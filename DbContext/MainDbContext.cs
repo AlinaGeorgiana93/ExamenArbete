@@ -25,7 +25,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
 
     #region C# model of database tables
     public DbSet<MoodDbM> Moods { get; set; }    
-    public DbSet<AnimalDbM> Animals { get; set; }    
+    public DbSet<ActivityDbM> Activitys { get; set; }    
     public DbSet<EmployeeDbM> Employees { get; set; }    
     public DbSet<CreditCardDbM> CreditCards { get; set; }
     public DbSet<UserDbM> Users { get; set; }    
@@ -53,7 +53,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         #region model the Views
         modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
         modelBuilder.Entity<GstUsrInfoMoodDto>().ToView("vwInfoMoods", "gstusr").HasNoKey();        
-        modelBuilder.Entity<GstUsrInfoAnimalsDto>().ToView("vwInfoAnimals", "gstusr").HasNoKey();        
+        modelBuilder.Entity<GstUsrInfoActivityDto>().ToView("vwInfoActivity", "gstusr").HasNoKey();        
         modelBuilder.Entity<GstUsrInfoEmployeesDto>().ToView("vwInfoEmployees", "gstusr").HasNoKey();        
         #endregion
 

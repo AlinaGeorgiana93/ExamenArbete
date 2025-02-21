@@ -36,7 +36,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "staff",
                 schema: "dbo",
                 columns: table => new
                 {
@@ -52,7 +52,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 });
 
             migrationBuilder.CreateTable(
-                name: "Zoos",
+                name: "Mood",
                 schema: "supusr",
                 columns: table => new
                 {
@@ -68,7 +68,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 });
 
             migrationBuilder.CreateTable(
-                name: "CreditCards",
+                name: "",
                 schema: "supusr",
                 columns: table => new
                 {
@@ -174,29 +174,36 @@ namespace DbContext.Migrations.SqlServerDbContext
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
             migrationBuilder.DropTable(
-                name: "Animals",
+                name: "Activity",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "CreditCards",
+                name: "Mood",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "EmployeeDbMZooDbM",
+                name: "Sleep",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Users",
+                name: "Staff",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "Employees",
+                name: "Appetiet",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Zoos",
+                name: "Graph",
+                schema: "supusr");
+
+            migrationBuilder.DropTable(
+                name: "Patient",
                 schema: "supusr");
         }
+        
+
     }
 }

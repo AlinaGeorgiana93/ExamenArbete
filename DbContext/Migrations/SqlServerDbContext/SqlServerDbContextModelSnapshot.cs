@@ -22,88 +22,50 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DbModels.AnimalDbM", b =>
+            modelBuilder.Entity("DbModels.ActivityDbM", b =>
                 {
-                    b.Property<Guid>("AnimalId")
+                    b.Property<Guid>("ActivityId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Age")
+                    b.Property<int>("Date")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Day")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("Kind")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Mood")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
+                    b.Property<int>("Level")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<bool>("Seeded")
-                        .HasColumnType("bit");
+                    b.HasKey("ActivityId");
+                   
 
-                    b.Property<Guid>("ZooDbMZooId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasIndex("MoodDbMMoodId");
 
-                    b.Property<string>("strKind")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("strMood")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("AnimalId");
-
-                    b.HasIndex("ZooDbMZooId");
-
-                    b.ToTable("Animals", "supusr");
+                    b.ToTable("Activitys", "supusr");
                 });
 
-            modelBuilder.Entity("DbModels.CreditCardDbM", b =>
+            modelBuilder.Entity("DbModels.MoodDbM", b =>
                 {
-                    b.Property<Guid>("CreditCardId")
+                    b.Property<Guid>("MoodId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EnryptedToken")
+                    b.Property<Guid>("Kind")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ExpirationMonth")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ExpirationYear")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("Issuer")
+                    b.Property<string>("Date")
                         .HasColumnType("int");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Day")
                         .HasColumnType("nvarchar(200)");
+                        
+                    b.HasKey("MoodId");
 
-                    b.Property<string>("Number")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("Seeded")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("strIssuer")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("CreditCardId");
-
-                    b.HasIndex("EmployeeId")
+                    b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("CreditCards", "supusr");
+                    b.ToTable("Moods", "supusr");
                 });
 
             modelBuilder.Entity("DbModels.EmployeeDbM", b =>

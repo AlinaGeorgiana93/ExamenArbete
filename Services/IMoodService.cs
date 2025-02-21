@@ -11,11 +11,11 @@ public interface IMoodService {
     public Task<ResponseItemDto<IMood>> UpdateMoodAsync(MoodCuDto item);
     public Task<ResponseItemDto<IMood>> CreateMoodAsync(MoodCuDto item);
 
-    public Task<ResponsePageDto<IAnimal>> ReadAnimalsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
-    public Task<ResponseItemDto<IAnimal>> ReadAnimalAsync(Guid id, bool flat);
-    public Task<ResponseItemDto<IAnimal>> DeleteAnimalAsync(Guid id);
-    public Task<ResponseItemDto<IAnimal>> UpdateAnimalAsync(AnimalCuDto item);
-    public Task<ResponseItemDto<IAnimal>> CreateAnimalAsync(AnimalCuDto item);
+    public Task<ResponsePageDto<IActivity>> ReadActivityAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
+    public Task<ResponseItemDto<IActivity>> ReadActivityAsync(Guid id, bool flat);
+    public Task<ResponseItemDto<IActivity>> DeleteActivityAsync(Guid id);
+    public Task<ResponseItemDto<IActivity>> UpdateActivityAsync(ActivityCuDto item);
+    public Task<ResponseItemDto<IActivity>> CreateActivityAsync(ActivityCuDto item);
 
     public Task<ResponsePageDto<IEmployee>> ReadEmployeesAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
     public Task<ResponseItemDto<IEmployee>> ReadEmployeeAsync(Guid id, bool flat);

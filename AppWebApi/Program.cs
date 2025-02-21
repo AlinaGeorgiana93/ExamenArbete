@@ -51,7 +51,7 @@ builder.Services.AddSwaggerGen(options => {
 builder.Services.AddSingleton<ILoggerProvider, InMemoryLoggerProvider>();
 builder.Services.AddScoped<AdminDbRepos>();
 builder.Services.AddScoped<MoodDbRepos>();
-builder.Services.AddScoped<AnimalDbRepos>();
+builder.Services.AddScoped<ActivityDbRepos>();
 builder.Services.AddScoped<EmployeeDbRepos>();
 builder.Services.AddScoped<CreditCardDbRepos>();
 builder.Services.AddScoped<LoginDbRepos>();

@@ -15,17 +15,17 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class ActivityController : Controller
     {
-        readonly IZooService _service = null;
-        readonly ILogger<AnimalsController> _logger = null;
+       // readonly IPatientService _service = null;
+        readonly ILogger<ActivityController> _logger = null;
 
-        public AnimalsController(IZooService service, ILogger<AnimalsController> logger)
+        public ActivityController(IPatientService service, ILogger<ActivityController> logger)
         {
             _service = service;
             _logger = logger;
         }
 
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IAnimal>))]
+        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> ReadItems(string seeded = "true", string flat = "true",
             string filter = null, string pageNr = "0", string pageSize = "10")
@@ -51,7 +51,7 @@ namespace AppWebApi.Controllers
         }
 
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAnimal>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItem(string id = null, string flat = "false")
@@ -78,7 +78,7 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "supusr, sysadmin")]
         [HttpDelete("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAnimal>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> DeleteItem(string id)
         {
@@ -88,7 +88,7 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(DeleteItem)}: {nameof(idArg)}: {idArg}");
                 
-                var item = await _service.DeleteAnimalAsync(idArg);
+                var item = await _service.DeleteActivityAsync(idArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
         
                 _logger.LogInformation($"item {idArg} deleted");
@@ -104,7 +104,7 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "supusr, sysadmin")]
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<AnimalCuDto>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<ActivityCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItemDto(string id = null)
@@ -115,13 +115,13 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItemDto)}: {nameof(idArg)}: {idArg}");
 
-                var item = await _service.ReadAnimalAsync(idArg, false);
+                var item = await _service.ReadActivityAsync(idArg, false);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
                 return Ok(
-                    new ResponseItemDto<AnimalCuDto>() {
+                    new ResponseItemDto<ActivityCuDto>() {
                     DbConnectionKeyUsed = item.DbConnectionKeyUsed,
-                    Item = new AnimalCuDto(item.Item)
+                    Item = new ActivityCuDto(item.Item)
                 });   
             }
             catch (Exception ex)
@@ -146,7 +146,7 @@ namespace AppWebApi.Controllers
                 
                 if (item.AnimalId != idArg) throw new ArgumentException("Id mismatch");
 
-                var model = await _service.UpdateAnimalAsync(item);
+                var model = await _service.UpdateActivityAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
                
                 return Ok(model);
@@ -169,7 +169,7 @@ namespace AppWebApi.Controllers
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
                 
-                var model = await _service.CreateAnimalAsync(item);
+                var model = await _service.CreateActivityAsync(item);
                 _logger.LogInformation($"item {model.Item.AnimalId} created");
 
                 return Ok(model);

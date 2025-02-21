@@ -13,5 +13,5 @@ public interface IMood
 
     //Navigation properties
     // public Graph Graph { get; set; }
-    // public List<Patient> Patient { get; set; } 
+    // public List<IPatient> Patients { get; set; } 
 }

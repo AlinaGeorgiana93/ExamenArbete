@@ -9,57 +9,57 @@ using DbContext;
 
 namespace DbRepos;
 
-public class AnimalDbRepos
+public class ActivityDbRepos
 {
-    private readonly ILogger<AnimalDbRepos> _logger;
+    private readonly ILogger<ActivityDbRepos> _logger;
     private readonly MainDbContext _dbContext;
 
     #region contructors
-    public AnimalDbRepos(ILogger<AnimalDbRepos> logger, MainDbContext context)
+    public ActivityDbRepos(ILogger<ActivityDbRepos> logger, MainDbContext context)
     {
         _logger = logger;
         _dbContext = context;
     }
     #endregion
 
-    public async Task<ResponseItemDto<IAnimal>> ReadItemAsync(Guid id, bool flat)
+    public async Task<ResponseItemDto<IActivity>> ReadItemAsync(Guid id, bool flat)
     {
-        IQueryable<AnimalDbM> query;
+        IQueryable<ActivityDbM> query;
         if (!flat)
         {
-            query = _dbContext.Animals.AsNoTracking()
-                .Include(i => i.ZooDbM)
+            query = _dbContext.Activitys.AsNoTracking()
+                .Include(i => i.ActivityDbM)
                 .Where(i => i.AnimalId == id);
         }
         else
         {
-            query = _dbContext.Animals.AsNoTracking()
-                .Where(i => i.AnimalId == id);
+            query = _dbContext.Activitys.AsNoTracking()
+                .Where(i => i.ActivityId == id);
         }
 
-        var resp = await query.FirstOrDefaultAsync<IAnimal>();
-        return new ResponseItemDto<IAnimal>()
+        var resp = await query.FirstOrDefaultAsync<IActivity>();
+        return new ResponseItemDto<IActivity>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = resp
         };
     }
 
-    public async Task<ResponsePageDto<IAnimal>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IActivity>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
-        IQueryable<AnimalDbM> query;
+        IQueryable<ActivityDbM> query;
         if (flat)
         {
-            query = _dbContext.Animals.AsNoTracking();
+            query = _dbContext.Activitys.AsNoTracking();
         }
         else
         {
-            query = _dbContext.Animals.AsNoTracking()
-                .Include(i => i.ZooDbM);
+            query = _dbContext.Activitys.AsNoTracking()
+                .Include(i => i.ActivityDbM);
         }
 
-        var ret = new ResponsePageDto<IAnimal>()
+        var ret = new ResponsePageDto<IActivity>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             DbItemsCount = await query
@@ -86,7 +86,7 @@ public class AnimalDbRepos
             .Skip(pageNumber * pageSize)
             .Take(pageSize)
 
-            .ToListAsync<IAnimal>(),
+            .ToListAsync<IActivity>(),
 
             PageNr = pageNumber,
             PageSize = pageSize
@@ -94,12 +94,12 @@ public class AnimalDbRepos
         return ret;
     }
 
-    public async Task<ResponseItemDto<IAnimal>> DeleteItemAsync(Guid id)
+    public async Task<ResponseItemDto<IActivity>> DeleteItemAsync(Guid id)
     {
         var query1 = _dbContext.Animals
             .Where(i => i.AnimalId == id);
 
-        var item = await query1.FirstOrDefaultAsync<AnimalDbM>();
+        var item = await query1.FirstOrDefaultAsync<ActivityDbM>();
 
         //If the item does not exists
         if (item == null) throw new ArgumentException($"Item {id} is not existing");
@@ -110,23 +110,23 @@ public class AnimalDbRepos
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<IAnimal>()
+        return new ResponseItemDto<IActivity>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
     }
 
-    public async Task<ResponseItemDto<IAnimal>> UpdateItemAsync(AnimalCuDto itemDto)
+    public async Task<ResponseItemDto<IActivity>> UpdateItemAsync(ActivityCuDto itemDto)
     {
-        var query1 = _dbContext.Animals
-            .Where(i => i.AnimalId == itemDto.AnimalId);
+        var query1 = _dbContext.Activitys
+            .Where(i => i.ActivityId == itemDto.ActivityId);
         var item = await query1
-                .Include(i => i.ZooDbM)
-                .FirstOrDefaultAsync<AnimalDbM>();
+                .Include(i => i.ActivityDbM)
+                .FirstOrDefaultAsync<ActivityDbM>();
 
         //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {itemDto.AnimalId} is not existing");
+        if (item == null) throw new ArgumentException($"Item {itemDto.ActivityId} is not existing");
 
         //transfer any changes from DTO to database objects
         //Update individual properties 
@@ -136,46 +136,46 @@ public class AnimalDbRepos
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Animals.Update(item);
+        _dbContext.Activitys.Update(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.AnimalId, false);    
+        return await ReadItemAsync(item.ActivityId, false);    
     }
 
-    public async Task<ResponseItemDto<IAnimal>> CreateItemAsync(AnimalCuDto itemDto)
+    public async Task<ResponseItemDto<IActivity>> CreateItemAsync(ActivityCuDto itemDto)
     {
-        if (itemDto.AnimalId != null)
-            throw new ArgumentException($"{nameof(itemDto.AnimalId)} must be null when creating a new object");
+        if (itemDto.ActivityId != null)
+            throw new ArgumentException($"{nameof(itemDto.ActivityId)} must be null when creating a new object");
 
         //transfer any changes from DTO to database objects
         //Update individual properties
-        var item = new AnimalDbM(itemDto);
+        var item = new ActivityDbM(itemDto);
 
         //Update navigation properties
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Animals.Add(item);
+        _dbContext.Activitys.Add(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.AnimalId, false);    
+        return await ReadItemAsync(item.ActivityId, false);    
     }
 
-    private async Task navProp_ItemCUdto_to_ItemDbM(AnimalCuDto itemDtoSrc, AnimalDbM itemDst)
+    private async Task navProp_ItemCUdto_to_ItemDbM(ActivityCuDto itemDtoSrc, ActivityDbM itemDst)
     {
         //update zoo nav props
-        var zoo = await _dbContext.Zoos.FirstOrDefaultAsync(
-            a => (a.ZooId == itemDtoSrc.ZooId));
+        var zoo = await _dbContext.Patients.FirstOrDefaultAsync(
+            a => (a.ZooId == itemDtoSrc.PatientId));
 
         if (zoo == null)
-            throw new ArgumentException($"Item id {itemDtoSrc.ZooId} not existing");
+            throw new ArgumentException($"Item id {itemDtoSrc.PatinetId} not existing");
 
-        itemDst.ZooDbM = zoo;
+        itemDst.patientDbM = patinet;
     }
 }
