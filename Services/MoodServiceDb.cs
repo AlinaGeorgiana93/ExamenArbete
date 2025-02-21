@@ -6,29 +6,29 @@ using Models.DTO;
 namespace Services;
 
 
-public class ZooServiceDb : IZooService {
+public class MoodServiceDb : IMoodService {
 
-    private readonly ZooDbRepos _zooRepo;
+    private readonly MoodDbRepos _MoodRepo;
     private readonly AnimalDbRepos _animalRepo;
     private readonly EmployeeDbRepos _employeeRepo;
     private readonly CreditCardDbRepos _creditcardRepo;
-    private readonly ILogger<ZooServiceDb> _logger;    
+    private readonly ILogger<MoodServiceDb> _logger;    
     
-    public ZooServiceDb(ZooDbRepos zooRepo, AnimalDbRepos animalRepo, EmployeeDbRepos employeeRepo, 
-        CreditCardDbRepos creditcardRepo, ILogger<ZooServiceDb> logger)
+    public MoodServiceDb(MoodDbRepos MoodRepo, AnimalDbRepos animalRepo, EmployeeDbRepos employeeRepo, 
+        CreditCardDbRepos creditcardRepo, ILogger<MoodServiceDb> logger)
     {
-        _zooRepo = zooRepo;
+        _MoodRepo = MoodRepo;
         _animalRepo = animalRepo;
         _employeeRepo = employeeRepo;
         _creditcardRepo = creditcardRepo;
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IZoo>> ReadZoosAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _zooRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
-    public Task<ResponseItemDto<IZoo>> ReadZooAsync(Guid id, bool flat) => _zooRepo.ReadItemAsync(id, flat);
-    public Task<ResponseItemDto<IZoo>> DeleteZooAsync(Guid id) => _zooRepo.DeleteItemAsync(id);
-    public Task<ResponseItemDto<IZoo>> UpdateZooAsync(ZooCuDto item) => _zooRepo.UpdateItemAsync(item);
-    public Task<ResponseItemDto<IZoo>> CreateZooAsync(ZooCuDto item) => _zooRepo.CreateItemAsync(item);
+    public Task<ResponsePageDto<IMood>> ReadMoodsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _zooRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponseItemDto<IMood>> ReadMoodAsync(Guid id, bool flat) => _MoodRepo.ReadItemAsync(id, flat);
+    public Task<ResponseItemDto<IMood>> DeleteMoodAsync(Guid id) => _MoodRepo.DeleteItemAsync(id);
+    public Task<ResponseItemDto<IMood>> UpdateMoodAsync(MoodCuDto item) => _MoodRepo.UpdateItemAsync(item);
+    public Task<ResponseItemDto<IMood>> CreateMoodAsync(MoodCuDto item) => _MoodRepo.CreateItemAsync(item);
 
     public Task<ResponsePageDto<IAnimal>> ReadAnimalsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _animalRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IAnimal>> ReadAnimalAsync(Guid id, bool flat) => _animalRepo.ReadItemAsync(id, flat);
@@ -50,4 +50,5 @@ public class ZooServiceDb : IZooService {
 
     public Task<ResponsePageDto<IEmployee>> ReadEmployeesWithCCAsync(bool hasCreditCard, int pageNumber, int pageSize) => _creditcardRepo.ReadEmployeesWithCCAsync(hasCreditCard, pageNumber, pageSize);
     public Task<ResponseItemDto<ICreditCard>> ReadDecryptedCCAsync(Guid id) => _creditcardRepo.ReadDecryptedCCAsync(id);
+
 }

@@ -6,8 +6,8 @@ namespace Models.DTO;
 public class GstUsrInfoDbDto
 {
     public string Title {get;  set;}
-    public int NrSeededZoos { get; set; } = 0;
-    public int NrUnseededZoos { get; set; } = 0;
+    public int NrSeededMoods { get; set; } = 0;
+    public int NrUnseededMoods { get; set; } = 0;
 
     public int NrSeededAnimals { get; set; } = 0;
     public int NrUnseededAnimals { get; set; } = 0;
@@ -19,11 +19,11 @@ public class GstUsrInfoDbDto
     public int NrUnseededCreditCards { get; set; } = 0;
 }
 
-public class GstUsrInfoZoosDto
+public class GstUsrInfoMoodDto
 {
-    public string Country { get; set; } = null;
-    public string City { get; set; } = null;
-    public int NrZoos { get; set; } = 0;
+    public string MoodKind { get; set; } = null;
+    public int NrMoods { get; set; } = 0;
+   
 }
 
 public class GstUsrInfoAnimalsDto

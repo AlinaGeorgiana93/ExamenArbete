@@ -33,7 +33,7 @@ public class AdminDbRepos
     {
         var info = new GstUsrInfoAllDto();
         info.Db = await _dbContext.InfoDbView.FirstAsync();
-        info.Zoos = await _dbContext.InfoZoosView.ToListAsync();
+        info.Zoos = await _dbContext.InfoMoodView.ToListAsync();
         info.Animals = await _dbContext.InfoAnimalsView.ToListAsync();
         info.Employees = await _dbContext.InfoEmployeesView.ToListAsync();
 

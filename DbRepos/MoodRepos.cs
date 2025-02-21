@@ -9,25 +9,25 @@ using DbContext;
 
 namespace DbRepos;
 
-public class ZooDbRepos
+public class MoodDbRepos
 {
-    private readonly ILogger<ZooDbRepos> _logger;
+    private readonly ILogger<MoodDbRepos> _logger;
     private readonly MainDbContext _dbContext;
 
     #region contructors
-    public ZooDbRepos(ILogger<ZooDbRepos> logger, MainDbContext context)
+    public MoodDbRepos(ILogger<MoodDbRepos> logger, MainDbContext context)
     {
         _logger = logger;
         _dbContext = context;
     }
     #endregion
 
-    public async Task<ResponseItemDto<IZoo>> ReadItemAsync(Guid id, bool flat)
+    public async Task<ResponseItemDto<IMood>> ReadItemAsync(Guid id, bool flat)
     {
-        IQueryable<ZooDbM> query;
+        IQueryable<MoodDbM> query;
         if (!flat)
         {
-            query = _dbContext.Zoos.AsNoTracking()
+            query = _dbContext.Mood.AsNoTracking()
                 .Include(i => i.AnimalsDbM)
                 .Include(i => i.EmployeesDbM)
                 .Where(i => i.ZooId == id);
@@ -46,7 +46,7 @@ public class ZooDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IZoo>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IMood>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<ZooDbM> query;
@@ -61,7 +61,7 @@ public class ZooDbRepos
                 .Include(i => i.EmployeesDbM);
         }
 
-        return new ResponsePageDto<IZoo>()
+        return new ResponsePageDto<IMood>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             DbItemsCount = await query
@@ -91,7 +91,7 @@ public class ZooDbRepos
         };
     }
 
-    public async Task<ResponseItemDto<IZoo>> DeleteItemAsync(Guid id)
+    public async Task<ResponseItemDto<IMood>> DeleteItemAsync(Guid id)
     {
         //Find the instance with matching id
         var query1 = _dbContext.Zoos
@@ -107,25 +107,25 @@ public class ZooDbRepos
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<IZoo>()
+        return new ResponseItemDto<IMood>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
     }
 
-    public async Task<ResponseItemDto<IZoo>> UpdateItemAsync(ZooCuDto itemDto)
+    public async Task<ResponseItemDto<IMood>> UpdateItemAsync(MoodCuDto itemDto)
     {
         //Find the instance with matching id and read the navigation properties.
         var query1 = _dbContext.Zoos
-            .Where(i => i.ZooId == itemDto.ZooId);
+            .Where(i => i.MoodId == itemDto.MoodId);
         var item = await query1
             .Include(i => i.AnimalsDbM)
             .Include(i => i.EmployeesDbM)
             .FirstOrDefaultAsync<ZooDbM>();
 
         //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {itemDto.ZooId} is not existing");
+        if (item == null) throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
 
         //transfer any changes from DTO to database objects
         //Update individual properties
@@ -144,14 +144,14 @@ public class ZooDbRepos
         return await ReadItemAsync(item.ZooId, false);    
     }
 
-    public async Task<ResponseItemDto<IZoo>> CreateItemAsync(ZooCuDto itemDto)
+    public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
     {
-        if (itemDto.ZooId != null)
-            throw new ArgumentException($"{nameof(itemDto.ZooId)} must be null when creating a new object");
+        if (itemDto.MoodId != null)
+            throw new ArgumentException($"{nameof(itemDto.MoodId)} must be null when creating a new object");
 
         //transfer any changes from DTO to database objects
         //Update individual properties Zoo
-        var item = new ZooDbM(itemDto);
+        var item = new MoodDbM(itemDto);
 
         //Update navigation properties
         await navProp_Itemdto_to_ItemDbM(itemDto, item);
@@ -168,7 +168,7 @@ public class ZooDbRepos
 
     //from all Guid relationships in _itemDtoSrc finds the corresponding object in the database and assigns it to _itemDst 
     //as navigation properties. Error is thrown if no object is found corresponing to an id.
-    private async Task navProp_Itemdto_to_ItemDbM(ZooCuDto itemDtoSrc, ZooDbM itemDst)
+    private async Task navProp_Itemdto_to_ItemDbM(MoodCuDto itemDtoSrc, ZooDbM itemDst)
     {
         //update AnimalsDbM from list
         List<AnimalDbM> Animals = null;

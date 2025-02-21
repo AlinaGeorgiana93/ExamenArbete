@@ -8,11 +8,11 @@ using Models.DTO;
 
 namespace DbModels;
 
-[Table("Zoos", Schema = "supusr")]
-public class ZooDbM : Zoo, ISeed<ZooDbM>
+[Table("Moods", Schema = "supusr")]
+public class MoodDbM : Mood, ISeed<MoodDbM>
 {
     [Key]
-    public override Guid ZooId { get; set; }
+    public override Guid MoodId { get; set; }
 
 
     [NotMapped]
@@ -29,13 +29,13 @@ public class ZooDbM : Zoo, ISeed<ZooDbM>
     public List<EmployeeDbM> EmployeesDbM { get; set; }
 
 
-    public override ZooDbM Seed (SeedGenerator _seeder)
+    public override MoodDbM Seed (SeedGenerator _seeder)
     {
         base.Seed (_seeder);
         return this;
     }
 
-    public ZooDbM UpdateFromDTO(ZooCuDto org)
+    public MoodDbM UpdateFromDTO(MoodCuDto org)
     {
         if (org == null) return null;
 
@@ -46,10 +46,10 @@ public class ZooDbM : Zoo, ISeed<ZooDbM>
         return this;
     }
 
-    public ZooDbM() { }
-    public ZooDbM(ZooCuDto org)
+    public MoodDbM() { }
+    public MoodDbM(MoodCuDto org)
     {
-        ZooId = Guid.NewGuid();
+        MoodId = Guid.NewGuid();
         UpdateFromDTO(org);
     }
 }

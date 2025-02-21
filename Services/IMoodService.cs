@@ -3,13 +3,13 @@ using Models.DTO;
 
 namespace Services;
 
-public interface IZooService {
+public interface IMoodService {
 
-    public Task<ResponsePageDto<IZoo>> ReadZoosAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
-    public Task<ResponseItemDto<IZoo>> ReadZooAsync(Guid id, bool flat);
-    public Task<ResponseItemDto<IZoo>> DeleteZooAsync(Guid id);
-    public Task<ResponseItemDto<IZoo>> UpdateZooAsync(ZooCuDto item);
-    public Task<ResponseItemDto<IZoo>> CreateZooAsync(ZooCuDto item);
+    public Task<ResponsePageDto<IMood>> ReadMoodsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
+    public Task<ResponseItemDto<IMood>> ReadMoodAsync(Guid id, bool flat);
+    public Task<ResponseItemDto<IMood>> DeleteMoodAsync(Guid id);
+    public Task<ResponseItemDto<IMood>> UpdateMoodAsync(MoodCuDto item);
+    public Task<ResponseItemDto<IMood>> CreateMoodAsync(MoodCuDto item);
 
     public Task<ResponsePageDto<IAnimal>> ReadAnimalsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
     public Task<ResponseItemDto<IAnimal>> ReadAnimalAsync(Guid id, bool flat);
