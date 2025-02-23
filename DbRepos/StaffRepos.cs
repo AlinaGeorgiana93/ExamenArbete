@@ -1,4 +1,4 @@
-﻿// using Microsoft.Extensions.Logging;
+// using Microsoft.Extensions.Logging;
 // using Microsoft.EntityFrameworkCore;
 // using System.Data;
 
@@ -9,123 +9,129 @@
 
 // namespace DbRepos;
 
-// public class MoodDbRepos
+// public class StaffDbRepos
 // {
-//     private readonly ILogger<MoodDbRepos> _logger;
+//     private readonly ILogger<StaffDbRepos> _logger;
 //     private readonly MainDbContext _dbContext;
 
 //     #region contructors
-//     public MoodDbRepos(ILogger<MoodDbRepos> logger, MainDbContext context)
+//     public StaffDbRepos(ILogger<StaffDbRepos> logger, MainDbContext context)
 //     {
 //         _logger = logger;
 //         _dbContext = context;
 //     }
 //     #endregion
 
-//     public async Task<ResponseItemDto<IMood>> ReadItemAsync(Guid id, bool flat)
+//     public async Task<ResponseItemDto<IStaff>> ReadItemAsync(Guid id, bool flat)
 //     {
-//         IQueryable<MoodDbM> query;
+//         IQueryable<StaffDbM> query;
 //         if (!flat)
 //         {
-//             query = _dbContext.Mood.AsNoTracking()
-//                 .Include(i => i.AnimalsDbM)
-//                 .Include(i => i.EmployeesDbM)
-//                 .Where(i => i.ZooId == id);
+//             query = _dbContext.Staff.AsNoTracking()
+//                 .Include(i => i.MoodsDbM)
+//                 .Include(i => i.PatientsDbM)
+ //                 .Include(i => i.ActivitiesDbM)
+ //                 .Include(i => i.ApetitesDbM)
+//                 .Where(i => i.StaffId == id);
 //         }
 //         else
 //         {
-//             query = _dbContext.Zoos.AsNoTracking()
-//                 .Where(i => i.ZooId == id);
+//             query = _dbContext.Staffs.AsNoTracking()
+//                 .Where(i => i.StaffId == id);
 //         }   
 
-//         var resp =  await query.FirstOrDefaultAsync<IZoo>();
-//         return new ResponseItemDto<IZoo>()
+//         var resp =  await query.FirstOrDefaultAsync<IStaff>();
+//         return new ResponseItemDto<IStaff>()
 //         {
 //             DbConnectionKeyUsed = _dbContext.dbConnection,
 //             Item = resp
 //         };
 //     }
 
-//     public async Task<ResponsePageDto<IMood>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+//     public async Task<ResponsePageDto<IStaff>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
 //     {
 //         filter ??= "";
-//         IQueryable<ZooDbM> query;
+//         IQueryable<StaffDbM> query;
 //         if (flat)
 //         {
-//             query = _dbContext.Zoos.AsNoTracking();
+//             query = _dbContext.Staffs.AsNoTracking();
 //         }
 //         else
 //         {
-//             query = _dbContext.Zoos.AsNoTracking()
-//                 .Include(i => i.AnimalsDbM)
-//                 .Include(i => i.EmployeesDbM);
+//             query = _dbContext.Staffs.AsNoTracking()
+//                 .Include(i => i.MoodsDbM)
+//                 .Include(i => i.PatientsDbM);
+//                 .Include(i => i.ActivitiesDbM)
+ //                .Include(i => i.ApetitesDbM)
+//                  
+//
 //         }
 
-//         return new ResponsePageDto<IMood>()
+//         return new ResponsePageDto<IStaff>()
 //         {
 //             DbConnectionKeyUsed = _dbContext.dbConnection,
 //             DbItemsCount = await query
 
 //             //Adding filter functionality
 //             .Where(i => (i.Seeded == seeded) && 
-//                         (i.Name.ToLower().Contains(filter) ||
-//                          i.City.ToLower().Contains(filter) ||
-//                          i.Country.ToLower().Contains(filter))).CountAsync(),
+//                         (i.FirstName.ToLower().Contains(filter) ||
+//                          i.LastName.ToLower().Contains(filter) ||
+//                          i.PersonNumber.ToLower().Contains(filter))).CountAsync(),
 
 //             PageItems = await query
 
 //             //Adding filter functionality
 //             .Where(i => (i.Seeded == seeded) && 
-//                         (i.Name.ToLower().Contains(filter) ||
-//                          i.City.ToLower().Contains(filter) ||
-//                          i.Country.ToLower().Contains(filter)))
+//                         (i.FirstName.ToLower().Contains(filter) ||
+//                          i.LastName.ToLower().Contains(filter) ||
+//                          i.PersonNumber.ToLower().Contains(filter)))
 
 //             //Adding paging
 //             .Skip(pageNumber * pageSize)
 //             .Take(pageSize)
 
-//             .ToListAsync<IZoo>(),
+//             .ToListAsync<IStaff>(),
 
 //             PageNr = pageNumber,
 //             PageSize = pageSize
 //         };
 //     }
 
-//     public async Task<ResponseItemDto<IMood>> DeleteItemAsync(Guid id)
+//     public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
 //     {
 //         //Find the instance with matching id
-//         var query1 = _dbContext.Zoos
-//             .Where(i => i.ZooId == id);
-//         var item = await query1.FirstOrDefaultAsync<ZooDbM>();
+//         var query1 = _dbContext.Staffs
+//             .Where(i => i.StaffId == id);
+//         var item = await query1.FirstOrDefaultAsync<StaffDbM>();
 
 //         //If the item does not exists
 //         if (item == null) throw new ArgumentException($"Item {id} is not existing");
 
 //         //delete in the database model
-//         _dbContext.Zoos.Remove(item);
+//         _dbContext.Staffs.Remove(item);
 
 //         //write to database in a UoW
 //         await _dbContext.SaveChangesAsync();
 
-//         return new ResponseItemDto<IMood>()
+//         return new ResponseItemDto<IStaff>()
 //         {
 //             DbConnectionKeyUsed = _dbContext.dbConnection,
 //             Item = item
 //         };
 //     }
 
-//     public async Task<ResponseItemDto<IMood>> UpdateItemAsync(MoodCuDto itemDto)
+//     public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
 //     {
 //         //Find the instance with matching id and read the navigation properties.
-//         var query1 = _dbContext.Zoos
-//             .Where(i => i.MoodId == itemDto.MoodId);
+//         var query1 = _dbContext.Staffs
+//             .Where(i => i.StaffId == itemDto.StaffId);
 //         var item = await query1
-//             .Include(i => i.AnimalsDbM)
-//             .Include(i => i.EmployeesDbM)
-//             .FirstOrDefaultAsync<ZooDbM>();
+//             .Include(i => i.MoodsDbM)
+//             .Include(i => i.ActivitesDbM)
+//             .FirstOrDefaultAsync<StaffDbM>();
 
 //         //If the item does not exists
-//         if (item == null) throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
+//         if (item == null) throw new ArgumentException($"Item {itemDto.StaffId} is not existing");
 
 //         //transfer any changes from DTO to database objects
 //         //Update individual properties
@@ -135,40 +141,40 @@
 //         await navProp_Itemdto_to_ItemDbM(itemDto, item);
 
 //         //write to database model
-//         _dbContext.Zoos.Update(item);
+//         _dbContext.Staffs.Update(item);
 
 //         //write to database in a UoW
 //         await _dbContext.SaveChangesAsync();
 
 //         //return the updated item in non-flat mode
-//         return await ReadItemAsync(item.ZooId, false);    
+//         return await ReadItemAsync(item.StaffId, false);    
 //     }
 
-//     public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
+//     public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
 //     {
 //         if (itemDto.MoodId != null)
-//             throw new ArgumentException($"{nameof(itemDto.MoodId)} must be null when creating a new object");
+//             throw new ArgumentException($"{nameof(itemDto.StaffId)} must be null when creating a new object");
 
 //         //transfer any changes from DTO to database objects
 //         //Update individual properties Zoo
-//         var item = new MoodDbM(itemDto);
+//         var item = new StaffDbM(itemDto);
 
 //         //Update navigation properties
 //         await navProp_Itemdto_to_ItemDbM(itemDto, item);
 
 //         //write to database model
-//         _dbContext.Zoos.Add(item);
+//         _dbContext.Staffs.Add(item);
 
 //         //write to database in a UoW
 //         await _dbContext.SaveChangesAsync();
         
 //         //return the updated item in non-flat mode
-//         return await ReadItemAsync(item.ZooId, false);
+//         return await ReadItemAsync(item.StaffId, false);
 //     }
 
 //     //from all Guid relationships in _itemDtoSrc finds the corresponding object in the database and assigns it to _itemDst 
 //     //as navigation properties. Error is thrown if no object is found corresponing to an id.
-//     private async Task navProp_Itemdto_to_ItemDbM(MoodCuDto itemDtoSrc, ZooDbM itemDst)
+//     private async Task navProp_Itemdto_to_ItemDbM(StaffCuDto itemDtoSrc, ZooDbM itemDst)
 //     {
 //         //update AnimalsDbM from list
 //         List<AnimalDbM> Animals = null;
