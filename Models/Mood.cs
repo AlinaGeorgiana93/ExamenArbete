@@ -13,6 +13,8 @@ public class Mood : IMood
     public DateTime Date { get; set; }
 
     public DayOfWeek Day { get; set; }
+    
+    public string Notes { get; set; } // Additional notes about the appetite
 
 
     

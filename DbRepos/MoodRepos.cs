@@ -1,205 +1,180 @@
-﻿// using Microsoft.Extensions.Logging;
-// using Microsoft.EntityFrameworkCore;
-// using System.Data;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
-// using Models;
-// using Models.DTO;
-// using DbModels;
-// using DbContext;
+using Models;
+using Models.DTO;
+using DbModels;
+using DbContext;
 
-// namespace DbRepos;
+namespace DbRepos;
 
-// public class MoodDbRepos
-// {
-//     private readonly ILogger<MoodDbRepos> _logger;
-//     private readonly MainDbContext _dbContext;
+public class MoodDbRepos
+{
+    private readonly ILogger<MoodDbRepos> _logger;
+    private readonly MainDbContext _dbContext;
 
-//     #region contructors
-//     public MoodDbRepos(ILogger<MoodDbRepos> logger, MainDbContext context)
-//     {
-//         _logger = logger;
-//         _dbContext = context;
-//     }
-//     #endregion
+    #region contructors
+    public MoodDbRepos(ILogger<MoodDbRepos> logger, MainDbContext context)
+    {
+        _logger = logger;
+        _dbContext = context;
+    }
+    #endregion
 
-//     public async Task<ResponseItemDto<IMood>> ReadItemAsync(Guid id, bool flat)
-//     {
-//         IQueryable<MoodDbM> query;
-//         if (!flat)
-//         {
-//             query = _dbContext.Mood.AsNoTracking()
-//                 .Include(i => i.AnimalsDbM)
-//                 .Include(i => i.EmployeesDbM)
-//                 .Where(i => i.ZooId == id);
-//         }
-//         else
-//         {
-//             query = _dbContext.Zoos.AsNoTracking()
-//                 .Where(i => i.ZooId == id);
-//         }   
+    public async Task<ResponseItemDto<IMood>> ReadItemAsync(Guid id, bool flat)
+    {
+        IQueryable<MoodDbM> query;
+        if (!flat)
+        {
+            query = _dbContext.Moods.AsNoTracking()
+                .Include(i => i.PatientDbM)
+                .Where(i => i.MoodId == id);
+        }
+        else
+        {
+            query = _dbContext.Moods.AsNoTracking()
+                .Where(i => i.MoodId == id);
+        }
 
-//         var resp =  await query.FirstOrDefaultAsync<IZoo>();
-//         return new ResponseItemDto<IZoo>()
-//         {
-//             DbConnectionKeyUsed = _dbContext.dbConnection,
-//             Item = resp
-//         };
-//     }
+        var resp = await query.FirstOrDefaultAsync<IMood>();
+        return new ResponseItemDto<IMood>()
+        {
+            DbConnectionKeyUsed = _dbContext.dbConnection,
+            Item = resp
+        };
+    }
 
-//     public async Task<ResponsePageDto<IMood>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
-//     {
-//         filter ??= "";
-//         IQueryable<ZooDbM> query;
-//         if (flat)
-//         {
-//             query = _dbContext.Zoos.AsNoTracking();
-//         }
-//         else
-//         {
-//             query = _dbContext.Zoos.AsNoTracking()
-//                 .Include(i => i.AnimalsDbM)
-//                 .Include(i => i.EmployeesDbM);
-//         }
+    public async Task<ResponsePageDto<IMood>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    {
+        filter ??= "";
+        IQueryable<MoodDbM> query;
+        if (flat)
+        {
+            query = _dbContext.Moods.AsNoTracking();
+        }
+        else
+        {
+            query = _dbContext.Moods.AsNoTracking()
+                .Include(i => i.PatientDbM);
+        }
 
-//         return new ResponsePageDto<IMood>()
-//         {
-//             DbConnectionKeyUsed = _dbContext.dbConnection,
-//             DbItemsCount = await query
+        var ret = new ResponsePageDto<IMood>()
+        {
+            DbConnectionKeyUsed = _dbContext.dbConnection,
+            DbItemsCount = await query
 
-//             //Adding filter functionality
-//             .Where(i => (i.Seeded == seeded) && 
-//                         (i.Name.ToLower().Contains(filter) ||
-//                          i.City.ToLower().Contains(filter) ||
-//                          i.Country.ToLower().Contains(filter))).CountAsync(),
+                // Adding filter functionality
+                .Where(i => 
+                (i.strLevel.ToLower().Contains(filter) ||
+                 i.strDate.ToLower().Contains(filter) ||
+                 i.Day.ToString().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter)))
+                .CountAsync(),
 
-//             PageItems = await query
+            PageItems = await query
 
-//             //Adding filter functionality
-//             .Where(i => (i.Seeded == seeded) && 
-//                         (i.Name.ToLower().Contains(filter) ||
-//                          i.City.ToLower().Contains(filter) ||
-//                          i.Country.ToLower().Contains(filter)))
+                    // Adding filter functionality
+                .Where(i => 
+                    (i.strKind.ToLower().Contains(filter) ||
+                    i.strDate.ToLower().Contains(filter) ||
+                    i.Day.ToString().Contains(filter) ||
+                    i.Notes.ToLower().Contains(filter)))
 
-//             //Adding paging
-//             .Skip(pageNumber * pageSize)
-//             .Take(pageSize)
+                // Adding paging
+                .Skip(pageNumber * pageSize)
+                .Take(pageSize)
 
-//             .ToListAsync<IZoo>(),
+                .ToListAsync<IMood>(),
 
-//             PageNr = pageNumber,
-//             PageSize = pageSize
-//         };
-//     }
+            PageNr = pageNumber,
+            PageSize = pageSize
+        };
+        return ret;
+    }
 
-//     public async Task<ResponseItemDto<IMood>> DeleteItemAsync(Guid id)
-//     {
-//         //Find the instance with matching id
-//         var query1 = _dbContext.Zoos
-//             .Where(i => i.ZooId == id);
-//         var item = await query1.FirstOrDefaultAsync<ZooDbM>();
+    public async Task<ResponseItemDto<IMood>> DeleteItemAsync(Guid id)
+    {
+        var query1 = _dbContext.Moods
+            .Where(i => i.MoodId == id);
 
-//         //If the item does not exists
-//         if (item == null) throw new ArgumentException($"Item {id} is not existing");
+        var item = await query1.FirstOrDefaultAsync<MoodDbM>();
 
-//         //delete in the database model
-//         _dbContext.Zoos.Remove(item);
+        //If the item does not exists
+        if (item == null) throw new ArgumentException($"Item {id} is not existing");
 
-//         //write to database in a UoW
-//         await _dbContext.SaveChangesAsync();
+        //delete in the database model
+        _dbContext.Moods.Remove(item);
 
-//         return new ResponseItemDto<IMood>()
-//         {
-//             DbConnectionKeyUsed = _dbContext.dbConnection,
-//             Item = item
-//         };
-//     }
+        //write to database in a UoW
+        await _dbContext.SaveChangesAsync();
 
-//     public async Task<ResponseItemDto<IMood>> UpdateItemAsync(MoodCuDto itemDto)
-//     {
-//         //Find the instance with matching id and read the navigation properties.
-//         var query1 = _dbContext.Zoos
-//             .Where(i => i.MoodId == itemDto.MoodId);
-//         var item = await query1
-//             .Include(i => i.AnimalsDbM)
-//             .Include(i => i.EmployeesDbM)
-//             .FirstOrDefaultAsync<ZooDbM>();
+        return new ResponseItemDto<IMood>()
+        {
+            DbConnectionKeyUsed = _dbContext.dbConnection,
+            Item = item
+        };
+    }
 
-//         //If the item does not exists
-//         if (item == null) throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
+    public async Task<ResponseItemDto<IMood>> UpdateItemAsync(MoodCuDto itemDto)
+    {
+        var query1 = _dbContext.Moods
+            .Where(i => i.MoodId == itemDto.MoodId);
+        var item = await query1
+                .Include(i => i.PatientDbM)
+                .FirstOrDefaultAsync<MoodDbM>();
 
-//         //transfer any changes from DTO to database objects
-//         //Update individual properties
-//         item.UpdateFromDTO(itemDto);
+        //If the item does not exists
+        if (item == null) throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
 
-//         //Update navigation properties
-//         await navProp_Itemdto_to_ItemDbM(itemDto, item);
+        //transfer any changes from DTO to database objects
+        //Update individual properties 
+        item.UpdateFromDTO(itemDto);
 
-//         //write to database model
-//         _dbContext.Zoos.Update(item);
+        //Update navigation properties
+        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
-//         //write to database in a UoW
-//         await _dbContext.SaveChangesAsync();
+        //write to database model
+        _dbContext.Moods.Update(item);
 
-//         //return the updated item in non-flat mode
-//         return await ReadItemAsync(item.ZooId, false);    
-//     }
+        //write to database in a UoW
+        await _dbContext.SaveChangesAsync();
 
-//     public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
-//     {
-//         if (itemDto.MoodId != null)
-//             throw new ArgumentException($"{nameof(itemDto.MoodId)} must be null when creating a new object");
+        //return the updated item in non-flat mode
+        return await ReadItemAsync(item.MoodId, false);    
+    }
 
-//         //transfer any changes from DTO to database objects
-//         //Update individual properties Zoo
-//         var item = new MoodDbM(itemDto);
+    public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
+    {
+        if (itemDto.MoodId != null)
+            throw new ArgumentException($"{nameof(itemDto.MoodId)} must be null when creating a new object");
 
-//         //Update navigation properties
-//         await navProp_Itemdto_to_ItemDbM(itemDto, item);
+        //transfer any changes from DTO to database objects
+        //Update individual properties
+        var item = new MoodDbM(itemDto);
 
-//         //write to database model
-//         _dbContext.Zoos.Add(item);
+        //Update navigation properties
+        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
-//         //write to database in a UoW
-//         await _dbContext.SaveChangesAsync();
-        
-//         //return the updated item in non-flat mode
-//         return await ReadItemAsync(item.ZooId, false);
-//     }
+        //write to database model
+        _dbContext.Appetites.Add(item);
 
-//     //from all Guid relationships in _itemDtoSrc finds the corresponding object in the database and assigns it to _itemDst 
-//     //as navigation properties. Error is thrown if no object is found corresponing to an id.
-//     private async Task navProp_Itemdto_to_ItemDbM(MoodCuDto itemDtoSrc, ZooDbM itemDst)
-//     {
-//         //update AnimalsDbM from list
-//         List<AnimalDbM> Animals = null;
-//         if (itemDtoSrc.AnimalsId != null)
-//         {
-//             Animals = new List<AnimalDbM>();
-//             foreach (var id in itemDtoSrc.AnimalsId)
-//             {
-//                 var p = await _dbContext.Animals.FirstOrDefaultAsync(i => i.AnimalId == id);
-//                 if (p == null)
-//                     throw new ArgumentException($"Item id {id} not existing");
+        //write to database in a UoW
+        await _dbContext.SaveChangesAsync();
 
-//                 Animals.Add(p);
-//             }
-//         }
-//         itemDst.AnimalsDbM = Animals;
+        //return the updated item in non-flat mode
+        return await ReadItemAsync(item.MoodId, false);    
+    }
 
-//         //update EmployeessDbM from list
-//         List<EmployeeDbM> Employees = null;
-//         if (itemDtoSrc.EmployeesId != null)
-//         {
-//             Employees = new List<EmployeeDbM>();
-//             foreach (var id in itemDtoSrc.EmployeesId)
-//             {
-//                 var p = await _dbContext.Employees.FirstOrDefaultAsync(i => i.EmployeeId == id);
-//                 if (p == null)
-//                     throw new ArgumentException($"Item id {id} not existing");
+    private async Task navProp_ItemCUdto_to_ItemDbM(MoodCuDto itemDtoSrc, MoodDbM itemDst)
+    {
+       
+        var patient = await _dbContext.Patients.FirstOrDefaultAsync(
+            a => (a.PatientId == itemDtoSrc.PatientId));
 
-//                 Employees.Add(p);
-//             }
-//         }
-//         itemDst.EmployeesDbM = Employees;
-//     }
-// }
+        if (patient == null)
+            throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
+
+        itemDst.PatientDbM = patient;
+    }
+}

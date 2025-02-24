@@ -28,8 +28,8 @@ public class ActivityDbRepos
         if (!flat)
         {
             query = _dbContext.Activitys.AsNoTracking()
-                .Include(i => i.ActivityDbM)
-                .Where(i => i.AnimalId == id);
+                .Include(i => i.PatientDbM)
+                .Where(i => i.ActivityId == id);
         }
         else
         {
@@ -56,7 +56,7 @@ public class ActivityDbRepos
         else
         {
             query = _dbContext.Activitys.AsNoTracking()
-                .Include(i => i.ActivityDbM);
+                .Include(i => i.PatientDbM);
         }
 
         var ret = new ResponsePageDto<IActivity>()
@@ -64,29 +64,28 @@ public class ActivityDbRepos
             DbConnectionKeyUsed = _dbContext.dbConnection,
             DbItemsCount = await query
 
-            //Adding filter functionality
-            .Where(i => (i.Seeded == seeded) && 
-                        (i.Name.ToLower().Contains(filter) ||
-                         i.strMood.ToLower().Contains(filter) ||
-                         i.strKind.ToLower().Contains(filter) ||
-                         i.Age.ToString().Contains(filter) ||
-                         i.Description.ToLower().Contains(filter))).CountAsync(),
+                // Adding filter functionality
+                .Where(i => 
+                (i.strLevel.ToLower().Contains(filter) ||
+                 i.strDate.ToLower().Contains(filter) ||
+                 i.Day.ToString().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter)))
+                .CountAsync(),
 
             PageItems = await query
 
-            //Adding filter functionality
-            .Where(i => (i.Seeded == seeded) && 
-                        (i.Name.ToLower().Contains(filter) ||
-                         i.strMood.ToLower().Contains(filter) ||
-                         i.strKind.ToLower().Contains(filter) ||
-                         i.Age.ToString().Contains(filter) ||
-                         i.Description.ToLower().Contains(filter)))
+                    // Adding filter functionality
+                .Where(i => 
+                    (i.strLevel.ToLower().Contains(filter) ||
+                    i.strDate.ToLower().Contains(filter) ||
+                    i.Day.ToString().Contains(filter) ||
+                    i.Notes.ToLower().Contains(filter)))
 
-            //Adding paging
-            .Skip(pageNumber * pageSize)
-            .Take(pageSize)
+                // Adding paging
+                .Skip(pageNumber * pageSize)
+                .Take(pageSize)
 
-            .ToListAsync<IActivity>(),
+                .ToListAsync<IActivity>(),
 
             PageNr = pageNumber,
             PageSize = pageSize
@@ -96,8 +95,8 @@ public class ActivityDbRepos
 
     public async Task<ResponseItemDto<IActivity>> DeleteItemAsync(Guid id)
     {
-        var query1 = _dbContext.Animals
-            .Where(i => i.AnimalId == id);
+        var query1 = _dbContext.Activitys
+            .Where(i => i.ActivityId == id);
 
         var item = await query1.FirstOrDefaultAsync<ActivityDbM>();
 
@@ -105,7 +104,7 @@ public class ActivityDbRepos
         if (item == null) throw new ArgumentException($"Item {id} is not existing");
 
         //delete in the database model
-        _dbContext.Animals.Remove(item);
+        _dbContext.Activitys.Remove(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
@@ -122,7 +121,7 @@ public class ActivityDbRepos
         var query1 = _dbContext.Activitys
             .Where(i => i.ActivityId == itemDto.ActivityId);
         var item = await query1
-                .Include(i => i.ActivityDbM)
+                .Include(i => i.PatientDbM)
                 .FirstOrDefaultAsync<ActivityDbM>();
 
         //If the item does not exists
@@ -158,7 +157,7 @@ public class ActivityDbRepos
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Activitys.Add(item);
+        _dbContext.Appetites.Add(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
@@ -169,13 +168,13 @@ public class ActivityDbRepos
 
     private async Task navProp_ItemCUdto_to_ItemDbM(ActivityCuDto itemDtoSrc, ActivityDbM itemDst)
     {
-        //update zoo nav props
-        var zoo = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => (a.ZooId == itemDtoSrc.PatientId));
+       
+        var patient = await _dbContext.Patients.FirstOrDefaultAsync(
+            a => (a.PatientId == itemDtoSrc.PatientId));
 
-        if (zoo == null)
-            throw new ArgumentException($"Item id {itemDtoSrc.PatinetId} not existing");
+        if (patient == null)
+            throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
 
-        itemDst.patientDbM = patinet;
+        itemDst.PatientDbM = patient;
     }
 }
