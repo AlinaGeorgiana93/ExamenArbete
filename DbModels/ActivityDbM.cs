@@ -14,41 +14,19 @@ public class ActivityDbM : Activity, ISeed<ActivityDbM>
     [Key]
     public override Guid ActivityId { get; set; }
 
-    #region adding more readability to an enum type in the database
-    public virtual string strLevel
-    {
-        get => Level.ToString();
-        set { }  //set is needed by EFC to include in the database, so I make it to do nothing
-    }
-   
+   [Required]
+    public ActivityLevel Level { get; set; }
 
-    #endregion
+    [Required]
     
- //   [NotMapped]
-    //public override IZoo Zoo { get => ZooDbM; set => throw new NotImplementedException(); }
+    public DateTime Date { get; set; }
 
-    //[JsonIgnore]
-    //[Required]
-    //public  ZooDbM ZooDbM { get; set; }
+    [Required]
 
+    public DayOfWeek Day { get; set; }
+    
 
-    public ActivityDbM UpdateFromDTO(ActivityCuDto org)
-    {
-        if (org == null) return null;
+  
 
-        Kind = org.Kind;
-        Mood = org.Mood;
-        Age = org.Age;
-        Name = org.Name;
-        Description = org.Description;
-
-        return this;
-    }
-
-    public ActivityDbM() { }
-    public ActivityDbM(AnimalCuDto org)
-    {
-        ActivityId = Guid.NewGuid();
-        UpdateFromDTO(org);
-    }
+    
 }
