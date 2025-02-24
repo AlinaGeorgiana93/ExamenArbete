@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
-    public enum AppetiteLevel {Low, Medium, High};
+    public enum AppetiteLevel {Low = 1, Medium = 2, High = 3}
+
     public interface IAppetite
     {
         
