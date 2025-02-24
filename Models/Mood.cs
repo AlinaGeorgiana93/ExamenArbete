@@ -13,9 +13,12 @@ public class Mood : IMood
     public DateTime Date { get; set; }
 
     public DayOfWeek Day { get; set; }
+
+
+    
     
     //Navigation properties
     // public Graph Graph { get; set; }
-    // public List<Patient> Patient { get; set; }   // public List<Patient> Patient { get; set; } 
+    // public  virtual List<Patient> Patient { get; set; }   
     
 }
