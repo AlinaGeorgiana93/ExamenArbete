@@ -9,11 +9,11 @@ public class GstUsrInfoDbDto
     public int NrSeededMoods { get; set; } = 0;
     public int NrUnseededMoods { get; set; } = 0;
 
-    public int NrSeededAnimals { get; set; } = 0;
-    public int NrUnseededAnimals { get; set; } = 0;
+    public int NrSeededStaffs { get; set; } = 0;
+    public int NrUnseededStaffs{ get; set; } = 0;
 
-    public int NrSeededEmployees { get; set; } = 0;
-    public int NrUnseededEmployees { get; set; } = 0;
+    public int NrSeededActivities { get; set; } = 0;
+    public int NrUnseededActivities{ get; set; } = 0;
 
     public int NrSeededCreditCards { get; set; } = 0;
     public int NrUnseededCreditCards { get; set; } = 0;
@@ -26,28 +26,26 @@ public class GstUsrInfoMoodDto
    
 }
 
-public class GstUsrInfoAnimalsDto
+public class GstUsrInfoStaffsDto
 {
-    public string Country { get; set; } = null;
-    public string City { get; set; } = null;
-    public string ZooName { get; set; } = null;
+    public string FirstName { get; set; } = null;
+    public string LastName { get; set; } = null;
+    public string PersonalNumber { get; set; } = null;
     public int NrAnimals { get; set; } = 0;
 }
 
-public class GstUsrInfoEmployeesDto
+public class GstUsrInfoActivitiesDto
 {
-    public string Country { get; set; } = null;
-    public string City { get; set; } = null;
-    public string ZooName { get; set; } = null;
-    public int NrEmployees { get; set; } = 0;
+ 
+    public int NrActivities { get; set; } = 0;
 }
 
 public class GstUsrInfoAllDto
 {
     public GstUsrInfoDbDto Db { get; set; } = null;
-    public List<GstUsrInfoZoosDto> Zoos { get; set; } = null;
-    public List<GstUsrInfoAnimalsDto> Animals { get; set; } = null;
-    public List<GstUsrInfoEmployeesDto> Employees { get; set; } = null;
+    public List<GstUsrInfoActivitiesDto> Activities { get; set; } = null;
+    public List<GstUsrInfoStaffsDto> Staffs { get; set; } = null;
+   // public List<GstUsrInfoMoodsDto> Moods{ get; set; } = null;
 }
 
 
