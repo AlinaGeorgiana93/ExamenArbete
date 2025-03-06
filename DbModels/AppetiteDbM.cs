@@ -34,6 +34,13 @@ public class AppetiteDbM : Appetite//, ISeed<AppetiteDbM>
     [Required]
     public  PatientDbM PatientDbM { get; set; }
 
+    [NotMapped]
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  GraphDbM? GraphDbM { get; set; }
+
     // public override AppetiteDbM Seed (SeedGenerator _seeder)
     // {
     //     base.Seed (_seeder);
