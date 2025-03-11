@@ -9,43 +9,43 @@ using Models.DTO;
 namespace DbModels;
 
 [Table("Moods", Schema = "supusr")]
-public class MoodDbM : Mood, ISeed<MoodDbM>
+public class MoodDbM : Mood //ISeed<MoodDbM>
 {
     [Key]
     public override Guid MoodId { get; set; }
 
 
     [NotMapped]
-    public override List<IAnimal> Animals { get => AnimalsDbM?.ToList<IAnimal>(); set => throw new NotImplementedException(); }
+    //public override List<IStaff> Staffs { get => StaffsDbM?.ToList<IStaff>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<AnimalDbM> AnimalsDbM { get; set; }
+    public List<StaffDbM> StaffsDbM { get; set; }
 
 
-    [NotMapped]
-    public override List<IEmployee> Employees { get => EmployeesDbM?.ToList<IEmployee>(); set => throw new NotImplementedException(); }
+//     [NotMapped]
+//    public override List<IPatient> Patients { get => PatientsDbM?.ToList<IPatient>(); set => throw new NotImplementedException(); }
 
-    [JsonIgnore]
-    public List<EmployeeDbM> EmployeesDbM { get; set; }
+//     [JsonIgnore]
+//     public List<PatientDbM> PatientsDbM { get; set; }
 
 
-    public override MoodDbM Seed (SeedGenerator _seeder)
-    {
-        base.Seed (_seeder);
-        return this;
-    }
+    // public override MoodDbM Seed (SeedGenerator _seeder)
+    // {
+    //     base.Seed (_seeder);
+    //     return this;
+    // }
 
-    public MoodDbM UpdateFromDTO(MoodCuDto org)
-    {
-        if (org == null) return null;
+   public Mood UpdateFromDTO(MoodCuDto org)
+{
+    if (org == null) return null;
 
-        City = org.City;
-        Country = org.Country;
-        Name = org.Name;
+    // Update properties from the DTO
+    Kind = org.Kind;                // Assuming Kind is part of DTO (of type MoodKind)
+   // Date = org.DateTime;            // Assuming DateTime in DTO is Date for the Mood
+   // Day = org.DateTime.DayOfWeek;   // Setting Day based on the DateTime in DTO
 
-        return this;
-    }
-
+    return this;
+}
     public MoodDbM() { }
     public MoodDbM(MoodCuDto org)
     {

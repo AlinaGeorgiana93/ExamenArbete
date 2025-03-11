@@ -21,7 +21,6 @@ public class StaffDbM : Staff, ISeed<StaffDbM>
     [JsonIgnore]
     public List<MoodDbM> MoodsDbM { get; set; }
 
-
     [NotMapped]
     //public override List<IActivity> Activities { get => ActivitiesDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
 

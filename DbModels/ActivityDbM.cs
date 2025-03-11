@@ -8,9 +8,9 @@ using Models.DTO;
 
 
 namespace DbModels;
-[Table("Acticity", Schema = "supusr")]
-public class ActivityDbM : Activity, ISeed<ActivityDbM>
-{
+[Table("Activity", Schema = "supusr")]
+public class ActivityDbM : Activity //ISeed<ActivityDbM>
+{ 
     [Key]
     public override Guid ActivityId { get; set; }
 
@@ -24,29 +24,26 @@ public class ActivityDbM : Activity, ISeed<ActivityDbM>
 
     #endregion
     
- //   [NotMapped]
-    //public override IZoo Zoo { get => ZooDbM; set => throw new NotImplementedException(); }
+//   [NotMapped]
+//     public override IStaff Staffs { get => StaffDbM; set => throw new NotImplementedException(); }
 
-    //[JsonIgnore]
-    //[Required]
-    //public  ZooDbM ZooDbM { get; set; }
+//     [JsonIgnore]
+//     [Required]
+//     public  StaffDbM StaffDbM { get; set; }
 
 
     public ActivityDbM UpdateFromDTO(ActivityCuDto org)
     {
         if (org == null) return null;
 
-        Kind = org.Kind;
-        Mood = org.Mood;
-        Age = org.Age;
-        Name = org.Name;
-        Description = org.Description;
+       Level= org.Level;
+      // Mood = org.Mood;
 
         return this;
     }
 
     public ActivityDbM() { }
-    public ActivityDbM(AnimalCuDto org)
+    public ActivityDbM(ActivityCuDto org)
     {
         ActivityId = Guid.NewGuid();
         UpdateFromDTO(org);

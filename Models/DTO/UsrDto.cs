@@ -4,8 +4,7 @@ namespace Models.DTO;
 
 public class UsrInfoDto
 {
-	public int NrUsers { get; set; }
-	public int NrSuperUsers { get; set; }
+	public int NrStaff { get; set; }
 	public int NrSystemAdmin { get; set; }
 }
 

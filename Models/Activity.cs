@@ -5,7 +5,7 @@ namespace Models;
 
 public class Activity:IActivity
 {
-    public Guid ActivityId { get; set; }
+    public virtual Guid ActivityId { get; set; }
     public ActivityLevel Level { get; set; }
     
     public DateTime Date { get; set; }

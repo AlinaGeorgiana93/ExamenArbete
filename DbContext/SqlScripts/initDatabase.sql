@@ -1,10 +1,8 @@
-USE zooefc;
+USE graphefc;
 GO
 
 --01-create-schema.sql
 --create a schema for guest users, i.e. not logged in
-CREATE SCHEMA gstusr;
-GO
 
 --create a schema for logged in user
 CREATE SCHEMA usr;
@@ -80,15 +78,15 @@ IF SUSER_ID (N'supusr') IS NOT NULL
 DROP LOGIN supusr;
 
 CREATE LOGIN gstusr WITH PASSWORD=N'pa$$Word1', 
-    DEFAULT_DATABASE=zooefc, DEFAULT_LANGUAGE=us_english, 
+    DEFAULT_DATABASE=graphefc, DEFAULT_LANGUAGE=us_english, 
     CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;
 
 CREATE LOGIN usr WITH PASSWORD=N'pa$$Word1', 
-DEFAULT_DATABASE=zooefc, DEFAULT_LANGUAGE=us_english, 
+DEFAULT_DATABASE=graphefc, DEFAULT_LANGUAGE=us_english, 
 CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;
 
 CREATE LOGIN supusr WITH PASSWORD=N'pa$$Word1', 
-DEFAULT_DATABASE=zooefc, DEFAULT_LANGUAGE=us_english, 
+DEFAULT_DATABASE=graphefc, DEFAULT_LANGUAGE=us_english, 
 CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;
 
 
@@ -103,24 +101,24 @@ CREATE USER supusrUser FROM LOGIN supusr;
 
 --05-create-roles-credentials.sql
 --create roles
-CREATE ROLE zooefcGstUsr;
-CREATE ROLE zooefcUsr;
-CREATE ROLE zooefcSupUsr;
+CREATE ROLE graphefcGstUsr;
+CREATE ROLE graphefcUsr;
+CREATE ROLE graphefcSupUsr;
 
 --assign securables creadentials to the roles
-GRANT SELECT, EXECUTE ON SCHEMA::gstusr to zooefcGstUsr;
-GRANT SELECT ON SCHEMA::supusr to zooefcUsr;
-GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to zooefcSupUsr;
+GRANT SELECT, EXECUTE ON SCHEMA::gstusr to graphefcGstUsr;
+GRANT SELECT ON SCHEMA::supusr to graphefcUsr;
+GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to graphefcSupUsr;
 
 --finally, add the users to the roles
-ALTER ROLE zooefcGstUsr ADD MEMBER gstusrUser;
+ALTER ROLE graphefcGstUsr ADD MEMBER gstusrUser;
 
-ALTER ROLE zooefcGstUsr ADD MEMBER usrUser;
-ALTER ROLE zooefcUsr ADD MEMBER usrUser;
+ALTER ROLE graphefcGstUsr ADD MEMBER usrUser;
+ALTER ROLE graphefcUsr ADD MEMBER usrUser;
 
-ALTER ROLE zooefcGstUsr ADD MEMBER supusrUser;
-ALTER ROLE zooefcUsr ADD MEMBER supusrUser;
-ALTER ROLE zooefcSupUsr ADD MEMBER supusrUser;
+ALTER ROLE graphefcGstUsr ADD MEMBER supusrUser;
+ALTER ROLE graphefcUsr ADD MEMBER supusrUser;
+ALTER ROLE graphefcSupUsr ADD MEMBER supusrUser;
 GO
 
 --07-create-gstusr-login.sql

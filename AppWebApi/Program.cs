@@ -50,13 +50,12 @@ builder.Services.AddSwaggerGen(options => {
 //Inject Custom logger
 builder.Services.AddSingleton<ILoggerProvider, InMemoryLoggerProvider>();
 builder.Services.AddScoped<AdminDbRepos>();
-builder.Services.AddScoped<MoodDbRepos>();
+//builder.Services.AddScoped<MoodDbRepos>();
 builder.Services.AddScoped<ActivityDbRepos>();
-builder.Services.AddScoped<EmployeeDbRepos>();
-builder.Services.AddScoped<CreditCardDbRepos>();
+builder.Services.AddScoped<StaffDbRepos>();
 builder.Services.AddScoped<LoginDbRepos>();
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
-builder.Services.AddScoped<IMoodService, MoodServiceDb>();
+//builder.Services.AddScoped<IMoodService, MoodServiceDb>();
 builder.Services.AddScoped<ILoginService, LoginServiceDb>();
 
 
