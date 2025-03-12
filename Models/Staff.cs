@@ -5,7 +5,7 @@ namespace Models;
 
 public class Staff : IStaff
 {
-    public Guid StaffId { get ; set ; }
+    public virtual Guid StaffId { get ; set ; }
     public string FirstName { get; set ; }
     public string LastName { get ; set; }
     public string PersonalNumber { get ; set ; }

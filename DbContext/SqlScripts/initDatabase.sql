@@ -3,7 +3,8 @@ GO
 
 --01-create-schema.sql
 --create a schema for guest users, i.e. not logged in
-
+CREATE SCHEMA gstusr;
+GO
 --create a schema for logged in user
 CREATE SCHEMA usr;
 GO
@@ -121,6 +122,7 @@ ALTER ROLE graphefcUsr ADD MEMBER supusrUser;
 ALTER ROLE graphefcSupUsr ADD MEMBER supusrUser;
 GO
 
+--07-create-gstusr-login.sql
 --07-create-gstusr-login.sql
 CREATE OR ALTER PROC gstusr.spLogin
     @UserNameOrEmail NVARCHAR(100),

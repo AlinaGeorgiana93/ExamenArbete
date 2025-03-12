@@ -15,6 +15,17 @@ builder.Services.AddEndpointsApiExplorer();
 //to use either user secrets or azure key vault depending on UseAzureKeyVault tag in appsettings.json
 builder.Configuration.AddApplicationSecrets("../Configuration/Configuration.csproj");
 
+// Debugging line to check if the connection string is correctly loaded
+var connectionString = builder.Configuration.GetConnectionString("SQLServer-graphefc-docker-sysadmin");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    Console.WriteLine("Connection string is empty or not found.");
+}
+else
+{
+    Console.WriteLine($"Connection String: {connectionString}");
+}
 //use multiple Database connections and their respective DbContexts
 builder.Services.AddEncryptions(builder.Configuration);
 builder.Services.AddDatabaseConnections(builder.Configuration);
@@ -57,7 +68,6 @@ builder.Services.AddScoped<LoginDbRepos>();
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
 //builder.Services.AddScoped<IMoodService, MoodServiceDb>();
 builder.Services.AddScoped<ILoginService, LoginServiceDb>();
-
 
 var app = builder.Build();
 

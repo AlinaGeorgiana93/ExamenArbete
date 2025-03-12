@@ -7,10 +7,10 @@
     <UserSecretsId>126a42a7-3b4f-429f-997d-1849782efbb0</UserSecretsId>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <UserSecretPath>/Users/Martin/.microsoft/usersecrets/</UserSecretPath>
-    <AzureScriptDirectory>/Users/Martin/Development/projects/CloudServices_and_Security_Jan_2025/azuregitbash</AzureScriptDirectory>
-    <AzureProjectSettings>/Users/Martin/Development/projects/CloudServices_and_Security_Jan_2025/azuregitbash/az-projects/newton-tanzanite</AzureProjectSettings>
+   <PropertyGroup>
+    <UserSecretPath>C:\Users\Admin\AppData\Roaming\Microsoft\UserSecrets\</UserSecretPath>
+    <AzureScriptDirectory>C:\Users\Admin\OneDrive\Desktop\programering\Molntjänsterochsäkerhet\azuregitbash</AzureScriptDirectory>
+    <AzureProjectSettings>C:\Users\Admin\OneDrive\Desktop\programering\Molntjänsterochsäkerhet\azuregitbash\az-projects\newton-turquoise</AzureProjectSettings>
   </PropertyGroup>
 
   <ItemGroup>

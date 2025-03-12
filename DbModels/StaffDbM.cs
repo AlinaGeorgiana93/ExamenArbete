@@ -12,17 +12,17 @@ namespace DbModels;
 public class StaffDbM : Staff, ISeed<StaffDbM>
 {
     [Key]
-    //public override Guid StaffId { get; set; }
+    public override Guid StaffId { get; set; }
 
 
     [NotMapped]
-   // public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
+    public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     public List<MoodDbM> MoodsDbM { get; set; }
 
     [NotMapped]
-    //public override List<IActivity> Activities { get => ActivitiesDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
+    public override List<IActivity> Activities { get => ActivityDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     public List<ActivityDbM> ActivityDbM { get; set; }

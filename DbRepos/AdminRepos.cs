@@ -29,6 +29,19 @@ public class AdminDbRepos
     }
     #endregion
 
+    public async Task<ResponseItemDto<GstUsrInfoAllDto>> InfoAsync()
+    {
+         var info = new GstUsrInfoAllDto();
+        info.Db = await _dbContext.InfoDbView.FirstAsync();
+        info.Staffs = await _dbContext.InfoStaffsView.ToListAsync();
+       
+
+        return new ResponseItemDto<GstUsrInfoAllDto>()
+        {
+            DbConnectionKeyUsed = _dbContext.dbConnection,
+            Item = info
+        };
+    }
 
     public async Task<UsrInfoDto> SeedUsersAsync(int nrOfUsers, int nrOfSysAdmin)
     {

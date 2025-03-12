@@ -40,10 +40,14 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     }
     #endregion
 
+    public DbSet<GstUsrInfoDbDto> InfoDbView { get; set; }
+    public DbSet<GstUsrInfoStaffsDto> InfoStaffsView { get; set; }
+
     //Here we can modify the migration building
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-    
+     modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
+      modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();   
     }
 
     #region DbContext for some popular databases
@@ -211,5 +215,4 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     }
     #endregion
 }
-
 

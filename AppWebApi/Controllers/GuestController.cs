@@ -25,23 +25,23 @@ namespace AppWebApi.Controllers
             _logger = logger;
         }
 
-        // [HttpGet()]
-        // [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
-        // public async Task<IActionResult> Info()
-        // {
-        //     try
-        //     {
-        //         var info = await _adminService.InfoAsync();
+        [HttpGet()]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
+        public async Task<IActionResult> Info()
+        {
+            try
+            {
+                var info = await _adminService.InfoAsync();
 
-        //         _logger.LogInformation($"{nameof(Info)}:\n{JsonConvert.SerializeObject(info)}");
-        //         return Ok(info);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _logger.LogError($"{nameof(Info)}: {ex.InnerException?.Message}");
-        //         return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
-        //     }
-        // }
+                _logger.LogInformation($"{nameof(Info)}:\n{JsonConvert.SerializeObject(info)}");
+                return Ok(info);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{nameof(Info)}: {ex.InnerException?.Message}");
+                return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
+            }
+        }
 
 
         [HttpPost]
