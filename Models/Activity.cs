@@ -16,7 +16,13 @@ public class Activity:IActivity
 
     public string Notes { get; set; } // Additional notes about the appetite
     
-    //Navigation properties
-    //public virtual List<IPatient> Patients{ get; set; }
+    public int PatientId { get; set; }
+    public Patient Patient { get; set; }
+
+    public int? GraphId { get; set; }
+    public Graph Graph { get; set; }
+
+    public int? StaffId { get; set; }  // Koppling till Staff
+    public Staff Staff { get; set; }
     
 }

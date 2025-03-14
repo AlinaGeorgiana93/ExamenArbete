@@ -19,8 +19,13 @@ public class Mood : IMood
 
     
     
-    //Navigation properties
-    // public Graph Graph { get; set; }
-    // public  virtual List<Patient> Patient { get; set; }   
+     public int PatientId { get; set; }
+    public Patient Patient { get; set; }
+
+    public int? GraphId { get; set; }
+    public Graph Graph { get; set; }
+
+    public int? StaffId { get; set; }  // Koppling till Staff
+    public Staff Staff { get; set; }
     
 }

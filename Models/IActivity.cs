@@ -16,8 +16,12 @@ public interface IActivity
     
    
     
-    
+    public int PatientId { get; set; }
+    public Patient Patient { get; set; }
 
-    //Navigation properties
-    //public virtual List<IPatient> Patients{ get; set; }
+    public int? GraphId { get; set; }
+    public Graph Graph { get; set; }
+
+    public int? StaffId { get; set; }  // Koppling till Staff
+    public Staff Staff { get; set; }
 }

@@ -12,8 +12,13 @@ public interface IMood
 
     public string Notes { get; set; } // Additional notes about the appetite
     
+     
+     public int PatientId { get; set; }
+    public Patient Patient { get; set; }
 
-    //Navigation properties
-    // public Graph Graph { get; set; }
-    // public List<IPatient> Patients { get; set; } 
+    public int? GraphId { get; set; }
+    public Graph Graph { get; set; }
+
+    public int? StaffId { get; set; }  // Koppling till Staff
+    public Staff Staff { get; set; }
 }
