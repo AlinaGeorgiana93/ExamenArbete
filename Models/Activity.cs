@@ -5,24 +5,24 @@ namespace Models;
 
 public class Activity:IActivity
 {
-    public Guid ActivityId { get; set; }
+    public virtual Guid ActivityId { get; set; }
 
 
-    public ActivityLevel Level { get; set; } // e.g., Low, Medium, High
+    public ActivityLevel ActivityLevel { get; set; } // e.g., Low, Medium, High
     
-    public DateTime Date { get; set; }
+    public virtual DateTime Date { get; set; }
 
-    public DayOfWeek Day { get; set; }
+    public virtual DayOfWeek Day { get; set; }
 
-    public string Notes { get; set; } // Additional notes about the appetite
+    public virtual string Notes { get; set; } // Additional notes about the appetite
     
-    public int PatientId { get; set; }
-    public Patient Patient { get; set; }
 
-    public int? GraphId { get; set; }
-    public Graph Graph { get; set; }
 
-    public int? StaffId { get; set; }  // Koppling till Staff
-    public Staff Staff { get; set; }
     
+    //Navigation properties
+   // public virtual IPatient Patient { get; set; }
+   // public List<IPatient> IPatients { get; set; }
+ 
+
+
 }

@@ -51,7 +51,7 @@ public class ActivityDbRepos
         IQueryable<ActivityDbM> query;
         if (flat)
         {
-            query = _dbContext.Activitys.AsNoTracking();
+            query = _dbContext.Activitys.AsNoTracking().Cast<ActivityDbM>();
         }
         else
         {
@@ -66,7 +66,7 @@ public class ActivityDbRepos
 
                 // Adding filter functionality
                 .Where(i => 
-                (i.strLevel.ToLower().Contains(filter) ||
+                (i.strActivityLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
                  i.Day.ToString().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter)))
@@ -76,7 +76,7 @@ public class ActivityDbRepos
 
                     // Adding filter functionality
                 .Where(i => 
-                    (i.strLevel.ToLower().Contains(filter) ||
+                    (i.strActivityLevel.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.Day.ToString().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter)))
@@ -98,7 +98,7 @@ public class ActivityDbRepos
         var query1 = _dbContext.Activitys
             .Where(i => i.ActivityId == id);
 
-        var item = await query1.FirstOrDefaultAsync<ActivityDbM>();
+        var item = await query1.Cast<ActivityDbM>().FirstOrDefaultAsync();
 
         //If the item does not exists
         if (item == null) throw new ArgumentException($"Item {id} is not existing");
@@ -157,7 +157,7 @@ public class ActivityDbRepos
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Appetites.Add(item);
+        _dbContext.Activitys.Add(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();

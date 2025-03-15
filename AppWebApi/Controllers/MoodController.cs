@@ -15,10 +15,10 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class MoodController : Controller
     {
-        readonly IMoodService _service = null;
+        readonly IPatientService _service = null;
         readonly ILogger<MoodController> _logger = null;
 
-        public MoodController(IMoodService service, ILogger<MoodController> logger)
+        public MoodController(IPatientService service, ILogger<MoodController> logger)
         {
             _service = service;
             _logger = logger;

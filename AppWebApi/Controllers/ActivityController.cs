@@ -15,7 +15,7 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class ActivityController : Controller
     {
-       // readonly IPatientService _service = null;
+         readonly IPatientService _service = null;
         readonly ILogger<ActivityController> _logger = null;
 
         public ActivityController(IPatientService service, ILogger<ActivityController> logger)
@@ -40,7 +40,7 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(ReadItems)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
                 
-                var resp = await _service.ReadAnimalsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
+                var resp = await _service.ReadActivityAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItem)}: {nameof(idArg)}: {idArg}, {nameof(flatArg)}: {flatArg}");
                 
-                var item = await _service.ReadAnimalAsync(idArg, flatArg);
+                var item = await _service.ReadActivityAsync(idArg, flatArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
                 return Ok(item);
@@ -134,9 +134,9 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "supusr, sysadmin")]
         [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAnimal>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> UpdateItem(string id, [FromBody] AnimalCuDto item)
+        public async Task<IActionResult> UpdateItem(string id, [FromBody] ActivityCuDto item)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
                 
-                if (item.AnimalId != idArg) throw new ArgumentException("Id mismatch");
+                if (item.ActivityId != idArg) throw new ArgumentException("Id mismatch");
 
                 var model = await _service.UpdateActivityAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
@@ -161,16 +161,16 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "supusr, sysadmin")]
         [HttpPost()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAnimal>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> CreateItem([FromBody] AnimalCuDto item)
+        public async Task<IActionResult> CreateItem([FromBody] ActivityCuDto item)
         {
             try
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
                 
                 var model = await _service.CreateActivityAsync(item);
-                _logger.LogInformation($"item {model.Item.AnimalId} created");
+                _logger.LogInformation($"item {model.Item.ActivityId} created");
 
                 return Ok(model);
             }

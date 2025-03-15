@@ -24,13 +24,13 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     public string dbConnection  => _databaseConnections.GetDbConnection(this.Database.GetConnectionString());
 
     #region C# model of database tables
-    public DbSet<MoodDbM> Moods { get; set; }    
-    public DbSet<ActivityDbM> Activities { get; set; }    
-    public DbSet<StaffDbM> Staffs { get; set; }    
-    public DbSet<CreditCardDbM> CreditCards { get; set; }
-    public DbSet<UserDbM> Users { get; set; } 
-    public DbSet<SleepDbM> Sleeps { get; set; }
-   
+        //public DbSet<Patient> Patients { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
+        public DbSet<Activity> Activitys { get; set; }
+        public DbSet<Mood> Moods { get; set; }
+        public DbSet<Sleep> Sleeps { get; set; }
+        public DbSet<Appetite> Appetites { get; set; }
+        public DbSet<Graph> Graphs { get; set; }
     #endregion
 
     #region model the Views
