@@ -14,18 +14,18 @@ public class MoodDbM : Mood//ISeed<MoodDbM>
     [Key]
     public override Guid MoodId { get; set; }
 
-  
+    public override DateTime Date {get;set}
+    public override DayOfWeek Day { get; set; }
+
+    public override string Notes { get; set; }
+
+
+
 
     #region adding more readability to an enum type in the database
     public virtual string strMoodKind
     {
         get => MoodKind.ToString();
-        set { } 
-    }
-    
-    public virtual string strDate
-    {
-        get => Date.ToString();
         set { } 
     }
      #endregion
