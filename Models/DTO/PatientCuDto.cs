@@ -28,11 +28,11 @@ public class PatientCuDto
         LastName= org.LastName;
         PersonalNumber = org.PersonalNumber;
         
-        // GraphsId = org.Graphs?.Select(i => i.GraphId).ToList();
-        // MoodsId = org.Moods?.Select(i => i.MoodId).ToList();
-        // ActivitiesId = org.Activities?.Select(e => e.ActivityId).ToList();
-        // AppetitesId = org.Appetites?.Select(e => e.AppetiteId).ToList();
-        // PatientsId = org.Patients?.Select(e => e.PatientId).ToList();
+         GraphId = org.Graphs?.Select(i => i.GraphId).ToList();
+         MoodId = org.Moods?.Select(i => i.MoodId).ToList();
+         ActivityId = org.Activities?.Select(e => e.ActivityId).ToList();
+         AppetiteId = org.Appetites?.Select(e => e.AppetiteId).ToList();
+        // PatientId = org.Patients?.Select(e => e.PatientId).ToList();
 
     }
 }
