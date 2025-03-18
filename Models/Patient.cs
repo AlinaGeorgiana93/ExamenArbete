@@ -16,9 +16,9 @@ public class Patient : IPatient
 
     public virtual List<IGraph> Graphs{ get; set; }
     public virtual List<IMood> Moods {get; set;}
-    public virtual List<Isleep> Sleeps {get; set;}
+    public virtual List<ISleep> Sleeps {get; set;}
 
     public virtual List <IActivity> Activities{ get; set; }
-    public virtual List <IApetite> Apetites{ get; set; }
+    public virtual List <IAppetite> Appetites{ get; set; }
      
 }

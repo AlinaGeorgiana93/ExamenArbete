@@ -16,6 +16,6 @@ public interface IPatient
     public List<IGraph> Graphs{ get; set; }
     public List<IMood> Moods {get; set;}
     public List <IActivity> Activities{ get; set; }
-    public List <Isleep> Sleeps{ get; set; }
-    public List <IApetite> Apetites{ get; set; }
+    public List <ISleep> Sleeps{ get; set; }
+    public List <IAppetite> Appetites{ get; set; }
 }
