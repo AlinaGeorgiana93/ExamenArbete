@@ -10,18 +10,18 @@ public class Activity:IActivity
 
     public ActivityLevel ActivityLevel { get; set; } // e.g., Low, Medium, High
     
-    public virtual DateTime Date { get; set; }
+    public  DateTime Date { get; set; }
 
-    public virtual DayOfWeek Day { get; set; }
+    public DayOfWeek Day { get; set; }
 
-    public virtual string Notes { get; set; } // Additional notes about the appetite
+    public string Notes { get; set; } // Additional notes about the appetite
     
 
 
     
     //Navigation properties
-   // public virtual IPatient Patient { get; set; }
-   // public List<IPatient> IPatients { get; set; }
+   // public Virtual IPatient Patient { get; set; }
+   // public  Virtual IGraph Graph { get; set; }
  
 
 
