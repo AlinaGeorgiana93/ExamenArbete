@@ -6,32 +6,33 @@ using Models.DTO;
 namespace Services;
 
 
-public class GraphServiceDb : IGraphService {
+public class PatientServiceDb : IPatientService {
 
-    private readonly GraphDbRepos _graphRepo;
+    private readonly PatientDbRepos _patientRepo;
     private readonly MoodDbRepos _moodRepo;
     private readonly ActivityDbRepos _activityRepo;
-    private readonly PatientDbRepos _patientRepo;
-
     private readonly AppetiteDbRepos _appetiteRepo;
     private readonly SleepDbRepos _sleepRepo;
-    private readonly ILogger<GraphServiceDb> _logger;    
+    private readonly PatientDbRepos _patientRepo;
+
+    private readonly ILogger<PatientServiceDb> _logger;    
     
-    public GraphServiceDb(GraphDbRepos graphRepo, MoodDbRepos moodRepo, ActivityDbRepos activityRepo, AppetiteDbRepos appetiteRepo, SleepDbRepos sleepRepo,ILogger<GraphServiceDb> logger)
+    public PatientServiceDb(PatientDbRepos patientRepo, MoodDbRepos moodRepo, GraphDbRepos graphRepo, ActivityDbRepos activityRepo, AppetiteDbRepos appetiteRepo, SleepDbRepos sleepRepo,ILogger<GraphServiceDb> logger)
     {
-        _graphRepo = graphRepo;
+        _patientRepo = patientRepo;
         _moodRepo = moodRepo;
         _activityRepo = activityRepo;
         _appetiteRepo = appetiteRepo;
+        _graphRepo = graphRepo;
         _sleepRepo = sleepRepo;
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IGraph>> ReadGraphsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _graphRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
-    public Task<ResponseItemDto<IGraph>> ReadGraphAsync(Guid id, bool flat) => _graphRepo.ReadItemAsync(id, flat);
-    public Task<ResponseItemDto<IGraph>> DeleteGraphAsync(Guid id) => _graphRepo.DeleteItemAsync(id);
-    public Task<ResponseItemDto<IGraph>> UpdateGraphAsync(GraphCuDto item) => _graphRepo.UpdateItemAsync(item);
-    public Task<ResponseItemDto<IGraph>> CreateGraphAsync(GraphCuDto item) => _graphRepo.CreateItemAsync(item);
+    public Task<ResponsePageDto<IPatient>> ReadPatientsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _patientRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponseItemDto<IPatient>> ReadPatientAsync(Guid id, bool flat) => _patientRepo.ReadItemAsync(id, flat);
+    public Task<ResponseItemDto<IPatient>> DeletePatientAsync(Guid id) => _patientRepo.DeleteItemAsync(id);
+    public Task<ResponseItemDto<IPatient>> UpdatePatientAsync(PatientCuDto item) => _patientRepo.UpdateItemAsync(item);
+    public Task<ResponseItemDto<IPatient>> CreatePatientAsync(PatientCuDto item) => _patientRepo.CreateItemAsync(item);
 
     public Task<ResponsePageDto<IMood>> ReadMoodsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _moodRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IMood>> ReadMoodAsync(Guid id, bool flat) => _moodRepo.ReadItemAsync(id, flat);
@@ -59,5 +60,12 @@ public class GraphServiceDb : IGraphService {
     public Task<ResponseItemDto<ISleep>> DeleteSleepAsync(Guid id) => _sleepRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<ISleep>> UpdateSleepAsync(SleepCuDto item) => _sleepRepo.UpdateItemAsync(item);
     public Task<ResponseItemDto<ISleep>> CreateSleepAsync(SleepCuDto item) => _sleepRepo.CreateItemAsync(item);
+
+    // Graph Methods
+    public Task<ResponsePageDto<IGraph>> ReadGraphsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _graphRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponseItemDto<IGraph>> ReadGraphAsync(Guid id, bool flat) => _graphRepo.ReadItemAsync(id, flat);
+    public Task<ResponseItemDto<IGraph>> DeleteGraphAsync(Guid id) => _graphRepo.DeleteItemAsync(id);
+    public Task<ResponseItemDto<IGraph>> UpdateGraphAsync(GraphCuDto item) => _graphRepo.UpdateItemAsync(item);
+    public Task<ResponseItemDto<IGraph>> CreateGraphAsync(GraphCuDto item) => _graphRepo.CreateItemAsync(item);
 
     }
