@@ -15,11 +15,6 @@ public class ActivityDbM : Activity// ISeed<ActivityDbM>
     public override Guid ActivityId { get; set; }
 
 
-    public override DayOfWeek Day { get; set; }
-
-    public override string Notes { get; set; }
-
-
 
 
     #region adding more readability to an enum type in the database
