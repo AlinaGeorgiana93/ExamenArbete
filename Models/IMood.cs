@@ -13,6 +13,7 @@ public interface IMood
     public string Notes { get; set; } // Additional notes about the appetite
     
     //Navigation properties
-   // public virtual IPatient Patient { get; set; }
-   // public List<IPatient> IPatients { get; set; }
+   // public IPatient Patient{ get; set; }
+   // public IGraph Graph { get; set; }
+ 
 }
