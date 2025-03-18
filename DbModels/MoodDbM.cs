@@ -15,12 +15,6 @@ public class MoodDbM : Mood//ISeed<MoodDbM>
     public override Guid MoodId { get; set; }
 
   
-    public override DayOfWeek Day { get; set; }
-
-    public override string Notes { get; set; }
-
-
-
 
     #region adding more readability to an enum type in the database
     public virtual string strMoodKind
