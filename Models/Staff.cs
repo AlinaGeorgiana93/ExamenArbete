@@ -17,9 +17,10 @@ public class Staff : IStaff
 
 
 
-    //public virtual List<IPatient> Patients{ get; set; }
+    public virtual List<IPatient> Patients{ get; set; }
     public virtual List<IMood> Moods {get; set;}
     public virtual List <IActivity> Activities{ get; set; }
     public virtual List <IAppetite> Appetites{ get; set; }
+    
 
 }
