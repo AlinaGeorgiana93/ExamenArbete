@@ -24,21 +24,12 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     public string dbConnection  => _databaseConnections.GetDbConnection(this.Database.GetConnectionString());
 
     #region C# model of database tables
-        //public DbSet<Patient> Patients { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
-        public DbSet<Activity> Activitys { get; set; }
-        public DbSet<Mood> Moods { get; set; }
-        public DbSet<Sleep> Sleeps { get; set; }
-        public DbSet<Appetite> Appetites { get; set; }
-        public DbSet<Graph> Graphs { get; set; }
+    public DbSet<MoodDbM> Moods { get; set; }    
+    public DbSet<ActivityDbM> Activities { get; set; }    
+    public DbSet<StaffDbM> Staffs { get; set; }    
+    public DbSet<UserDbM> Users { get; set; }    
     #endregion
 
-    #region model the Views
-    public DbSet<GstUsrInfoDbDto> InfoDbView { get; set; }
-    public DbSet<GstUsrInfoMoodDto> InfoMoodView { get; set; }
-    public DbSet<GstUsrInfoActivitiesDto> InfoActivityView { get; set; }
-    public DbSet<GstUsrInfoStaffsDto> InfoStaffView { get; set; }
-    #endregion
 
     #region constructors
     public MainDbContext() { }
@@ -49,23 +40,14 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     }
     #endregion
 
+    public DbSet<GstUsrInfoDbDto> InfoDbView { get; set; }
+    public DbSet<GstUsrInfoStaffsDto> InfoStaffsView { get; set; }
+
     //Here we can modify the migration building
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        #region model the Views
-        modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
-        modelBuilder.Entity<GstUsrInfoMoodDto>().ToView("vwInfoMoods", "gstusr").HasNoKey();        
-        modelBuilder.Entity<GstUsrInfoActivitiesDto>().ToView("vwInfoActivity", "gstusr").HasNoKey();        
-        modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();        
-        #endregion
-
-        #region override modelbuilder
-        //Tokens can be very long
-        modelBuilder.Entity<CreditCardDbM>()
-            .Property(a => a.EnryptedToken).HasColumnType("nvarchar(max)");
-        #endregion
-        
-        base.OnModelCreating(modelBuilder);
+     modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
+      modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();   
     }
 
     #region DbContext for some popular databases
@@ -233,5 +215,4 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     }
     #endregion
 }
-
 

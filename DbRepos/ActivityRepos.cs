@@ -33,7 +33,7 @@ public class ActivityDbRepos
         }
         else
         {
-            query = _dbContext.Activitys.AsNoTracking()
+            query = _dbContext.Activities.AsNoTracking()
                 .Where(i => i.ActivityId == id);
         }
 
@@ -118,7 +118,7 @@ public class ActivityDbRepos
 
     public async Task<ResponseItemDto<IActivity>> UpdateItemAsync(ActivityCuDto itemDto)
     {
-        var query1 = _dbContext.Activitys
+        var query1 = _dbContext.Activities
             .Where(i => i.ActivityId == itemDto.ActivityId);
         var item = await query1
                 .Include(i => i.PatientDbM)
@@ -132,10 +132,10 @@ public class ActivityDbRepos
         item.UpdateFromDTO(itemDto);
 
         //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Activitys.Update(item);
+        _dbContext.Activities.Update(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
@@ -154,10 +154,10 @@ public class ActivityDbRepos
         var item = new ActivityDbM(itemDto);
 
         //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+      //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Activitys.Add(item);
+        _dbContext.Activities.Add(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
