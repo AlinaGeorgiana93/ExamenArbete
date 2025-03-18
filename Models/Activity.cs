@@ -10,11 +10,11 @@ public class Activity:IActivity
 
     public ActivityLevel ActivityLevel { get; set; } // e.g., Low, Medium, High
     
-    public  DateTime Date { get; set; }
+    public virtual  DateTime Date { get; set; }
 
-    public DayOfWeek Day { get; set; }
+    public  virtual DayOfWeek Day { get; set; }
 
-    public string Notes { get; set; } // Additional notes about the appetite
+    public virtual string Notes { get; set; } // Additional notes about the appetite
     
 
 

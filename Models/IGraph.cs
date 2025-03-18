@@ -8,7 +8,7 @@ namespace Models
         Guid GraphId { get; set; }
         DateTime Date { get; set; }
 
-        public IPatient Patient { get; set; }  // Patient linked to this Graph
+      //  public IPatient Patient { get; set; }  // Patient linked to this Graph
 
         List<IActivity> Activities { get; set; }
         List<IAppetite> Appetites { get; set; }

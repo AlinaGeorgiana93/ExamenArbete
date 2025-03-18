@@ -27,12 +27,12 @@ public class AppetiteDbM : Appetite//, ISeed<AppetiteDbM>
     }
     #endregion
     
-    [NotMapped]
-    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
+    // [NotMapped]
+    // public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
-    [JsonIgnore]
-    [Required]
-    public  PatientDbM PatientDbM { get; set; }
+    // [JsonIgnore]
+    // [Required]
+    // public  PatientDbM PatientDbM { get; set; }
 
     // public override AppetiteDbM Seed (SeedGenerator _seeder)
     // {

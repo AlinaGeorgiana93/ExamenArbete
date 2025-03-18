@@ -27,7 +27,7 @@ public class ActivityDbRepos
         IQueryable<ActivityDbM> query;
         if (!flat)
         {
-            query = _dbContext.Activitys.AsNoTracking()
+            query = _dbContext.Activities.AsNoTracking()
                 .Include(i => i.PatientDbM)
                 .Where(i => i.ActivityId == id);
         }
@@ -51,11 +51,11 @@ public class ActivityDbRepos
         IQueryable<ActivityDbM> query;
         if (flat)
         {
-            query = _dbContext.Activitys.AsNoTracking().Cast<ActivityDbM>();
+            query = _dbContext.Activities.AsNoTracking().Cast<ActivityDbM>();
         }
         else
         {
-            query = _dbContext.Activitys.AsNoTracking()
+            query = _dbContext.Activities.AsNoTracking()
                 .Include(i => i.PatientDbM);
         }
 
@@ -95,7 +95,7 @@ public class ActivityDbRepos
 
     public async Task<ResponseItemDto<IActivity>> DeleteItemAsync(Guid id)
     {
-        var query1 = _dbContext.Activitys
+        var query1 = _dbContext.Activities
             .Where(i => i.ActivityId == id);
 
         var item = await query1.Cast<ActivityDbM>().FirstOrDefaultAsync();
@@ -104,7 +104,7 @@ public class ActivityDbRepos
         if (item == null) throw new ArgumentException($"Item {id} is not existing");
 
         //delete in the database model
-        _dbContext.Activitys.Remove(item);
+        _dbContext.Activities.Remove(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
