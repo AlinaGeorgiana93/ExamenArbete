@@ -13,11 +13,12 @@ public class PatientCuDto
 
 
 
-    public virtual List<Guid> GraphId { get; set; } = null;
-    public virtual List<Guid> MoodId { get; set; } = null;
-    public virtual List<Guid> ActivityId { get; set; } = null;
-    public virtual List<Guid> AppetiteId { get; set; } = null;
-   
+    public virtual List<Guid> GraphsId { get; set; } = null;
+     public virtual List<Guid> ActivitiesId { get; set; } = null;
+    public virtual List<Guid> AppetitesId { get; set; } = null;
+    public virtual List<Guid> MoodsId { get; set; } = null;
+    public virtual List<Guid> SleepsId { get; set; } = null;
+
 
 
     public PatientCuDto() { }
@@ -28,11 +29,12 @@ public class PatientCuDto
         LastName= org.LastName;
         PersonalNumber = org.PersonalNumber;
         
-         GraphId = org.Graphs?.Select(i => i.GraphId).ToList();
-         MoodId = org.Moods?.Select(i => i.MoodId).ToList();
-         ActivityId = org.Activities?.Select(e => e.ActivityId).ToList();
-         AppetiteId = org.Appetites?.Select(e => e.AppetiteId).ToList();
-        // PatientId = org.Patients?.Select(e => e.PatientId).ToList();
+        GraphsId = org.Graphs?.Select(i => i.GraphId).ToList();
+        MoodsId = org.Moods?.Select(i => i.MoodId).ToList();
+        ActivitiesId  = org.Activities?.Select(e => e.ActivityId).ToList();
+        AppetitesId = org.Appetites?.Select(e => e.AppetiteId).ToList();
+
+        //PatientId = org.Patient?.Select(e => e.PatientId).ToList();
 
     }
 }
