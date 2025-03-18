@@ -15,7 +15,7 @@ namespace AppWebApi.Controllers
         readonly IPatientService _service = null;
         readonly ILogger< AppetitesController> _logger = null;
 
-        public  AppetitesController(IZooService service, ILogger< AppetitesController> logger)
+        public  AppetitesController(IPatientService service, ILogger< AppetitesController> logger)
         {
             _service = service;
             _logger = logger;
