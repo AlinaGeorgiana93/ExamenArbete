@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -9,64 +9,63 @@ using DbContext;
 
 namespace DbRepos;
 
-public class MoodDbRepos
+public class SleepDbRepos
 {
-    private readonly ILogger<MoodDbRepos> _logger;
+    private readonly ILogger<SleepDbRepos> _logger;
     private readonly MainDbContext _dbContext;
 
     #region contructors
-    public MoodDbRepos(ILogger<MoodDbRepos> logger, MainDbContext context)
+    public SleepDbRepos(ILogger<SleepDbRepos> logger, MainDbContext context)
     {
         _logger = logger;
         _dbContext = context;
     }
     #endregion
 
-    public async Task<ResponseItemDto<IMood>> ReadItemAsync(Guid id, bool flat)
+    public async Task<ResponseItemDto<ISleep>> ReadItemAsync(Guid id, bool flat)
     {
-        IQueryable<MoodDbM> query;
+        IQueryable<SleepDbM> query;
         if (!flat)
         {
-            query = _dbContext.Moods.AsNoTracking()
-                .Include(i => i.PatientDbM)
-                .Where(i => i.MoodId == id);
+            query = _dbContext.Sleeps.AsNoTracking()
+               // .Include(i => i.PatientDbM)
+                .Where(i => i.SleepId == id);
         }
         else
         {
-            query = _dbContext.Moods.AsNoTracking()
-                .Where(i => i.MoodId == id);
+            query = _dbContext.Sleeps.AsNoTracking()
+               .Where(i => i.SleepId == id);
         }
 
-        var resp = await query.FirstOrDefaultAsync<IMood>();
-        return new ResponseItemDto<IMood>()
+        var resp = await query.FirstOrDefaultAsync<ISleep>();
+        return new ResponseItemDto<ISleep>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = resp
         };
     }
 
-    public async Task<ResponsePageDto<IMood>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<ISleep>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
-        IQueryable<MoodDbM> query;
+        IQueryable<SleepDbM> query;
         if (flat)
         {
-            query = _dbContext.Moods.AsNoTracking();
+            query = _dbContext.Sleeps.AsNoTracking();
         }
         else
         {
-            query = _dbContext.Moods.AsNoTracking()
+            query = _dbContext.Sleeps.AsNoTracking()
                 .Include(i => i.PatientDbM);
         }
 
-        var ret = new ResponsePageDto<IMood>()
+        var ret = new ResponsePageDto<ISleep>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             DbItemsCount = await query
 
-                // Adding filter functionality
                 .Where(i => 
-                (i.strLevel.ToLower().Contains(filter) ||
+                (i.strSleepLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
                  i.Day.ToString().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter)))
@@ -74,18 +73,16 @@ public class MoodDbRepos
 
             PageItems = await query
 
-                    // Adding filter functionality
                 .Where(i => 
-                    (i.strKind.ToLower().Contains(filter) ||
+                    (i.strSleepLevel.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.Day.ToString().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter)))
 
-                // Adding paging
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
 
-                .ToListAsync<IMood>(),
+                .ToListAsync<ISleep>(),
 
             PageNr = pageNumber,
             PageSize = pageSize
@@ -93,82 +90,82 @@ public class MoodDbRepos
         return ret;
     }
 
-    public async Task<ResponseItemDto<IMood>> DeleteItemAsync(Guid id)
+    public async Task<ResponseItemDto<ISleep>> DeleteItemAsync(Guid id)
     {
-        var query1 = _dbContext.Moods
-            .Where(i => i.MoodId == id);
+        var query1 = _dbContext.Sleeps
+            .Where(i => i.SleepId == id);
 
-        var item = await query1.FirstOrDefaultAsync<MoodDbM>();
+        var item = await query1.FirstOrDefaultAsync<SleepDbM>();
 
         //If the item does not exists
         if (item == null) throw new ArgumentException($"Item {id} is not existing");
 
         //delete in the database model
-        _dbContext.Moods.Remove(item);
+        _dbContext.Sleeps.Remove(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<IMood>()
+        return new ResponseItemDto<ISleep>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
     }
 
-    public async Task<ResponseItemDto<IMood>> UpdateItemAsync(MoodCuDto itemDto)
+    public async Task<ResponseItemDto<ISleep>> UpdateItemAsync(SleepCuDto itemDto)
     {
-        var query1 = _dbContext.Moods
-            .Where(i => i.MoodId == itemDto.MoodId);
+        var query1 = _dbContext.Sleeps
+            .Where(i => i.SleepId == itemDto.SleepId);
         var item = await query1
-                .Include(i => i.PatientDbM)
-                .FirstOrDefaultAsync<MoodDbM>();
+               // .Include(i => i.PatientDbM)
+                .FirstOrDefaultAsync<SleepDbM>();
 
         //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
+        if (item == null) throw new ArgumentException($"Item {itemDto.SleepId} is not existing");
 
         //transfer any changes from DTO to database objects
         //Update individual properties 
         item.UpdateFromDTO(itemDto);
 
         //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+       // await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Moods.Update(item);
+        _dbContext.Sleeps.Update(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.MoodId, false);    
+        return await ReadItemAsync(item.SleepId, false);    
     }
 
-    public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
+    public async Task<ResponseItemDto<ISleep>> CreateItemAsync(SleepCuDto itemDto)
     {
-        if (itemDto.MoodId != null)
-            throw new ArgumentException($"{nameof(itemDto.MoodId)} must be null when creating a new object");
+        if (itemDto.SleepId != null)
+            throw new ArgumentException($"{nameof(itemDto.SleepId)} must be null when creating a new object");
 
         //transfer any changes from DTO to database objects
         //Update individual properties
-        var item = new MoodDbM(itemDto);
+        var item = new SleepDbM(itemDto);
 
         //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+       // await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Appetites.Add(item);
+        _dbContext.Sleeps.Add(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.MoodId, false);    
+        return await ReadItemAsync(item.SleepId, false);    
     }
-
-    private async Task navProp_ItemCUdto_to_ItemDbM(MoodCuDto itemDtoSrc, MoodDbM itemDst)
+/* 
+    private async Task navProp_ItemCUdto_to_ItemDbM(SleepCuDto itemDtoSrc, SleepDbM itemDst)
     {
-       
+        //update zoo nav props
         var patient = await _dbContext.Patients.FirstOrDefaultAsync(
             a => (a.PatientId == itemDtoSrc.PatientId));
 
@@ -176,5 +173,5 @@ public class MoodDbRepos
             throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
 
         itemDst.PatientDbM = patient;
-    }
+    } */
 }

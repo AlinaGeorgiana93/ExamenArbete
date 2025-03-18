@@ -1,6 +1,6 @@
 #!/bin/bash
 #To make the .sh file executable
-#sudo chmod +x ./database-rebuild-all.sh
+#sudo chmod +x ./database-rebuild-all.sh local
 
 if [[ -z "$1" ]]; then
     printf "\nMissing parameter:\n  ./database-rebuild-all.sh [local | azure]\n"

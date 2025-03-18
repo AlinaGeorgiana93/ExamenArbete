@@ -8,14 +8,16 @@ public class Mood : IMood
 
     public virtual Guid MoodId { get; set;}
    
-    public virtual MoodKind Kind { get; set; }
+    public  MoodKind MoodKind { get; set; }
 
-    public DateTime Date { get; set; }
+    public virtual DateTime Date { get; set; }
 
-    public DayOfWeek Day { get; set; }
+    public virtual DayOfWeek Day { get; set; }
     
-    //Navigation properties
-    // public Graph Graph { get; set; }
-    // public List<Patient> Patient { get; set; }   // public List<Patient> Patient { get; set; } 
-    
+    public virtual string Notes { get; set; } // Additional notes about the appetite
+
+
+   //Navigation properties
+   // public Virtual IPatient Patient { get; set; }
+   // public Virtual IGraph Graph { get; set; }
 }

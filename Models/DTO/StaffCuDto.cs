@@ -12,7 +12,7 @@ namespace Models.DTO;
 //These DTO are simplistic and used to Update and Create objects
 public class StaffCuDto
 {
-    public Guid StaffId { get ; set ; }
+    public virtual Guid? StaffId { get ; set ; }
     public string FirstName { get; set ; }
     public string LastName { get ; set; }
     public string PersonalNumber { get ; set ; }

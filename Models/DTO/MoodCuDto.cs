@@ -14,25 +14,28 @@ public class MoodCuDto
 {
     public virtual Guid? MoodId { get; set; }
 
-    public MoodKind Kind { get; set; }
+    public MoodKind  MoodKind { get; set; }
 
     public DateTime Date { get; set; }
 
     public DayOfWeek Day { get; set; }
+     public string Notes { get; set; } 
 
 
-    //public virtual List<Guid> PatientId { get; set; } = null;
+
+   //public virtual Guid? PatientId { get; set; } = null;
 
 
     public MoodCuDto() { }
     public MoodCuDto(IMood org)
     {
         MoodId = org.MoodId;
-        Kind = org.Kind;
+        MoodKind = org.MoodKind;
         Date = org.Date;
         Day = org.Day;
         
-       // AnimalsId = org.Animals?.Select(i => i.AnimalId).ToList();
-       // EmployeesId = org.Employees?.Select(e => e.EmployeeId).ToList();
+       // PatientId = org?.Patient?.PatientId;
+
+      
     }
 }
