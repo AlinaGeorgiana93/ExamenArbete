@@ -32,12 +32,12 @@ public class GraphDbRepos
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM)
-                .Include(i => i.PatientsDbM)
+               // .Include(i => i.PatientsDbM)
                 .Where(i => i.GraphId == id);
         }
         else
         {
-            query = _dbContext.s.AsNoTracking()
+            query = _dbContext.Graphs.AsNoTracking()
                 .Where(i => i.GraphId == id);
         }   
 
@@ -63,8 +63,8 @@ public class GraphDbRepos
                 .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
-                .Include(i => i.AppetitesDbM)
-                .Include(i => i.PatientsDbM);
+                .Include(i => i.AppetitesDbM);
+               // .Include(i => i.PatientsDbM);
         }
 
         return new ResponsePageDto<IGraph>()
@@ -130,7 +130,7 @@ public class GraphDbRepos
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM)
-                .Include(i => i.PatientsDbM);
+              //  .Include(i => i.PatientsDbM)
             .FirstOrDefaultAsync<GraphDbM>();
 
         //If the item does not exists

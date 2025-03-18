@@ -29,9 +29,9 @@ public class StaffDbRepos
         {
             query = _dbContext.Staffs.AsNoTracking()
                 .Include(i => i.MoodsDbM)
-                .Include(i => i.ActivityDbM)
-                //.Include(i=> i.AppetiteDbM)
-                // .Include(i => i.SleepDbM)
+               .Include(i => i.ActivitiesDbM)
+                .Include(i=> i.AppetitesDbM)
+                .Include(i => i.SleepsDbM)
                 // .Include(i => i.PatientsDbM)
                 .Where(i => i.StaffId == id);
         }
@@ -59,10 +59,10 @@ public class StaffDbRepos
          {
             query = _dbContext.Staffs.AsNoTracking()
              .Include(i => i.MoodsDbM)
-                .Include(i => i.ActivityDbM);
-                //.Include(i=> i.AppetiteDbM)
-                // .Include(i => i.SleepDbM)
-                // .Include(i => i.PatientsDbM)
+                .Include(i => i.ActivitiesDbM)
+                .Include(i=> i.AppetitesDbM)
+                 .Include(i => i.SleepsDbM);
+              //   .Include(i => i.PatientsDbM)
          }
          
 
@@ -71,8 +71,6 @@ public class StaffDbRepos
               i.FirstName.ToLower().Contains(filter) ||
               i.LastName.ToLower().Contains(filter) ||
               i.PersonalNumber.ToLower().Contains(filter) 
-            //  i.AddressDbM.City.ToLower().Contains(filter) ||
-            //  i.AddressDbM.Country.ToLower().Contains(filter)
            ));
 
         return new ResponsePageDto<IStaff>
@@ -134,8 +132,8 @@ public class StaffDbRepos
             .Where(i => i.StaffId == itemDto.StaffId);
         var item = await query1
             .Include(i => i.MoodsDbM)
-            .Include(i => i.ActivityDbM)
-           // .Include(i => i.AppetiteDbM)
+            .Include(i => i.ActivitiesDbM)
+            .Include(i => i.AppetitesDbM)
             .FirstOrDefaultAsync<StaffDbM>();
 
         if (item == null) throw new ArgumentException($"Item {itemDto.StaffId} is not existing");

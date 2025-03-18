@@ -22,11 +22,21 @@ public class StaffDbM : Staff, ISeed<StaffDbM>
     public List<MoodDbM> MoodsDbM { get; set; }
 
     [NotMapped]
-    public override List<IActivity> Activities { get => ActivityDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
+    public override List<IActivity> Activities { get => ActivitiesDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<ActivityDbM> ActivityDbM { get; set; }
+    public List<ActivityDbM> ActivitiesDbM { get; set; }
     public bool Seeded { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    [NotMapped]
+    public override List<ISleep> Sleeps { get => SleepsDbM?.ToList<ISleep>(); set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    public List<SleepDbM> SleepsDbM { get; set; }
+
+     public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    public List<AppetiteDbM> AppetitesDbM { get; set; }
 
 
     // public override StaffDbM Seed (SeedGenerator _seeder)
