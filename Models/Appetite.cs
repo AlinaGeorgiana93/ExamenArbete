@@ -7,13 +7,13 @@ namespace Models
     {
         
         public virtual Guid AppetiteId { get; set; }
-        public AppetiteLevel AppetiteLevel { get; set; } // e.g., Low, Medium, High
-        public DateTime Date { get; set; }
-        public DayOfWeek Day { get; set; }
-        public string Notes { get; set; } // Additional notes about the appetite
+        public virtual AppetiteLevel AppetiteLevel { get; set; } // e.g., Low, Medium, High
+        public virtual DateTime Date { get; set; }
+        public virtual DayOfWeek Day { get; set; }
+        public virtual string Notes { get; set; } // Additional notes about the appetite
 
         // Navigation property to Patient
-          //public virtual IPatient Patient { get; set; }
-          //public virtual IGraph Graph { get; set; }
+          public virtual IPatient Patient { get; set; }
+          public virtual IGraph Graph { get; set; }
     }
 }

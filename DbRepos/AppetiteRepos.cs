@@ -29,6 +29,7 @@ public class AppetiteDbRepos
         {
             query = _dbContext.Appetites.AsNoTracking()
                 .Include(i => i.PatientDbM)
+                .Include(i => i.GraphDbM)
                 .Where(i => i.AppetiteId == id);
         }
         else
@@ -56,7 +57,8 @@ public class AppetiteDbRepos
         else
         {
             query = _dbContext.Appetites.AsNoTracking()
-                .Include(i => i.PatientDbM);
+                .Include(i => i.PatientDbM)
+                .Include(i => i.GraphDbM);
         }
 
         var ret = new ResponsePageDto<IAppetite>()
@@ -122,6 +124,7 @@ public class AppetiteDbRepos
             .Where(i => i.AppetiteId == itemDto.AppetiteId);
         var item = await query1
                 .Include(i => i.PatientDbM)
+                .Include(i => i.GraphDbM)  // Include Graph
                 .FirstOrDefaultAsync<AppetiteDbM>();
 
         //If the item does not exists
@@ -168,7 +171,7 @@ public class AppetiteDbRepos
 
     private async Task navProp_ItemCUdto_to_ItemDbM(AppetiteCuDto itemDtoSrc, AppetiteDbM itemDst)
     {
-        //update zoo nav props
+        //update Patient nav props
         var patient = await _dbContext.Patients.FirstOrDefaultAsync(
             a => (a.PatientId == itemDtoSrc.PatientId));
 
@@ -176,5 +179,13 @@ public class AppetiteDbRepos
             throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
 
         itemDst.PatientDbM = patient;
+
+         var graph = await _dbContext.Graphs.FirstOrDefaultAsync(
+        g => (g.GraphId == itemDtoSrc.GraphId));
+
+    if (graph == null)
+        throw new ArgumentException($"Graph ID {itemDtoSrc.GraphId} does not exist");
+
+    itemDst.GraphDbM = graph;
     }
 }
