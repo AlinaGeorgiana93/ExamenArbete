@@ -13,8 +13,9 @@ public interface IPatient
     
 
     //Navigation properties
-    //public virtual List<IPatient> Patients{ get; set; }
-    //public virtual List<IMood> Moods {get; set;}
-   // public virtual List <IActivity> Activities{ get; set; }
-   // public virtual List <IApetite> Apetites{ get; set; }
+    public List<IGraph> Graphs{ get; set; }
+    public List<IMood> Moods {get; set;}
+    public List <IActivity> Activities{ get; set; }
+    public List <Isleep> Sleeps{ get; set; }
+    public List <IApetite> Apetites{ get; set; }
 }
