@@ -22,7 +22,7 @@ public class StaffCuDto
     //public virtual List<Guid> PatientId { get; set; } = null;
     //public virtual List<Guid> MoodId { get; set; } = null;
     //public virtual List<Guid> ActivityId { get; set; } = null;
-    //public virtual List<Guid> ApetiteId { get; set; } = null;
+    //public virtual List<Guid> AppetiteId { get; set; } = null;
    
 
 
@@ -36,7 +36,7 @@ public class StaffCuDto
         
        // MoodsId = org.Moods?.Select(i => i.MoodId).ToList();
        // ActivitysId = org.Activities?.Select(e => e.ActivityId).ToList();
-       //ApetitesId = org.Apetites?.Select(e => e.ApetiteId).ToList();
+       //AppetitesId = org.Appetites?.Select(e => e.AppetiteId).ToList();
        //PacientsId = org.Pacientes?.Select(e => e.PatientId).ToList();
 
     }

@@ -30,7 +30,7 @@ public class StaffDbRepos
             query = _dbContext.Staffs.AsNoTracking()
                 .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivityDbM)
-                //.Include(i=> i.ApetiteDbM)
+                //.Include(i=> i.AppetiteDbM)
                 // .Include(i => i.SleepDbM)
                 // .Include(i => i.PatientsDbM)
                 .Where(i => i.StaffId == id);
@@ -60,7 +60,7 @@ public class StaffDbRepos
             query = _dbContext.Staffs.AsNoTracking()
              .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivityDbM);
-                //.Include(i=> i.ApetiteDbM)
+                //.Include(i=> i.AppetiteDbM)
                 // .Include(i => i.SleepDbM)
                 // .Include(i => i.PatientsDbM)
          }
@@ -135,7 +135,7 @@ public class StaffDbRepos
         var item = await query1
             .Include(i => i.MoodsDbM)
             .Include(i => i.ActivityDbM)
-           // .Include(i => i.ApetiteDbM)
+           // .Include(i => i.AppetiteDbM)
             .FirstOrDefaultAsync<StaffDbM>();
 
         if (item == null) throw new ArgumentException($"Item {itemDto.StaffId} is not existing");
