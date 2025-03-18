@@ -7,7 +7,6 @@ using Models.DTO;
 using Services;
 using Configuration;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AppWebApi.Controllers
 {
@@ -49,67 +48,66 @@ namespace AppWebApi.Controllers
          }
 
 #if DEBUG
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+        // [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        //     Policy = null, Roles = "sysadmin")]
 
-        [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> Seed(string count = "10")
-        {
-            try
-            {
-                int countArg = int.Parse(count);
+        // [HttpGet()]
+        // [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
+        // [ProducesResponseType(400, Type = typeof(string))]
+        // public async Task<IActionResult> Seed(string count = "10")
+        // {
+        //     try
+        //     {
+        //         int countArg = int.Parse(count);
 
-                _logger.LogInformation($"{nameof(Seed)}: {nameof(countArg)}: {countArg}");
-                var info = await _adminService.SeedAsync(countArg);
-                return Ok(info);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(Seed)}: {ex.InnerException?.Message}");
-                return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
-            }
-        }
+        //         _logger.LogInformation($"{nameof(Seed)}: {nameof(countArg)}: {countArg}");
+        //         var info = await _adminService.SeedAsync(countArg);
+        //         return Ok(info);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError($"{nameof(Seed)}: {ex.InnerException?.Message}");
+        //         return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
+        //     }
+        // }
 
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+        // [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        //     Policy = null, Roles = "sysadmin")]
 
-        [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> RemoveSeed(string seeded = "true")
-        {
-            try
-            {
-                bool seededArg = bool.Parse(seeded);
+        // [HttpGet()]
+        // [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
+        // [ProducesResponseType(400, Type = typeof(string))]
+        // public async Task<IActionResult> RemoveSeed(string seeded = "true")
+        // {
+        //     try
+        //     {
+        //         bool seededArg = bool.Parse(seeded);
 
-                _logger.LogInformation($"{nameof(RemoveSeed)}: {nameof(seededArg)}: {seededArg}");
-                var info = await _adminService.RemoveSeedAsync(seededArg);
-                return Ok(info);        
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(RemoveSeed)}: {ex.InnerException?.Message}");
-                return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
-            }
-        }
+        //         _logger.LogInformation($"{nameof(RemoveSeed)}: {nameof(seededArg)}: {seededArg}");
+        //         var info = await _adminService.RemoveSeedAsync(seededArg);
+        //         return Ok(info);        
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError($"{nameof(RemoveSeed)}: {ex.InnerException?.Message}");
+        //         return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
+        //     }
+        // }
 
         //You need to run this with sysadmin connection string
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(UsrInfoDto))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> SeedUsers(string countUsr = "32", string countSupUsr = "2", string countSysAdmin = "1")
+        public async Task<IActionResult> SeedUsers(string countUsr = "10", string countSysAdmin = "1")
         {
             try
             {
                 int _countUsr = int.Parse(countUsr);
-                int _countSupUsr = int.Parse(countSupUsr);
                 int _countSysAdmin = int.Parse(countSysAdmin);
 
-                _logger.LogInformation($"{nameof(SeedUsers)}: {nameof(_countUsr)}: {_countUsr}, {nameof(_countSupUsr)}: {_countSupUsr}, {nameof(_countSysAdmin)}: {_countSysAdmin}");
+                _logger.LogInformation($"{nameof(SeedUsers)}: {nameof(_countUsr)}: {_countUsr}, {nameof(_countSysAdmin)}: {_countSysAdmin}");
 
-                UsrInfoDto _info = await _adminService.SeedUsersAsync(_countUsr, _countSupUsr, _countSysAdmin);
+                UsrInfoDto _info = await _adminService.SeedUsersAsync(_countUsr, _countSysAdmin);
                 return Ok(_info);           
             }
             catch (Exception ex)
