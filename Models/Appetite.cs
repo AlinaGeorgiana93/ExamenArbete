@@ -14,5 +14,6 @@ namespace Models
 
         // Navigation property to Patient
           //public virtual IPatient Patient { get; set; }
+          //public virtual IGraph Graph { get; set; }
     }
 }

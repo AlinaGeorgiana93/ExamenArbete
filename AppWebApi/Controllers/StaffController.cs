@@ -10,15 +10,15 @@ using Services;
 namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Policy = null, Roles = "usr, supusr, sysadmin")]
+        Policy = null, Roles = "staff, sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class StaffController : Controller
     {
-        readonly IMoodService _service = null;
+       readonly IStaffService _service = null;
         readonly ILogger<StaffController> _logger = null;
 
-        public StaffController(IMoodService service, ILogger<StaffController> logger)
+        public StaffController( IStaffService service, ILogger<StaffController> logger)
         {
             _service = service;
             _logger = logger;
@@ -40,7 +40,7 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(ReadItems)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
 
-                var resp = await _service.ReadMoodsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
+                var resp = await _service.ReadStaffsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
                 return Ok(resp);     
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace AppWebApi.Controllers
         }
 
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMood>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItem(string id = null, string flat = "false")
@@ -63,7 +63,7 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItem)}: {nameof(idArg)}: {idArg}, {nameof(flatArg)}: {flatArg}");
                 
-                var item = await _service.ReadMoodAsync(idArg, flatArg);
+                var item = await _service.ReadStaffAsync(idArg, flatArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
                 return Ok(item);         
@@ -76,9 +76,9 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpDelete("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMood>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> DeleteItem(string id)
         {
@@ -88,7 +88,7 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(DeleteItem)}: {nameof(idArg)}: {idArg}");
                 
-                var item = await _service.DeleteMoodAsync(idArg);
+                var item = await _service.DeleteStaffAsync(idArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
         
                 _logger.LogInformation($"item {idArg} deleted");
@@ -104,7 +104,7 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "supusr, sysadmin")]
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<MoodCuDto>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<StaffCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItemDto(string id = null)
@@ -115,13 +115,13 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItemDto)}: {nameof(idArg)}: {idArg}");
 
-                var item = await _service.ReadMoodAsync(idArg, false);
+                var item = await _service.ReadStaffAsync(idArg, false);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
                 return Ok(
-                    new ResponseItemDto<MoodCuDto>() {
+                    new ResponseItemDto<StaffCuDto>() {
                     DbConnectionKeyUsed = item.DbConnectionKeyUsed,
-                    Item = new MoodCuDto(item.Item)
+                    Item = new StaffCuDto(item.Item)
                 });
             }
             catch (Exception ex)
@@ -134,9 +134,9 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "supusr, sysadmin")]
         [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMood>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> UpdateItem(string id, [FromBody] MoodCuDto item)
+        public async Task<IActionResult> UpdateItem(string id, [FromBody] StaffCuDto item)
         {
             try
             {
@@ -144,9 +144,9 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
                 
-                if (item.MoodId != idArg) throw new ArgumentException("Id mismatch");
+                if (item.StaffId != idArg) throw new ArgumentException("Id mismatch");
 
-                var _item = await _service.UpdateMoodAsync(item);
+                var _item = await _service.UpdateStaffAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
                
                 return Ok(_item);             
@@ -163,14 +163,14 @@ namespace AppWebApi.Controllers
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMood>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> CreateItem([FromBody] MoodCuDto item)
+        public async Task<IActionResult> CreateItem([FromBody] StaffCuDto item)
         {
             try
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
                 
-                var _item = await _service.CreateMoodAsync(item);
-                _logger.LogInformation($"item {_item.Item.MoodId} created");
+                var _item = await _service.CreateStaffAsync(item);
+                _logger.LogInformation($"item {_item.Item.StaffId} created");
 
                 return Ok(_item);       
             }

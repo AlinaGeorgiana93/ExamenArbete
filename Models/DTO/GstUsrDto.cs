@@ -31,7 +31,6 @@ public class GstUsrInfoStaffsDto
     public string FirstName { get; set; } = null;
     public string LastName { get; set; } = null;
     public string PersonalNumber { get; set; } = null;
-    public int NrAnimals { get; set; } = 0;
 }
 
 public class GstUsrInfoActivitiesDto

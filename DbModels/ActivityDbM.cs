@@ -8,8 +8,8 @@ using Models.DTO;
 
 
 namespace DbModels;
-[Table("Activitys", Schema = "supusr")]
-public class ActivityDbM : Activity// ISeed<ActivityDbM>
+[Table("Activities", Schema = "supusr")]
+public class ActivityDbM : Activity // ISeed<ActivityDbM>
 {
     [Key]
     public override Guid ActivityId { get; set; }

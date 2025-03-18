@@ -1,4 +1,4 @@
---USE zooefc;
+--USE graphefc;
 --GO
 
 --01-create-schema.sql
@@ -84,24 +84,24 @@ GO
 
 --05-create-roles-credentials.sql
 --create roles
-CREATE ROLE zooefcGstUsr;
-CREATE ROLE zooefcUsr;
-CREATE ROLE zooefcSupUsr;
+CREATE ROLE graphefcGstUsr;
+CREATE ROLE graphefcUsr;
+CREATE ROLE graphefcSupUsr;
 
 --assign securables creadentials to the roles
-GRANT SELECT, EXECUTE ON SCHEMA::gstusr to zooefcGstUsr;
-GRANT SELECT ON SCHEMA::supusr to zooefcUsr;
-GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to zooefcSupUsr;
+GRANT SELECT, EXECUTE ON SCHEMA::gstusr to graphefcGstUsr;
+GRANT SELECT ON SCHEMA::supusr to graphefcUsr;
+GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to graphefcSupUsr;
 
 --finally, add the users to the roles
-ALTER ROLE zooefcGstUsr ADD MEMBER gstusrUser;
+ALTER ROLE graphefcGstUsr ADD MEMBER gstusrUser;
 
-ALTER ROLE zooefcGstUsr ADD MEMBER usrUser;
-ALTER ROLE zooefcUsr ADD MEMBER usrUser;
+ALTER ROLE graphefcGstUsr ADD MEMBER usrUser;
+ALTER ROLE graphefcUsr ADD MEMBER usrUser;
 
-ALTER ROLE zooefcGstUsr ADD MEMBER supusrUser;
-ALTER ROLE zooefcUsr ADD MEMBER supusrUser;
-ALTER ROLE zooefcSupUsr ADD MEMBER supusrUser;
+ALTER ROLE graphefcGstUsr ADD MEMBER supusrUser;
+ALTER ROLE graphefcUsr ADD MEMBER supusrUser;
+ALTER ROLE graphefcefcSupUsr ADD MEMBER supusrUser;
 GO
 
 --07-create-gstusr-login.sql
