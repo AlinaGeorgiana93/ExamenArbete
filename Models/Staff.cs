@@ -22,5 +22,6 @@ public class Staff : IStaff
     public virtual List <IActivity> Activities{ get; set; }
     public virtual List <IAppetite> Appetites{ get; set; }
     
+     public virtual List <ISleep> Sleeps{ get; set; }
 
 }

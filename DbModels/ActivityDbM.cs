@@ -14,7 +14,7 @@ public class ActivityDbM : Activity// ISeed<ActivityDbM>
     [Key]
     public override Guid ActivityId { get; set; }
 
-    public override DateTime Date {get;set}
+    public override DateTime Date {get;set;}
     public override DayOfWeek Day { get; set; }
 
     public override string Notes { get; set; }

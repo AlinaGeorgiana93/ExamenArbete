@@ -16,6 +16,7 @@ public class Sleep : ISleep
 
     //Navigation properties
    
-    //public virtual List<IPatient> Patients{ get; set; }
+     public virtual IPatient Patient { get; set; }
+    public  virtual IGraph Graph { get; set; }
     
 }

@@ -1,9 +1,9 @@
-// using DbRepos;
-// using Microsoft.Extensions.Logging;
-// using Models;
-// using Models.DTO;
+using DbRepos;
+using Microsoft.Extensions.Logging;
+using Models;
+using Models.DTO;
 
-// namespace Services;
+namespace Services;
 
 
 public class MoodServiceDb : IMoodService {
@@ -24,4 +24,4 @@ public class MoodServiceDb : IMoodService {
     public Task<ResponseItemDto<IMood>> CreateMoodAsync(MoodCuDto item) => _moodRepo.CreateItemAsync(item);
 
 
-// }
+}

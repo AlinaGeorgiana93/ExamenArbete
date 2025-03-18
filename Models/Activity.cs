@@ -20,8 +20,8 @@ public class Activity:IActivity
 
     
     //Navigation properties
-   // public Virtual IPatient Patient { get; set; }
-   // public  Virtual IGraph Graph { get; set; }
+   public virtual IPatient Patient { get; set; }
+   public  virtual IGraph Graph { get; set; }
  
 
 

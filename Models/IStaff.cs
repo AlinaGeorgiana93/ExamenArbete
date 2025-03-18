@@ -17,5 +17,7 @@ public interface IStaff
      public  List<IMood> Moods {get; set;}
      public List <IActivity> Activities{ get; set; }
      public List <IAppetite> Appetites{ get; set; }
-     public List <Patient> Patients { get; set; }
+     public List <IPatient> Patients { get; set; }
+     public List <ISleep> Sleeps { get; set; }
+
 }
