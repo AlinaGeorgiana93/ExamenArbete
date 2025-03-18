@@ -15,11 +15,10 @@ public class PatientDbM : Patient
     public override Guid PatientId { get; set; }
 
     [NotMapped]
-public override IGraph Graph { get => GraphDbM; set => GraphDbM = value as GraphDbM; }
-
+    public override List<IGraph> Graphs { get => GraphsDbM?.ToList<IGraph>(); set => throw new NotImplementedException(); }
     [JsonIgnore]
     [Required]
-    public PatientDbM GraphDbM { get; set; }  
+    public List<GraphDbM> GraphsDbM { get; set; }  
 
 
     [NotMapped]

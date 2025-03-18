@@ -67,7 +67,7 @@ public class ActivityDbRepos
                 // Adding filter functionality
                 .Where(i => 
                 (i.strActivityLevel.ToLower().Contains(filter) ||
-                 i.strDate.ToLower().Contains(filter) ||
+                 i.Date.ToString().Contains(filter) ||
                  i.Day.ToString().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter)))
                 .CountAsync(),
@@ -77,7 +77,7 @@ public class ActivityDbRepos
                     // Adding filter functionality
                 .Where(i => 
                     (i.strActivityLevel.ToLower().Contains(filter) ||
-                    i.strDate.ToLower().Contains(filter) ||
+                    i.Date.ToString().Contains(filter) ||
                     i.Day.ToString().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter)))
 

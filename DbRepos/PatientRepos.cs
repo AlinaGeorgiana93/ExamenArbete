@@ -32,12 +32,12 @@ public class PatientDbRepos
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM)
-                .Include(i => i.PatientsDbM)
+
                 .Where(i => i.PatientId == id);
         }
         else
         {
-            query = _dbContext.s.AsNoTracking()
+            query = _dbContext.Patients.AsNoTracking()
                 .Where(i => i.PatientId == id);
         }   
 
@@ -63,8 +63,8 @@ public class PatientDbRepos
                 .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
-                .Include(i => i.AppetitesDbM)
-                .Include(i => i.PatientsDbM);
+                .Include(i => i.AppetitesDbM);
+         
         }
 
         return new ResponsePageDto<IPatient>()
@@ -130,7 +130,6 @@ public class PatientDbRepos
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM)
-                .Include(i => i.PatientsDbM);
             .FirstOrDefaultAsync<PatientDbM>();
 
         //If the item does not exists

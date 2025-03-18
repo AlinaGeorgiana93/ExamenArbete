@@ -32,7 +32,7 @@ public class GraphDbRepos
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM)
-               // .Include(i => i.PatientsDbM)
+                .Include(i => i.PatientDbM)
                 .Where(i => i.GraphId == id);
         }
         else
@@ -63,8 +63,8 @@ public class GraphDbRepos
                 .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
-                .Include(i => i.AppetitesDbM);
-               // .Include(i => i.PatientsDbM);
+                .Include(i => i.AppetitesDbM)
+                .Include(i => i.PatientDbM);
         }
 
         return new ResponsePageDto<IGraph>()

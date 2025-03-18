@@ -14,13 +14,13 @@ public class GraphDbM : Graph
     [Key]
     public override Guid GraphId { get; set; }
 
-    // Fix: Link Graph to Patient
-    // [NotMapped]
-    // public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
+    //Fix: Link Graph to Patient
+    [NotMapped]
+    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
-    // [JsonIgnore]
-    // [Required]
-    // public PatientDbM PatientDbM { get; set; }  // Graph now belongs to a Patient
+    [JsonIgnore]
+    [Required]
+    public PatientDbM PatientDbM { get; set; }  // Graph now belongs to a Patient
 
 
     [NotMapped]

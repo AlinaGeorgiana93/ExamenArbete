@@ -45,13 +45,13 @@ public class ActivityDbM : Activity// ISeed<ActivityDbM>
     }
 
 
-    /*  [NotMapped]
+      [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
     public  PatientDbM PatientDbM { get; set; }
- */
+ 
 
     public ActivityDbM() { }
     public ActivityDbM(ActivityCuDto org)
