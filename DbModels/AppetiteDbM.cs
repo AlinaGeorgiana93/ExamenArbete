@@ -45,13 +45,21 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
     }
 
 
-    /*  [NotMapped]
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
     public  PatientDbM PatientDbM { get; set; }
- */
+
+    [NotMapped]
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  GraphDbM GraphDbM { get; set; }
+ 
+ 
 
     public AppetiteDbM() { }
     public AppetiteDbM(AppetiteCuDto org)
