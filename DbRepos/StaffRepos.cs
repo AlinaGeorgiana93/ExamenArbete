@@ -32,7 +32,7 @@ public class StaffDbRepos
                .Include(i => i.ActivitiesDbM)
                 .Include(i=> i.AppetitesDbM)
                 .Include(i => i.SleepsDbM)
-               // .Include(i => i.PatientsDbM)
+               .Include(i => i.PatientsDbM)
                 .Where(i => i.StaffId == id);
         }
         else
@@ -61,8 +61,8 @@ public class StaffDbRepos
              .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivitiesDbM)
                 .Include(i=> i.AppetitesDbM)
-                 .Include(i => i.SleepsDbM);
-              //   .Include(i => i.PatientsDbM)
+                 .Include(i => i.SleepsDbM)
+               .Include(i => i.PatientsDbM);
          }
          
 

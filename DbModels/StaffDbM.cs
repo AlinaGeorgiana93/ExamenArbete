@@ -33,16 +33,18 @@ public class StaffDbM : Staff, ISeed<StaffDbM>
     [JsonIgnore]
     public List<SleepDbM> SleepsDbM { get; set; }
 
+    [NotMapped]
      public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     public List<AppetiteDbM> AppetitesDbM { get; set; }
 
     
-     public override List<IPatient> Patients { get => PatientssDbM?.ToList<IPatient>(); set => throw new NotImplementedException(); }
+    [NotMapped]
+     public override List<IPatient> Patients { get => PatientsDbM?.ToList<IPatient>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<PatientDbM> PatientssDbM { get; set; }
+    public List<PatientDbM> PatientsDbM { get; set; }
 
 
     // public override StaffDbM Seed (SeedGenerator _seeder)

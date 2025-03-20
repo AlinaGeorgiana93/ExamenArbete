@@ -157,7 +157,7 @@ public class MoodDbRepos
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
-        _dbContext.Appetites.Add(item);
+        _dbContext.Moods.Add(item);
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
