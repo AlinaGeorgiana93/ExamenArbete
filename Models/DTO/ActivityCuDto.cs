@@ -23,7 +23,7 @@ public class ActivityCuDto
     
     public string Notes { get; set; } 
     
-    //public virtual Guid? PatientId { get; set; } = null;
+      public virtual Guid? PatientId { get; set; } = null;
 
 
     public ActivityCuDto() { }
@@ -35,6 +35,5 @@ public class ActivityCuDto
         Day = org.Day;
         Notes = org.Notes;
        
-        // PatientsId = org.Patients?.Select(i => i.PatientId).ToList();
-    }
+        PatientId = org?.Patient?.PatientId;    }
 }

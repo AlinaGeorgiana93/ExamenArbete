@@ -23,7 +23,7 @@ public class MoodCuDto
 
 
 
-   //public virtual Guid? PatientId { get; set; } = null;
+   public virtual Guid? PatientId { get; set; } = null;
 
 
     public MoodCuDto() { }
@@ -34,7 +34,7 @@ public class MoodCuDto
         Date = org.Date;
         Day = org.Day;
         
-       // PatientId = org?.Patient?.PatientId;
+       PatientId = org?.Patient?.PatientId;
 
       
     }

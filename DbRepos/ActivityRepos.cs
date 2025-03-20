@@ -132,7 +132,7 @@ public class ActivityDbRepos
         item.UpdateFromDTO(itemDto);
 
         //Update navigation properties
-     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.Activities.Update(item);
@@ -154,7 +154,7 @@ public class ActivityDbRepos
         var item = new ActivityDbM(itemDto);
 
         //Update navigation properties
-      //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.Activities.Add(item);
