@@ -10,15 +10,15 @@ using Services;
 namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Policy = null, Roles = "usr, supusr, sysadmin")]
+        Policy = null, Roles = "staff, sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class ActivityController : Controller
     {
-         readonly IPatientService _service = null;
+         readonly IActivityService _service = null;
         readonly ILogger<ActivityController> _logger = null;
 
-        public ActivityController(IPatientService service, ILogger<ActivityController> logger)
+        public ActivityController(IActivityService service, ILogger<ActivityController> logger)
         {
             _service = service;
             _logger = logger;
@@ -76,7 +76,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -102,7 +102,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = "sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<ActivityCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -132,7 +132,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -159,7 +159,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]

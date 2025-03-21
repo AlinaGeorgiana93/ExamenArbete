@@ -27,13 +27,13 @@ public class SleepDbM : Sleep//, ISeed<SleepDbM>
     }
     #endregion
     
-   /*  [NotMapped]
+   [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
     public  PatientDbM PatientDbM { get; set; }
- */
+
     // public override SleepDbM Seed (SeedGenerator _seeder)
     // {
     //     base.Seed (_seeder);

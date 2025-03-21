@@ -4,7 +4,6 @@ using Models;
 using Models.DTO;
 using Services;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AppWebApi.Controllers
 {
@@ -12,10 +11,10 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class AppetitesController : Controller
     {
-        readonly IPatientService _service = null;
+        readonly IAppetiteService _service = null;
         readonly ILogger< AppetitesController> _logger = null;
 
-        public  AppetitesController(IPatientService service, ILogger< AppetitesController> logger)
+        public  AppetitesController(IAppetiteService service, ILogger< AppetitesController> logger)
         {
             _service = service;
             _logger = logger;

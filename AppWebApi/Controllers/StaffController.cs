@@ -25,7 +25,7 @@ namespace AppWebApi.Controllers
         }
 
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IMood>))]
+        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IStaff>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> ReadItems(string seeded = "true", string flat = "true",
             string filter = null, string pageNr = "0", string pageSize = "10")
@@ -102,7 +102,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = "staff, sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<StaffCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -132,7 +132,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -159,7 +159,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMood>))]
         [ProducesResponseType(400, Type = typeof(string))]

@@ -23,6 +23,6 @@ public class SleepCuDto
         Day = org.Day;
         Notes = org.Notes;
 
-       // PatientId = org?.Patient?.PatientId;
+       PatientId = org?.Patient?.PatientId;
     }
 }

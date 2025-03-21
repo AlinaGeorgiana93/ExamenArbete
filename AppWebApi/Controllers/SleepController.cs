@@ -9,12 +9,12 @@ namespace AppWebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class SleepsController : Controller
+    public class SleepController : Controller
     {
-        readonly IPatientService _service = null;
-        readonly ILogger<SleepsController> _logger = null;
+        readonly ISleepService _service = null;
+        readonly ILogger<SleepController> _logger = null;
 
-        public SleepsController(IPatientService service, ILogger<SleepsController> logger)
+        public SleepController(ISleepService service, ILogger<SleepController> logger)
         {
             _service = service;
             _logger = logger;
