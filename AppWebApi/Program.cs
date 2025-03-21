@@ -61,17 +61,20 @@ builder.Services.AddSwaggerGen(options => {
 //Inject Custom logger
 builder.Services.AddSingleton<ILoggerProvider, InMemoryLoggerProvider>();
 builder.Services.AddScoped<AdminDbRepos>();
-//builder.Services.AddScoped<MoodDbRepos>();
+builder.Services.AddScoped<MoodDbRepos>();
 builder.Services.AddScoped<ActivityDbRepos>();
 builder.Services.AddScoped<StaffDbRepos>();
 builder.Services.AddScoped<LoginDbRepos>();
 builder.Services.AddScoped<GraphDbRepos>();
-builder.Services.AddScoped<IGraphService, GraphServiceDb>();
 builder.Services.AddScoped<AppetiteDbRepos>();
-builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+builder.Services.AddScoped<IGraphService, GraphServiceDb>();
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
-//builder.Services.AddScoped<IMoodService, MoodServiceDb>();
+builder.Services.AddScoped<IMoodService, MoodServiceDb>();
 builder.Services.AddScoped<ILoginService, LoginServiceDb>();
+builder.Services.AddScoped<IStaffService, StaffServiceDb>();
+builder.Services.AddScoped<IAppetiteService, AppetiteServiceDb>();
+builder.Services.AddScoped<IActivityService, ActivityServiceDb>();  
+
 
 var app = builder.Build();
 

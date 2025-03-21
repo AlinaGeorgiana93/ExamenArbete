@@ -14,13 +14,6 @@ public class ActivityDbM : Activity// ISeed<ActivityDbM>
     [Key]
     public override Guid ActivityId { get; set; }
 
-    public override DateTime Date {get;set;}
-    public override DayOfWeek Day { get; set; }
-
-    public override string Notes { get; set; }
-
-
-
 
     #region adding more readability to an enum type in the database
     public virtual string strActivityLevel
@@ -28,8 +21,14 @@ public class ActivityDbM : Activity// ISeed<ActivityDbM>
         get => ActivityLevel.ToString();
         set { } 
     }
+
+    public virtual string strDate
+    {
+      get => Date.ToString("yyyy-MM-dd"); // Exempelvis för att alltid få formatet "2025-03-21"
+      set { }
+    }  
     
-     #endregion
+    #endregion
 
    public ActivityDbM UpdateFromDTO(ActivityCuDto org)
     {

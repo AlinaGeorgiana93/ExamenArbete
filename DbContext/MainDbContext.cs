@@ -33,7 +33,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<PatientDbM> Patients{ get; set; }     
     public DbSet<UserDbM> Users { get; set; }    
 
-      public DbSet<GraphDbM> Graphs { get; set; }    
+    public DbSet<GraphDbM> Graphs { get; set; }    
     #endregion
 
 

@@ -29,7 +29,7 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
         get => Date.ToString();
         set { } 
     }
-     #endregion
+    #endregion
 
    public AppetiteDbM UpdateFromDTO(AppetiteCuDto org)
     {

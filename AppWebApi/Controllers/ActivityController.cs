@@ -40,7 +40,7 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(ReadItems)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
                 
-                var resp = await _service.ReadActivityAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
+                var resp = await _service.ReadActivitiesAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
                 return Ok(resp);
             }
             catch (Exception ex)

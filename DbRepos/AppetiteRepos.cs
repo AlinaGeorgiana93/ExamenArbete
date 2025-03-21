@@ -77,7 +77,7 @@ public class AppetiteDbRepos
             PageItems = await query
 
                     // Adding filter functionality
-                .Where(i => 
+                     .Where(i => 
                     (i.strAppetiteLevel.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.Day.ToString().Contains(filter) ||

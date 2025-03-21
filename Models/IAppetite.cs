@@ -14,7 +14,7 @@ namespace Models
         public DayOfWeek Day { get; set; }
         public string Notes { get; set; } // Additional notes about the appetite
 
-    //Navigation properties
+       //Navigation properties
         public IPatient Patient { get; set; }
         public IGraph Graph { get; set; } 
     }
