@@ -20,9 +20,6 @@ public class StaffCuDto
 
 
     public virtual List<Guid> PatientId { get; set; } = null;
-    public virtual List<Guid> MoodId { get; set; } = null;
-    public virtual List<Guid> ActivityId { get; set; } = null;
-    public virtual List<Guid> AppetiteId { get; set; } = null;
    
 
 
@@ -34,9 +31,6 @@ public class StaffCuDto
         LastName= org.LastName;
         PersonalNumber = org.PersonalNumber;
         
-       MoodId = org.Moods?.Select(i => i.MoodId).ToList();
-       ActivityId = org.Activities?.Select(e => e.ActivityId).ToList();
-       AppetiteId = org.Appetites?.Select(e => e.AppetiteId).ToList();
        PatientId = org.Patients?.Select(e => e.PatientId).ToList();
 
     }
