@@ -25,4 +25,4 @@ public class GraphServiceDb : IGraphService {
     public Task<ResponseItemDto<IGraph>> CreateGraphAsync(GraphCuDto item) => _graphRepo.CreateItemAsync(item);
 
 
-    }
+}

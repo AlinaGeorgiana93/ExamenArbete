@@ -14,7 +14,7 @@ public class SleepServiceDb : ISleepService
     
 
 
- public SleepServiceDb(SleepDbRepos sleepRepo, ILogger<SleepServiceDb> logger)
+    public SleepServiceDb(SleepDbRepos sleepRepo, ILogger<SleepServiceDb> logger)
     {
         _sleepRepo = sleepRepo;
         _logger = logger;

@@ -17,7 +17,7 @@ public class ActivityServiceDb : IActivityService {
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IActivity>> ReadActivityAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _activityRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponsePageDto<IActivity>> ReadActivitiesAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _activityRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IActivity>> ReadActivityAsync(Guid id, bool flat) => _activityRepo.ReadItemAsync(id, flat);
     public Task<ResponseItemDto<IActivity>> DeleteActivityAsync(Guid id) => _activityRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<IActivity>> UpdateActivityAsync(ActivityCuDto item) => _activityRepo.UpdateItemAsync(item);
