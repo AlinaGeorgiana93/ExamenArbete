@@ -26,20 +26,26 @@ public class SleepDbM : Sleep//, ISeed<SleepDbM>
         set { } 
     }
     #endregion
-    
-   [NotMapped]
+     public Guid PatientDbMPatientId { get; set; } 
+   
+         [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
-    public  PatientDbM PatientDbM { get; set; }
+    public PatientDbM PatientDbM { get; set; }
 
-         [NotMapped]
-    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+    
+        [JsonIgnore]
+        [Required]
+        public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
 
-    [JsonIgnore]
-    [Required]
-    public  GraphDbM GraphDbM { get; set; }
+        [NotMapped]
+        public override IGraph Graph
+        {
+            get => GraphDbM;
+            set => throw new NotImplementedException();
+        }
 
     // public override SleepDbM Seed (SeedGenerator _seeder)
     // {

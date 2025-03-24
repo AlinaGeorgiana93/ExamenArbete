@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-
 using Models;
 using Seido.Utilities.SeedGenerator;
 using Models.DTO;
@@ -16,36 +15,38 @@ public class PatientDbM : Patient
 
     [NotMapped]
     public override List<IGraph> Graphs { get => GraphsDbM?.ToList<IGraph>(); set => throw new NotImplementedException(); }
+
     [JsonIgnore]
     [Required]
-    public List<GraphDbM> GraphsDbM { get; set; }  
+    public List<GraphDbM> GraphsDbM { get; set; }  // Now using concrete class GraphDbM
 
 
     [NotMapped]
     public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<AppetiteDbM> AppetitesDbM { get; set; }
+    public List<AppetiteDbM> AppetitesDbM { get; set; }  // Now using concrete class AppetiteDbM
 
 
     [NotMapped]
     public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<MoodDbM> MoodsDbM { get; set; }
+    public List<MoodDbM> MoodsDbM { get; set; }  // Now using concrete class MoodDbM
 
-        [NotMapped]
+
+    [NotMapped]
     public override List<IActivity> Activities { get => ActivitiesDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<ActivityDbM> ActivitiesDbM { get; set; }
+    public List<ActivityDbM> ActivitiesDbM { get; set; }  // Now using concrete class ActivityDbM
 
 
     [NotMapped]
     public override List<ISleep> Sleeps { get => SleepsDbM?.ToList<ISleep>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<SleepDbM> SleepsDbM { get; set; }
+    public List<SleepDbM> SleepsDbM { get; set; }  // Now using concrete class SleepDbM
 
 
     public PatientDbM UpdateFromDTO(PatientCuDto org)
@@ -53,7 +54,6 @@ public class PatientDbM : Patient
         if (org == null) return null;
 
         PersonalNumber = org.PersonalNumber;
-
 
         return this;
     }

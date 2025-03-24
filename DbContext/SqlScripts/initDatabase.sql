@@ -13,33 +13,20 @@ GO
 --create a view that gives overview of the database content
 CREATE OR ALTER VIEW gstusr.vwInfoDb AS
     SELECT 'Guest user database overview' as Title,
-    (SELECT COUNT(*) FROM supusr.Zoos WHERE Seeded = 1) as nrSeededZoos, 
-    (SELECT COUNT(*) FROM supusr.Zoos WHERE Seeded = 0) as nrUnseededZoos,
-    (SELECT COUNT(*) FROM supusr.Animals WHERE Seeded = 1) as nrSeededAnimals, 
-    (SELECT COUNT(*) FROM supusr.Animals WHERE Seeded = 0) as nrUnseededAnimals,
-    (SELECT COUNT(*) FROM supusr.Employees WHERE Seeded = 1) as nrSeededEmployees, 
-    (SELECT COUNT(*) FROM supusr.Employees WHERE Seeded = 0) as nrUnseededEmployees,
-    (SELECT COUNT(*) FROM supusr.CreditCards WHERE Seeded = 1) as nrSeededCreditCards, 
-    (SELECT COUNT(*) FROM supusr.CreditCards WHERE Seeded = 0) as nrUnseededCreditCards
-
+    (SELECT COUNT(*) FROM supusr.Staffs) as nrStaffs  -- Removed Seeded filter
 GO
 
-CREATE OR ALTER VIEW gstusr.vwInfoZoos AS
-    SELECT z.Country, z.City, COUNT(*) as NrZoos  FROM supusr.Zoos z
-    GROUP BY z.Country, z.City WITH ROLLUP;
-GO
 
-CREATE OR ALTER VIEW gstusr.vwInfoAnimals AS
-    SELECT z.Country, z.City, z.Name as ZooName, COUNT(a.AnimalId) as NrAnimals FROM supusr.Zoos z
-    INNER JOIN supusr.Animals a ON a.ZooDbMZooId = z.ZooId
-    GROUP BY z.Country, z.City, z.Name WITH ROLLUP;
-GO
 
-CREATE OR ALTER VIEW gstusr.vwInfoEmployees AS
-    SELECT z.Country, z.City, z.Name as ZooName, COUNT(e.EmployeeId) as NrEmployees FROM supusr.Zoos z
-    INNER JOIN supusr.EmployeeDbMZooDbM ct ON ct.ZoosDbMZooId = z.ZooId
-    INNER JOIN supusr.Employees e ON e.EmployeeId = ct.EmployeesDbMEmployeeId
-    GROUP BY z.Country, z.City, z.Name WITH ROLLUP;
+
+CREATE OR ALTER VIEW gstusr.vwInfoStaffs AS
+    SELECT 
+        s.FirstName,      -- Staff first name
+        s.LastName,       -- Staff last name
+        COUNT(p.PatientId) as NrPatients  -- Number of patients assigned to this staff
+    FROM supusr.Staffs s
+    LEFT JOIN supusr.Patients p ON p.StaffId = s.StaffId  -- Assuming a relationship between Staff and Patients
+    GROUP BY s.FirstName, s.LastName WITH ROLLUP;
 GO
 
 
@@ -47,24 +34,34 @@ GO
 --03-create-supusr-sp.sql
 CREATE OR ALTER PROC supusr.spDeleteAll
     @Seeded BIT = 1
-
-    AS
-
+AS
+BEGIN
     SET NOCOUNT ON;
 
-    DELETE FROM supusr.Zoos WHERE Seeded = @Seeded;
-    DELETE FROM supusr.Animals WHERE Seeded = @Seeded;
-    DELETE FROM supusr.Employees WHERE Seeded = @Seeded;
+    -- Delete from the current project tables: Staffs, Patients, Moods, Activities, Appetites, Graphs
+    DELETE FROM supusr.Staffs WHERE Seeded = @Seeded;
+    DELETE FROM supusr.Patients WHERE Seeded = @Seeded;
+    DELETE FROM supusr.Moods WHERE Seeded = @Seeded;
+    DELETE FROM supusr.Activities WHERE Seeded = @Seeded;
+    DELETE FROM supusr.Appetites WHERE Seeded = @Seeded;
+    DELETE FROM supusr.Graphs WHERE Seeded = @Seeded;
 
+    -- Optionally, return the current overview of the database
     SELECT * FROM gstusr.vwInfoDb;
 
-    --throw our own error
-    --;THROW 999999, 'my own supusr.spDeleteAll Error directly from SQL Server', 1
+    -- Return the status
+    RETURN 0;  -- Success
 
-    --show return code usage
-    RETURN 0;  --indicating success
-    --RETURN 1;  --indicating your own error code, in this case 1
 GO
+
+-- Drop the existing constraint
+ALTER TABLE [supusr].[Activities] 
+DROP CONSTRAINT [FK_Activities_Patients_PatientDbMPatientId];
+
+-- Add a new constraint with ON DELETE SET NULL or NO ACTION
+ALTER TABLE [supusr].[Activities] 
+ADD CONSTRAINT [FK_Activities_Patients_PatientDbMPatientId]
+FOREIGN KEY ([PatientDbMPatientId]) REFERENCES [supusr].[Patients] ([PatientId]) ON DELETE SET NULL;
 
 
 --04-create-users.sql
@@ -90,8 +87,7 @@ CREATE LOGIN supusr WITH PASSWORD=N'pa$$Word1',
 DEFAULT_DATABASE=graphefc, DEFAULT_LANGUAGE=us_english, 
 CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;
 
-
---create 3 users from the logins, we will late set credentials for these
+--Create 3 users from the logins, we will later set credentials for these
 DROP USER IF EXISTS  gstusrUser;
 DROP USER IF EXISTS usrUser;
 DROP USER IF EXISTS supusrUser;
@@ -106,23 +102,20 @@ CREATE ROLE graphefcGstUsr;
 CREATE ROLE graphefcUsr;
 CREATE ROLE graphefcSupUsr;
 
---assign securables creadentials to the roles
+--assign securables credentials to the roles
 GRANT SELECT, EXECUTE ON SCHEMA::gstusr to graphefcGstUsr;
 GRANT SELECT ON SCHEMA::supusr to graphefcUsr;
 GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to graphefcSupUsr;
 
 --finally, add the users to the roles
 ALTER ROLE graphefcGstUsr ADD MEMBER gstusrUser;
-
 ALTER ROLE graphefcGstUsr ADD MEMBER usrUser;
 ALTER ROLE graphefcUsr ADD MEMBER usrUser;
-
 ALTER ROLE graphefcGstUsr ADD MEMBER supusrUser;
 ALTER ROLE graphefcUsr ADD MEMBER supusrUser;
 ALTER ROLE graphefcSupUsr ADD MEMBER supusrUser;
 GO
 
---07-create-gstusr-login.sql
 --07-create-gstusr-login.sql
 CREATE OR ALTER PROC gstusr.spLogin
     @UserNameOrEmail NVARCHAR(100),
@@ -131,26 +124,15 @@ CREATE OR ALTER PROC gstusr.spLogin
     @UserId UNIQUEIDENTIFIER OUTPUT,
     @UserName NVARCHAR(100) OUTPUT,
     @Role NVARCHAR(100) OUTPUT
-    
     AS
-
     SET NOCOUNT ON;
-    
+
     SET @UserId = NULL;
     SET @UserName = NULL;
     SET @Role = NULL;
-    
-    SELECT Top 1 @UserId = UserId, @UserName = UserName, @Role = [Role] FROM dbo.Users 
+
+    SELECT Top 1 @UserId = UserId, @UserName = UserName, @Role = [Role] 
+    FROM dbo.Users 
     WHERE ((UserName = @UserNameOrEmail) OR
-           (Email IS NOT NULL AND (Email = @UserNameOrEmail))) AND ([Password] = @Password);
-    
-    IF (@UserId IS NULL)
-    BEGIN
-        ;THROW 999999, 'Login error: wrong user or password', 1
-    END
-
-GO
-
-
-
-
+           (Email IS NOT NULL AND (Email = @UserNameOrEmail))) 
+           AND ([Password] = @Password

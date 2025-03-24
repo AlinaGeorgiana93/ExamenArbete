@@ -1,50 +1,53 @@
 ﻿using System;
-using Configuration;
+using System.Collections.Generic; // Required for List
 
-namespace Models.DTO;
-
-public class GstUsrInfoDbDto
+namespace Models.DTO
 {
-    public string Title {get;  set;}
-    public int NrSeededMoods { get; set; } = 0;
-    public int NrUnseededMoods { get; set; } = 0;
+    // Main summary information for guest user access
+    public class GstUsrInfoDbDto
+    {
+        public string Title { get; set; } // Title for the section (e.g., "Guest Access Overview")
+        
+        // Count of unseeded data (no distinction of seeded/unseeded, just unseeded counts)
+        public int NrMoods { get; set; } = 0; 
+        public int NrStaffs { get; set; } = 0; 
+        public int NrActivities { get; set; } = 0; 
+        public int NrAppetites { get; set; } = 0; 
+        public int NrGraphs { get; set; } = 0; 
+        public int NrPatients { get; set; } = 0; 
+        public int NrSleeps { get; set; } = 0; 
 
-    public int NrSeededStaffs { get; set; } = 0;
-    public int NrUnseededStaffs{ get; set; } = 0;
 
-    public int NrSeededActivities { get; set; } = 0;
-    public int NrUnseededActivities{ get; set; } = 0;
+    }
 
-    public int NrSeededCreditCards { get; set; } = 0;
-    public int NrUnseededCreditCards { get; set; } = 0;
+    // Represents mood information for the guest user
+    public class GstUsrInfoMoodsDto
+    {
+        public string MoodKind { get; set; } = null; // Type of mood (e.g., happy, sad, etc.)
+        public int NrMoods { get; set; } = 0; // Number of moods of this kind available to the guest
+    }
+
+    // Represents staff details for the guest user (basic info like name and personal number)
+    public class GstUsrInfoStaffsDto
+    {
+        public string FirstName { get; set; } = null; // Staff first name
+        public string LastName { get; set; } = null; // Staff last name
+        public int NrPatients { get; set; }    // Number of patients assigned to the staff
+     
+    }
+
+    // Represents the number of activities for the guest user
+    public class GstUsrInfoActivitiesDto
+    {
+        public int NrActivities { get; set; } = 0; // Number of activities available to the guest
+    }
+
+    // Combines all information for the guest user
+    public class GstUsrInfoAllDto
+    {
+        public GstUsrInfoDbDto Db { get; set; } = null; // General database info for guest
+        public List<GstUsrInfoActivitiesDto> Activities { get; set; } = new List<GstUsrInfoActivitiesDto>(); // List of activities info
+        public List<GstUsrInfoStaffsDto> Staffs { get; set; } = new List<GstUsrInfoStaffsDto>(); // List of staff info
+        public List<GstUsrInfoMoodsDto> Moods { get; set; } = new List<GstUsrInfoMoodsDto>(); // List of moods info
+    }
 }
-
-public class GstUsrInfoMoodDto
-{
-    public string MoodKind { get; set; } = null;
-    public int NrMoods { get; set; } = 0;
-   
-}
-
-public class GstUsrInfoStaffsDto
-{
-    public string FirstName { get; set; } = null;
-    public string LastName { get; set; } = null;
-    public string PersonalNumber { get; set; } = null;
-}
-
-public class GstUsrInfoActivitiesDto
-{
- 
-    public int NrActivities { get; set; } = 0;
-}
-
-public class GstUsrInfoAllDto
-{
-    public GstUsrInfoDbDto Db { get; set; } = null;
-    public List<GstUsrInfoActivitiesDto> Activities { get; set; } = null;
-    public List<GstUsrInfoStaffsDto> Staffs { get; set; } = null;
-   // public List<GstUsrInfoMoodsDto> Moods{ get; set; } = null;
-}
-
-

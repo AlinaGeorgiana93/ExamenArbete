@@ -15,8 +15,6 @@ public class Staff : IStaff
         throw new NotImplementedException();
     }
 
-
-
     public virtual List<IPatient> Patients{ get; set; }
   
 }

@@ -12,14 +12,13 @@ public class StaffDbM : Staff // ISeed<StaffDbM>
 {
     [Key]
     public override Guid StaffId { get; set; }
-
-    
+ 
     [NotMapped]
-     public override List<IPatient> Patients { get => PatientsDbM?.ToList<IPatient>(); set => throw new NotImplementedException(); }
+    public override List<IPatient> Patients { get => PatientsDbM?.ToList<IPatient>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<PatientDbM> PatientsDbM { get; set; }
-
+     [Required]
+     public  List <PatientDbM> PatientsDbM { get; set; }
 
     // public override StaffDbM Seed (SeedGenerator _seeder)
     // {

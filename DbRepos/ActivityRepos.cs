@@ -29,6 +29,7 @@ public class ActivityDbRepos
         {
             query = _dbContext.Activities.AsNoTracking()
                 .Include(i => i.PatientDbM)
+                .Include(i => i.GraphDbM) 
                 .Where(i => i.ActivityId == id);
         }
         else
