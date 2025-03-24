@@ -17,8 +17,6 @@ CREATE OR ALTER VIEW gstusr.vwInfoDb AS
 GO
 
 
-
-
 CREATE OR ALTER VIEW gstusr.vwInfoStaffs AS
     SELECT 
         s.FirstName,      -- Staff first name
@@ -54,18 +52,7 @@ BEGIN
 
 GO
 
--- Drop the existing constraint
-ALTER TABLE [supusr].[Activities] 
-DROP CONSTRAINT [FK_Activities_Patients_PatientDbMPatientId];
 
--- Add a new constraint with ON DELETE SET NULL or NO ACTION
-ALTER TABLE [supusr].[Activities] 
-ADD CONSTRAINT [FK_Activities_Patients_PatientDbMPatientId]
-FOREIGN KEY ([PatientDbMPatientId]) REFERENCES [supusr].[Patients] ([PatientId]) ON DELETE SET NULL;
-
-
---04-create-users.sql
---Create 3 logins
 IF SUSER_ID (N'gstusr') IS NOT NULL
 DROP LOGIN gstusr;
 
@@ -75,8 +62,8 @@ DROP LOGIN usr;
 IF SUSER_ID (N'supusr') IS NOT NULL
 DROP LOGIN supusr;
 
-CREATE LOGIN gstusr WITH PASSWORD=N'pa$$Word1', 
-    DEFAULT_DATABASE=graphefc, DEFAULT_LANGUAGE=us_english, 
+CREATE LOGIN gstusr WITH PASSWORD=N'pa$$Word1',
+    DEFAULT_DATABASE=graphefc, DEFAULT_LANGUAGE=us_english,
     CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;
 
 CREATE LOGIN usr WITH PASSWORD=N'pa$$Word1', 
@@ -124,15 +111,22 @@ CREATE OR ALTER PROC gstusr.spLogin
     @UserId UNIQUEIDENTIFIER OUTPUT,
     @UserName NVARCHAR(100) OUTPUT,
     @Role NVARCHAR(100) OUTPUT
+    
     AS
-    SET NOCOUNT ON;
 
+    SET NOCOUNT ON;
+    
     SET @UserId = NULL;
     SET @UserName = NULL;
     SET @Role = NULL;
-
-    SELECT Top 1 @UserId = UserId, @UserName = UserName, @Role = [Role] 
-    FROM dbo.Users 
+    
+    SELECT Top 1 @UserId = UserId, @UserName = UserName, @Role = [Role] FROM dbo.Users 
     WHERE ((UserName = @UserNameOrEmail) OR
-           (Email IS NOT NULL AND (Email = @UserNameOrEmail))) 
-           AND ([Password] = @Password
+           (Email IS NOT NULL AND (Email = @UserNameOrEmail))) AND ([Password] = @Password);
+    
+    IF (@UserId IS NULL)
+    BEGIN
+        ;THROW 999999, 'Login error: wrong user or password', 1
+    END
+
+GO
