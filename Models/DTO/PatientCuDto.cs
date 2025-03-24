@@ -6,7 +6,7 @@ using System.Xml.Linq;
 namespace Models.DTO;
 public class PatientCuDto
 {
-    public Guid PatientId { get ; set ; }
+    public Guid? PatientId { get ; set ; }
     public string FirstName { get; set ; }
     public string LastName { get ; set; }
     public string PersonalNumber { get ; set ; }

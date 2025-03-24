@@ -12,7 +12,7 @@ public class Patient : IPatient
     public string PersonalNumber { get ; set ; }
 
 
-    public virtual List<IPatient> Patients{ get; set; }
+    //public virtual List<IPatient> Patients{ get; set; }
 
     public virtual List<IGraph> Graphs{ get; set; }
     public virtual List<IMood> Moods {get; set;}

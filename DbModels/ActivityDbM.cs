@@ -31,7 +31,24 @@ public class ActivityDbM : Activity// ISeed<ActivityDbM>
     
      #endregion
 
-   public ActivityDbM UpdateFromDTO(ActivityCuDto org)
+   
+
+      [NotMapped]
+    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  PatientDbM PatientDbM { get; set; }
+
+     [NotMapped]
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  GraphDbM GraphDbM { get; set; }
+ 
+ 
+ public ActivityDbM UpdateFromDTO(ActivityCuDto org)
     {
         if (org == null) return null;
 
@@ -44,14 +61,6 @@ public class ActivityDbM : Activity// ISeed<ActivityDbM>
         return this;
     }
 
-
-      [NotMapped]
-    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
-
-    [JsonIgnore]
-    [Required]
-    public  PatientDbM PatientDbM { get; set; }
- 
 
     public ActivityDbM() { }
     public ActivityDbM(ActivityCuDto org)

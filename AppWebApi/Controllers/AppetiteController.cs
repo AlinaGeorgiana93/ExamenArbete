@@ -9,12 +9,12 @@ namespace AppWebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class AppetitesController : Controller
+    public class AppetiteController : Controller
     {
         readonly IAppetiteService _service = null;
-        readonly ILogger< AppetitesController> _logger = null;
+        readonly ILogger< AppetiteController> _logger = null;
 
-        public  AppetitesController(IAppetiteService service, ILogger< AppetitesController> logger)
+        public  AppetiteController(IAppetiteService service, ILogger< AppetiteController> logger)
         {
             _service = service;
             _logger = logger;

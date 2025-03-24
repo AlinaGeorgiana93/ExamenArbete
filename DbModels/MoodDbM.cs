@@ -49,6 +49,13 @@ public class MoodDbM : Mood//ISeed<MoodDbM>
     [JsonIgnore]
     [Required]
     public  PatientDbM PatientDbM { get; set; }
+
+     [NotMapped]
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  GraphDbM GraphDbM { get; set; }
  
 
     public MoodDbM() { }

@@ -34,6 +34,13 @@ public class SleepDbM : Sleep//, ISeed<SleepDbM>
     [Required]
     public  PatientDbM PatientDbM { get; set; }
 
+         [NotMapped]
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  GraphDbM GraphDbM { get; set; }
+
     // public override SleepDbM Seed (SeedGenerator _seeder)
     // {
     //     base.Seed (_seeder);
