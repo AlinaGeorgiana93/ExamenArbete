@@ -8,9 +8,9 @@
   </PropertyGroup>
 
    <PropertyGroup>
-    <UserSecretPath>C:\Users\Admin\AppData\Roaming\Microsoft\UserSecrets\</UserSecretPath>
-    <AzureScriptDirectory>C:\Users\Admin\OneDrive\Desktop\programering\Molntjänsterochsäkerhet\azuregitbash</AzureScriptDirectory>
-    <AzureProjectSettings>C:\Users\Admin\OneDrive\Desktop\programering\Molntjänsterochsäkerhet\azuregitbash\az-projects\newton-turquoise</AzureProjectSettings>
+    <UserSecretPath>C:\Users\Mona_\OneDrive\Skrivbord\systemutvecklare_Net_Newton\cloudsec\secrets</UserSecretPath>
+    <AzureScriptDirectory>C:\Users\Mona_\OneDrive\Skrivbord\systemutvecklare_Net_Newton\cloudsec\azuregitbash</AzureScriptDirectory>
+    <AzureProjectSettings>C:\Users\Mona_\OneDrive\Skrivbord\systemutvecklare_Net_Newton\cloudsec\azuregitbash</AzureProjectSettings>
   </PropertyGroup>
 
   <ItemGroup>
