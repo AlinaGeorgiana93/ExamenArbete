@@ -67,20 +67,20 @@ public class ActivityDbRepos
 
                 // Adding filter functionality
                 .Where(i => 
-                (i.strActivityLevel.ToLower().Contains(filter) ||
-                 i.strDate.ToString().Contains(filter) ||
-                 i.Day.ToString().Contains(filter) ||
-                 i.Notes.ToLower().Contains(filter)))
+                 i.strActivityLevel.ToLower().Contains(filter) ||
+                 i.strDate.ToLower().Contains(filter) ||
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
             PageItems = await query
 
                     // Adding filter functionality
                 .Where(i => 
-                    (i.strActivityLevel.ToLower().Contains(filter) ||
-                    i.strDate.ToString().Contains(filter) ||
-                    i.Day.ToString().Contains(filter) ||
-                    i.Notes.ToLower().Contains(filter)))
+                    i.strActivityLevel.ToLower().Contains(filter) ||
+                    i.strDate.ToLower().Contains(filter) ||
+                    i.strDayOfWeek.ToLower().Contains(filter) ||
+                    i.Notes.ToLower().Contains(filter))
 
                 // Adding paging
                 .Skip(pageNumber * pageSize)

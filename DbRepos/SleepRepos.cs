@@ -68,20 +68,20 @@ public class SleepDbRepos
 
                 // Adding filter functionality
                 .Where(i => 
-                (i.strSleepLevel.ToLower().Contains(filter) ||
+                i.strSleepLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
-                 i.Day.ToString().Contains(filter) ||
-                 i.Notes.ToLower().Contains(filter)))
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
             PageItems = await query
 
                     // Adding filter functionality
                      .Where(i => 
-                    (i.strSleepLevel.ToLower().Contains(filter) ||
+                    i.strSleepLevel.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
-                    i.Day.ToString().Contains(filter) ||
-                    i.Notes.ToLower().Contains(filter)))
+                    i.strDayOfWeek.ToLower().Contains(filter) ||
+                    i.Notes.ToLower().Contains(filter))
 
                 // Adding paging
                 .Skip(pageNumber * pageSize)

@@ -25,6 +25,13 @@ public class SleepDbM : Sleep//, ISeed<SleepDbM>
         get => Date.ToString();
         set { } 
     }
+
+     public virtual string strDayOfWeek
+        {
+            get => Day.ToString();
+            set { }
+        }
+
     #endregion
      public Guid PatientDbMPatientId { get; set; } 
    

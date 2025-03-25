@@ -104,6 +104,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 {
                     ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     strActivityLevel = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -144,6 +145,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 {
                     AppetiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     strAppetiteLevel = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -187,6 +189,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Day = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strMoodKind = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientDbMPatientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -225,6 +229,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     SleepId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     strSleepLevel = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientDbMPatientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),

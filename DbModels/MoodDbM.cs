@@ -28,6 +28,21 @@ public class MoodDbM : Mood//ISeed<MoodDbM>
         get => MoodKind.ToString();
         set { } 
     }
+
+
+     public virtual string strDayOfWeek
+        {
+            get => Day.ToString();
+            set { }
+        }
+
+        
+        public virtual string strDate
+        {
+            get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
+            set { }
+        }
+
      #endregion
 
    public MoodDbM UpdateFromDTO(MoodCuDto org)

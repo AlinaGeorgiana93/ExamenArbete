@@ -24,11 +24,16 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
         set { } 
     }
     
-    public virtual string strDate
-    {
-        get => Date.ToString();
-        set { } 
-    }
+        public virtual string strDayOfWeek
+        {
+            get => Day.ToString();
+            set { }
+        }
+        public virtual string strDate
+        {
+            get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
+            set { }
+        }
     #endregion
 
    public AppetiteDbM UpdateFromDTO(AppetiteCuDto org)

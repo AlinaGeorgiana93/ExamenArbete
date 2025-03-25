@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20250325125633_miInitial")]
+    [Migration("20250325144327_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -58,6 +58,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<string>("strDate")
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("strDayOfWeek")
+                        .HasColumnType("nvarchar(200)");
+
                     b.HasKey("ActivityId");
 
                     b.HasIndex("GraphDbMGraphId");
@@ -100,6 +103,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("strDate")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("strDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("AppetiteId");
@@ -166,6 +172,12 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("strDate")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("strDayOfWeek")
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("strMoodKind")
                         .HasColumnType("nvarchar(200)");
@@ -234,6 +246,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasColumnType("int");
 
                     b.Property<string>("strDate")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("strDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("strSleepLevel")
