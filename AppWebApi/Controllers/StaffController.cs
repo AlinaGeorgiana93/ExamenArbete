@@ -161,7 +161,8 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
         [HttpPost()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMood>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
+
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> CreateItem([FromBody] StaffCuDto item)
         {
