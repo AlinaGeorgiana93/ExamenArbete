@@ -79,43 +79,27 @@ public class StaffDbRepos
 
     } 
 
-    public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
+     public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
     {
-        var query = _dbContext.Staffs
-        .Where(a => a.StaffId == id);
-        var item = await query.FirstOrDefaultAsync();
+        var query1 = _dbContext.Staffs
+            .Where(i => i.StaffId == id);
 
-        if(item == null) throw new ArgumentException($"Item: {id} is not existing");
+        var item = await query1.FirstOrDefaultAsync<StaffDbM>();
 
+        //If the item does not exists
+        if (item == null) throw new ArgumentException($"Item {id} is not existing");
+
+        //delete in the database model
         _dbContext.Staffs.Remove(item);
 
+        //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<IStaff> 
+        return new ResponseItemDto<IStaff>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
-    }
- public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
-    {
-        if (itemDto.StaffId != null) 
-          throw new ArgumentException($"{nameof(itemDto.StaffId)} must be null when creating a new object");
-
-          var item = new StaffDbM(itemDto);
-
-          UpdateNavigationProp(itemDto, item);
-
-          _dbContext.Add(item);
-
-          await _dbContext.SaveChangesAsync();
-
-          return await ReadItemAsync(item.StaffId, true);
-    }
-
-    private void UpdateNavigationProp(StaffCuDto itemDto, StaffDbM item)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
@@ -123,34 +107,60 @@ public class StaffDbRepos
         var query1 = _dbContext.Staffs
             .Where(i => i.StaffId == itemDto.StaffId);
         var item = await query1
-            .Include(i => i.PatientsDbM)
-            .FirstOrDefaultAsync<StaffDbM>();
+                //.Include(i => i.AttractionDbM) // Commented out Attraction
+                .FirstOrDefaultAsync<StaffDbM>();
 
+        //If the item does not exists
         if (item == null) throw new ArgumentException($"Item {itemDto.StaffId} is not existing");
 
+        //transfer any changes from DTO to database objects
+        //Update individual properties 
         item.UpdateFromDTO(itemDto);
 
-        UpdateNavigationProp(itemDto, item);
+        //Update navigation properties
+        //await navProp_ItemCUdto_to_ItemDbM(itemDto, item); // Commented out navProp_ItemCUdto_to_ItemDbM
 
-        _dbContext.Update(item);
+        //write to database model
+        _dbContext.Staffs.Update(item);
 
+        //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        return await ReadItemAsync(item.StaffId, true);
+        //return the updated item in non-flat mode
+        return await ReadItemAsync(item.StaffId, false);    
     }
 
-    // public async Task UpdateNavigationProp(StaffCuDto itemDto, StaffDbM item)
-    // {
-      
-    //     // Update Address
-    //     var updatedAddress = await _dbContext.Moods
-    //         .FirstOrDefaultAsync(a => a.MoodId == itemDto.MoodId);
-    //     if (updatedMood == null)
-    //         throw new ArgumentException($"Address with id {itemDto.Moodd} does not exist");
-    //     item.MoodDbM = updatedMood;
-    // }
+    public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
+    {
+        if (itemDto.StaffId != null)
+            throw new ArgumentException($"{nameof(itemDto.StaffId)} must be null when creating a new object");
 
+        //transfer any changes from DTO to database objects
+        //Update individual properties
+        var item = new StaffDbM(itemDto);
 
+        //Update navigation properties
+        //await navProp_ItemCUdto_to_ItemDbM(itemDto, item); // Commented out navProp_ItemCUdto_to_ItemDbM
+
+        //write to database model
+        _dbContext.Staffs.Add(item);
+
+        //write to database in a UoW
+        await _dbContext.SaveChangesAsync();
+
+        //return the updated item in non-flat mode
+        return await ReadItemAsync(item.StaffId, false);    
+    }
+
+        //private async Task navProp_ItemCUdto_to_ItemDbM(AddressCuDto itemDtoSrc, AddressDbM itemDst) // Commented out method
+    //{
+    //    //update attraction nav props
+    //    var attraction = await _dbContext.Attractions.FirstOrDefaultAsync(
+    //        a => (a.AttractionId == itemDtoSrc.AttractionId));
+
+    //    if (attraction == null)
+    //        throw new ArgumentException($"Item id {itemDtoSrc.AttractionId} not existing");
+
+    //    itemDst.AttractionDbM = attraction;
+    //}
 }
-
-
