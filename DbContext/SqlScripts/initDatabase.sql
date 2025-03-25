@@ -29,7 +29,6 @@ GO
 
 
 
---03-create-supusr-sp.sql
 CREATE OR ALTER PROC supusr.spDeleteAll
     @Seeded BIT = 1
 AS
@@ -49,8 +48,8 @@ BEGIN
 
     -- Return the status
     RETURN 0;  -- Success
-
-GO
+END
+GO  -- Make sure this is on a new line
 
 
 IF SUSER_ID (N'gstusr') IS NOT NULL

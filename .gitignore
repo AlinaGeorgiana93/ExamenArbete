@@ -65,6 +65,8 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 /Configuration/Configuration.csproj
+ExamenArbete/DbContext/Migrations/
+
 
 
 # Tye

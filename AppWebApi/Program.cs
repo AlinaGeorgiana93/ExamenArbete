@@ -67,6 +67,9 @@ builder.Services.AddScoped<StaffDbRepos>();
 builder.Services.AddScoped<LoginDbRepos>();
 builder.Services.AddScoped<GraphDbRepos>();
 builder.Services.AddScoped<AppetiteDbRepos>();
+builder.Services.AddScoped<PatientDbRepos>();
+builder.Services.AddScoped<SleepDbRepos>();
+
 builder.Services.AddScoped<IGraphService, GraphServiceDb>();
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
 builder.Services.AddScoped<IMoodService, MoodServiceDb>();
@@ -74,7 +77,8 @@ builder.Services.AddScoped<ILoginService, LoginServiceDb>();
 builder.Services.AddScoped<IStaffService, StaffServiceDb>();
 builder.Services.AddScoped<IAppetiteService, AppetiteServiceDb>();
 builder.Services.AddScoped<IActivityService, ActivityServiceDb>();  
-
+builder.Services.AddScoped<IPatientService, PatientServiceDb>();  
+builder.Services.AddScoped<ISleepService, SleepServiceDb>();  
 
 var app = builder.Build();
 
