@@ -49,53 +49,43 @@ public class PatientDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IPatient>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+   public async Task<ResponsePageDto<IPatient>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
-        IQueryable<PatientDbM> query;
-        if (flat)
-        {
-            query = _dbContext.Patients.AsNoTracking();
-        }
-        else
-        {
+
+        IQueryable<PatientDbM> query = _dbContext.Patients.AsNoTracking();
+
+         if (!flat)
+         {
             query = _dbContext.Patients.AsNoTracking()
-                .Include(i => i.MoodsDbM)
+               .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM);
+         }
          
-        }
 
-        return new ResponsePageDto<IPatient>()
+        query = query.Where(i => 
+           (
+              i.FirstName.ToLower().Contains(filter) ||
+              i.LastName.ToLower().Contains(filter) ||
+              i.PersonalNumber.ToLower().Contains(filter) 
+           ));
+
+        return new ResponsePageDto<IPatient>
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
-            DbItemsCount = await query
-
-            //Adding filter functionality
-            .Where(i => //(i.Seeded == seeded) && 
-                        // (i.Date.ToLower().Contains(filter) ||
-                        //  i..ToLower().Contains(filter) ||
-                         i.PersonalNumber.ToString().ToLower().Contains(filter)).CountAsync(),
-
+            DbItemsCount = await query.CountAsync(),
             PageItems = await query
-
-            //Adding filter functionality
-            .Where(i => //(i.Seeded == seeded) && 
-                        // (i.Date.ToLower().Contains(filter) ||
-                        //  i..ToLower().Contains(filter) ||
-                         i.PersonalNumber.ToString().ToLower().Contains(filter))
-
-            //Adding paging
-            .Skip(pageNumber * pageSize)
-            .Take(pageSize)
-
-            .ToListAsync<IPatient>(),
-
+                .Skip(pageNumber * pageSize)
+                .Take(pageSize)
+                .ToListAsync<IPatient>(),
             PageNr = pageNumber,
             PageSize = pageSize
         };
-    }
+
+    } 
+
 
     public async Task<ResponseItemDto<IPatient>> DeleteItemAsync(Guid id)
     {
@@ -237,4 +227,5 @@ public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDt
     //     itemDst.AppetitesDbM = Appetites;
     // }
     }
+
 

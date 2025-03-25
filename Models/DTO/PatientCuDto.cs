@@ -11,11 +11,11 @@ namespace Models.DTO
         public string LastName { get; set; }
         public string PersonalNumber { get; set; }
 
-        public List<Guid> GraphsId { get; set; } = new List<Guid>();
-        public List<Guid> ActivitiesId { get; set; } = new List<Guid>();
-        public List<Guid> AppetitesId { get; set; } = new List<Guid>();
-        public List<Guid> MoodsId { get; set; } = new List<Guid>();
-        public List<Guid> SleepsId { get; set; } = new List<Guid>();
+        public List<Guid> GraphsId { get; set; } = null;
+        public List<Guid> ActivitiesId { get; set; } =null;
+        public List<Guid> AppetitesId { get; set; } = null;
+        public List<Guid> MoodsId { get; set; } = null;
+        public List<Guid> SleepsId { get; set; } =null;
 
         public PatientCuDto() { }
 

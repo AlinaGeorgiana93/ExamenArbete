@@ -53,6 +53,8 @@ public class PatientDbM : Patient
     {
         if (org == null) return null;
 
+        FirstName=org.FirstName;
+        LastName=org.LastName;
         PersonalNumber = org.PersonalNumber;
 
         return this;
