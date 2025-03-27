@@ -15,12 +15,7 @@ public class ActivityDbM : Activity
 
 
     #region Adding more readability to an enum type in the database
-    public virtual string strActivityLevel
-    {
-        get => ActivityLevel.ToString();
-        set { }
-    }
-
+    
     public virtual string strDayOfWeek
     {
         get => Day.ToString();
@@ -38,7 +33,7 @@ public class ActivityDbM : Activity
     {
         if (org == null) return null;
 
-        ActivityLevel = org.ActivityLevel;
+        
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
