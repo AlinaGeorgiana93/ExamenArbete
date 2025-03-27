@@ -9,7 +9,7 @@ using Models.DTO;
 
 namespace DbModels;
 [Table("Sleeps", Schema = "supusr")]
-public class SleepDbM : Sleep//, ISeed<SleepDbM>
+public class SleepDbM : Sleep
 {
     [Key]
     public override Guid SleepId { get; set; }
@@ -25,20 +25,28 @@ public class SleepDbM : Sleep//, ISeed<SleepDbM>
         get => Date.ToString();
         set { } 
     }
+
+      public virtual string strDayOfWeek
+        {
+            get => Day.ToString();
+            set { }
+        }
     #endregion
     
-   /*  [NotMapped]
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    [Required]
+  
     public  PatientDbM PatientDbM { get; set; }
- */
-    // public override SleepDbM Seed (SeedGenerator _seeder)
-    // {
-    //     base.Seed (_seeder);
-    //     return this;
-    // }
+
+       [NotMapped]
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  GraphDbM GraphDbM { get; set; }
+
 
     public SleepDbM UpdateFromDTO(SleepCuDto org)
     {

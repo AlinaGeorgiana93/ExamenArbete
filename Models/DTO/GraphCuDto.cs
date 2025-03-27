@@ -20,9 +20,7 @@ public class GraphCuDto
     public virtual List<Guid> AppetitesId { get; set; } = null;
     public virtual List<Guid> MoodsId { get; set; } = null;
     public virtual List<Guid> SleepsId { get; set; } = null;
-
-
-    public virtual Guid? PatientId { get; set; } // ✅ Store Patient as a GUID instead of `IPatient`
+    //public virtual Guid? PatientId { get; set; } // ✅ Store Patient as a GUID instead of `IPatient`
    
 
     public GraphCuDto() { }
@@ -37,6 +35,6 @@ public class GraphCuDto
         SleepsId = org.Sleeps?.Select(i => i.SleepId).ToList();
        AppetitesId = org.Appetites?.Select(e => e.AppetiteId).ToList();
 
-       PatientId = org.Patient?.PatientId; // ✅ Assign PatientId correctly
+      // PatientId = org.Patient?.PatientId; // ✅ Assign PatientId correctly
     }
 }

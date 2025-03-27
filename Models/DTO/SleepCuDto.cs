@@ -11,7 +11,7 @@ public class SleepCuDto
     public DateTime Date { get; set; }
     public DayOfWeek Day { get; set; }
     public string Notes { get; set; } 
-    public virtual Guid? PatientId { get; set; } = null;
+   public virtual Guid? PatientId { get; set; } = null;
     public SleepCuDto() { }
     public SleepCuDto(ISleep org)
     {
@@ -23,6 +23,6 @@ public class SleepCuDto
         Day = org.Day;
         Notes = org.Notes;
 
-       // PatientId = org?.Patient?.PatientId;
+       PatientId = org?.Patient?.PatientId;
     }
 }

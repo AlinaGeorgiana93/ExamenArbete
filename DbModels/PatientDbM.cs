@@ -14,12 +14,16 @@ public class PatientDbM : Patient
     [Key]
     public override Guid PatientId { get; set; }
 
+   [JsonIgnore]
+    public virtual Guid Graphd { get; set; }
+
     [NotMapped]
-    public override List<IGraph> Graphs { get => GraphsDbM?.ToList<IGraph>(); set => throw new NotImplementedException(); }
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
     [JsonIgnore]
     [Required]
-    public List<GraphDbM> GraphsDbM { get; set; }  
-
+    [ForeignKey ("GraphId")] //Connecting FK above with GraphDbM.GraphId
+    public  GraphDbM  GraphDbM { get; set; } = null;
 
     [NotMapped]
     public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }

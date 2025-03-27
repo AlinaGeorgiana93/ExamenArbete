@@ -16,7 +16,6 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
 
 
 
-
     #region adding more readability to an enum type in the database
     public virtual string strAppetiteLevel
     {
@@ -24,11 +23,19 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
         set { } 
     }
     
-    public virtual string strDate
-    {
-        get => Date.ToString();
-        set { } 
-    }
+  public virtual string strDayOfWeek
+        {
+            get => Day.ToString();
+            set { }
+        }
+
+        
+        public virtual string strDate
+        {
+            get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
+            set { }
+        }
+
      #endregion
 
    public AppetiteDbM UpdateFromDTO(AppetiteCuDto org)
@@ -45,13 +52,20 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
     }
 
 
-    /*  [NotMapped]
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    [Required]
+  
     public  PatientDbM PatientDbM { get; set; }
- */
+
+        [NotMapped]
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+    [Required]
+    public  GraphDbM GraphDbM { get; set; }
+
 
     public AppetiteDbM() { }
     public AppetiteDbM(AppetiteCuDto org)

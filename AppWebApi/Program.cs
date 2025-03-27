@@ -61,16 +61,24 @@ builder.Services.AddSwaggerGen(options => {
 //Inject Custom logger
 builder.Services.AddSingleton<ILoggerProvider, InMemoryLoggerProvider>();
 builder.Services.AddScoped<AdminDbRepos>();
-//builder.Services.AddScoped<MoodDbRepos>();
+builder.Services.AddScoped<MoodKindDbRepos>();
+builder.Services.AddScoped<MoodDbRepos>();
 builder.Services.AddScoped<ActivityDbRepos>();
+builder.Services.AddScoped<AppetiteDbRepos>();
+builder.Services.AddScoped<SleepDbRepos>();
 builder.Services.AddScoped<StaffDbRepos>();
 builder.Services.AddScoped<LoginDbRepos>();
 builder.Services.AddScoped<GraphDbRepos>();
+builder.Services.AddScoped<PatientDbRepos>();
 builder.Services.AddScoped<IGraphService, GraphServiceDb>();
-builder.Services.AddScoped<AppetiteDbRepos>();
 builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+builder.Services.AddScoped<IAppetiteService, AppetiteServiceDb>();
+builder.Services.AddScoped<ISleepService, SleepServiceDb>();
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
-//builder.Services.AddScoped<IMoodService, MoodServiceDb>();
+builder.Services.AddScoped<IStaffService, StaffServiceDb>();
+builder.Services.AddScoped<IMoodKindService, MoodKindServiceDb>();
+builder.Services.AddScoped<IMoodService, MoodServiceDb>();
+builder.Services.AddScoped<IPatientService, PatientServiceDb>();
 builder.Services.AddScoped<ILoginService, LoginServiceDb>();
 
 var app = builder.Build();

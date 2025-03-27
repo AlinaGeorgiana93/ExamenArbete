@@ -66,20 +66,20 @@ public class ActivityDbRepos
 
                 // Adding filter functionality
                 .Where(i => 
-                (i.strActivityLevel.ToLower().Contains(filter) ||
-                 i.Date.ToString().Contains(filter) ||
-                 i.Day.ToString().Contains(filter) ||
-                 i.Notes.ToLower().Contains(filter)))
+                i.strActivityLevel.ToLower().Contains(filter) ||
+                 i.strDate.ToLower().Contains(filter) ||
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
             PageItems = await query
 
                     // Adding filter functionality
                 .Where(i => 
-                    (i.strActivityLevel.ToLower().Contains(filter) ||
-                    i.Date.ToString().Contains(filter) ||
-                    i.Day.ToString().Contains(filter) ||
-                    i.Notes.ToLower().Contains(filter)))
+                    i.strActivityLevel.ToLower().Contains(filter) ||
+                    i.strDate.ToLower().Contains(filter) ||
+                    i.strDayOfWeek.ToLower().Contains(filter) ||
+                    i.Notes.ToLower().Contains(filter))
 
                 // Adding paging
                 .Skip(pageNumber * pageSize)
@@ -166,15 +166,15 @@ public class ActivityDbRepos
         return await ReadItemAsync(item.ActivityId, false);    
     }
 
-    private async Task navProp_ItemCUdto_to_ItemDbM(ActivityCuDto itemDtoSrc, ActivityDbM itemDst)
-    {
+    // private async Task navProp_ItemCUdto_to_ItemDbM(ActivityCuDto itemDtoSrc, ActivityDbM itemDst)
+    // {
        
-        var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => (a.PatientId == itemDtoSrc.PatientId));
+    //     var patient = await _dbContext.Patients.FirstOrDefaultAsync(
+    //         a => (a.PatientId == itemDtoSrc.PatientId));
 
-        if (patient == null)
-            throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
+    //     if (patient == null)
+    //         throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
 
-        itemDst.PatientDbM = patient;
-    }
+    //     itemDst.PatientDbM = patient;
+    // }
 }

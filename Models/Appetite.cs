@@ -13,6 +13,9 @@ namespace Models
         public virtual string Notes { get; set; } // Additional notes about the appetite
 
         // Navigation property to Patient
+
+          public virtual Guid? PatientId { get; set; } 
+
           public virtual IPatient Patient { get; set; }
           public virtual IGraph Graph { get; set; }
     }

@@ -15,6 +15,12 @@ public class ResponsePageDto<T>
     public int PageSize { get; init; }
     public int PageCount => (int)Math.Ceiling((double)DbItemsCount / PageSize);
     public string DbConnectionKeyUsed {get; init;}
+
+    public static implicit operator ResponsePageDto<T>(ResponsePageDto<IMoodKind> v)
+    {
+        throw new NotImplementedException();
+    }
+
 }
 
 public class ResponseItemDto<T>

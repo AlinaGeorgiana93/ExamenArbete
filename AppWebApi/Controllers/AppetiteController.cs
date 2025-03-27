@@ -1,21 +1,21 @@
+
 using Microsoft.AspNetCore.Mvc;
 
 using Models;
 using Models.DTO;
 using Services;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AppWebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class AppetitesController : Controller
+    public class AppetiteController : Controller
     {
-        readonly IPatientService _service = null;
-        readonly ILogger< AppetitesController> _logger = null;
+        readonly IAppetiteService _service = null;
+        readonly ILogger< AppetiteController> _logger = null;
 
-        public  AppetitesController(IPatientService service, ILogger< AppetitesController> logger)
+        public  AppetiteController(IAppetiteService service, ILogger< AppetiteController> logger)
         {
             _service = service;
             _logger = logger;
@@ -171,4 +171,3 @@ namespace AppWebApi.Controllers
         }
     }
 }
-

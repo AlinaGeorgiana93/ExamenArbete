@@ -1,11 +1,9 @@
-﻿﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Models;
 using Models.DTO;
 using Services;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AppWebApi.Controllers
 {
@@ -13,19 +11,20 @@ namespace AppWebApi.Controllers
         Policy = null, Roles = "staff, sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class ActivityController : Controller
+    public class MoodKindController : Controller
     {
-         readonly IActivityService _service = null;
-        readonly ILogger<ActivityController> _logger = null;
+        readonly IMoodKindService _service = null;
+        readonly ILogger<MoodKindController> _logger = null;
 
-        public ActivityController(IActivityService service, ILogger<ActivityController> logger)
+        public MoodKindController(IMoodKindService service, ILogger<MoodKindController> logger)
         {
             _service = service;
             _logger = logger;
         }
 
+    
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> ReadItems(string seeded = "true", string flat = "true",
             string filter = null, string pageNr = "0", string pageSize = "10")
@@ -39,9 +38,9 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItems)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
-                
-                var resp = await _service.ReadActivitiesAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
-                return Ok(resp);
+
+                var resp = await _service.ReadMoodKindsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
+                return Ok(resp);     
             }
             catch (Exception ex)
             {
@@ -51,7 +50,7 @@ namespace AppWebApi.Controllers
         }
 
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItem(string id = null, string flat = "false")
@@ -63,10 +62,10 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItem)}: {nameof(idArg)}: {idArg}, {nameof(flatArg)}: {flatArg}");
                 
-                var item = await _service.ReadActivityAsync(idArg, flatArg);
+                var item = await _service.ReadMoodKindAsync(idArg, flatArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
-                return Ok(item);
+                return Ok(item);         
             }
             catch (Exception ex)
             {
@@ -76,9 +75,9 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = "sysadmin")]
         [HttpDelete("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> DeleteItem(string id)
         {
@@ -88,11 +87,11 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(DeleteItem)}: {nameof(idArg)}: {idArg}");
                 
-                var item = await _service.DeleteActivityAsync(idArg);
+                var item = await _service.DeleteMoodKindAsync(idArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
         
                 _logger.LogInformation($"item {idArg} deleted");
-                return Ok(item);
+                return Ok(item);                
             }
             catch (Exception ex)
             {
@@ -102,9 +101,9 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+             Policy = null, Roles = "staff, sysadmin")]
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<ActivityCuDto>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<MoodKindCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItemDto(string id = null)
@@ -115,14 +114,14 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItemDto)}: {nameof(idArg)}: {idArg}");
 
-                var item = await _service.ReadActivityAsync(idArg, false);
+                var item = await _service.ReadMoodKindAsync(idArg, false);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
                 return Ok(
-                    new ResponseItemDto<ActivityCuDto>() {
+                    new ResponseItemDto<MoodKindCuDto>() {
                     DbConnectionKeyUsed = item.DbConnectionKeyUsed,
-                    Item = new ActivityCuDto(item.Item)
-                });   
+                    Item = new MoodKindCuDto(item.Item)
+                });
             }
             catch (Exception ex)
             {
@@ -131,54 +130,58 @@ namespace AppWebApi.Controllers
             }
         }
 
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
-        [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> UpdateItem(string id, [FromBody] ActivityCuDto item)
-        {
+       [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+             Policy = null, Roles = "sysadmin")]
+         [HttpPut("{id}")]
+         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
+         [ProducesResponseType(400, Type = typeof(string))]
+         public async Task<IActionResult> UpdateItem(string id, [FromBody] MoodKindCuDto item)
+         {
             try
-            {
+             {
                 var idArg = Guid.Parse(id);
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
                 
-                if (item.ActivityId != idArg) throw new ArgumentException("Id mismatch");
+                 if (item.MoodKindId != idArg) throw new ArgumentException("Id mismatch");
 
-                var model = await _service.UpdateActivityAsync(item);
+                var _item = await _service.UpdateMoodKindAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
                
-                return Ok(model);
-            }
+                 return Ok(_item);             
+             }
             catch (Exception ex)
-            {
+             {
                 _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message}");
                 return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
-            }
+             }
         }
 
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
-        [HttpPost()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> CreateItem([FromBody] ActivityCuDto item)
-        {
+         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+             Policy = null, Roles = " sysadmin")]
+         [HttpPost()]
+         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
+         [ProducesResponseType(400, Type = typeof(string))]
+         public async Task<IActionResult> CreateItem([FromBody] MoodKindCuDto item)
+         {
             try
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
                 
-                var model = await _service.CreateActivityAsync(item);
-                _logger.LogInformation($"item {model.Item.ActivityId} created");
+                var _item = await _service.CreateMoodKindAsync(item);
+                _logger.LogInformation($"item {_item.Item.MoodKindId} created");
 
-                return Ok(model);
+                return Ok(_item);       
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{nameof(CreateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not create. Error {ex.InnerException?.Message}");
+                // Log the full exception first
+                _logger.LogError($"{nameof(CreateItem)}: {ex.Message}, {ex.StackTrace}");
+
+                // Then return the BadRequest response
+                return BadRequest($"Could not create. Error {ex.Message}");
             }
-        }
+                }
+
     }
 }
