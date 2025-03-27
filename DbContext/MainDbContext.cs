@@ -68,35 +68,35 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
 
         base.OnModelCreating(modelBuilder);
 
-        // modelBuilder.Entity<SleepDbM>()
-        //   .HasOne(s => s.PatientDbM)
-        //   .WithMany()
-        //   .HasForeignKey(s => s.PatientDbMPatientId)
-        //   .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
+        modelBuilder.Entity<SleepDbM>()
+          .HasOne(s => s.PatientDbM)
+          .WithMany()
+          .HasForeignKey(s => s.PatientDbMPatientId)
+          .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
 
-        // modelBuilder.Entity<MoodDbM>()
-        //     .HasOne(m => m.PatientDbM)
-        //     .WithMany()
-        //     .HasForeignKey(m => m.PatientDbMPatientId)
-        //     .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<MoodDbM>()
+            .HasOne(m => m.PatientDbM)
+            .WithMany()
+            .HasForeignKey(m => m.PatientDbMPatientId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-        // modelBuilder.Entity<AppetiteDbM>()
-        //     .HasOne(a => a.PatientDbM)
-        //     .WithMany()
-        //     .HasForeignKey(a => a.PatientDbMPatientId)
-        //     .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<AppetiteDbM>()
+            .HasOne(a => a.PatientDbM)
+            .WithMany()
+            .HasForeignKey(a => a.PatientDbMPatientId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-        // modelBuilder.Entity<ActivityDbM>()
-        //     .HasOne(ac => ac.PatientDbM)
-        //     .WithMany()
-        //     .HasForeignKey(ac => ac.PatientDbMPatientId)
-        //     .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<ActivityDbM>()
+            .HasOne(ac => ac.PatientDbM)
+            .WithMany()
+            .HasForeignKey(ac => ac.PatientDbMPatientId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-        // modelBuilder.Entity<GraphDbM>()
-        //     .HasOne(g => g.PatientDbM)
-        //     .WithMany()
-        //     .HasForeignKey(g => g.PatientDbMPatientId)
-        //     .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<GraphDbM>()
+            .HasOne(g => g.PatientDbM)
+            .WithMany()
+            .HasForeignKey(g => g.PatientDbMPatientId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 
     #region DbContext for some popular databases
