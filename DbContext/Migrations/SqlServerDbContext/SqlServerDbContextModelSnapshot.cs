@@ -46,9 +46,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PatientDbMPatientId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("strActivityLevel")
                         .HasColumnType("nvarchar(200)");
 
@@ -63,8 +60,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasIndex("GraphDbMGraphId");
 
                     b.HasIndex("PatientDbMPatientId");
-
-                    b.HasIndex("PatientDbMPatientId1");
 
                     b.ToTable("Activities", "supusr");
                 });
@@ -93,9 +88,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PatientDbMPatientId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("strAppetiteLevel")
                         .HasColumnType("nvarchar(200)");
 
@@ -110,8 +102,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasIndex("GraphDbMGraphId");
 
                     b.HasIndex("PatientDbMPatientId");
-
-                    b.HasIndex("PatientDbMPatientId1");
 
                     b.ToTable("Appetites", "supusr");
                 });
@@ -128,14 +118,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PatientDbMPatientId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("GraphId");
 
                     b.HasIndex("PatientDbMPatientId");
-
-                    b.HasIndex("PatientDbMPatientId1");
 
                     b.ToTable("Graphs", "supusr");
                 });
@@ -164,12 +149,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PatientDbMPatientId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("strDate")
                         .HasColumnType("nvarchar(200)");
 
@@ -184,8 +163,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasIndex("GraphDbMGraphId");
 
                     b.HasIndex("PatientDbMPatientId");
-
-                    b.HasIndex("PatientDbMPatientId1");
 
                     b.ToTable("Moods", "supusr");
                 });
@@ -236,9 +213,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PatientDbMPatientId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("SleepLevel")
                         .HasColumnType("int");
 
@@ -256,8 +230,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasIndex("GraphDbMGraphId");
 
                     b.HasIndex("PatientDbMPatientId");
-
-                    b.HasIndex("PatientDbMPatientId1");
 
                     b.ToTable("Sleeps", "supusr");
                 });
@@ -364,14 +336,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .IsRequired();
 
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
-                        .WithMany()
-                        .HasForeignKey("PatientDbMPatientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DbModels.PatientDbM", null)
                         .WithMany("ActivitiesDbM")
-                        .HasForeignKey("PatientDbMPatientId1");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GraphDbM");
 
@@ -387,14 +355,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .IsRequired();
 
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
-                        .WithMany()
-                        .HasForeignKey("PatientDbMPatientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DbModels.PatientDbM", null)
                         .WithMany("AppetitesDbM")
-                        .HasForeignKey("PatientDbMPatientId1");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GraphDbM");
 
@@ -404,14 +368,10 @@ namespace DbContext.Migrations.SqlServerDbContext
             modelBuilder.Entity("DbModels.GraphDbM", b =>
                 {
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
-                        .WithMany()
-                        .HasForeignKey("PatientDbMPatientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DbModels.PatientDbM", null)
                         .WithMany("GraphsDbM")
-                        .HasForeignKey("PatientDbMPatientId1");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PatientDbM");
                 });
@@ -425,14 +385,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .IsRequired();
 
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
-                        .WithMany()
-                        .HasForeignKey("PatientDbMPatientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DbModels.PatientDbM", null)
                         .WithMany("MoodsDbM")
-                        .HasForeignKey("PatientDbMPatientId1");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GraphDbM");
 
@@ -455,14 +411,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .IsRequired();
 
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
-                        .WithMany()
-                        .HasForeignKey("PatientDbMPatientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DbModels.PatientDbM", null)
                         .WithMany("SleepsDbM")
-                        .HasForeignKey("PatientDbMPatientId1");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GraphDbM");
 

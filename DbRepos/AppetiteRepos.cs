@@ -46,7 +46,7 @@ public class AppetiteDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IAppetite>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IAppetite>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<AppetiteDbM> query;
@@ -67,7 +67,7 @@ public class AppetiteDbRepos
             DbItemsCount = await query
 
                 // Adding filter functionality
-                .Where(i => 
+                .Where(i =>
                  i.strAppetiteLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
                  i.strDayOfWeek.ToLower().Contains(filter) ||
@@ -76,12 +76,12 @@ public class AppetiteDbRepos
 
             PageItems = await query
 
-                    // Adding filter functionality
-                     .Where(i => 
-                    i.strAppetiteLevel.ToLower().Contains(filter) ||
-                    i.strDayOfWeek.ToLower().Contains(filter) ||
-                    i.Day.ToString().Contains(filter) ||
-                    i.Notes.ToLower().Contains(filter))
+                     // Adding filter functionality
+                     .Where(i =>
+                      i.strAppetiteLevel.ToLower().Contains(filter) ||
+                      i.strDayOfWeek.ToLower().Contains(filter) ||
+                      i.strDayOfWeek.ToLower().Contains(filter) ||
+                      i.Notes.ToLower().Contains(filter))
 
                 // Adding paging
                 .Skip(pageNumber * pageSize)
@@ -144,7 +144,7 @@ public class AppetiteDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.AppetiteId, false);    
+        return await ReadItemAsync(item.AppetiteId, false);
     }
 
     public async Task<ResponseItemDto<IAppetite>> CreateItemAsync(AppetiteCuDto itemDto)
@@ -166,26 +166,26 @@ public class AppetiteDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.AppetiteId, false);    
+        return await ReadItemAsync(item.AppetiteId, false);
     }
 
     private async Task navProp_ItemCUdto_to_ItemDbM(AppetiteCuDto itemDtoSrc, AppetiteDbM itemDst)
     {
         //update Patient nav props
         var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => (a.PatientId == itemDtoSrc.PatientId));
+            a => a.PatientId == itemDtoSrc.PatientId);
 
         if (patient == null)
             throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
 
         itemDst.PatientDbM = patient;
 
-         var graph = await _dbContext.Graphs.FirstOrDefaultAsync(
-        g => (g.GraphId == itemDtoSrc.GraphId));
+        var graph = await _dbContext.Graphs.FirstOrDefaultAsync(
+       g => g.GraphId == itemDtoSrc.GraphId);
 
-    if (graph == null)
-        throw new ArgumentException($"Graph ID {itemDtoSrc.GraphId} does not exist");
+        if (graph == null)
+            throw new ArgumentException($"Graph ID {itemDtoSrc.GraphId} does not exist");
 
-    itemDst.GraphDbM = graph;
+        itemDst.GraphDbM = graph;
     }
 }

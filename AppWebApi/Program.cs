@@ -34,7 +34,8 @@ builder.Services.AddDatabaseConnectionsDbContext();
 
 builder.Services.AddJwtTokenService(builder.Configuration);
 
-builder.Services.AddSwaggerGen(options => {
+builder.Services.AddSwaggerGen(options =>
+{
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -76,9 +77,9 @@ builder.Services.AddScoped<IMoodService, MoodServiceDb>();
 builder.Services.AddScoped<ILoginService, LoginServiceDb>();
 builder.Services.AddScoped<IStaffService, StaffServiceDb>();
 builder.Services.AddScoped<IAppetiteService, AppetiteServiceDb>();
-builder.Services.AddScoped<IActivityService, ActivityServiceDb>();  
-builder.Services.AddScoped<IPatientService, PatientServiceDb>();  
-builder.Services.AddScoped<ISleepService, SleepServiceDb>();  
+builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+builder.Services.AddScoped<IPatientService, PatientServiceDb>();
+builder.Services.AddScoped<ISleepService, SleepServiceDb>();
 
 var app = builder.Build();
 
@@ -92,8 +93,8 @@ app.UseHttpsRedirection();
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .SetIsOriginAllowed(origin => true) 
-    .AllowCredentials()); 
+    .SetIsOriginAllowed(origin => true)
+    .AllowCredentials());
 
 app.UseAuthorization();
 app.MapControllers();

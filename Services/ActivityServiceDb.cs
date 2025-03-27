@@ -6,18 +6,19 @@ using Models.DTO;
 namespace Services;
 
 
-public class ActivityServiceDb : IActivityService {
+public class ActivityServiceDb : IActivityService
+{
 
     private readonly ActivityDbRepos _activityRepo;
-    private readonly ILogger<ActivityServiceDb> _logger;    
-    
-    public ActivityServiceDb(ActivityDbRepos activityRepo,ILogger<ActivityServiceDb> logger)
+    private readonly ILogger<ActivityServiceDb> _logger;
+
+    public ActivityServiceDb(ActivityDbRepos activityRepo, ILogger<ActivityServiceDb> logger)
     {
         _activityRepo = activityRepo;
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IActivity>> ReadActivitiesAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _activityRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponsePageDto<IActivity>> ReadActivitiesAsync(bool flat, string filter, int pageNumber, int pageSize) => _activityRepo.ReadItemsAsync(flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IActivity>> ReadActivityAsync(Guid id, bool flat) => _activityRepo.ReadItemAsync(id, flat);
     public Task<ResponseItemDto<IActivity>> DeleteActivityAsync(Guid id) => _activityRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<IActivity>> UpdateActivityAsync(ActivityCuDto item) => _activityRepo.UpdateItemAsync(item);

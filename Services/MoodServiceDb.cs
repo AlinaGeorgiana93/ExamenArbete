@@ -6,18 +6,19 @@ using Models.DTO;
 namespace Services;
 
 
-public class MoodServiceDb : IMoodService {
+public class MoodServiceDb : IMoodService
+{
 
     private readonly MoodDbRepos _moodRepo;
-    private readonly ILogger<MoodServiceDb> _logger;    
-    
-    public MoodServiceDb(MoodDbRepos moodRepo,ILogger<MoodServiceDb> logger)
+    private readonly ILogger<MoodServiceDb> _logger;
+
+    public MoodServiceDb(MoodDbRepos moodRepo, ILogger<MoodServiceDb> logger)
     {
         _moodRepo = moodRepo;
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IMood>> ReadMoodsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _moodRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponsePageDto<IMood>> ReadMoodsAsync(bool flat, string filter, int pageNumber, int pageSize) => _moodRepo.ReadItemsAsync(flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IMood>> ReadMoodAsync(Guid id, bool flat) => _moodRepo.ReadItemAsync(id, flat);
     public Task<ResponseItemDto<IMood>> DeleteMoodAsync(Guid id) => _moodRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<IMood>> UpdateMoodAsync(MoodCuDto item) => _moodRepo.UpdateItemAsync(item);

@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using Models;
-using Seido.Utilities.SeedGenerator;
 using Models.DTO;
 
 namespace DbModels;
@@ -53,8 +52,8 @@ public class PatientDbM : Patient
     {
         if (org == null) return null;
 
-        FirstName=org.FirstName;
-        LastName=org.LastName;
+        FirstName = org.FirstName;
+        LastName = org.LastName;
         PersonalNumber = org.PersonalNumber;
 
         return this;

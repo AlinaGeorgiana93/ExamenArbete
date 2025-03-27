@@ -1,6 +1,6 @@
 namespace Models;
 
-public enum SleepLevel {Low, Medium, High};
+public enum SleepLevel { Low, Medium, High };
 
 public interface ISleep
 {
@@ -10,14 +10,14 @@ public interface ISleep
     public DateTime Date { get; set; }
 
     public DayOfWeek Day { get; set; }
-    
-    public string Notes { get; set; } 
 
-   
-    
-    
+    public string Notes { get; set; }
+
+
+
+
 
     //Navigation properties
-   public IPatient Patient { get; set; }
-   public IGraph Graph { get; set; }
+    public IPatient Patient { get; set; }
+    public IGraph Graph { get; set; }
 }

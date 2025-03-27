@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using Models;
-using Seido.Utilities.SeedGenerator;
 using Models.DTO;
 
 namespace DbModels;
@@ -13,10 +12,10 @@ public class GraphDbM : Graph
     [Key]
     public override Guid GraphId { get; set; }
 
-     public Guid PatientDbMPatientId { get; set; } 
+    public Guid PatientDbMPatientId { get; set; }
 
     // Link Graph to Patient
-            [NotMapped]
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]

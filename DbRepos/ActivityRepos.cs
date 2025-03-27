@@ -29,7 +29,7 @@ public class ActivityDbRepos
         {
             query = _dbContext.Activities.AsNoTracking()
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM) 
+                .Include(i => i.GraphDbM)
                 .Where(i => i.ActivityId == id);
         }
         else
@@ -46,18 +46,19 @@ public class ActivityDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IActivity>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IActivity>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<ActivityDbM> query;
         if (flat)
         {
-            query = _dbContext.Activities.AsNoTracking().Cast<ActivityDbM>();
+            query = _dbContext.Activities.AsNoTracking();
         }
         else
         {
             query = _dbContext.Activities.AsNoTracking()
-                .Include(i => i.PatientDbM);
+                .Include(i => i.PatientDbM)
+                .Include(i => i.GraphDbM);
         }
 
         var ret = new ResponsePageDto<IActivity>()
@@ -66,7 +67,7 @@ public class ActivityDbRepos
             DbItemsCount = await query
 
                 // Adding filter functionality
-                .Where(i => 
+                .Where(i =>
                  i.strActivityLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
                  i.strDayOfWeek.ToLower().Contains(filter) ||
@@ -75,8 +76,8 @@ public class ActivityDbRepos
 
             PageItems = await query
 
-                    // Adding filter functionality
-                .Where(i => 
+                // Adding filter functionality
+                .Where(i =>
                     i.strActivityLevel.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.strDayOfWeek.ToLower().Contains(filter) ||
@@ -142,7 +143,7 @@ public class ActivityDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.ActivityId, false);    
+        return await ReadItemAsync(item.ActivityId, false);
     }
 
     public async Task<ResponseItemDto<IActivity>> CreateItemAsync(ActivityCuDto itemDto)
@@ -164,14 +165,14 @@ public class ActivityDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.ActivityId, false);    
+        return await ReadItemAsync(item.ActivityId, false);
     }
 
     private async Task navProp_ItemCUdto_to_ItemDbM(ActivityCuDto itemDtoSrc, ActivityDbM itemDst)
     {
-       
+
         var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => (a.PatientId == itemDtoSrc.PatientId));
+            a => a.PatientId == itemDtoSrc.PatientId);
 
         if (patient == null)
             throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");

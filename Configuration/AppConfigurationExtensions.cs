@@ -12,7 +12,7 @@ public static class AppConfigurationExtensions
 {
     const string _appsettingfile = "appsettings.json";
     static string _projectFile;
-    
+
     //to use either user secrets or azure key vault depending on UseAzureKeyVault tag in appsettings.json
     //Azure key vault access parameters location are set in <AzureProjectSettings> tag in the csproj file
     //User secret id is set in <UserSecretsId> and <UserSecretPath> in the csproj file
@@ -41,17 +41,17 @@ public static class AppConfigurationExtensions
         }
 #endif
 
-        if (useAzureKeyVault) 
+        if (useAzureKeyVault)
         {
             //Environment variables are set as part of the deployment process
             configuration.AddAzureKeyVault();
         }
         else
         {
-           //Load the user secrets file
-           string secretId = CsprojElement("UserSecretsId");
-           configuration.AddUserSecrets(secretId, reloadOnChange: true);
-           Environment.SetEnvironmentVariable("USERSECRETID", secretId);
+            //Load the user secrets file
+            string secretId = CsprojElement("UserSecretsId");
+            configuration.AddUserSecrets(secretId, reloadOnChange: true);
+            Environment.SetEnvironmentVariable("USERSECRETID", secretId);
         }
 
         //override with any locally set configuration from appsettings.json
@@ -81,22 +81,22 @@ public static class AppConfigurationExtensions
 
     private static IConfigurationBuilder AddAzureKeyVault(this IConfigurationBuilder configuration)
     {
-            //A deployed WebApp will start here by reading the environment variables
-            var vaultUri = new Uri(Environment.GetEnvironmentVariable("AZURE_KeyVaultUri"));
-            var tenantId = Environment.GetEnvironmentVariable("AZURE_TENANT_ID");
-            var clientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
-            var clientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET");
-            var secretname = Environment.GetEnvironmentVariable("AZURE_KeyVaultSecret");
+        //A deployed WebApp will start here by reading the environment variables
+        var vaultUri = new Uri(Environment.GetEnvironmentVariable("AZURE_KeyVaultUri"));
+        var tenantId = Environment.GetEnvironmentVariable("AZURE_TENANT_ID");
+        var clientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
+        var clientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET");
+        var secretname = Environment.GetEnvironmentVariable("AZURE_KeyVaultSecret");
 
-            //Open the AZKV from creadentials in the environment variables
-            var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-            var client = new SecretClient(vaultUri, credential);
+        //Open the AZKV from creadentials in the environment variables
+        var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+        var client = new SecretClient(vaultUri, credential);
 
-            var secret = client.GetSecret(secretname);
-            var userSecretsJson = secret.Value.Value;
+        var secret = client.GetSecret(secretname);
+        var userSecretsJson = secret.Value.Value;
 
-            var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(userSecretsJson)); 
-            configuration.AddJsonStream(stream);
+        var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(userSecretsJson));
+        configuration.AddJsonStream(stream);
 
         return configuration;
     }
@@ -123,14 +123,15 @@ public static class AppConfigurationExtensions
     }
 
     //read the tag from project file. Only during development
-    private static string CsprojElement (string elemtTag) { 
-    
+    private static string CsprojElement(string elemtTag)
+    {
+
         string csprojPath = Path.Combine(Directory.GetCurrentDirectory(), _projectFile);
         XDocument csproj = XDocument.Load(csprojPath);
         var elemValue = csproj.Descendants(elemtTag).FirstOrDefault()?.Value;
-        return elemValue;        
+        return elemValue;
     }
-    
+
     private static Dictionary<string, string> JsonFlatToDictionary(string json)
     {
         IEnumerable<(string Path, JsonProperty P)> GetLeaves(string path, JsonProperty p)
@@ -143,6 +144,6 @@ public static class AppConfigurationExtensions
             return document.RootElement.EnumerateObject()
                 .SelectMany(p => GetLeaves(null, p))
                 //Clone so that we can use the values outside of using
-                .ToDictionary(k => k.Path, v => v.P.Value.Clone().ToString()); 
+                .ToDictionary(k => k.Path, v => v.P.Value.Clone().ToString());
     }
 }

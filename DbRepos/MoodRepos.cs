@@ -45,7 +45,7 @@ public class MoodDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IMood>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IMood>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<MoodDbM> query;
@@ -56,7 +56,8 @@ public class MoodDbRepos
         else
         {
             query = _dbContext.Moods.AsNoTracking()
-                .Include(i => i.PatientDbM);
+                .Include(i => i.PatientDbM)
+                .Include(i => i.GraphDbM);
         }
 
         var ret = new ResponsePageDto<IMood>()
@@ -65,17 +66,17 @@ public class MoodDbRepos
             DbItemsCount = await query
 
                 // Adding filter functionality
-                .Where(i => 
+                .Where(i =>
                 i.strMoodKind.ToLower().Contains(filter) ||
                 i.strDayOfWeek.ToLower().Contains(filter) ||
                 i.strDate.ToLower().Contains(filter) ||
-                 i.Notes.ToLower().Contains(filter))
+                i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
             PageItems = await query
 
-                    // Adding filter functionality
-                .Where(i => 
+                // Adding filter functionality
+                .Where(i =>
                     i.strMoodKind.ToLower().Contains(filter) ||
                     i.strDayOfWeek.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
@@ -141,7 +142,7 @@ public class MoodDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.MoodId, false);    
+        return await ReadItemAsync(item.MoodId, false);
     }
 
     public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
@@ -163,14 +164,14 @@ public class MoodDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.MoodId, false);    
+        return await ReadItemAsync(item.MoodId, false);
     }
 
     private async Task navProp_ItemCUdto_to_ItemDbM(MoodCuDto itemDtoSrc, MoodDbM itemDst)
     {
-       
+
         var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => (a.PatientId == itemDtoSrc.PatientId));
+            a => a.PatientId == itemDtoSrc.PatientId);
 
         if (patient == null)
             throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");

@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 using Models;
-using Seido.Utilities.SeedGenerator;
 using Models.DTO;
 
 
 namespace DbModels;
 [Table("Sleeps", Schema = "supusr")]
-public class SleepDbM : Sleep//, ISeed<SleepDbM>
+public class SleepDbM : Sleep
 {
     [Key]
     public override Guid SleepId { get; set; }
@@ -18,47 +17,43 @@ public class SleepDbM : Sleep//, ISeed<SleepDbM>
     public virtual string strSleepLevel
     {
         get => SleepLevel.ToString();
-        set { } 
+        set { }
     }
     public virtual string strDate
     {
         get => Date.ToString();
-        set { } 
+        set { }
     }
 
-     public virtual string strDayOfWeek
-        {
-            get => Day.ToString();
-            set { }
-        }
+    public virtual string strDayOfWeek
+    {
+        get => Day.ToString();
+        set { }
+    }
 
     #endregion
-     public Guid PatientDbMPatientId { get; set; } 
-   
-         [NotMapped]
+    public Guid PatientDbMPatientId { get; set; }
+
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
     public PatientDbM PatientDbM { get; set; }
 
-    
-        [JsonIgnore]
-        [Required]
-        public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
 
-        [NotMapped]
-        public override IGraph Graph
-        {
-            get => GraphDbM;
-            set => throw new NotImplementedException();
-        }
+    [JsonIgnore]
+    [Required]
+    public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
 
-    // public override SleepDbM Seed (SeedGenerator _seeder)
-    // {
-    //     base.Seed (_seeder);
-    //     return this;
-    // }
+    [NotMapped]
+    public override IGraph Graph
+    {
+        get => GraphDbM;
+        set => throw new NotImplementedException();
+    }
+
+
 
     public SleepDbM UpdateFromDTO(SleepCuDto org)
     {
@@ -68,7 +63,7 @@ public class SleepDbM : Sleep//, ISeed<SleepDbM>
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
-       
+
 
         return this;
     }

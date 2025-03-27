@@ -39,9 +39,9 @@ public class PatientDbRepos
         {
             query = _dbContext.Patients.AsNoTracking()
                 .Where(i => i.PatientId == id);
-        }   
+        }
 
-        var resp =  await query.FirstOrDefaultAsync<IPatient>();
+        var resp = await query.FirstOrDefaultAsync<IPatient>();
         return new ResponseItemDto<IPatient>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
@@ -49,27 +49,27 @@ public class PatientDbRepos
         };
     }
 
-   public async Task<ResponsePageDto<IPatient>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IPatient>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 
         IQueryable<PatientDbM> query = _dbContext.Patients.AsNoTracking();
 
-         if (!flat)
-         {
+        if (!flat)
+        {
             query = _dbContext.Patients.AsNoTracking()
                .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM);
-         }
-         
+        }
 
-        query = query.Where(i => 
+
+        query = query.Where(i =>
            (
               i.FirstName.ToLower().Contains(filter) ||
               i.LastName.ToLower().Contains(filter) ||
-              i.PersonalNumber.ToLower().Contains(filter) 
+              i.PersonalNumber.ToLower().Contains(filter)
            ));
 
         return new ResponsePageDto<IPatient>
@@ -84,7 +84,7 @@ public class PatientDbRepos
             PageSize = pageSize
         };
 
-    } 
+    }
 
 
     public async Task<ResponseItemDto<IPatient>> DeleteItemAsync(Guid id)
@@ -135,25 +135,25 @@ public class PatientDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.PatientId, false);    
+        return await ReadItemAsync(item.PatientId, false);
     }
 
 
-public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDto)
-{
-    if (itemDto.PatientId != null)
-        throw new ArgumentException($"{nameof(itemDto.PatientId)} must be null when creating a new object");
+    public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDto)
+    {
+        if (itemDto.PatientId != null)
+            throw new ArgumentException($"{nameof(itemDto.PatientId)} must be null when creating a new object");
 
-    // Create the patient entity
-    var patient = new PatientDbM(itemDto);
+        // Create the patient entity
+        var patient = new PatientDbM(itemDto);
 
-    // Save the patient first without the related entities
-    _dbContext.Patients.Add(patient);
-    await _dbContext.SaveChangesAsync();
+        // Save the patient first without the related entities
+        _dbContext.Patients.Add(patient);
+        await _dbContext.SaveChangesAsync();
 
-    // Return the newly created patient
-    return await ReadItemAsync(patient.PatientId, false);
-}
+        // Return the newly created patient
+        return await ReadItemAsync(patient.PatientId, false);
+    }
 
 
 
@@ -226,6 +226,6 @@ public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDt
     //     }
     //     itemDst.AppetitesDbM = Appetites;
     // }
-    }
+}
 
 

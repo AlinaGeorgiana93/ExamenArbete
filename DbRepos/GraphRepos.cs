@@ -39,9 +39,9 @@ public class GraphDbRepos
         {
             query = _dbContext.Graphs.AsNoTracking()
                 .Where(i => i.GraphId == id);
-        }   
+        }
 
-        var resp =  await query.FirstOrDefaultAsync<IGraph>();
+        var resp = await query.FirstOrDefaultAsync<IGraph>();
         return new ResponseItemDto<IGraph>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
@@ -49,7 +49,7 @@ public class GraphDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IGraph>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IGraph>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<GraphDbM> query;
@@ -130,7 +130,7 @@ public class GraphDbRepos
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM)
-              //  .Include(i => i.PatientsDbM)
+            //  .Include(i => i.PatientsDbM)
             .FirstOrDefaultAsync<GraphDbM>();
 
         //If the item does not exists
@@ -150,7 +150,7 @@ public class GraphDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.GraphId, false);    
+        return await ReadItemAsync(item.GraphId, false);
     }
 
     public async Task<ResponseItemDto<IGraph>> CreateItemAsync(GraphCuDto itemDto)
@@ -170,7 +170,7 @@ public class GraphDbRepos
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
-        
+
         //return the updated item in non-flat mode
         return await ReadItemAsync(item.GraphId, false);
     }
@@ -212,7 +212,7 @@ public class GraphDbRepos
         }
         itemDst.ActivitiesDbM = Activities;
 
-            // ✅ Update SleepsDbM from list (Newly added)
+        // ✅ Update SleepsDbM from list (Newly added)
         List<SleepDbM> Sleeps = null;
         if (itemDtoSrc.SleepsId != null)
         {
@@ -228,7 +228,7 @@ public class GraphDbRepos
         }
         itemDst.SleepsDbM = Sleeps;
 
-    // ✅ Update AppetitesDbM from list (Newly added)
+        // ✅ Update AppetitesDbM from list (Newly added)
         List<AppetiteDbM> Appetites = null;
         if (itemDtoSrc.AppetitesId != null)
         {

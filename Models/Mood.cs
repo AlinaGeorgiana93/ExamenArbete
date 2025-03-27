@@ -1,5 +1,4 @@
 using Configuration;
-using Seido.Utilities.SeedGenerator;
 
 namespace Models;
 
@@ -8,7 +7,7 @@ public class Mood : IMood
 
     public virtual Guid MoodId { get; set;}
    
-    public  MoodKind MoodKind { get; set; }
+    public virtual MoodKind MoodKind { get; set; }
 
     public virtual DateTime Date { get; set; }
 
@@ -18,7 +17,7 @@ public class Mood : IMood
 
 
 
-    public Guid PatientId { get; set; }
+
    //Navigation properties
     public virtual IPatient Patient { get; set; }
     public virtual IGraph Graph { get; set; }

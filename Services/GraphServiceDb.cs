@@ -6,19 +6,20 @@ using Models.DTO;
 namespace Services;
 
 
-public class GraphServiceDb : IGraphService {
+public class GraphServiceDb : IGraphService
+{
 
     private readonly GraphDbRepos _graphRepo;
-  
-    private readonly ILogger<GraphServiceDb> _logger;    
-    
+
+    private readonly ILogger<GraphServiceDb> _logger;
+
     public GraphServiceDb(GraphDbRepos graphRepo, ILogger<GraphServiceDb> logger)
     {
         _graphRepo = graphRepo;
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IGraph>> ReadGraphsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _graphRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponsePageDto<IGraph>> ReadGraphsAsync(bool flat, string filter, int pageNumber, int pageSize) => _graphRepo.ReadItemsAsync(flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IGraph>> ReadGraphAsync(Guid id, bool flat) => _graphRepo.ReadItemAsync(id, flat);
     public Task<ResponseItemDto<IGraph>> DeleteGraphAsync(Guid id) => _graphRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<IGraph>> UpdateGraphAsync(GraphCuDto item) => _graphRepo.UpdateItemAsync(item);

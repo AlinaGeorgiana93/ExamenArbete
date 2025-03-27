@@ -77,7 +77,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                 {
                     GraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientDbMPatientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -88,13 +87,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.PatientDbMPatientId,
                         principalSchema: "supusr",
                         principalTable: "Patients",
-                        principalColumn: "PatientId");
-                    table.ForeignKey(
-                        name: "FK_Graphs_Patients_PatientDbMPatientId1",
-                        column: x => x.PatientDbMPatientId1,
-                        principalSchema: "supusr",
-                        principalTable: "Patients",
-                        principalColumn: "PatientId");
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,7 +102,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientDbMPatientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ActivityLevel = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
@@ -129,13 +122,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.PatientDbMPatientId,
                         principalSchema: "supusr",
                         principalTable: "Patients",
-                        principalColumn: "PatientId");
-                    table.ForeignKey(
-                        name: "FK_Activities_Patients_PatientDbMPatientId1",
-                        column: x => x.PatientDbMPatientId1,
-                        principalSchema: "supusr",
-                        principalTable: "Patients",
-                        principalColumn: "PatientId");
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -149,7 +137,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientDbMPatientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AppetiteLevel = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
@@ -170,13 +157,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.PatientDbMPatientId,
                         principalSchema: "supusr",
                         principalTable: "Patients",
-                        principalColumn: "PatientId");
-                    table.ForeignKey(
-                        name: "FK_Appetites_Patients_PatientDbMPatientId1",
-                        column: x => x.PatientDbMPatientId1,
-                        principalSchema: "supusr",
-                        principalTable: "Patients",
-                        principalColumn: "PatientId");
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -185,17 +167,15 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: table => new
                 {
                     MoodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Day = table.Column<int>(type: "int", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strMoodKind = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientDbMPatientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     MoodKind = table.Column<int>(type: "int", nullable: false),
-                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Day = table.Column<int>(type: "int", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(200)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -212,13 +192,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.PatientDbMPatientId,
                         principalSchema: "supusr",
                         principalTable: "Patients",
-                        principalColumn: "PatientId");
-                    table.ForeignKey(
-                        name: "FK_Moods_Patients_PatientDbMPatientId1",
-                        column: x => x.PatientDbMPatientId1,
-                        principalSchema: "supusr",
-                        principalTable: "Patients",
-                        principalColumn: "PatientId");
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -232,7 +207,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GraphDbMGraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientDbMPatientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SleepLevel = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
@@ -253,13 +227,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.PatientDbMPatientId,
                         principalSchema: "supusr",
                         principalTable: "Patients",
-                        principalColumn: "PatientId");
-                    table.ForeignKey(
-                        name: "FK_Sleeps_Patients_PatientDbMPatientId1",
-                        column: x => x.PatientDbMPatientId1,
-                        principalSchema: "supusr",
-                        principalTable: "Patients",
-                        principalColumn: "PatientId");
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -275,12 +244,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                 column: "PatientDbMPatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_PatientDbMPatientId1",
-                schema: "supusr",
-                table: "Activities",
-                column: "PatientDbMPatientId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Appetites_GraphDbMGraphId",
                 schema: "supusr",
                 table: "Appetites",
@@ -293,22 +256,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                 column: "PatientDbMPatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appetites_PatientDbMPatientId1",
-                schema: "supusr",
-                table: "Appetites",
-                column: "PatientDbMPatientId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Graphs_PatientDbMPatientId",
                 schema: "supusr",
                 table: "Graphs",
                 column: "PatientDbMPatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Graphs_PatientDbMPatientId1",
-                schema: "supusr",
-                table: "Graphs",
-                column: "PatientDbMPatientId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Moods_GraphDbMGraphId",
@@ -321,12 +272,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr",
                 table: "Moods",
                 column: "PatientDbMPatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Moods_PatientDbMPatientId1",
-                schema: "supusr",
-                table: "Moods",
-                column: "PatientDbMPatientId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Patients_StaffDbMStaffId",
@@ -345,12 +290,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr",
                 table: "Sleeps",
                 column: "PatientDbMPatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sleeps_PatientDbMPatientId1",
-                schema: "supusr",
-                table: "Sleeps",
-                column: "PatientDbMPatientId1");
         }
 
         /// <inheritdoc />

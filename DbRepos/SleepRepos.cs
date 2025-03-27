@@ -46,7 +46,7 @@ public class SleepDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<ISleep>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<ISleep>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<SleepDbM> query;
@@ -67,8 +67,8 @@ public class SleepDbRepos
             DbItemsCount = await query
 
                 // Adding filter functionality
-                .Where(i => 
-                i.strSleepLevel.ToLower().Contains(filter) ||
+                .Where(i =>
+                 i.strSleepLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
                  i.strDayOfWeek.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
@@ -76,8 +76,8 @@ public class SleepDbRepos
 
             PageItems = await query
 
-                    // Adding filter functionality
-                     .Where(i => 
+                     // Adding filter functionality
+                     .Where(i =>
                     i.strSleepLevel.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.strDayOfWeek.ToLower().Contains(filter) ||
@@ -124,12 +124,12 @@ public class SleepDbRepos
             .Where(i => i.SleepId == itemDto.SleepId);
         var item = await query1
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)  
+                .Include(i => i.GraphDbM)
                 .FirstOrDefaultAsync<SleepDbM>();
 
         if (item == null) throw new ArgumentException($"Item {itemDto.SleepId} is not existing");
 
-        
+
         item.UpdateFromDTO(itemDto);
 
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
@@ -138,7 +138,7 @@ public class SleepDbRepos
 
         await _dbContext.SaveChangesAsync();
 
-        return await ReadItemAsync(item.SleepId, false);    
+        return await ReadItemAsync(item.SleepId, false);
     }
 
     public async Task<ResponseItemDto<ISleep>> CreateItemAsync(SleepCuDto itemDto)
@@ -146,7 +146,7 @@ public class SleepDbRepos
         if (itemDto.SleepId != null)
             throw new ArgumentException($"{nameof(itemDto.SleepId)} must be null when creating a new object");
 
-     
+
         var item = new SleepDbM(itemDto);
 
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
@@ -155,25 +155,25 @@ public class SleepDbRepos
 
         await _dbContext.SaveChangesAsync();
 
-        return await ReadItemAsync(item.SleepId, false);    
+        return await ReadItemAsync(item.SleepId, false);
     }
 
     private async Task navProp_ItemCUdto_to_ItemDbM(SleepCuDto itemDtoSrc, SleepDbM itemDst)
     {
         var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => (a.PatientId == itemDtoSrc.PatientId));
+            a => a.PatientId == itemDtoSrc.PatientId);
 
         if (patient == null)
             throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
 
         itemDst.PatientDbM = patient;
 
-         var graph = await _dbContext.Graphs.FirstOrDefaultAsync(
-        g => (g.GraphId == itemDtoSrc.GraphId));
+        var graph = await _dbContext.Graphs.FirstOrDefaultAsync(
+       g => g.GraphId == itemDtoSrc.GraphId);
 
-    if (graph == null)
-        throw new ArgumentException($"Graph ID {itemDtoSrc.GraphId} does not exist");
+        if (graph == null)
+            throw new ArgumentException($"Graph ID {itemDtoSrc.GraphId} does not exist");
 
-    itemDst.GraphDbM = graph;
+        itemDst.GraphDbM = graph;
     }
 }

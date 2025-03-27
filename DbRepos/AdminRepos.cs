@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-using Seido.Utilities.SeedGenerator;
 using Models.DTO;
 using DbModels;
 using DbContext;
@@ -31,10 +30,10 @@ public class AdminDbRepos
 
     public async Task<ResponseItemDto<GstUsrInfoAllDto>> InfoAsync()
     {
-         var info = new GstUsrInfoAllDto();
+        var info = new GstUsrInfoAllDto();
         info.Db = await _dbContext.InfoDbView.FirstAsync();
         info.Staffs = await _dbContext.InfoStaffsView.ToListAsync();
-       
+
 
         return new ResponseItemDto<GstUsrInfoAllDto>()
         {
@@ -45,46 +44,46 @@ public class AdminDbRepos
 
     public async Task<UsrInfoDto> SeedUsersAsync(int nrOfUsers, int nrOfSysAdmin)
     {
-            _logger.LogInformation($"Seeding {nrOfUsers} staff ");
-            
-            //First delete all existing users
-            foreach (var u in _dbContext.Users)
-                _dbContext.Users.Remove(u);
+        _logger.LogInformation($"Seeding {nrOfUsers} staff ");
 
-            //add users
-            for (int i = 1; i <= nrOfUsers; i++)
+        //First delete all existing users
+        foreach (var u in _dbContext.Users)
+            _dbContext.Users.Remove(u);
+
+        //add users
+        for (int i = 1; i <= nrOfUsers; i++)
+        {
+            _dbContext.Users.Add(new UserDbM
             {
-                _dbContext.Users.Add(new UserDbM
-                {
-                    UserId = Guid.NewGuid(),
-                    UserName = $"staff{i}",
-                    Email = $"staff{i}@gmail.com",
-                    Password = _encryptions.EncryptPasswordToBase64($"staff{i}"),
-                    Role = "staff"
-                });
-            }
+                UserId = Guid.NewGuid(),
+                UserName = $"staff{i}",
+                Email = $"staff{i}@gmail.com",
+                Password = _encryptions.EncryptPasswordToBase64($"staff{i}"),
+                Role = "staff"
+            });
+        }
 
 
-            //add system adminitrators
-            for (int i = 1; i <= nrOfSysAdmin; i++)
+        //add system adminitrators
+        for (int i = 1; i <= nrOfSysAdmin; i++)
+        {
+            _dbContext.Users.Add(new UserDbM
             {
-                _dbContext.Users.Add(new UserDbM
-                {
-                    UserId = Guid.NewGuid(),
-                    UserName = $"sysadmin{i}",
-                    Email = $"sysadmin{i}@gmail.com",
-                    Password = _encryptions.EncryptPasswordToBase64($"sysadmin{i}"),
-                    Role = "sysadmin"
-                });
-            }
-            await _dbContext.SaveChangesAsync();
+                UserId = Guid.NewGuid(),
+                UserName = $"sysadmin{i}",
+                Email = $"sysadmin{i}@gmail.com",
+                Password = _encryptions.EncryptPasswordToBase64($"sysadmin{i}"),
+                Role = "sysadmin"
+            });
+        }
+        await _dbContext.SaveChangesAsync();
 
-            var _info = new UsrInfoDto
-            {
-                NrStaff = await _dbContext.Users.CountAsync(i => i.Role == "staff"),
-                NrSystemAdmin = await _dbContext.Users.CountAsync(i => i.Role == "sysadmin")
-            };
+        var _info = new UsrInfoDto
+        {
+            NrStaff = await _dbContext.Users.CountAsync(i => i.Role == "staff"),
+            NrSystemAdmin = await _dbContext.Users.CountAsync(i => i.Role == "sysadmin")
+        };
 
-            return _info;
+        return _info;
     }
 }

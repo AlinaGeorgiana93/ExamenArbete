@@ -15,7 +15,7 @@ namespace DbModels;
 [Table("Users", Schema = "dbo")]
 public class UserDbM : User
 {
-    [Key]     
+    [Key]
     public override Guid UserId { get; set; }
 
     [Required]

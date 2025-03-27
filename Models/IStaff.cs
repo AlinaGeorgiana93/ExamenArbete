@@ -9,12 +9,12 @@ public interface IStaff
     public string LastName { get; set; }
 
     public string PersonalNumber { get; set; }
-    
-    
+
+
 
     //Navigation properties
-  
-     public List <IPatient> Patients { get; set; }
-  
+
+    public List<IPatient> Patients { get; set; }
+
 
 }

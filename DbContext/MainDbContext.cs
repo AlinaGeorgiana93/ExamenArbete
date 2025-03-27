@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore;
- 
+
 using Configuration;
 using Models;
 using Models.DTO;
@@ -10,32 +10,32 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Npgsql.Replication;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
- 
+
 namespace DbContext;
- 
+
 //DbContext namespace is a fundamental EFC layer of the database context and is
 //used for all Database connection as well as for EFC CodeFirst migration and database updates
- 
+
 public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     IConfiguration _configuration;
     DatabaseConnections _databaseConnections;
- 
-    public string dbConnection  => _databaseConnections.GetDbConnection(this.Database.GetConnectionString());
- 
+
+    public string dbConnection => _databaseConnections.GetDbConnection(this.Database.GetConnectionString());
+
     #region C# model of database tables
     public DbSet<StaffDbM> Staffs { get; set; }
     public DbSet<PatientDbM> Patients { get; set; }
-    public DbSet<UserDbM> Users { get; set; }    
+    public DbSet<UserDbM> Users { get; set; }
     public DbSet<SleepDbM> Sleeps { get; set; }
-    public DbSet<MoodDbM> Moods { get; set; }   
-    public DbSet<GraphDbM> Graphs { get; set; }    
+    public DbSet<MoodDbM> Moods { get; set; }
+    public DbSet<GraphDbM> Graphs { get; set; }
 
-    public DbSet<AppetiteDbM> Appetites { get; set; }   
-    public DbSet<ActivityDbM> Activities { get; set; }  
- 
+    public DbSet<AppetiteDbM> Appetites { get; set; }
+    public DbSet<ActivityDbM> Activities { get; set; }
+
     #endregion
- 
+
     #region model the Views
     public DbSet<GstUsrInfoDbDto> InfoDbView { get; set; }
     public DbSet<GstUsrInfoStaffsDto> InfoStaffsView { get; set; }
@@ -43,7 +43,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
 
 
     #endregion
- 
+
     #region constructors
     public MainDbContext() { }
     public MainDbContext(DbContextOptions options, IConfiguration configuration, DatabaseConnections databaseConnections) : base(options)
@@ -52,92 +52,92 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         _configuration = configuration;
     }
     #endregion
- 
+
     //Here we can modify the migration building
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
- 
+
         #region model the Views
         modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
         modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();
-        
 
-        
-            
+
+
+
         #endregion
-        
+
         base.OnModelCreating(modelBuilder);
 
-      modelBuilder.Entity<SleepDbM>()
-        .HasOne(s => s.PatientDbM)
-        .WithMany()
-        .HasForeignKey(s => s.PatientDbMPatientId)
-        .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
+        // modelBuilder.Entity<SleepDbM>()
+        //   .HasOne(s => s.PatientDbM)
+        //   .WithMany()
+        //   .HasForeignKey(s => s.PatientDbMPatientId)
+        //   .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
 
-    modelBuilder.Entity<MoodDbM>()
-        .HasOne(m => m.PatientDbM)
-        .WithMany()
-        .HasForeignKey(m => m.PatientDbMPatientId)
-        .OnDelete(DeleteBehavior.NoAction);
+        // modelBuilder.Entity<MoodDbM>()
+        //     .HasOne(m => m.PatientDbM)
+        //     .WithMany()
+        //     .HasForeignKey(m => m.PatientDbMPatientId)
+        //     .OnDelete(DeleteBehavior.NoAction);
 
-    modelBuilder.Entity<AppetiteDbM>()
-        .HasOne(a => a.PatientDbM)
-        .WithMany()
-        .HasForeignKey(a => a.PatientDbMPatientId)
-        .OnDelete(DeleteBehavior.NoAction);
+        // modelBuilder.Entity<AppetiteDbM>()
+        //     .HasOne(a => a.PatientDbM)
+        //     .WithMany()
+        //     .HasForeignKey(a => a.PatientDbMPatientId)
+        //     .OnDelete(DeleteBehavior.NoAction);
 
-    modelBuilder.Entity<ActivityDbM>()
-        .HasOne(ac => ac.PatientDbM)
-        .WithMany()
-        .HasForeignKey(ac => ac.PatientDbMPatientId)
-        .OnDelete(DeleteBehavior.NoAction);
+        // modelBuilder.Entity<ActivityDbM>()
+        //     .HasOne(ac => ac.PatientDbM)
+        //     .WithMany()
+        //     .HasForeignKey(ac => ac.PatientDbMPatientId)
+        //     .OnDelete(DeleteBehavior.NoAction);
 
-    modelBuilder.Entity<GraphDbM>()
-        .HasOne(g => g.PatientDbM)
-        .WithMany()
-        .HasForeignKey(g => g.PatientDbMPatientId)
-        .OnDelete(DeleteBehavior.NoAction);
+        // modelBuilder.Entity<GraphDbM>()
+        //     .HasOne(g => g.PatientDbM)
+        //     .WithMany()
+        //     .HasForeignKey(g => g.PatientDbMPatientId)
+        //     .OnDelete(DeleteBehavior.NoAction);
     }
- 
+
     #region DbContext for some popular databases
     public class SqlServerDbContext : MainDbContext
     {
         public SqlServerDbContext() { }
         public SqlServerDbContext(DbContextOptions options, IConfiguration configuration, DatabaseConnections databaseConnections)
             : base(options, configuration, databaseConnections) { }
- 
- 
+
+
         //Used only for CodeFirst Database Migration and database update commands
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            
+
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder = SetupDatabaseConnection(optionsBuilder,
                     (options, connectionString) => options.UseSqlServer(connectionString, options => options.EnableRetryOnFailure()));
             }
 
-            
- 
+
+
             base.OnConfiguring(optionsBuilder);
         }
- 
+
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.Properties<decimal>().HaveColumnType("money");
             configurationBuilder.Properties<string>().HaveColumnType("nvarchar(200)");
- 
+
             base.ConfigureConventions(configurationBuilder);
         }
     }
- 
+
     public class MySqlDbContext : MainDbContext
     {
         public MySqlDbContext() { }
         public MySqlDbContext(DbContextOptions options) : base(options, null, null) { }
- 
- 
+
+
         //Used only for CodeFirst Database Migration
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -146,25 +146,25 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
                 optionsBuilder = SetupDatabaseConnection(optionsBuilder,
                     (options, connectionString) => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
             }
- 
+
             base.OnConfiguring(optionsBuilder);
         }
- 
+
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.Properties<string>().HaveColumnType("varchar(200)");
- 
+
             base.ConfigureConventions(configurationBuilder);
- 
+
         }
     }
- 
+
     public class PostgresDbContext : MainDbContext
     {
         public PostgresDbContext() { }
-        public PostgresDbContext(DbContextOptions options) : base(options, null, null){ }
- 
- 
+        public PostgresDbContext(DbContextOptions options) : base(options, null, null) { }
+
+
         //Used only for CodeFirst Database Migration
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -173,81 +173,81 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
                 optionsBuilder = SetupDatabaseConnection(optionsBuilder,
                     (options, connectionString) => options.UseNpgsql(connectionString));
             }
- 
+
             base.OnConfiguring(optionsBuilder);
         }
- 
+
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.Properties<string>().HaveColumnType("varchar(200)");
             base.ConfigureConventions(configurationBuilder);
         }
     }
- 
+
     public class SqliteDbContext : MainDbContext
     {
         public SqliteDbContext() { }
-        public SqliteDbContext(DbContextOptions options) : base(options, null, null){ }
- 
- 
+        public SqliteDbContext(DbContextOptions options) : base(options, null, null) { }
+
+
         //Used only for CodeFirst Database Migration
- protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-{
-    if (!optionsBuilder.IsConfigured)
-    {
-        // Get the connection string
-        var connectionString = _databaseConnections.GetDbConnection(this.Database.GetConnectionString());
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                // Get the connection string
+                var connectionString = _databaseConnections.GetDbConnection(this.Database.GetConnectionString());
 
-        // Log the connection string
-        Console.WriteLine($"Using connection string: {connectionString}");
+                // Log the connection string
+                Console.WriteLine($"Using connection string: {connectionString}");
 
-        // Call SetupDatabaseConnection with the connection string
-        optionsBuilder = SetupDatabaseConnection(optionsBuilder, (options, connStr) => options.UseSqlite(connStr));
+                // Call SetupDatabaseConnection with the connection string
+                optionsBuilder = SetupDatabaseConnection(optionsBuilder, (options, connStr) => options.UseSqlite(connStr));
 
-        // Now the connection string is printed before it's used
+                // Now the connection string is printed before it's used
+            }
+
+            base.OnConfiguring(optionsBuilder);
+        }
     }
 
-    base.OnConfiguring(optionsBuilder);
-}
-    }
-    
     #endregion
- 
- 
+
+
     #region Methods used only during Migration
     private void DesignTimeMigrationCreateServices()
     {
         //ASP.NET Core program.cs has not run by efc design-time, configure and create services as in
         //program.cs
- 
+
         // Create a configuration
         System.Console.WriteLine($"   configuring");
         var conf = new ConfigurationBuilder();
         conf.AddApplicationSecrets("../Configuration/Configuration.csproj");
- 
+
         System.Console.WriteLine($"   building configuring");
         var configuration = conf.Build();
- 
+
         System.Console.WriteLine($"   creating services");
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddDatabaseConnections(configuration);
         serviceCollection.AddSingleton<IConfiguration>(configuration);
- 
+
         // Build the service provider and get the DbContext
         System.Console.WriteLine($"   retrieving services from serviceProvider");
- 
+
         var serviceProvider = serviceCollection.BuildServiceProvider();
         _configuration = serviceProvider.GetRequiredService<IConfiguration>();
         System.Console.WriteLine($"   {nameof(IConfiguration)} retrieved");
- 
+
         _databaseConnections = serviceProvider.GetRequiredService<DatabaseConnections>();
         System.Console.WriteLine($"   {nameof(DatabaseConnections)} retrieved");
         System.Console.WriteLine($"      secret source: {_databaseConnections.SetupInfo.SecretSource}");
         System.Console.WriteLine($"      database server: {_databaseConnections.SetupInfo.DataConnectionServer}");
         System.Console.WriteLine($"      database connection tag: {_databaseConnections.SetupInfo.DataConnectionTag}");
- 
+
     }
- 
+
     private DbConnectionDetail GetDatabaseConnection()
     {
         var connection = _databaseConnections.GetDataConnectionDetails(_configuration["DatabaseConnections:MigrationDataUser"]);
@@ -255,10 +255,10 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         {
             throw new InvalidDataException($"Error: Connection string for {connection.DbConnection}, {connection.DbUserLogin} not set");
         }
- 
+
         return connection;
     }
- 
+
     DbContextOptionsBuilder SetupDatabaseConnection(DbContextOptionsBuilder optionsBuilder, Func<DbContextOptionsBuilder, string, DbContextOptionsBuilder> options)
     {
         System.Console.WriteLine($"{nameof(SqlServerDbContext)}: executing OnConfiguring...");
@@ -266,9 +266,9 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         {
             DesignTimeMigrationCreateServices();
         }
- 
+
         DbConnectionDetail connection = GetDatabaseConnection();
- 
+
         optionsBuilder = options(optionsBuilder, connection.DbConnectionString);
         System.Console.WriteLine($"{nameof(SqlServerDbContext)}: OnConfiguring completed successfully");
         System.Console.WriteLine($"Proceeding with migration with user: {connection.DbUserLogin} " +
@@ -277,6 +277,6 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     }
     #endregion
 }
- 
- 
- 
+
+
+

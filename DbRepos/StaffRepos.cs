@@ -22,7 +22,7 @@ public class StaffDbRepos
     }
     #endregion
 
-   public async Task<ResponseItemDto<IStaff>> ReadItemAsync(Guid id, bool flat)
+    public async Task<ResponseItemDto<IStaff>> ReadItemAsync(Guid id, bool flat)
     {
         IQueryable<StaffDbM> query;
         if (!flat)
@@ -35,9 +35,9 @@ public class StaffDbRepos
         {
             query = _dbContext.Staffs.AsNoTracking()
                 .Where(i => i.StaffId == id);
-        }  
- 
-        var resp =  await query.FirstOrDefaultAsync<IStaff>();
+        }
+
+        var resp = await query.FirstOrDefaultAsync<IStaff>();
         return new ResponseItemDto<IStaff>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
@@ -45,24 +45,24 @@ public class StaffDbRepos
         };
     }
 
-     public async Task<ResponsePageDto<IStaff>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IStaff>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 
         IQueryable<StaffDbM> query = _dbContext.Staffs.AsNoTracking();
 
-         if (!flat)
-         {
+        if (!flat)
+        {
             query = _dbContext.Staffs.AsNoTracking()
                .Include(i => i.PatientsDbM);
-         }
-         
+        }
 
-        query = query.Where(i => 
+
+        query = query.Where(i =>
            (
               i.FirstName.ToLower().Contains(filter) ||
               i.LastName.ToLower().Contains(filter) ||
-              i.PersonalNumber.ToLower().Contains(filter) 
+              i.PersonalNumber.ToLower().Contains(filter)
            ));
 
         return new ResponsePageDto<IStaff>
@@ -77,9 +77,9 @@ public class StaffDbRepos
             PageSize = pageSize
         };
 
-    } 
+    }
 
-     public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
+    public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
     {
         var query1 = _dbContext.Staffs
             .Where(i => i.StaffId == id);
@@ -127,7 +127,7 @@ public class StaffDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.StaffId, false);    
+        return await ReadItemAsync(item.StaffId, false);
     }
 
     public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
@@ -149,10 +149,10 @@ public class StaffDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.StaffId, false);    
+        return await ReadItemAsync(item.StaffId, false);
     }
 
-        //private async Task navProp_ItemCUdto_to_ItemDbM(AddressCuDto itemDtoSrc, AddressDbM itemDst) // Commented out method
+    //private async Task navProp_ItemCUdto_to_ItemDbM(AddressCuDto itemDtoSrc, AddressDbM itemDst) // Commented out method
     //{
     //    //update attraction nav props
     //    var attraction = await _dbContext.Attractions.FirstOrDefaultAsync(

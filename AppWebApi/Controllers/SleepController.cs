@@ -23,20 +23,19 @@ namespace AppWebApi.Controllers
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponsePageDto<ISleep>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> ReadItems(string seeded = "true", string flat = "true",
+        public async Task<IActionResult> ReadItems(string flat = "true",
             string filter = null, string pageNr = "0", string pageSize = "10")
         {
             try
             {
-                bool seededArg = bool.Parse(seeded);
                 bool flatArg = bool.Parse(flat);
                 int pageNrArg = int.Parse(pageNr);
                 int pageSizeArg = int.Parse(pageSize);
 
-                _logger.LogInformation($"{nameof(ReadItems)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
+                _logger.LogInformation($"{nameof(ReadItems)}: {nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
-                
-                var resp = await _service.ReadSleepsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
+
+                var resp = await _service.ReadSleepsAsync(flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -58,9 +57,9 @@ namespace AppWebApi.Controllers
                 bool flatArg = bool.Parse(flat);
 
                 _logger.LogInformation($"{nameof(ReadItem)}: {nameof(idArg)}: {idArg}, {nameof(flatArg)}: {flatArg}");
-                
+
                 var item = await _service.ReadSleepAsync(idArg, flatArg);
-                if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
+                if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
 
                 return Ok(item);
             }
@@ -81,10 +80,10 @@ namespace AppWebApi.Controllers
                 var idArg = Guid.Parse(id);
 
                 _logger.LogInformation($"{nameof(DeleteItem)}: {nameof(idArg)}: {idArg}");
-                
+
                 var item = await _service.DeleteSleepAsync(idArg);
-                if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
-        
+                if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
+
                 _logger.LogInformation($"item {idArg} deleted");
                 return Ok(item);
             }
@@ -108,13 +107,14 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(ReadItemDto)}: {nameof(idArg)}: {idArg}");
 
                 var item = await _service.ReadSleepAsync(idArg, false);
-                if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
+                if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
 
                 return Ok(
-                    new ResponseItemDto<SleepCuDto>() {
-                    DbConnectionKeyUsed = item.DbConnectionKeyUsed,
-                    Item = new SleepCuDto(item.Item)
-                });   
+                    new ResponseItemDto<SleepCuDto>()
+                    {
+                        DbConnectionKeyUsed = item.DbConnectionKeyUsed,
+                        Item = new SleepCuDto(item.Item)
+                    });
             }
             catch (Exception ex)
             {
@@ -133,12 +133,12 @@ namespace AppWebApi.Controllers
                 var idArg = Guid.Parse(id);
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
-                
+
                 if (item.SleepId != idArg) throw new ArgumentException("Id mismatch");
 
                 var model = await _service.UpdateSleepAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
-               
+
                 return Ok(model);
             }
             catch (Exception ex)
@@ -156,7 +156,7 @@ namespace AppWebApi.Controllers
             try
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
-                
+
                 var model = await _service.CreateSleepAsync(item);
                 _logger.LogInformation($"item {model.Item.SleepId} created");
 

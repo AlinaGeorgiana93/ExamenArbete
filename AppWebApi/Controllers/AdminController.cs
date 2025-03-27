@@ -45,7 +45,7 @@ namespace AppWebApi.Controllers
                 _logger.LogError($"{nameof(Info)}: {ex.InnerException?.Message}");
                 return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
             }
-         }
+        }
 
 #if DEBUG
         // [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
@@ -108,12 +108,12 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(SeedUsers)}: {nameof(_countUsr)}: {_countUsr}, {nameof(_countSysAdmin)}: {_countSysAdmin}");
 
                 UsrInfoDto _info = await _adminService.SeedUsersAsync(_countUsr, _countSysAdmin);
-                return Ok(_info);           
+                return Ok(_info);
             }
             catch (Exception ex)
             {
                 return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
-            }       
+            }
         }
 #endif
 

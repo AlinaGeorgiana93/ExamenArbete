@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 using Models;
-using Seido.Utilities.SeedGenerator;
 using Models.DTO;
 
 
@@ -21,22 +20,22 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
     public virtual string strAppetiteLevel
     {
         get => AppetiteLevel.ToString();
-        set { } 
+        set { }
     }
-    
-        public virtual string strDayOfWeek
-        {
-            get => Day.ToString();
-            set { }
-        }
-        public virtual string strDate
-        {
-            get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
-            set { }
-        }
+
+    public virtual string strDayOfWeek
+    {
+        get => Day.ToString();
+        set { }
+    }
+    public virtual string strDate
+    {
+        get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
+        set { }
+    }
     #endregion
 
-   public AppetiteDbM UpdateFromDTO(AppetiteCuDto org)
+    public AppetiteDbM UpdateFromDTO(AppetiteCuDto org)
     {
         if (org == null) return null;
 
@@ -44,18 +43,18 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
-       
+
 
         return this;
     }
 
-    
-    public Guid PatientDbMPatientId { get; set; } 
-    
-   [NotMapped]
-    public override IPatient Patient 
+
+    public Guid PatientDbMPatientId { get; set; }
+
+    [NotMapped]
+    public override IPatient Patient
     {
-         get => PatientDbM; set => throw new NotImplementedException();
+        get => PatientDbM; set => throw new NotImplementedException();
     }
 
     [JsonIgnore]
@@ -64,17 +63,17 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
 
     [JsonIgnore]
     [Required]
-     public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
+    public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
 
     [NotMapped]
-     public override IGraph Graph
-     {
-            get => GraphDbM;
-            set => throw new NotImplementedException();
-     }
+    public override IGraph Graph
+    {
+        get => GraphDbM;
+        set => throw new NotImplementedException();
+    }
 
- 
- 
+
+
 
     public AppetiteDbM() { }
     public AppetiteDbM(AppetiteCuDto org)
@@ -83,7 +82,7 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
         UpdateFromDTO(org);
     }
 
-  
 
-    
+
+
 }
