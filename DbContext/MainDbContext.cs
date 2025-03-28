@@ -32,6 +32,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<GraphDbM> Graphs { get; set; }
 
     public DbSet<AppetiteDbM> Appetites { get; set; }
+    public DbSet<AppetiteLevelDbM> AppetiteLevels { get; set; }    
     public DbSet<ActivityDbM> Activities { get; set; }
 
     #endregion
@@ -61,7 +62,9 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
         modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();
 
-
+        modelBuilder.Entity<AppetiteLevel>()
+            .Ignore(mk => mk.Appetite);  // Ignore the navigation property 'Appetite'
+     modelBuilder.Ignore<IPatient>(); // 🚀 Ensure IPatient is ignored
 
 
         #endregion
