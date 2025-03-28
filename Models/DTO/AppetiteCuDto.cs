@@ -32,6 +32,6 @@ public class AppetiteCuDto
         Notes = org.Notes;
 
          PatientId = org?.Patient?.PatientId;
-        // GraphId = org?.Graph?.GraphId;
+         //GraphId = org?.Graph?.GraphId;
     }
 }

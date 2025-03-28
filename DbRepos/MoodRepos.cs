@@ -1,7 +1,6 @@
 ﻿﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-
 using Models;
 using Models.DTO;
 using DbModels;
@@ -67,8 +66,8 @@ public class MoodDbRepos
 
                 // Adding filter functionality
                 .Where(i => 
-                i.strDayOfWeek.ToLower().Contains(filter) ||
-                i.strDate.ToLower().Contains(filter) ||
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
+                 i.strDate.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 

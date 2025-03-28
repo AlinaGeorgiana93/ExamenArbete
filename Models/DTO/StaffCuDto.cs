@@ -19,7 +19,7 @@ public class StaffCuDto
     public string PersonalNumber { get; set; }
 
     // FK for Patients (One-to-Many Relationship)
-    public virtual List<Guid>? PatientsId { get; set; }
+    public virtual List<Guid> PatientsId { get; set; }
 
     public StaffCuDto() { }
 

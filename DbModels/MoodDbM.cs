@@ -58,16 +58,6 @@ public class MoodDbM : Mood {
 
     [JsonIgnore]
     public List<MoodKindDbM> MoodKindsDbM { get; set; }
-
-      [NotMapped]
-        public override IGraph Graph
-        {
-            get => GraphDbM;
-            set => throw new NotImplementedException();
-        }
-        [JsonIgnore]
-        public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
-
         
     public MoodDbM() { }
     public MoodDbM(MoodCuDto org)

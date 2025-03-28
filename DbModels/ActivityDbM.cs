@@ -19,7 +19,6 @@ public class ActivityDbM : Activity
 
 
 
-
     #region adding more readability to an enum type in the database
     public virtual string strActivityLevel
     {
@@ -32,14 +31,12 @@ public class ActivityDbM : Activity
             get => Day.ToString();
             set { }
         }
-
         
         public virtual string strDate
         {
             get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
             set { }
         }
-
     
      #endregion
 
@@ -51,22 +48,22 @@ public class ActivityDbM : Activity
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
-       
 
         return this;
     }
-      [NotMapped]
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
+    [Required]
     public  PatientDbM PatientDbM { get; set; }
 
-       [NotMapped]
-    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+    //    [NotMapped]
+    // public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
 
-    [JsonIgnore]
+    // [JsonIgnore]
    
-    public  GraphDbM GraphDbM { get; set; }
+    // public  GraphDbM GraphDbM { get; set; }
 
 
     public ActivityDbM() { }
@@ -75,8 +72,5 @@ public class ActivityDbM : Activity
         ActivityId = Guid.NewGuid();
         UpdateFromDTO(org);
     }
-
-  
-
     
 }

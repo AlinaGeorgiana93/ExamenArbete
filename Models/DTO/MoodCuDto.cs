@@ -12,7 +12,9 @@ public class MoodCuDto
     public DayOfWeek Day { get; set; }
     public string Notes { get; set; } 
  
-    //public virtual Guid? PatientId { get; set; } = null;
+    public virtual Guid? PatientId { get; set; } = null;
+    public List<Guid> MoodKindsId { get; set; }
+
    
 
 
@@ -23,7 +25,8 @@ public class MoodCuDto
         Date = org.Date;
         Day = org.Day;
         
-     //PatientId = org?.Patient?.PatientId;
+      PatientId = org?.Patient?.PatientId;
+      MoodKindsId = org.MoodKinds?.Select(e => e.MoodKindId).ToList();
 
       
     }

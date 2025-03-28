@@ -12,7 +12,7 @@ public interface IMood
     
     //Navigation properties
     public IPatient Patient{ get; set; }
-    public IGraph Graph { get; set; }
+  //  public IGraph Graph { get; set; }
     public List<IMoodKind> MoodKinds {get; set;}
  
 }

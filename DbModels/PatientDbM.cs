@@ -14,14 +14,18 @@ public class PatientDbM : Patient
     [Key]
     public override Guid PatientId { get; set; }
 
+    
+    public override string FirstName {get;set; }
+    public override string LastName { get; set; }
+    public override string PersonalNumber { get; set; }
+
    [JsonIgnore]
-    public virtual Guid Graphd { get; set; }
+    public virtual Guid? GraphId { get; set; }
 
     [NotMapped]
     public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
-
     [JsonIgnore]
-    [Required]
+  
     [ForeignKey ("GraphId")] //Connecting FK above with GraphDbM.GraphId
     public  GraphDbM  GraphDbM { get; set; } = null;
 
@@ -56,6 +60,8 @@ public class PatientDbM : Patient
     {
         if (org == null) return null;
 
+        FirstName=org.FirstName;
+        LastName=org.LastName;
         PersonalNumber = org.PersonalNumber;
 
 

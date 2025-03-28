@@ -16,6 +16,6 @@ namespace Models
 
     //Navigation properties
         public IPatient Patient { get; set; }
-        public IGraph Graph { get; set; } 
+      //  public IGraph Graph { get; set; } 
     }
 }

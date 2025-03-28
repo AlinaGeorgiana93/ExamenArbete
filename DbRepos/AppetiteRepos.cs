@@ -29,7 +29,7 @@ public class AppetiteDbRepos
         {
             query = _dbContext.Appetites.AsNoTracking()
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)
+                //.Include(i => i.GraphDbM)
                 .Where(i => i.AppetiteId == id);
         }
         else
@@ -57,8 +57,8 @@ public class AppetiteDbRepos
         else
         {
             query = _dbContext.Appetites.AsNoTracking()
-                .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM);
+                .Include(i => i.PatientDbM);
+                //.Include(i => i.GraphDbM);
         }
 
         var ret = new ResponsePageDto<IAppetite>()
@@ -124,7 +124,7 @@ public class AppetiteDbRepos
             .Where(i => i.AppetiteId == itemDto.AppetiteId);
         var item = await query1
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)  // Include Graph
+                //.Include(i => i.GraphDbM)  // Include Graph
                 .FirstOrDefaultAsync<AppetiteDbM>();
 
         //If the item does not exists

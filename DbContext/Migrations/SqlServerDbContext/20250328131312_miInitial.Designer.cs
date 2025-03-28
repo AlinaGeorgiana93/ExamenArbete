@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20250327155141_miInitial")]
+    [Migration("20250328131312_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -40,16 +40,13 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<int>("Day")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("GraphDbMGraphId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid?>("PatientDbMPatientId")
+                    b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PatientId")
+                    b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("strActivityLevel")
@@ -62,8 +59,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("ActivityId");
-
-                    b.HasIndex("GraphDbMGraphId");
 
                     b.HasIndex("PatientDbMPatientId");
 
@@ -85,9 +80,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<int>("Day")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("GraphDbMGraphId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(200)");
 
@@ -107,8 +99,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("AppetiteId");
-
-                    b.HasIndex("GraphDbMGraphId");
 
                     b.HasIndex("PatientDbMPatientId");
 
@@ -144,9 +134,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<int>("Day")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("GraphDbMGraphId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("MoodKindId")
                         .HasColumnType("uniqueidentifier");
 
@@ -167,8 +154,6 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.HasKey("MoodId");
 
-                    b.HasIndex("GraphDbMGraphId");
-
                     b.HasIndex("MoodKindId");
 
                     b.HasIndex("PatientDbMPatientId");
@@ -185,10 +170,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid>("GraphId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("Graphd")
+                    b.Property<Guid?>("GraphId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LastName")
@@ -203,7 +185,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasKey("PatientId");
 
                     b.HasIndex("GraphId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[GraphId] IS NOT NULL");
 
                     b.HasIndex("StaffDbMStaffId");
 
@@ -221,9 +204,6 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.Property<int>("Day")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("GraphDbMGraphId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(200)");
@@ -247,8 +227,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("SleepId");
-
-                    b.HasIndex("GraphDbMGraphId");
 
                     b.HasIndex("PatientDbMPatientId");
 
@@ -390,42 +368,26 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("DbModels.ActivityDbM", b =>
                 {
-                    b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("ActivitiesDbM")
-                        .HasForeignKey("GraphDbMGraphId");
-
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("ActivitiesDbM")
-                        .HasForeignKey("PatientDbMPatientId");
-
-                    b.Navigation("GraphDbM");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PatientDbM");
                 });
 
             modelBuilder.Entity("DbModels.AppetiteDbM", b =>
                 {
-                    b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("AppetitesDbM")
-                        .HasForeignKey("GraphDbMGraphId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("AppetitesDbM")
                         .HasForeignKey("PatientDbMPatientId");
-
-                    b.Navigation("GraphDbM");
 
                     b.Navigation("PatientDbM");
                 });
 
             modelBuilder.Entity("DbModels.MoodDbM", b =>
                 {
-                    b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("MoodsDbM")
-                        .HasForeignKey("GraphDbMGraphId");
-
                     b.HasOne("MoodKind", "MoodKind")
                         .WithMany()
                         .HasForeignKey("MoodKindId");
@@ -433,8 +395,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("MoodsDbM")
                         .HasForeignKey("PatientDbMPatientId");
-
-                    b.Navigation("GraphDbM");
 
                     b.Navigation("MoodKind");
 
@@ -445,9 +405,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 {
                     b.HasOne("DbModels.GraphDbM", "GraphDbM")
                         .WithOne("PatientDbM")
-                        .HasForeignKey("DbModels.PatientDbM", "GraphId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DbModels.PatientDbM", "GraphId");
 
                     b.HasOne("DbModels.StaffDbM", null)
                         .WithMany("PatientsDbM")
@@ -458,17 +416,9 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("DbModels.SleepDbM", b =>
                 {
-                    b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("SleepsDbM")
-                        .HasForeignKey("GraphDbMGraphId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("SleepsDbM")
                         .HasForeignKey("PatientDbMPatientId");
-
-                    b.Navigation("GraphDbM");
 
                     b.Navigation("PatientDbM");
                 });
@@ -490,16 +440,8 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("DbModels.GraphDbM", b =>
                 {
-                    b.Navigation("ActivitiesDbM");
-
-                    b.Navigation("AppetitesDbM");
-
-                    b.Navigation("MoodsDbM");
-
                     b.Navigation("PatientDbM")
                         .IsRequired();
-
-                    b.Navigation("SleepsDbM");
                 });
 
             modelBuilder.Entity("DbModels.MoodDbM", b =>

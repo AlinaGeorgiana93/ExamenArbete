@@ -20,7 +20,8 @@ public class Mood : IMood
    //Navigation properties
 
     public virtual Guid? PatientId { get; set; } 
+    
     public virtual IPatient Patient { get; set; }
-    public virtual IGraph Graph { get; set; }
+   // public virtual IGraph Graph { get; set; }
     public virtual List<IMoodKind> MoodKinds {get; set;}
 }

@@ -59,12 +59,12 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
   
     public  PatientDbM PatientDbM { get; set; }
 
-        [NotMapped]
-    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+    //     [NotMapped]
+    // public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
 
-    [JsonIgnore]
-    [Required]
-    public  GraphDbM GraphDbM { get; set; }
+    // [JsonIgnore]
+
+    // public  GraphDbM GraphDbM { get; set; }
 
 
     public AppetiteDbM() { }

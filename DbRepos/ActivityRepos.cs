@@ -22,7 +22,7 @@ public class ActivityDbRepos
     }
     #endregion
 
-    public async Task<ResponseItemDto<IActivity>> ReadItemAsync(Guid id, bool flat)
+   public async Task<ResponseItemDto<IActivity>> ReadItemAsync(Guid id, bool flat)
     {
         IQueryable<ActivityDbM> query;
         if (!flat)
@@ -35,9 +35,9 @@ public class ActivityDbRepos
         {
             query = _dbContext.Activities.AsNoTracking()
                 .Where(i => i.ActivityId == id);
-        }
-
-        var resp = await query.FirstOrDefaultAsync<IActivity>();
+        }  
+ 
+        var resp =  await query.FirstOrDefaultAsync<IActivity>();
         return new ResponseItemDto<IActivity>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
@@ -45,136 +45,109 @@ public class ActivityDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IActivity>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+     public async Task<ResponsePageDto<IActivity>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
-        IQueryable<ActivityDbM> query;
-        if (flat)
-        {
-            query = _dbContext.Activities.AsNoTracking().Cast<ActivityDbM>();
-        }
-        else
-        {
-            query = _dbContext.Activities.AsNoTracking()
-                .Include(i => i.PatientDbM);
-        }
 
-        var ret = new ResponsePageDto<IActivity>()
+        IQueryable<ActivityDbM> query = _dbContext.Activities.AsNoTracking();
+
+         if (!flat)
+         {
+            query = _dbContext.Activities.AsNoTracking()
+            .Include(i => i.PatientDbM);
+            
+         }
+         
+
+        query = query.Where(i => 
+        
+               i.strActivityLevel.ToLower().Contains(filter) ||
+                i.strDate.ToLower().Contains(filter) ||
+                i.strDayOfWeek.ToLower().Contains(filter) ||
+                i.PatientDbM.FirstName.ToLower().Contains(filter) ||
+                i.Notes.ToLower().Contains(filter)
+           );
+
+        return new ResponsePageDto<IActivity>
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
-            DbItemsCount = await query
-
-                // Adding filter functionality
-                .Where(i => 
-                i.strActivityLevel.ToLower().Contains(filter) ||
-                 i.strDate.ToLower().Contains(filter) ||
-                 i.strDayOfWeek.ToLower().Contains(filter) ||
-                 i.Notes.ToLower().Contains(filter))
-                .CountAsync(),
-
+            DbItemsCount = await query.CountAsync(),
             PageItems = await query
-
-                    // Adding filter functionality
-                .Where(i => 
-                    i.strActivityLevel.ToLower().Contains(filter) ||
-                    i.strDate.ToLower().Contains(filter) ||
-                    i.strDayOfWeek.ToLower().Contains(filter) ||
-                    i.Notes.ToLower().Contains(filter))
-
-                // Adding paging
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
-
                 .ToListAsync<IActivity>(),
-
             PageNr = pageNumber,
             PageSize = pageSize
         };
-        return ret;
-    }
+
+    } 
 
     public async Task<ResponseItemDto<IActivity>> DeleteItemAsync(Guid id)
     {
-        var query1 = _dbContext.Activities
-            .Where(i => i.ActivityId == id);
+        var query = _dbContext.Activities
+        .Where(a => a.ActivityId == id);
+        var item = await query.FirstOrDefaultAsync();
 
-        var item = await query1.Cast<ActivityDbM>().FirstOrDefaultAsync();
+        if(item == null) throw new ArgumentException($"Item: {id} is not existing");
 
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {id} is not existing");
-
-        //delete in the database model
         _dbContext.Activities.Remove(item);
 
-        //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<IActivity>()
+        return new ResponseItemDto<IActivity> 
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
     }
+ public async Task<ResponseItemDto<IActivity>> CreateItemAsync(ActivityCuDto itemDto)
+    {
+        if (itemDto.ActivityId != null) 
+          throw new ArgumentException($"{nameof(itemDto.ActivityId)} must be null when creating a new object");
 
+          var item = new ActivityDbM(itemDto);
+
+          await UpdateNavigationProp(itemDto, item);
+
+          _dbContext.Add(item);
+
+          await _dbContext.SaveChangesAsync();
+
+          return await ReadItemAsync(item.ActivityId, true);
+    }
     public async Task<ResponseItemDto<IActivity>> UpdateItemAsync(ActivityCuDto itemDto)
     {
         var query1 = _dbContext.Activities
             .Where(i => i.ActivityId == itemDto.ActivityId);
         var item = await query1
-                .Include(i => i.PatientDbM)
-                .FirstOrDefaultAsync<ActivityDbM>();
+            .Include(i => i.PatientDbM)
+            .FirstOrDefaultAsync<ActivityDbM>();
 
-        //If the item does not exists
         if (item == null) throw new ArgumentException($"Item {itemDto.ActivityId} is not existing");
 
-        //transfer any changes from DTO to database objects
-        //Update individual properties 
         item.UpdateFromDTO(itemDto);
 
-        //Update navigation properties
-     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+        await UpdateNavigationProp(itemDto, item);
 
-        //write to database model
-        _dbContext.Activities.Update(item);
+        _dbContext.Update(item);
 
-        //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.ActivityId, false);    
+        return await ReadItemAsync(item.ActivityId, true);
     }
 
-    public async Task<ResponseItemDto<IActivity>> CreateItemAsync(ActivityCuDto itemDto)
+    public async Task UpdateNavigationProp(ActivityCuDto itemDto, ActivityDbM item)
     {
-        if (itemDto.ActivityId != null)
-            throw new ArgumentException($"{nameof(itemDto.ActivityId)} must be null when creating a new object");
-
-        //transfer any changes from DTO to database objects
-        //Update individual properties
-        var item = new ActivityDbM(itemDto);
-
-        //Update navigation properties
-      //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
-
-        //write to database model
-        _dbContext.Activities.Add(item);
-
-        //write to database in a UoW
-        await _dbContext.SaveChangesAsync();
-
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.ActivityId, false);    
+      
+        // Update Address
+        var updatedPatients = await _dbContext.Patients
+            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);
+        if (updatedPatients == null)
+            throw new ArgumentException($"Address with id {itemDto.PatientId} does not exist");
+        item.PatientDbM = updatedPatients;
     }
 
-    // private async Task navProp_ItemCUdto_to_ItemDbM(ActivityCuDto itemDtoSrc, ActivityDbM itemDst)
-    // {
-       
-    //     var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-    //         a => (a.PatientId == itemDtoSrc.PatientId));
 
-    //     if (patient == null)
-    //         throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
-
-    //     itemDst.PatientDbM = patient;
-    // }
 }
+
+

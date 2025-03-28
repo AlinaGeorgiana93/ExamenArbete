@@ -1,4 +1,9 @@
-using Models;
+using System;
+using System.Diagnostics.Metrics;
+using System.Reflection.Emit;
+using System.Xml.Linq;
+
+namespace Models.DTO;
 
 public class MoodKindCuDto
 {
@@ -13,13 +18,18 @@ public class MoodKindCuDto
     public MoodKindCuDto() { }
     public MoodKindCuDto(IMoodKind org)
     {
+       
+
+         if (org == null)
+    {
+        throw new ArgumentNullException(nameof(org), "IMoodKind object cannot be null");
+    }
         MoodKindId = org.MoodKindId;
-  
         Name = org.Name;
         Label = org.Label;
         Rating = org.Rating;
         
-       MoodId = org?.Mood?.MoodId;
+        MoodId = org?.Mood?.MoodId;
 
 
       

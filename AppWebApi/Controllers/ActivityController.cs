@@ -167,10 +167,10 @@ namespace AppWebApi.Controllers
         {
             try
             {
-                _logger.LogInformation($"{nameof(CreateItem)}:");
+              _logger.LogInformation($"{nameof(CreateItem)}: Creating activity for patientId {item.PatientId}");
                 
                 var model = await _service.CreateActivityAsync(item);
-                _logger.LogInformation($"item {model.Item.ActivityId} created");
+                 _logger.LogInformation($"Activity with ID {model.Item.ActivityId} created for patientId {item.PatientId}");
 
                 return Ok(model);
             }

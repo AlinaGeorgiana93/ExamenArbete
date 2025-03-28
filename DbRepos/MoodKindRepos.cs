@@ -37,9 +37,9 @@ namespace DbRepos
                     .Where(i => i.MoodKindId == id);  // Use correct property MoodKindId
             }
 
-            var resp = await query.FirstOrDefaultAsync();
-
-            return new ResponseItemDto<IMoodKind>()
+          
+        var resp = await query.FirstOrDefaultAsync<IMoodKind>();
+        return new ResponseItemDto<IMoodKind>()
             {
                 DbConnectionKeyUsed = _dbContext.dbConnection,
                 Item = resp
@@ -79,6 +79,7 @@ namespace DbRepos
                 )
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
+
                 .ToListAsync<IMoodKind>(),
 
             PageNr = pageNumber,
@@ -92,7 +93,7 @@ namespace DbRepos
             var query1 = _dbContext.MoodKinds
                 .Where(i => i.MoodKindId == id);
 
-            var item = await query1.FirstOrDefaultAsync();
+            var item = await query1.FirstOrDefaultAsync<MoodKindDbM>();
 
             // If the item does not exist
             if (item == null)
@@ -118,7 +119,7 @@ namespace DbRepos
 
             var item = await query1
                     .Include(i => i.MoodDbM) // Include related entities if needed
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync<MoodKindDbM>();
 
             // If the item does not exist
             if (item == null) throw new ArgumentException($"Item {itemDto.MoodKindId} is not existing");
