@@ -13,12 +13,12 @@ namespace Models.DTO;
 public class ActivityLevelCuDto
 {
 
-  public virtual Guid ActivityLevelId { get; set; }     // Primary Key
+  public virtual Guid ? ActivityLevelId { get; set; }     // Primary Key
   public virtual string Name { get; set; }      // e.g., "Hig", "Medel", Low.
   public virtual int Rating { get; set; }       // Rating from 1 to 10
 
 
-  public virtual Guid ActivityId { get; set; }
+  public virtual Guid? ActivityId { get; set; }
 
 
 
@@ -28,8 +28,10 @@ public class ActivityLevelCuDto
     ActivityLevelId = org.ActivityLevelId;
     Name = org.Name;
     Rating = org.Rating;
-    ActivityId = org.ActivityId;
+    ActivityId? = org?.Activity?.ActivityId;
 
 
   }
 }
+
+

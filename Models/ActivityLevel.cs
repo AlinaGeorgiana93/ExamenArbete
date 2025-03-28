@@ -9,6 +9,10 @@ public class ActivityLevel: IActivityLevel
     public virtual int Rating { get; set; }       // Rating from 1 to 10
 
     
+
+
+    public virtual Guid? ActivityId { get; set; } //FK key -nullable
+    
     public virtual Guid ActivityId { get; set; }
  
 }

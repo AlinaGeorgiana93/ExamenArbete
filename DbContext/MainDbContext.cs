@@ -34,6 +34,8 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<AppetiteDbM> Appetites { get; set; }
     public DbSet<ActivityDbM> Activities { get; set; }
 
+    public DbSet<ActivityLevelDbM> ActivityLevels { get; set; }
+
     #endregion
 
     #region model the Views
@@ -97,6 +99,13 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
             .WithMany()
             .HasForeignKey(g => g.PatientDbMPatientId)
             .OnDelete(DeleteBehavior.NoAction);
+
+          modelBuilder.Entity<ActivityLevelDbM>()
+          .HasOne(ac => ac.ActivityDbM)
+          .WithMany()
+          .HasForeignKey(s => s.ActivityDbMActivityId)
+          .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
+
     }
 
     #region DbContext for some popular databases
