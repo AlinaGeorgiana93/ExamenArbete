@@ -70,7 +70,9 @@ builder.Services.AddScoped<GraphDbRepos>();
 builder.Services.AddScoped<AppetiteDbRepos>();
 builder.Services.AddScoped<PatientDbRepos>();
 builder.Services.AddScoped<SleepDbRepos>();
+builder.services.AddScoped<ActivityDbRepos>();
 
+builder.Services.AddScoped<IActivityLevelService, IActivityLevelService>();
 builder.Services.AddScoped<IGraphService, GraphServiceDb>();
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
 builder.Services.AddScoped<IMoodService, MoodServiceDb>();

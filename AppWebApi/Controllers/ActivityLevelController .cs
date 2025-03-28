@@ -15,7 +15,7 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class ActivityLevelController : Controller
     {
-        readonly IActivityLevelService _service = null;
+        readonly LIActivityLevelLevelService _service = null;
         readonly ILogger<ActivityLevelController> _logger = null;
 
         public ActivityLevelController(Level service, ILogger<ActivityLevelController> logger)
@@ -25,7 +25,7 @@ namespace AppWebApi.Controllers
         }
 
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponsePageDto<IActivityLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> ReadItems(string flat = "true",
             string filter = null, string pageNr = "0", string pageSize = "10")
@@ -39,7 +39,7 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(ReadItems)}: {nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
 
-                var resp = await _service.ReadActivitiesAsync(flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
+                var resp = await _service.ReadActivitiesLevelAsync(flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace AppWebApi.Controllers
         }
 
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivityLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItem(string id = null, string flat = "false")
@@ -62,7 +62,7 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItem)}: {nameof(idArg)}: {idArg}, {nameof(flatArg)}: {flatArg}");
 
-                var item = await _service.ReadActivityAsync(idArg, flatArg);
+                var item = await _service.ReadActivityLevelAsync(idArg, flatArg);
                 if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
 
                 return Ok(item);
@@ -77,7 +77,7 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
         [HttpDelete("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivityLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> DeleteItem(string id)
         {
@@ -87,7 +87,7 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(DeleteItem)}: {nameof(idArg)}: {idArg}");
 
-                var item = await _service.DeleteActivityAsync(idArg);
+                var item = await _service.DeleteActivityLevelAsync(idArg);
                 if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
 
                 _logger.LogInformation($"item {idArg} deleted");
@@ -103,7 +103,7 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "sysadmin")]
         [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<ActivityCuDto>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<ActivityLevelCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> ReadItemDto(string id = null)
@@ -114,14 +114,14 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItemDto)}: {nameof(idArg)}: {idArg}");
 
-                var item = await _service.ReadActivityAsync(idArg, false);
+                var item = await _service.ReadActivityLevelAsync(idArg, false);
                 if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
 
                 return Ok(
-                    new ResponseItemDto<ActivityCuDto>()
+                    new ResponseItemDto<ActivityLevelCuDto>()
                     {
                         DbConnectionKeyUsed = item.DbConnectionKeyUsed,
-                        Item = new ActivityCuDto(item.Item)
+                        Item = new ActivityLevelCuDto(item.Item)
                     });
             }
             catch (Exception ex)
@@ -134,9 +134,9 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
         [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivityLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> UpdateItem(string id, [FromBody] ActivityCuDto item)
+        public async Task<IActionResult> UpdateItem(string id, [FromBody] ActivityLevelCuDto item)
         {
             try
             {
@@ -144,9 +144,9 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
 
-                if (item.ActivityId != idArg) throw new ArgumentException("Id mismatch");
+                if (item.ActivityLevelId != idArg) throw new ArgumentException("Id mismatch");
 
-                var model = await _service.UpdateActivityAsync(item);
+                var model = await _service.UpdateActivityLevelAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
 
                 return Ok(model);
@@ -161,16 +161,16 @@ namespace AppWebApi.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
         [HttpPost()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivityLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> CreateItem([FromBody] ActivityCuDto item)
+        public async Task<IActionResult> CreateItem([FromBody] ActivityLevelCuDto item)
         {
             try
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
 
-                var model = await _service.CreateActivityAsync(item);
-                _logger.LogInformation($"item {model.Item.ActivityId} created");
+                var model = await _service.CreateActivityLevelAsync(item);
+                _logger.LogInformation($"item {model.Item.ActivityLevelId} created");
 
                 return Ok(model);
             }
