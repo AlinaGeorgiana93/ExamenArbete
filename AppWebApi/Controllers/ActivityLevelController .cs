@@ -15,7 +15,7 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class ActivityLevelController : Controller
     {
-        readonly LIActivityLevelLevelService _service = null;
+        readonly IActivityLevelService _service = null;
         readonly ILogger<ActivityLevelController> _logger = null;
 
         public ActivityLevelController(Level service, ILogger<ActivityLevelController> logger)
