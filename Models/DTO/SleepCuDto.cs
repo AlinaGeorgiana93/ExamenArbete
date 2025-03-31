@@ -20,7 +20,6 @@ public class SleepCuDto
     {
         SleepId = org.SleepId;
 
-       
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
