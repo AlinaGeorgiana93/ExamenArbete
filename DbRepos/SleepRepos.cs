@@ -66,7 +66,6 @@ public class SleepDbRepos
             DbConnectionKeyUsed = _dbContext.dbConnection,
             DbItemsCount = await query
 
-                // Adding filter functionality
                 .Where(i =>
                  i.strSleepLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
@@ -76,14 +75,12 @@ public class SleepDbRepos
 
             PageItems = await query
 
-                     // Adding filter functionality
                      .Where(i =>
-                    i.strSleepLevel.ToLower().Contains(filter) ||
-                    i.strDate.ToLower().Contains(filter) ||
-                    i.strDayOfWeek.ToLower().Contains(filter) ||
-                    i.Notes.ToLower().Contains(filter))
+                      i.strSleepLevel.ToLower().Contains(filter) ||
+                      i.strDayOfWeek.ToLower().Contains(filter) ||
+                      i.strDayOfWeek.ToLower().Contains(filter) ||
+                      i.Notes.ToLower().Contains(filter))
 
-                // Adding paging
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
 
@@ -102,13 +99,10 @@ public class SleepDbRepos
 
         var item = await query1.FirstOrDefaultAsync<SleepDbM>();
 
-        //If the item does not exists
         if (item == null) throw new ArgumentException($"Item {id} is not existing");
 
-        //delete in the database model
         _dbContext.Sleeps.Remove(item);
 
-        //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
         return new ResponseItemDto<ISleep>()
@@ -124,12 +118,12 @@ public class SleepDbRepos
             .Where(i => i.SleepId == itemDto.SleepId);
         var item = await query1
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)
+                .Include(i => i.GraphDbM)  // Include Graph
                 .FirstOrDefaultAsync<SleepDbM>();
 
         if (item == null) throw new ArgumentException($"Item {itemDto.SleepId} is not existing");
 
-
+       
         item.UpdateFromDTO(itemDto);
 
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
@@ -146,7 +140,7 @@ public class SleepDbRepos
         if (itemDto.SleepId != null)
             throw new ArgumentException($"{nameof(itemDto.SleepId)} must be null when creating a new object");
 
-
+       
         var item = new SleepDbM(itemDto);
 
         await navProp_ItemCUdto_to_ItemDbM(itemDto, item);

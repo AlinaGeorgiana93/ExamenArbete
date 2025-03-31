@@ -36,6 +36,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<ActivityDbM> Activities { get; set; }
 
     public DbSet<ActivityLevelDbM> ActivityLevels { get; set; }
+    public DbSet<SleepLevelDbM> SleepLevels { get; set; }    
 
     #endregion
 
@@ -67,6 +68,10 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Entity<AppetiteLevel>()
             .Ignore(mk => mk.Appetite);  // Ignore the navigation property 'Appetite'
      modelBuilder.Ignore<IPatient>(); // 🚀 Ensure IPatient is ignored
+
+    modelBuilder.Entity<SleepLevel>()
+            .Ignore(mk => mk.Sleep); 
+     modelBuilder.Ignore<IPatient>();
 
 
         #endregion
