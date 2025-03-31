@@ -54,10 +54,12 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
      modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
      modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();   
+     // Ignore the navigation property 'Mood'
 
-      modelBuilder.Entity<IMoodKind>()
-            .Ignore(mk => mk.Mood);  // Ignore the navigation property 'Mood'
-       modelBuilder.Ignore<IPatient>(); // 🚀 Ensure IPatient is ignored
+   // modelBuilder.Entity<IMoodKind>().Ignore(e => e.Moods);
+    modelBuilder.Ignore<IPatient>(); // 🚀 Ensure IPatient is ignored
+     modelBuilder.Ignore<IMoodKind>();
+    
    
      
          base.OnModelCreating(modelBuilder);

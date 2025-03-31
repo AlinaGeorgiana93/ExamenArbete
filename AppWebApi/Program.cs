@@ -79,6 +79,9 @@ builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
 builder.Services.AddScoped<AppetiteDbRepos>();
 builder.Services.AddScoped<IAppetiteService, AppetiteServiceDb>();
 
+builder.Services.AddScoped<ActivityDbRepos>();
+builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+
 builder.Services.AddScoped<SleepDbRepos>();
 builder.Services.AddScoped<ISleepService, SleepServiceDb>();
 

@@ -13,7 +13,7 @@ public class MoodCuDto
     public string Notes { get; set; } 
  
     public virtual Guid? PatientId { get; set; } = null;
-    public List<Guid> MoodKindsId { get; set; }
+    public virtual Guid? MoodKindId { get; set; } // ✅ Store Patient as a GUID instead of `IPatient`
 
    
 
@@ -26,7 +26,7 @@ public class MoodCuDto
         Day = org.Day;
         
       PatientId = org?.Patient?.PatientId;
-      MoodKindsId = org.MoodKinds?.Select(e => e.MoodKindId).ToList();
+      MoodKindId = org?.MoodKind?.MoodKindId;
 
       
     }

@@ -139,11 +139,11 @@ public class ActivityDbRepos
     public async Task UpdateNavigationProp(ActivityCuDto itemDto, ActivityDbM item)
     {
       
-        // Update Address
+        // Update Patient
         var updatedPatients = await _dbContext.Patients
             .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);
         if (updatedPatients == null)
-            throw new ArgumentException($"Address with id {itemDto.PatientId} does not exist");
+            throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
         item.PatientDbM = updatedPatients;
     }
 

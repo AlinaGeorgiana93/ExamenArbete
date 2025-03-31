@@ -27,7 +27,7 @@ public class MoodDbRepos
         if (!flat)
         {
             query = _dbContext.Moods.AsNoTracking()
-                .Include(i => i.MoodKindsDbM)
+                .Include(i => i.MoodKindDbM)
                 .Include(i => i.PatientDbM)
                 .Where(i => i.MoodId == id);
         }
@@ -56,7 +56,7 @@ public class MoodDbRepos
         else
         {
             query = _dbContext.Moods.AsNoTracking()
-                .Include(i => i.MoodKindsDbM);
+                .Include(i => i.MoodKindDbM);
         }
 
         var ret = new ResponsePageDto<IMood>()
@@ -125,32 +125,31 @@ public class MoodDbRepos
         item.UpdateFromDTO(itemDto);
 
     // Update activities if provided
-    if (itemDto.MoodKindsId != null)
+  // Update activity if provided
+if (itemDto.MoodKindId != null)
+{
+    // Assuming itemDto.MoodKindId is a single ID, not a list
+    var moodKindId = itemDto.MoodKindId;  // Single ID instead of a list
+    var moodKind = await _dbContext.MoodKinds.FirstOrDefaultAsync(a => a.MoodKindId == moodKindId);
+    
+    if (moodKind != null)
     {
-        var moodKinds = new List<MoodKindDbM>();
-        foreach (var moodKindId in itemDto.MoodKindsId)
-        {
-            var moodKind = await _dbContext.MoodKinds.FirstOrDefaultAsync(a => a.MoodKindId == moodKindId);
-            if (moodKind != null)
-            {
-                moodKind.MoodId = item.MoodId; // Ensure activity is linked to the patient
-                moodKinds.Add(moodKind);
-            }
-            else
-            {
-                _logger.LogError($"Activity with ID {moodKindId} not found.");
-                throw new ArgumentException($"Activity with ID {moodKind} not found.");
-            }
-        }
-        item.MoodKindsDbM = moodKinds; // Update activities for the patient
-
+       // moodKind.MoodsId = item.MoodId; // Ensure activity is linked to the mood
+        item.MoodKindDbM = moodKind;  // Update the single MoodKind for the item
     }
-     // Save the updated patient and related entities to the database
-    _dbContext.Moods.Update(item);
-    await _dbContext.SaveChangesAsync();
+    else
+    {
+        _logger.LogError($"MoodKind with ID {moodKindId} not found.");
+        throw new ArgumentException($"MoodKind with ID {moodKindId} not found.");
+    }
+}
 
-    // Return the updated patient in non-flat mode (including related entities)
-    return await ReadItemAsync(item.MoodId, false);
+// Save the updated mood and related entities to the database
+_dbContext.Moods.Update(item);
+await _dbContext.SaveChangesAsync();
+
+// Return the updated item (non-flat mode, including related entities)
+return await ReadItemAsync(item.MoodId, false);
 }
 
     public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
@@ -175,15 +174,14 @@ public class MoodDbRepos
         return await ReadItemAsync(item.MoodId, false);    
     }
 
-    // private async Task navProp_ItemCUdto_to_ItemDbM(MoodCuDto itemDtoSrc, MoodDbM itemDst)
-    // {
-       
-    //     var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-    //         a => a.PatientId == itemDtoSrc.PatientId);
-
-    //     if (patient == null)
-    //         throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
-
-    //     itemDst.PatientDbM = patient;
-    // }
+   public async Task UpdateNavigationProp(MoodCuDto itemDto, MoodDbM item)
+    {
+      
+        // Update Patient
+        var updatedMoodKinds = await _dbContext.MoodKinds
+            .FirstOrDefaultAsync(a => a.MoodKindId == itemDto.MoodKindId);
+        if (updatedMoodKinds == null)
+            throw new ArgumentException($"Patient with id {itemDto.MoodKindId} does not exist");
+        item.MoodKindDbM = updatedMoodKinds;
+    }
 }

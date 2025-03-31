@@ -7,8 +7,6 @@ public class Mood : IMood
 {
 
     public virtual Guid MoodId { get; set;}
-   
-    public  IMoodKind MoodKind { get; set; }
 
     public virtual DateTime Date { get; set; }
 
@@ -23,5 +21,6 @@ public class Mood : IMood
     
     public virtual IPatient Patient { get; set; }
    // public virtual IGraph Graph { get; set; }
-    public virtual List<IMoodKind> MoodKinds {get; set;}
+     public virtual IMoodKind MoodKind { get; set; }
+
 }

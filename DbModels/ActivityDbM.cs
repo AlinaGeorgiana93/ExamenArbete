@@ -58,13 +58,6 @@ public class ActivityDbM : Activity
     [Required]
     public  PatientDbM PatientDbM { get; set; }
 
-    //    [NotMapped]
-    // public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
-
-    // [JsonIgnore]
-   
-    // public  GraphDbM GraphDbM { get; set; }
-
 
     public ActivityDbM() { }
     public ActivityDbM(ActivityCuDto org)

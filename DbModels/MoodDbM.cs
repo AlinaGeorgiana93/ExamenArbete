@@ -54,10 +54,11 @@ public class MoodDbM : Mood {
     public PatientDbM PatientDbM { get; set; }
 
     [NotMapped]
-    public override List<IMoodKind> MoodKinds { get => MoodKindsDbM?.ToList<IMoodKind>(); set => throw new NotImplementedException(); }
+    public override IMoodKind MoodKind { get => MoodKindDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<MoodKindDbM> MoodKindsDbM { get; set; }
+    
+    public MoodKindDbM MoodKindDbM { get; set; }
         
     public MoodDbM() { }
     public MoodDbM(MoodCuDto org)

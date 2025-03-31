@@ -1,12 +1,16 @@
+using Configuration;
+
 namespace Models;
 
 public interface IMoodKind
 {
-    public Guid MoodKindId { get; set; }
-    public string Name  { get; set; } // e.g., Low, Medium, High
-    public string Label { get; set; }
-    public int Rating { get; set; }
+    public Guid MoodKindId { get; set; }  // Primärnyckel
+    public string Name { get; set; }      
+    public int Rating { get; set; }            // Betyg mellan 1-10
 
-    //Navigation properties
-    public IMood Mood { get; set; }
+
+      public List<IMood> Moods {get; set;}
+
+
+
 }
