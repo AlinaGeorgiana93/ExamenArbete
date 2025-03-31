@@ -9,10 +9,6 @@ public class Staff : IStaff
     public string LastName { get ; set; }
     public string PersonalNumber { get ; set ; }
 
-    public void Seed(object seeder)
-    {
-        throw new NotImplementedException();
-    }
 
     public virtual List<IPatient> Patients{ get; set; }
 
