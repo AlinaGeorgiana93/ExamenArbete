@@ -49,7 +49,7 @@ public class GraphDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IGraph>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IGraph>> ReadItemsAsync( bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<GraphDbM> query;

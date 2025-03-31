@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20250326154254_miInitial")]
+    [Migration("20250331094143_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -333,7 +333,7 @@ namespace DbContext.Migrations.SqlServerDbContext
             modelBuilder.Entity("DbModels.ActivityDbM", b =>
                 {
                     b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("ActivitiesDbM")
+                        .WithMany()
                         .HasForeignKey("GraphDbMGraphId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -352,7 +352,7 @@ namespace DbContext.Migrations.SqlServerDbContext
             modelBuilder.Entity("DbModels.AppetiteDbM", b =>
                 {
                     b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("AppetitesDbM")
+                        .WithMany()
                         .HasForeignKey("GraphDbMGraphId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -382,7 +382,7 @@ namespace DbContext.Migrations.SqlServerDbContext
             modelBuilder.Entity("DbModels.MoodDbM", b =>
                 {
                     b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("MoodsDbM")
+                        .WithMany()
                         .HasForeignKey("GraphDbMGraphId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -408,7 +408,7 @@ namespace DbContext.Migrations.SqlServerDbContext
             modelBuilder.Entity("DbModels.SleepDbM", b =>
                 {
                     b.HasOne("DbModels.GraphDbM", "GraphDbM")
-                        .WithMany("SleepsDbM")
+                        .WithMany()
                         .HasForeignKey("GraphDbMGraphId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -422,17 +422,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Navigation("GraphDbM");
 
                     b.Navigation("PatientDbM");
-                });
-
-            modelBuilder.Entity("DbModels.GraphDbM", b =>
-                {
-                    b.Navigation("ActivitiesDbM");
-
-                    b.Navigation("AppetitesDbM");
-
-                    b.Navigation("MoodsDbM");
-
-                    b.Navigation("SleepsDbM");
                 });
 
             modelBuilder.Entity("DbModels.PatientDbM", b =>
