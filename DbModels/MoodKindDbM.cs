@@ -6,8 +6,8 @@ using Models;
 using Seido.Utilities.SeedGenerator;
 using Models.DTO;
 
-namespace DbModels;
 
+namespace DbModels;
 [Table("MoodKinds", Schema = "supusr")]
 public class MoodKindDbM : MoodKind
 {
@@ -16,33 +16,36 @@ public class MoodKindDbM : MoodKind
     public override string Name {get;set; }
     public override string Label { get; set; }
     public override int Rating { get; set; }
+   // public override Guid MoodId { get; set; }
 
-   
-   
-    public MoodKindDbM UpdateFromDTO(MoodKindCuDto org)
+
+      public MoodKindDbM UpdateFromDTO(MoodKindCuDto org)
     {
-        if (org == null) return null;
+          if (org == null) return null;
 
         Name = org.Name;
         Label = org.Label;
         Rating = org.Rating;
-       
 
         return this;
+
     }
+[NotMapped]
+public override IMood Mood { get => MoodDbM; set => throw new NotImplementedException(); }
+
+[JsonIgnore]
+[Required]
+public MoodDbM MoodDbM { get; set; }  // This is a real entity
 
 
-     [NotMapped]
-    public override IMood Mood { get => MoodDbM; set => throw new NotImplementedException(); }
-    [JsonIgnore]
-    public MoodDbM MoodDbM { get; set; }  // This should be a real EF entity
 
-    
+
     public MoodKindDbM() { }
     public MoodKindDbM(MoodKindCuDto org)
     {
         MoodKindId = Guid.NewGuid();
         UpdateFromDTO(org);
     }
-  
+    
 }
+

@@ -25,11 +25,12 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
 
     #region C# model of database tables
     public DbSet<MoodDbM> Moods { get; set; }    
+     public DbSet<MoodKindDbM> MoodKinds { get; set; }   
     public DbSet<ActivityDbM> Activities { get; set; }    
     public DbSet<StaffDbM> Staffs { get; set; }    
     public DbSet<AppetiteDbM> Appetites { get; set; }    
     public DbSet<SleepDbM> Sleeps { get; set; }  
-     public DbSet<MoodKindDbM> MoodKinds { get; set; }    
+
     public DbSet<PatientDbM> Patients{ get; set; }     
     public DbSet<UserDbM> Users { get; set; }    
     public DbSet<GraphDbM> Graphs { get; set; }    
@@ -54,10 +55,10 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
      modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
      modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();   
 
-      modelBuilder.Entity<MoodKind>()
+      modelBuilder.Entity<IMoodKind>()
             .Ignore(mk => mk.Mood);  // Ignore the navigation property 'Mood'
-     modelBuilder.Ignore<IPatient>(); // 🚀 Ensure IPatient is ignored
-     
+       modelBuilder.Ignore<IPatient>(); // 🚀 Ensure IPatient is ignored
+   
      
          base.OnModelCreating(modelBuilder);
     }

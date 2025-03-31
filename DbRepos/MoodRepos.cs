@@ -115,32 +115,43 @@ public class MoodDbRepos
     }
 
     public async Task<ResponseItemDto<IMood>> UpdateItemAsync(MoodCuDto itemDto)
-    {
-        var query1 = _dbContext.Moods
-            .Where(i => i.MoodId == itemDto.MoodId);
-        var item = await query1
-                .Include(i => i.PatientDbM)
-                .FirstOrDefaultAsync<MoodDbM>();
+{
+    // Fetch the patient from the database using the PatientId
+    var query1 = _dbContext.Moods
+        .Where(i => i.MoodId == itemDto.MoodId);
+    var item = await query1.FirstOrDefaultAsync<MoodDbM>() ?? throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
 
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
-
-        //transfer any changes from DTO to database objects
-        //Update individual properties 
+        // Transfer changes from DTO to database object
         item.UpdateFromDTO(itemDto);
 
-        //Update navigation properties
-      //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+    // Update activities if provided
+    if (itemDto.MoodKindsId != null)
+    {
+        var moodKinds = new List<MoodKindDbM>();
+        foreach (var moodKindId in itemDto.MoodKindsId)
+        {
+            var moodKind = await _dbContext.MoodKinds.FirstOrDefaultAsync(a => a.MoodKindId == moodKindId);
+            if (moodKind != null)
+            {
+                moodKind.MoodId = item.MoodId; // Ensure activity is linked to the patient
+                moodKinds.Add(moodKind);
+            }
+            else
+            {
+                _logger.LogError($"Activity with ID {moodKindId} not found.");
+                throw new ArgumentException($"Activity with ID {moodKind} not found.");
+            }
+        }
+        item.MoodKindsDbM = moodKinds; // Update activities for the patient
 
-        //write to database model
-        _dbContext.Moods.Update(item);
-
-        //write to database in a UoW
-        await _dbContext.SaveChangesAsync();
-
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.MoodId, false);    
     }
+     // Save the updated patient and related entities to the database
+    _dbContext.Moods.Update(item);
+    await _dbContext.SaveChangesAsync();
+
+    // Return the updated patient in non-flat mode (including related entities)
+    return await ReadItemAsync(item.MoodId, false);
+}
 
     public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
     {

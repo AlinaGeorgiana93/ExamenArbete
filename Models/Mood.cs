@@ -8,7 +8,7 @@ public class Mood : IMood
 
     public virtual Guid MoodId { get; set;}
    
-    public  MoodKind MoodKind { get; set; }
+    public  IMoodKind MoodKind { get; set; }
 
     public virtual DateTime Date { get; set; }
 

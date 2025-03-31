@@ -36,13 +36,13 @@ BEGIN
     SET NOCOUNT ON;
 
     -- Delete from the current project tables: Staffs, Patients, Moods, Activities, Appetites, Graphs
-    DELETE FROM supusr.Staffs WHERE Seeded = @Seeded;
-    DELETE FROM supusr.Patients WHERE Seeded = @Seeded;
-    DELETE FROM supusr.Moods WHERE Seeded = @Seeded;
-    DELETE FROM supusr.Activities WHERE Seeded = @Seeded;
-    DELETE FROM supusr.Appetites WHERE Seeded = @Seeded;
-    DELETE FROM supusr.Graphs WHERE Seeded = @Seeded;
-
+    DELETE FROM supusr.Staffs ;
+    DELETE FROM supusr.Patients;
+    DELETE FROM supusr.Moods ;
+    DELETE FROM supusr.MoodKinds;
+    DELETE FROM supusr.Activities;
+    DELETE FROM supusr.Appetites;
+    DELETE FROM supusr.Graphs;
     -- Optionally, return the current overview of the database
     SELECT * FROM gstusr.vwInfoDb;
 

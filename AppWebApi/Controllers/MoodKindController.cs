@@ -5,6 +5,8 @@ using Models;
 using Models.DTO;
 using Services;
 
+// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
@@ -13,7 +15,7 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class MoodKindController : Controller
     {
-        readonly IMoodKindService _service = null;
+         readonly IMoodKindService _service = null;
         readonly ILogger<MoodKindController> _logger = null;
 
         public MoodKindController(IMoodKindService service, ILogger<MoodKindController> logger)
@@ -22,7 +24,6 @@ namespace AppWebApi.Controllers
             _logger = logger;
         }
 
-    
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponsePageDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -38,9 +39,9 @@ namespace AppWebApi.Controllers
 
                 _logger.LogInformation($"{nameof(ReadItems)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
-
+                
                 var resp = await _service.ReadMoodKindsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
-                return Ok(resp);     
+                return Ok(resp);
             }
             catch (Exception ex)
             {
@@ -65,7 +66,7 @@ namespace AppWebApi.Controllers
                 var item = await _service.ReadMoodKindAsync(idArg, flatArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
-                return Ok(item);         
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -75,7 +76,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -91,7 +92,7 @@ namespace AppWebApi.Controllers
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
         
                 _logger.LogInformation($"item {idArg} deleted");
-                return Ok(item);                
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -101,7 +102,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Policy = null, Roles = "staff, sysadmin")]
+            Policy = null, Roles = "sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<MoodKindCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -121,7 +122,7 @@ namespace AppWebApi.Controllers
                     new ResponseItemDto<MoodKindCuDto>() {
                     DbConnectionKeyUsed = item.DbConnectionKeyUsed,
                     Item = new MoodKindCuDto(item.Item)
-                });
+                });   
             }
             catch (Exception ex)
             {
@@ -130,58 +131,54 @@ namespace AppWebApi.Controllers
             }
         }
 
-       [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Policy = null, Roles = "sysadmin")]
-         [HttpPut("{id}")]
-         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
-         [ProducesResponseType(400, Type = typeof(string))]
-         public async Task<IActionResult> UpdateItem(string id, [FromBody] MoodKindCuDto item)
-         {
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = " sysadmin")]
+        [HttpPut("{id}")]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        public async Task<IActionResult> UpdateItem(string id, [FromBody] MoodKindCuDto item)
+        {
             try
-             {
+            {
                 var idArg = Guid.Parse(id);
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
                 
-                 if (item.MoodKindId != idArg) throw new ArgumentException("Id mismatch");
+                if (item.MoodKindId != idArg) throw new ArgumentException("Id mismatch");
 
-                var _item = await _service.UpdateMoodKindAsync(item);
+                var model = await _service.UpdateMoodKindAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
                
-                 return Ok(_item);             
-             }
+                return Ok(model);
+            }
             catch (Exception ex)
-             {
+            {
                 _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message}");
                 return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
-             }
+            }
         }
 
-         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Policy = null, Roles = " sysadmin")]
-         [HttpPost()]
-         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
-         [ProducesResponseType(400, Type = typeof(string))]
-         public async Task<IActionResult> CreateItem([FromBody] MoodKindCuDto item)
-         {
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = " sysadmin")]
+        [HttpPost()]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        public async Task<IActionResult> CreateItem([FromBody] MoodKindCuDto item)
+        {
             try
             {
-                _logger.LogInformation($"{nameof(CreateItem)}:");
+              _logger.LogInformation($"{nameof(CreateItem)}: Creating activity for patientId {item.MoodId}");
                 
-                var _item = await _service.CreateMoodKindAsync(item);
-                _logger.LogInformation($"item {_item.Item.MoodKindId} created");
+                var model = await _service.CreateMoodKindAsync(item);
+                 _logger.LogInformation($"Activity with ID {model.Item.MoodKindId} created for patientId {item.MoodId}");
 
-                return Ok(_item);       
+                return Ok(model);
             }
             catch (Exception ex)
             {
-                // Log the full exception first
-                _logger.LogError($"{nameof(CreateItem)}: {ex.Message}, {ex.StackTrace}");
-
-                // Then return the BadRequest response
-                return BadRequest($"Could not create. Error {ex.Message}");
+                _logger.LogError($"{nameof(CreateItem)}: {ex.InnerException?.Message}");
+                return BadRequest($"Could not create. Error {ex.InnerException?.Message}");
             }
-                }
-
+        }
     }
 }
