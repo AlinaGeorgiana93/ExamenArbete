@@ -15,12 +15,7 @@ public class MoodDbM : Mood
 
 
     #region adding more readability to an enum type in the database
-    public virtual string strMoodKind
-    {
-        get => MoodKind.ToString();
-        set { }
-    }
-
+   
 
     public virtual string strDayOfWeek
     {
@@ -41,7 +36,7 @@ public class MoodDbM : Mood
     {
         if (org == null) return null;
 
-        MoodKind = org.MoodKind;
+       
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;

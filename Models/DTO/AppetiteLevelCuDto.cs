@@ -19,7 +19,6 @@ public class AppetiteLevelCuDto
         Label = org.Label;
         Rating = org.Rating;
         
-       AppetiteId = org?.Appetite?.AppetiteId;
 
 
       

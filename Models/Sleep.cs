@@ -5,7 +5,7 @@ namespace Models;
 public class Sleep : ISleep
 {
     public virtual Guid SleepId { get; set; }
-    public virtual SleepLevel SleepLevel { get; set; }
+    
     
     public virtual DateTime Date { get; set; }
 

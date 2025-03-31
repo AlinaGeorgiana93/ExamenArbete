@@ -14,11 +14,7 @@ public class SleepDbM : Sleep
     public override Guid SleepId { get; set; }
 
     #region adding more readability to an enum type in the database
-    public virtual string strSleepLevel
-    {
-        get => SleepLevel.ToString();
-        set { }
-    }
+   
     public virtual string strDate
     {
         get => Date.ToString();
@@ -59,7 +55,6 @@ public class SleepDbM : Sleep
     {
         if (org == null) return null;
 
-        SleepLevel = org.SleepLevel;
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;

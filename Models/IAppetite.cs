@@ -16,6 +16,6 @@ namespace Models
         //Navigation properties
         public IPatient Patient { get; set; }
         public IGraph Graph { get; set; }
-        public IAppetiteLevel AppetiteLevels { get; set; } // e.g., Low, Medium, High
+        public IAppetiteLevel AppetiteLevel { get; set; } // e.g., Low, Medium, High
     }
 }

@@ -11,7 +11,7 @@ namespace Models
         public virtual DayOfWeek Day { get; set; }
         public virtual string Notes { get; set; } // Additional notes about the appetite
 
-        public IAppetiteLevel AppetiteLevels { get; set; } // e.g., Low, Medium, High
+        public IAppetiteLevel AppetiteLevel { get; set; } // e.g., Low, Medium, High
 
         // Navigation property to Patient
         public virtual IPatient Patient { get; set; }

@@ -68,7 +68,7 @@ public class ActivityDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                 i.strActivityLevel.ToLower().Contains(filter) ||
+                
                  i.strDate.ToLower().Contains(filter) ||
                  i.strDayOfWeek.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
@@ -78,7 +78,7 @@ public class ActivityDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                    i.strActivityLevel.ToLower().Contains(filter) ||
+                
                     i.strDate.ToLower().Contains(filter) ||
                     i.strDayOfWeek.ToLower().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter))

@@ -7,7 +7,7 @@ namespace Models.DTO;
 public class SleepCuDto
 {
     public virtual Guid?  SleepId { get; set; }
-    public SleepLevel SleepLevel { get; set; } 
+    
     public DateTime Date { get; set; }
     public DayOfWeek Day { get; set; }
     public string Notes { get; set; } 
@@ -20,7 +20,7 @@ public class SleepCuDto
     {
         SleepId = org.SleepId;
 
-        SleepLevel = org.SleepLevel;
+       
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;

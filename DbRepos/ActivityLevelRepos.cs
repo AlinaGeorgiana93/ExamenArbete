@@ -49,7 +49,7 @@ public class ActivityLevelDbRepos
         public async Task<ResponsePageDto<IActivityLevel>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
-        IQueryable<ActivityLevelDbMDbM> query;
+        IQueryable<ActivityLevelDbM> query;
 
         if (flat)
         {
@@ -88,7 +88,7 @@ public class ActivityLevelDbRepos
         public async Task<ResponseItemDto<IActivityLevel>> DeleteItemAsync(Guid id)
         {
             var query1 = _dbContext.ActivityLevels
-                .Where(i => i.ActivityLeveldId == id);
+                .Where(i => i.ActivityLevelId == id);
 
             var item = await query1.FirstOrDefaultAsync();
 
@@ -112,7 +112,7 @@ public class ActivityLevelDbRepos
         public async Task<ResponseItemDto<IActivityLevel>> UpdateItemAsync(ActivityLevelCuDto itemDto)
         {
             var query1 = _dbContext.ActivityLevels
-                .Where(i => i.ActivityLeveldId == itemDto.ActivityLeveldId);
+                .Where(i => i.ActivityLevelId == itemDto.ActivityLevelId);
 
             var item = await query1
                     .Include(i => i.ActivityDbM) // Include related entities if needed
@@ -155,5 +155,8 @@ public class ActivityLevelDbRepos
         return await ReadItemAsync(item.ActivityLevelId, false);    
     }
 
-    
+    public static implicit operator ActivityLevelDbRepos(ActivityDbRepos v)
+    {
+        throw new NotImplementedException();
+    }
 }

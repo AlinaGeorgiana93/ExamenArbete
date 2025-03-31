@@ -67,7 +67,7 @@ public class MoodDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                i.strMoodKind.ToLower().Contains(filter) ||
+              
                 i.strDayOfWeek.ToLower().Contains(filter) ||
                 i.strDate.ToLower().Contains(filter) ||
                 i.Notes.ToLower().Contains(filter))
@@ -77,7 +77,7 @@ public class MoodDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                    i.strMoodKind.ToLower().Contains(filter) ||
+                   
                     i.strDayOfWeek.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter))

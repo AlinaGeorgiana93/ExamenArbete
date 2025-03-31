@@ -12,7 +12,7 @@ public class ActivityLevelServiceDb : IActivityLevelService
     private readonly ActivityLevelDbRepos _activityLevelRepo;
     private readonly ILogger<ActivityLevelServiceDb> _logger;
 
-    public ActivityLevelServiceDb(ActivityDbRepos activityRepo, ILogger<ActivityLevelServiceDb> logger)
+    public ActivityLevelServiceDb(ActivityLevelDbRepos activityRepo, ILogger<ActivityLevelServiceDb> logger)
     {
         _activityLevelRepo = activityRepo;
         _logger = logger;

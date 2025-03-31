@@ -28,7 +28,7 @@ public class ActivityLevelCuDto
     ActivityLevelId = org.ActivityLevelId;
     Name = org.Name;
     Rating = org.Rating;
-    ActivityId = org.Activity?.ActivityId;
+  
 
 
   }

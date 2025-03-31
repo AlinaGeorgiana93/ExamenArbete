@@ -35,7 +35,7 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(ReadItems)}:{nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
 
-                var resp = await _service.ReadGraphsAsync(flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
+                var resp = await _service.ReadGraphsAsync( filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
                 return Ok(resp);
             }
             catch (Exception ex)

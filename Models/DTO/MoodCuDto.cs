@@ -14,7 +14,6 @@ public class MoodCuDto
 {
     public virtual Guid? MoodId { get; set; }
 
-    public MoodKind  MoodKind { get; set; }
 
     public DateTime Date { get; set; }
 
@@ -30,7 +29,7 @@ public class MoodCuDto
     public MoodCuDto(IMood org)
     {
         MoodId = org.MoodId;
-        MoodKind = org.MoodKind;
+       
         Date = org.Date;
         Day = org.Day;
         

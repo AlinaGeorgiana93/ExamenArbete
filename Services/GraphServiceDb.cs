@@ -18,7 +18,7 @@ public class GraphServiceDb : IGraphService {
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IGraph>> ReadGraphsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _graphRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponsePageDto<IGraph>> ReadGraphsAsync( string filter, int pageNumber, int pageSize) => _graphRepo.ReadItemsAsync(true,filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IGraph>> ReadGraphAsync(Guid id, bool flat) => _graphRepo.ReadItemAsync(id, flat);
     public Task<ResponseItemDto<IGraph>> DeleteGraphAsync(Guid id) => _graphRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<IGraph>> UpdateGraphAsync(GraphCuDto item) => _graphRepo.UpdateItemAsync(item);

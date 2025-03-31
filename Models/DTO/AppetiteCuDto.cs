@@ -21,7 +21,6 @@ public class AppetiteCuDto
         AppetiteId = org.AppetiteId;
 
 
-        AppetiteLevel = org.AppetiteLevel;
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
