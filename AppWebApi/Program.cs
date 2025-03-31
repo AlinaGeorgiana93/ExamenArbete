@@ -102,7 +102,7 @@ builder.Services.AddScoped<ActivityDbRepos>();
 builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
 
 builder.Services.AddScoped<ActivityLevelDbRepos>();
-builder.Services.AddScoped<IActivityLevelService, IActivityLevelService>();
+builder.Services.AddScoped<IActivityLevelService, ActivityLevelServiceDb>();
 
 builder.Services.AddScoped<StaffDbRepos>();
 builder.Services.AddScoped<IStaffService, StaffServiceDb>();
