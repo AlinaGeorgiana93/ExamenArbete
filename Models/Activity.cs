@@ -19,6 +19,7 @@ public class Activity : IActivity
     public virtual IGraph Graph { get; set; }
 
     public List<IActivityLevel> ActivityLevels { get; set; }
+    // One-to-Many: En Activity kan ha flera ActivityLevel
 
 
 

@@ -12,7 +12,8 @@ public class ActivityLevel: IActivityLevel
 
 
     public virtual Guid? ActivityId { get; set; } //FK key -nullable
+    public Activity Activity { get; set; }
     
-    public virtual Guid ActivityId { get; set; }
+
  
 }
