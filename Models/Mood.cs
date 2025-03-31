@@ -5,20 +5,20 @@ namespace Models;
 public class Mood : IMood
 {
 
-    public virtual Guid MoodId { get; set;}
-   
-    public virtual MoodKind MoodKind { get; set; }
+    public virtual Guid MoodId { get; set; }
+
+
 
     public virtual DateTime Date { get; set; }
 
     public virtual DayOfWeek Day { get; set; }
-    
+
     public virtual string Notes { get; set; } // Additional notes about the appetite
 
 
 
 
-   //Navigation properties
+    //Navigation properties
     public virtual IPatient Patient { get; set; }
     public virtual IGraph Graph { get; set; }
 }

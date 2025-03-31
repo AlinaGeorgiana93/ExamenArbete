@@ -10,9 +10,6 @@ namespace Models
 
         public IPatient Patient { get; set; }  // Patient linked to this Graph
 
-        // List<IActivity> Activities { get; set; }
-        // List<IAppetite> Appetites { get; set; }
-        // List<IMood> Moods { get; set; }
-        // List<ISleep> Sleeps { get; set; }
+        
     }
 }

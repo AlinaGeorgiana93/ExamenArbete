@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
-    public enum AppetiteLevel { Low = 1, Medium = 2, High = 3 }
 
     public interface IAppetite
     {
@@ -17,6 +16,6 @@ namespace Models
         //Navigation properties
         public IPatient Patient { get; set; }
         public IGraph Graph { get; set; }
-        public List<IAppetiteLevel> AppetiteLevels { get; set; } // e.g., Low, Medium, High
+        public IAppetiteLevel AppetiteLevels { get; set; } // e.g., Low, Medium, High
     }
 }

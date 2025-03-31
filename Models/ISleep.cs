@@ -1,11 +1,9 @@
 namespace Models;
 
-public enum SleepLevel { Low, Medium, High };
 
 public interface ISleep
 {
     public Guid SleepId { get; set; }
-    public SleepLevel SleepLevel { get; set; }
 
     public DateTime Date { get; set; }
 

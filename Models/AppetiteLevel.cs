@@ -14,5 +14,5 @@ public class AppetiteLevel: IAppetiteLevel
  
     public virtual Guid? AppetiteId { get; set; } //FK key -nullable
 
-    public virtual IAppetite Appetite { get; set; }
+    public virtual List <IAppetite> Appetite { get; set; }
 }

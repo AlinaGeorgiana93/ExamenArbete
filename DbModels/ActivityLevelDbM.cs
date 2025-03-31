@@ -30,9 +30,9 @@ public class ActivityLevelDbM : ActivityLevel
 
 
     [NotMapped]
-    public override Activity Activity
+    public override List<Activity> Activity
     {
-        get => ActivityDbM;
+        get => ActivityDbM != null ? new List<Activity> { ActivityDbM } : null;
         set => throw new NotImplementedException();
     }
 

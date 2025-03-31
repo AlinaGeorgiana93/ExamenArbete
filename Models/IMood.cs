@@ -1,10 +1,8 @@
 namespace Models;
-public enum MoodKind { Happy, Sad, Mad, Calm, Stressd, Sleepy };
 
 public interface IMood
 {
     public Guid MoodId { get; set; }
-    public MoodKind MoodKind { get; set; } // e.g., Happy, Sad, Mad, Calm, Stressed, Sleepy
 
     public DateTime Date { get; set; }
 

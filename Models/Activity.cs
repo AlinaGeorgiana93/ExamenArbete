@@ -19,7 +19,7 @@ public class Activity : IActivity
     public virtual IGraph Graph { get; set; }
 
     public virtual IActivityLevel ActivityLevel { get; set; }
-   
+
 
 
 
