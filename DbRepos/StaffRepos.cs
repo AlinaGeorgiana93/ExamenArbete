@@ -55,10 +55,10 @@ public class StaffDbRepos
         {
             query = _dbContext.Staffs.AsNoTracking()
                .Include(i => i.PatientsDbM);
-        }
+         }
+         
 
-
-        query = query.Where(i =>
+        query = query.Where(i => 
            (
               i.FirstName.ToLower().Contains(filter) ||
               i.LastName.ToLower().Contains(filter) ||
@@ -79,7 +79,7 @@ public class StaffDbRepos
 
     }
 
-    public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
+     public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
     {
         var query1 = _dbContext.Staffs
             .Where(i => i.StaffId == id);
@@ -127,7 +127,7 @@ public class StaffDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.StaffId, false);
+        return await ReadItemAsync(item.StaffId, false);    
     }
 
     public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
@@ -149,10 +149,10 @@ public class StaffDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.StaffId, false);
+        return await ReadItemAsync(item.StaffId, false);    
     }
 
-    //private async Task navProp_ItemCUdto_to_ItemDbM(AddressCuDto itemDtoSrc, AddressDbM itemDst) // Commented out method
+        //private async Task navProp_ItemCUdto_to_ItemDbM(AddressCuDto itemDtoSrc, AddressDbM itemDst) // Commented out method
     //{
     //    //update attraction nav props
     //    var attraction = await _dbContext.Attractions.FirstOrDefaultAsync(

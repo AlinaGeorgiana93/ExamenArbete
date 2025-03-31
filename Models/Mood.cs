@@ -5,9 +5,7 @@ namespace Models;
 public class Mood : IMood
 {
 
-    public virtual Guid MoodId { get; set; }
-
-
+    public virtual Guid MoodId { get; set;}
 
     public virtual DateTime Date { get; set; }
 
@@ -18,7 +16,12 @@ public class Mood : IMood
 
 
 
-    //Navigation properties
+   //Navigation properties
+
+    public virtual Guid? PatientId { get; set; } 
+    
     public virtual IPatient Patient { get; set; }
-    public virtual IGraph Graph { get; set; }
+   // public virtual IGraph Graph { get; set; }
+     public virtual IMoodKind MoodKind { get; set; }
+
 }

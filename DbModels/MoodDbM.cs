@@ -8,35 +8,36 @@ using Models.DTO;
 namespace DbModels;
 
 [Table("Moods", Schema = "supusr")]
-public class MoodDbM : Mood
-{
+public class MoodDbM : Mood {
+    
     [Key]
     public override Guid MoodId { get; set; }
+    public override DateTime Date {get;set; }
+    public override DayOfWeek Day { get; set; }
+    public override string Notes { get; set; }
 
 
     #region adding more readability to an enum type in the database
-   
+    
 
-    public virtual string strDayOfWeek
-    {
-        get => Day.ToString();
-        set { }
-    }
+     public virtual string strDayOfWeek
+        {
+            get => Day.ToString();
+            set { }
+        }
+        
+        public virtual string strDate
+        {
+            get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
+            set { }
+        }
 
-
-    public virtual string strDate
-    {
-        get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
-        set { }
-    }
-
-    #endregion
+     #endregion
 
     public MoodDbM UpdateFromDTO(MoodCuDto org)
     {
         if (org == null) return null;
 
-       
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
@@ -44,32 +45,20 @@ public class MoodDbM : Mood
 
         return this;
     }
-
-    public Guid PatientDbMPatientId { get; set; }
-
-    [NotMapped]
-    public override IPatient Patient
-    {
-        get => PatientDbM; set => throw new NotImplementedException();
-    }
+        [NotMapped]
+    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    [Required]
+    
     public PatientDbM PatientDbM { get; set; }
 
-    [JsonIgnore]
-    [Required]
-    public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
-
     [NotMapped]
-    public override IGraph Graph
-    {
-        get => GraphDbM;
-        set => throw new NotImplementedException();
-    }
+    public override IMoodKind MoodKind { get => MoodKindDbM; set => throw new NotImplementedException(); }
 
-
-
+    [JsonIgnore]
+    
+    public MoodKindDbM MoodKindDbM { get; set; }
+        
     public MoodDbM() { }
     public MoodDbM(MoodCuDto org)
     {

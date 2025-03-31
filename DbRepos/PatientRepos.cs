@@ -49,27 +49,27 @@ public class PatientDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IPatient>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
+   public async Task<ResponsePageDto<IPatient>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 
         IQueryable<PatientDbM> query = _dbContext.Patients.AsNoTracking();
 
-        if (!flat)
-        {
+         if (!flat)
+         {
             query = _dbContext.Patients.AsNoTracking()
                .Include(i => i.MoodsDbM)
                 .Include(i => i.ActivitiesDbM)
                 .Include(i => i.SleepsDbM)
                 .Include(i => i.AppetitesDbM);
-        }
+         }
+         
 
-
-        query = query.Where(i =>
+        query = query.Where(i => 
            (
               i.FirstName.ToLower().Contains(filter) ||
               i.LastName.ToLower().Contains(filter) ||
-              i.PersonalNumber.ToLower().Contains(filter)
+              i.PersonalNumber.ToLower().Contains(filter) 
            ));
 
         return new ResponsePageDto<IPatient>
@@ -84,7 +84,7 @@ public class PatientDbRepos
             PageSize = pageSize
         };
 
-    }
+    } 
 
 
     public async Task<ResponseItemDto<IPatient>> DeleteItemAsync(Guid id)
@@ -111,35 +111,112 @@ public class PatientDbRepos
     }
 
     public async Task<ResponseItemDto<IPatient>> UpdateItemAsync(PatientCuDto itemDto)
+{
+    // Fetch the patient from the database using the PatientId
+    var query1 = _dbContext.Patients
+        .Where(i => i.PatientId == itemDto.PatientId);
+    var item = await query1.FirstOrDefaultAsync<PatientDbM>();
+
+    if (item == null) throw new ArgumentException($"Item {itemDto.PatientId} is not existing");
+
+    // Transfer changes from DTO to database object
+    item.UpdateFromDTO(itemDto);
+
+    // Update activities if provided
+    if (itemDto.ActivitiesId != null)
     {
-        var query1 = _dbContext.Patients
-            .Where(i => i.PatientId == itemDto.PatientId);
-        var item = await query1
-                //.Include(i => i.AttractionDbM) // Commented out Attraction
-                .FirstOrDefaultAsync<PatientDbM>();
-
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {itemDto.PatientId} is not existing");
-
-        //transfer any changes from DTO to database objects
-        //Update individual properties 
-        item.UpdateFromDTO(itemDto);
-
-        //Update navigation properties
-        //await navProp_ItemCUdto_to_ItemDbM(itemDto, item); // Commented out navProp_ItemCUdto_to_ItemDbM
-
-        //write to database model
-        _dbContext.Patients.Update(item);
-
-        //write to database in a UoW
-        await _dbContext.SaveChangesAsync();
-
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.PatientId, false);
+        var activities = new List<ActivityDbM>();
+        foreach (var activityId in itemDto.ActivitiesId)
+        {
+            var activity = await _dbContext.Activities.FirstOrDefaultAsync(a => a.ActivityId == activityId);
+            if (activity != null)
+            {
+                activity.PatientId = item.PatientId; // Ensure activity is linked to the patient
+                activities.Add(activity);
+            }
+            else
+            {
+                _logger.LogError($"Activity with ID {activityId} not found.");
+                throw new ArgumentException($"Activity with ID {activityId} not found.");
+            }
+        }
+        item.ActivitiesDbM = activities; // Update activities for the patient
     }
 
+    // Update sleeps if provided
+    if (itemDto.SleepsId != null)
+    {
+        var sleeps = new List<SleepDbM>();
+        foreach (var sleepId in itemDto.SleepsId)
+        {
+            var sleep = await _dbContext.Sleeps.FirstOrDefaultAsync(s => s.SleepId == sleepId);
+            if (sleep != null)
+            {
+                sleep.PatientId = item.PatientId; // Ensure sleep is linked to the patient
+                sleeps.Add(sleep);
+            }
+            else
+            {
+                _logger.LogError($"Sleep with ID {sleepId} not found.");
+                throw new ArgumentException($"Sleep with ID {sleepId} not found.");
+            }
+        }
+        item.SleepsDbM = sleeps; // Update sleeps for the patient
+    }
 
-    public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDto)
+    // Update moods if provided
+    if (itemDto.MoodsId != null)
+    {
+        var moods = new List<MoodDbM>();
+        foreach (var moodId in itemDto.MoodsId)
+        {
+            var mood = await _dbContext.Moods.FirstOrDefaultAsync(m => m.MoodId == moodId);
+            if (mood != null)
+            {
+                mood.PatientId = item.PatientId; // Ensure mood is linked to the patient
+                moods.Add(mood);
+            }
+            else
+            {
+                _logger.LogError($"Mood with ID {moodId} not found.");
+                throw new ArgumentException($"Mood with ID {moodId} not found.");
+            }
+        }
+        item.MoodsDbM = moods; // Update moods for the patient
+    }
+
+    // Update appetites if provided
+    if (itemDto.AppetitesId != null)
+    {
+        var appetites = new List<AppetiteDbM>();
+        foreach (var appetiteId in itemDto.AppetitesId)
+        {
+            var appetite = await _dbContext.Appetites.FirstOrDefaultAsync(a => a.AppetiteId == appetiteId);
+            if (appetite != null)
+            {
+                appetite.PatientId = item.PatientId; // Ensure appetite is linked to the patient
+                appetites.Add(appetite);
+            }
+            else
+            {
+                _logger.LogError($"Appetite with ID {appetiteId} not found.");
+                throw new ArgumentException($"Appetite with ID {appetiteId} not found.");
+            }
+        }
+        item.AppetitesDbM = appetites; // Update appetites for the patient
+    }
+
+    // Save the updated patient and related entities to the database
+    _dbContext.Patients.Update(item);
+    await _dbContext.SaveChangesAsync();
+
+    // Return the updated patient in non-flat mode (including related entities)
+    return await ReadItemAsync(item.PatientId, false);
+}
+
+
+
+ public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDto)
     {
         if (itemDto.PatientId != null)
             throw new ArgumentException($"{nameof(itemDto.PatientId)} must be null when creating a new object");
@@ -226,6 +303,4 @@ public class PatientDbRepos
     //     }
     //     itemDst.AppetitesDbM = Appetites;
     // }
-}
-
-
+    }

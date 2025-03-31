@@ -7,17 +7,17 @@ using Models.DTO;
 namespace DbModels;
 
 [Table("Staffs", Schema = "supusr")]
-public class StaffDbM : Staff
+public class StaffDbM : Staff 
 {
     [Key]
     public override Guid StaffId { get; set; }
-
+ 
     [NotMapped]
     public override List<IPatient> Patients { get => PatientsDbM?.ToList<IPatient>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    [Required]
-    public List<PatientDbM> PatientsDbM { get; set; }
+     [Required]
+     public  List <PatientDbM> PatientsDbM { get; set; }
 
     public StaffDbM UpdateFromDTO(StaffCuDto org)
     {

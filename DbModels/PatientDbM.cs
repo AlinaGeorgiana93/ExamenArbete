@@ -12,13 +12,20 @@ public class PatientDbM : Patient
     [Key]
     public override Guid PatientId { get; set; }
 
+    
+    public override string FirstName {get;set; }
+    public override string LastName { get; set; }
+    public override string PersonalNumber { get; set; }
+
+   [JsonIgnore]
+    public virtual Guid? GraphId { get; set; }
+
     [NotMapped]
-    public override List<IGraph> Graphs { get => GraphsDbM?.ToList<IGraph>(); set => throw new NotImplementedException(); }
-
+    public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
     [JsonIgnore]
-    [Required]
-    public List<GraphDbM> GraphsDbM { get; set; }  // Now using concrete class GraphDbM
-
+  
+    [ForeignKey ("GraphId")] //Connecting FK above with GraphDbM.GraphId
+    public  GraphDbM  GraphDbM { get; set; } = null;
 
     [NotMapped]
     public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
@@ -52,8 +59,8 @@ public class PatientDbM : Patient
     {
         if (org == null) return null;
 
-        FirstName = org.FirstName;
-        LastName = org.LastName;
+        FirstName=org.FirstName;
+        LastName=org.LastName;
         PersonalNumber = org.PersonalNumber;
 
         return this;

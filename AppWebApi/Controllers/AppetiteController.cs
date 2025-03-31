@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 
 using Models;
@@ -12,9 +13,9 @@ namespace AppWebApi.Controllers
     public class AppetiteController : Controller
     {
         readonly IAppetiteService _service = null;
-        readonly ILogger<AppetiteController> _logger = null;
+        readonly ILogger< AppetiteController> _logger = null;
 
-        public AppetiteController(IAppetiteService service, ILogger<AppetiteController> logger)
+        public  AppetiteController(IAppetiteService service, ILogger< AppetiteController> logger)
         {
             _service = service;
             _logger = logger;
@@ -170,4 +171,3 @@ namespace AppWebApi.Controllers
         }
     }
 }
-

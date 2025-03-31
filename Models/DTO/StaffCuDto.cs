@@ -3,6 +3,7 @@ using System.Diagnostics.Metrics;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 
+
 namespace Models.DTO;
 
 //DTO is a DataTransferObject, can be instanstiated by the controller logic
@@ -12,26 +13,24 @@ namespace Models.DTO;
 //These DTO are simplistic and used to Update and Create objects
 public class StaffCuDto
 {
-    public virtual Guid? StaffId { get ; set ; }
-    public string FirstName { get; set ; }
-    public string LastName { get ; set; }
-    public string PersonalNumber { get ; set ; }
+    public virtual Guid? StaffId { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string PersonalNumber { get; set; }
 
-
-
-    public virtual List<Guid> PatientId { get; set; } = null;
-   
-
+    // FK for Patients (One-to-Many Relationship)
+    public virtual List<Guid> PatientsId { get; set; }
 
     public StaffCuDto() { }
+
     public StaffCuDto(IStaff org)
     {
         StaffId = org.StaffId;
         FirstName = org.FirstName;
-        LastName= org.LastName;
+        LastName = org.LastName;
         PersonalNumber = org.PersonalNumber;
         
-       PatientId = org.Patients?.Select(e => e.PatientId).ToList();
-
+        // Ensure Patients list is not null before selecting IDs
+       PatientsId = org.Patients?.Select(i => i.PatientId).ToList();
     }
 }

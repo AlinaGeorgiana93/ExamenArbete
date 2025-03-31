@@ -29,7 +29,7 @@ public class AppetiteDbRepos
         {
             query = _dbContext.Appetites.AsNoTracking()
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)
+                //.Include(i => i.GraphDbM)
                 .Where(i => i.AppetiteId == id);
         }
         else
@@ -57,8 +57,8 @@ public class AppetiteDbRepos
         else
         {
             query = _dbContext.Appetites.AsNoTracking()
-                .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM);
+                .Include(i => i.PatientDbM);
+                //.Include(i => i.GraphDbM);
         }
 
         var ret = new ResponsePageDto<IAppetite>()
@@ -70,6 +70,8 @@ public class AppetiteDbRepos
                 .Where(i =>
                  i.strAppetiteLevel.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter))
                  i.strDayOfWeek.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
@@ -124,7 +126,7 @@ public class AppetiteDbRepos
             .Where(i => i.AppetiteId == itemDto.AppetiteId);
         var item = await query1
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)  // Include Graph
+                //.Include(i => i.GraphDbM)  // Include Graph
                 .FirstOrDefaultAsync<AppetiteDbM>();
 
         //If the item does not exists
@@ -135,7 +137,7 @@ public class AppetiteDbRepos
         item.UpdateFromDTO(itemDto);
 
         //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.Appetites.Update(item);
@@ -157,7 +159,7 @@ public class AppetiteDbRepos
         var item = new AppetiteDbM(itemDto);
 
         //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+      //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.Appetites.Add(item);
@@ -175,10 +177,10 @@ public class AppetiteDbRepos
         var patient = await _dbContext.Patients.FirstOrDefaultAsync(
             a => a.PatientId == itemDtoSrc.PatientId);
 
-        if (patient == null)
-            throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
+    //     if (patient == null)
+    //         throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
 
-        itemDst.PatientDbM = patient;
+    //     itemDst.PatientDbM = patient;
 
         var graph = await _dbContext.Graphs.FirstOrDefaultAsync(
        g => g.GraphId == itemDtoSrc.GraphId);

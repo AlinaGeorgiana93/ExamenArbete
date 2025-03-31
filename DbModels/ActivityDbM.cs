@@ -9,6 +9,7 @@ namespace DbModels;
 
 [Table("Activities", Schema = "supusr")]
 public class ActivityDbM : Activity
+public class ActivityDbM : Activity
 {
     [Key]
     public override Guid ActivityId { get; set; }

@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-
 using Models;
 using Models.DTO;
 using DbModels;
@@ -28,6 +27,7 @@ public class MoodDbRepos
         if (!flat)
         {
             query = _dbContext.Moods.AsNoTracking()
+                .Include(i => i.MoodKindDbM)
                 .Include(i => i.PatientDbM)
                 .Where(i => i.MoodId == id);
         }
@@ -56,8 +56,7 @@ public class MoodDbRepos
         else
         {
             query = _dbContext.Moods.AsNoTracking()
-                .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM);
+                .Include(i => i.MoodKindDbM);
         }
 
         var ret = new ResponsePageDto<IMood>()
@@ -66,18 +65,16 @@ public class MoodDbRepos
             DbItemsCount = await query
 
                 // Adding filter functionality
-                .Where(i =>
-              
-                i.strDayOfWeek.ToLower().Contains(filter) ||
-                i.strDate.ToLower().Contains(filter) ||
-                i.Notes.ToLower().Contains(filter))
+                .Where(i => 
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
+                 i.strDate.ToLower().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
             PageItems = await query
 
-                // Adding filter functionality
-                .Where(i =>
-                   
+                    // Adding filter functionality
+                .Where(i => 
                     i.strDayOfWeek.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter))
@@ -118,32 +115,42 @@ public class MoodDbRepos
     }
 
     public async Task<ResponseItemDto<IMood>> UpdateItemAsync(MoodCuDto itemDto)
-    {
-        var query1 = _dbContext.Moods
-            .Where(i => i.MoodId == itemDto.MoodId);
-        var item = await query1
-                .Include(i => i.PatientDbM)
-                .FirstOrDefaultAsync<MoodDbM>();
+{
+    // Fetch the patient from the database using the PatientId
+    var query1 = _dbContext.Moods
+        .Where(i => i.MoodId == itemDto.MoodId);
+    var item = await query1.FirstOrDefaultAsync<MoodDbM>() ?? throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
 
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {itemDto.MoodId} is not existing");
-
-        //transfer any changes from DTO to database objects
-        //Update individual properties 
+        // Transfer changes from DTO to database object
         item.UpdateFromDTO(itemDto);
 
-        //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
-
-        //write to database model
-        _dbContext.Moods.Update(item);
-
-        //write to database in a UoW
-        await _dbContext.SaveChangesAsync();
-
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.MoodId, false);
+    // Update activities if provided
+  // Update activity if provided
+if (itemDto.MoodKindId != null)
+{
+    // Assuming itemDto.MoodKindId is a single ID, not a list
+    var moodKindId = itemDto.MoodKindId;  // Single ID instead of a list
+    var moodKind = await _dbContext.MoodKinds.FirstOrDefaultAsync(a => a.MoodKindId == moodKindId);
+    
+    if (moodKind != null)
+    {
+       // moodKind.MoodsId = item.MoodId; // Ensure activity is linked to the mood
+        item.MoodKindDbM = moodKind;  // Update the single MoodKind for the item
     }
+    else
+    {
+        _logger.LogError($"MoodKind with ID {moodKindId} not found.");
+        throw new ArgumentException($"MoodKind with ID {moodKindId} not found.");
+    }
+}
+
+// Save the updated mood and related entities to the database
+_dbContext.Moods.Update(item);
+await _dbContext.SaveChangesAsync();
+
+// Return the updated item (non-flat mode, including related entities)
+return await ReadItemAsync(item.MoodId, false);
+}
 
     public async Task<ResponseItemDto<IMood>> CreateItemAsync(MoodCuDto itemDto)
     {
@@ -155,7 +162,7 @@ public class MoodDbRepos
         var item = new MoodDbM(itemDto);
 
         //Update navigation properties
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.Moods.Add(item);
@@ -167,15 +174,14 @@ public class MoodDbRepos
         return await ReadItemAsync(item.MoodId, false);
     }
 
-    private async Task navProp_ItemCUdto_to_ItemDbM(MoodCuDto itemDtoSrc, MoodDbM itemDst)
+   public async Task UpdateNavigationProp(MoodCuDto itemDto, MoodDbM item)
     {
-
-        var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => a.PatientId == itemDtoSrc.PatientId);
-
-        if (patient == null)
-            throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
-
-        itemDst.PatientDbM = patient;
+      
+        // Update Patient
+        var updatedMoodKinds = await _dbContext.MoodKinds
+            .FirstOrDefaultAsync(a => a.MoodKindId == itemDto.MoodKindId);
+        if (updatedMoodKinds == null)
+            throw new ArgumentException($"Patient with id {itemDto.MoodKindId} does not exist");
+        item.MoodKindDbM = updatedMoodKinds;
     }
 }

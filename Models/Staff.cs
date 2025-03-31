@@ -15,5 +15,6 @@ public class Staff : IStaff
     }
 
     public virtual List<IPatient> Patients{ get; set; }
-  
+
+
 }

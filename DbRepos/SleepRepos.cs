@@ -71,6 +71,8 @@ public class SleepDbRepos
                  i.strDate.ToLower().Contains(filter) ||
                  i.strDayOfWeek.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
+                 i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
             PageItems = await query

@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-    <UserSecretsId>126a42a7-3b4f-429f-997d-1849782efbb0</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<UserSecretsId>126a42a7-3b4f-429f-997d-1849782efbb0</UserSecretsId>
+	</PropertyGroup>
 
    <PropertyGroup>
     <UserSecretPath>C:\Users\Admin\AppData\Roaming\Microsoft\UserSecrets\</UserSecretPath>

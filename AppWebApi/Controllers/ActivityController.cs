@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Models;
@@ -11,6 +11,7 @@ namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Policy = null, Roles = "staff, sysadmin")]
+        Policy = null, Roles = "staff, sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class ActivityController : Controller
@@ -18,6 +19,7 @@ namespace AppWebApi.Controllers
         readonly IActivityService _service = null;
         readonly ILogger<ActivityController> _logger = null;
 
+        public ActivityController(IActivityService service, ILogger<ActivityController> logger)
         public ActivityController(IActivityService service, ILogger<ActivityController> logger)
         {
             _service = service;
@@ -76,6 +78,7 @@ namespace AppWebApi.Controllers
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -101,6 +104,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = "sysadmin")]
             Policy = null, Roles = "sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<ActivityCuDto>))]
@@ -133,6 +137,7 @@ namespace AppWebApi.Controllers
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -160,6 +165,7 @@ namespace AppWebApi.Controllers
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IActivity>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -170,7 +176,7 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(CreateItem)}:");
 
                 var model = await _service.CreateActivityAsync(item);
-                _logger.LogInformation($"item {model.Item.ActivityId} created");
+                 _logger.LogInformation($"Activity with ID {model.Item.ActivityId} created for patientId {item.PatientId}");
 
                 return Ok(model);
             }
@@ -182,4 +188,3 @@ namespace AppWebApi.Controllers
         }
     }
 }
-

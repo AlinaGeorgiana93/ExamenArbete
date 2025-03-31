@@ -59,13 +59,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-//Inject Custom logger
+//Inject Custom logger - grouped by two to be easier to find if we put all of them 
 builder.Services.AddSingleton<ILoggerProvider, InMemoryLoggerProvider>();
+
 builder.Services.AddScoped<AdminDbRepos>();
 builder.Services.AddScoped<MoodDbRepos>();
 builder.Services.AddScoped<ActivityDbRepos>();
+builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+
+builder.Services.AddScoped<SleepDbRepos>();
+builder.Services.AddScoped<ISleepService, SleepServiceDb>();
+
 builder.Services.AddScoped<StaffDbRepos>();
-builder.Services.AddScoped<LoginDbRepos>();
+builder.Services.AddScoped<IStaffService, StaffServiceDb>();
+
+builder.Services.AddScoped<PatientDbRepos>();
+builder.Services.AddScoped<IPatientService, PatientServiceDb>();
+
 builder.Services.AddScoped<GraphDbRepos>();
 builder.Services.AddScoped<AppetiteDbRepos>();
 builder.Services.AddScoped<PatientDbRepos>();
