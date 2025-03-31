@@ -9,7 +9,7 @@ namespace Models
     {
 
         public Guid AppetiteId { get; set; }
-        public AppetiteLevel AppetiteLevel { get; set; } // e.g., Low, Medium, High
+        
         public DateTime Date { get; set; }
         public DayOfWeek Day { get; set; }
         public string Notes { get; set; } // Additional notes about the appetite
@@ -17,5 +17,6 @@ namespace Models
         //Navigation properties
         public IPatient Patient { get; set; }
         public IGraph Graph { get; set; }
+        public List<IAppetiteLevel> AppetiteLevels { get; set; } // e.g., Low, Medium, High
     }
 }
