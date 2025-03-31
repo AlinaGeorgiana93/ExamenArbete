@@ -11,9 +11,10 @@ public class SleepCuDto
     public DateTime Date { get; set; }
     public DayOfWeek Day { get; set; }
     public string Notes { get; set; } 
-    public virtual Guid? GraphId { get; set; } = null;
-    public virtual Guid? PatientId { get; set; } = null;
 
+   
+     public virtual Guid? PatientId { get; set; } = null;
+    public virtual Guid? SleepLevelId { get; set; } // ✅ Store Patient as a GUID instead of `IPatient`
 
     public SleepCuDto() { }
     public SleepCuDto(ISleep org)
@@ -24,8 +25,8 @@ public class SleepCuDto
         Day = org.Day;
         Notes = org.Notes;
 
-        PatientId = org?.Patient?.PatientId;
-        GraphId = org?.Graph?.GraphId;
+          SleepLevelId = org?.SleepLevel?.SleepLevelId;
+  
 
     }
 }

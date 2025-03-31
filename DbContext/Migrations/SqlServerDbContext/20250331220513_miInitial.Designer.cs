@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20250331181448_miInitial")]
+    [Migration("20250331220513_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -31,9 +31,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ActivityLevel")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -46,11 +43,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PatientId")
+                    b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("strActivityLevel")
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("strDate")
                         .HasColumnType("nvarchar(200)");
@@ -65,14 +59,36 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.ToTable("Activities", "supusr");
                 });
 
+            modelBuilder.Entity("DbModels.ActivityLevelDbM", b =>
+                {
+                    b.Property<Guid>("ActivityLevelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ActivityDbMActivityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActivityLevelId");
+
+                    b.HasIndex("ActivityDbMActivityId");
+
+                    b.ToTable("ActivityLevels", "supusr");
+                });
+
             modelBuilder.Entity("DbModels.AppetiteDbM", b =>
                 {
                     b.Property<Guid>("AppetiteId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AppetiteLevel")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("AppetiteLevelDbMAppetiteLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -89,9 +105,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strAppetiteLevel")
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("strDate")
                         .HasColumnType("nvarchar(200)");
 
@@ -100,9 +113,31 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.HasKey("AppetiteId");
 
+                    b.HasIndex("AppetiteLevelDbMAppetiteLevelId");
+
                     b.HasIndex("PatientDbMPatientId");
 
                     b.ToTable("Appetites", "supusr");
+                });
+
+            modelBuilder.Entity("DbModels.AppetiteLevelDbM", b =>
+                {
+                    b.Property<Guid>("AppetiteLevelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppetiteLevelId");
+
+                    b.ToTable("AppetiteLevels", "supusr");
                 });
 
             modelBuilder.Entity("DbModels.GraphDbM", b =>
@@ -231,8 +266,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SleepLevel")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SleepLevelDbMSleepLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("strDate")
                         .HasColumnType("nvarchar(200)");
@@ -240,14 +275,33 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<string>("strDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strSleepLevel")
-                        .HasColumnType("nvarchar(200)");
-
                     b.HasKey("SleepId");
 
                     b.HasIndex("PatientDbMPatientId");
 
+                    b.HasIndex("SleepLevelDbMSleepLevelId");
+
                     b.ToTable("Sleeps", "supusr");
+                });
+
+            modelBuilder.Entity("DbModels.SleepLevelDbM", b =>
+                {
+                    b.Property<Guid>("SleepLevelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("SleepLevelId");
+
+                    b.ToTable("SleepLevels", "supusr");
                 });
 
             modelBuilder.Entity("DbModels.StaffDbM", b =>
@@ -298,28 +352,25 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("Models.DTO.GstUsrInfoDbDto", b =>
                 {
-                    b.Property<int>("NrSeededActivities")
+                    b.Property<int>("NrActivities")
                         .HasColumnType("int");
 
-                    b.Property<int>("NrSeededCreditCards")
+                    b.Property<int>("NrAppetites")
                         .HasColumnType("int");
 
-                    b.Property<int>("NrSeededMoods")
+                    b.Property<int>("NrGraphs")
                         .HasColumnType("int");
 
-                    b.Property<int>("NrSeededStaffs")
+                    b.Property<int>("NrMoods")
                         .HasColumnType("int");
 
-                    b.Property<int>("NrUnseededActivities")
+                    b.Property<int>("NrPatients")
                         .HasColumnType("int");
 
-                    b.Property<int>("NrUnseededCreditCards")
+                    b.Property<int>("NrSleeps")
                         .HasColumnType("int");
 
-                    b.Property<int>("NrUnseededMoods")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NrUnseededStaffs")
+                    b.Property<int>("NrStaffs")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -338,8 +389,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("PersonalNumber")
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<int>("NrPatients")
+                        .HasColumnType("int");
 
                     b.ToTable((string)null);
 
@@ -357,11 +408,26 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Navigation("PatientDbM");
                 });
 
+            modelBuilder.Entity("DbModels.ActivityLevelDbM", b =>
+                {
+                    b.HasOne("DbModels.ActivityDbM", "ActivityDbM")
+                        .WithMany()
+                        .HasForeignKey("ActivityDbMActivityId");
+
+                    b.Navigation("ActivityDbM");
+                });
+
             modelBuilder.Entity("DbModels.AppetiteDbM", b =>
                 {
+                    b.HasOne("DbModels.AppetiteLevelDbM", "AppetiteLevelDbM")
+                        .WithMany("AppetitesDbM")
+                        .HasForeignKey("AppetiteLevelDbMAppetiteLevelId");
+
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("AppetitesDbM")
                         .HasForeignKey("PatientDbMPatientId");
+
+                    b.Navigation("AppetiteLevelDbM");
 
                     b.Navigation("PatientDbM");
                 });
@@ -400,7 +466,18 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .WithMany("SleepsDbM")
                         .HasForeignKey("PatientDbMPatientId");
 
+                    b.HasOne("DbModels.SleepLevelDbM", "SleepLevelDbM")
+                        .WithMany("SleepsDbM")
+                        .HasForeignKey("SleepLevelDbMSleepLevelId");
+
                     b.Navigation("PatientDbM");
+
+                    b.Navigation("SleepLevelDbM");
+                });
+
+            modelBuilder.Entity("DbModels.AppetiteLevelDbM", b =>
+                {
+                    b.Navigation("AppetitesDbM");
                 });
 
             modelBuilder.Entity("DbModels.GraphDbM", b =>
@@ -422,6 +499,11 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.Navigation("MoodsDbM");
 
+                    b.Navigation("SleepsDbM");
+                });
+
+            modelBuilder.Entity("DbModels.SleepLevelDbM", b =>
+                {
                     b.Navigation("SleepsDbM");
                 });
 

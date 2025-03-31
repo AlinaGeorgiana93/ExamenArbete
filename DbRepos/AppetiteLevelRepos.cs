@@ -9,17 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace DbRepos
 {
-    public class AppetiteLevelDbRepos
+    public class AppetiteLevelDbRepos(ILogger<AppetiteLevelDbRepos> logger, MainDbContext context)
     {
-        private readonly ILogger<AppetiteLevelDbRepos> _logger;
-        private readonly MainDbContext _dbContext;
+        private readonly ILogger<AppetiteLevelDbRepos> _logger = logger;
+        private readonly MainDbContext _dbContext = context;
 
         #region Constructors
-        public AppetiteLevelDbRepos(ILogger<AppetiteLevelDbRepos> logger, MainDbContext context)
-        {
-            _logger = logger;
-            _dbContext = context;
-        }
         #endregion
 
         public async Task<ResponseItemDto<IAppetiteLevel>> ReadItemAsync(Guid id, bool flat)
@@ -28,7 +23,7 @@ namespace DbRepos
             if (!flat)
             {
                 query = _dbContext.AppetiteLevels.AsNoTracking()
-                    .Include(i => i.AppetiteDbM) // Assuming there is a relationship
+                    .Include(i => i.AppetitesDbM) // Assuming there is a relationship
                     .Where(i => i.AppetiteLevelId == id);  // Use correct property MoodKindId
             }
             else
@@ -58,7 +53,7 @@ namespace DbRepos
         else
         {
             query = _dbContext.AppetiteLevels.AsNoTracking()
-                .Include(i => i.AppetiteDbM);
+                .Include(i => i.AppetitesDbM);
         }
 
         var ret = new ResponsePageDto<IAppetiteLevel>()
@@ -117,7 +112,7 @@ namespace DbRepos
                 .Where(i => i.AppetiteLevelId == itemDto.AppetiteLevelId);
 
             var item = await query1
-                    .Include(i => i.AppetiteDbM) // Include related entities if needed
+                    .Include(i => i.AppetitesDbM) // Include related entities if needed
                     .FirstOrDefaultAsync();
 
             // If the item does not exist

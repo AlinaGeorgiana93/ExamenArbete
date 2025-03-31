@@ -31,11 +31,12 @@ public class SleepLevelDbM : SleepLevel
     }
 
 
-    [NotMapped]
-    public override List<ISleep> Sleep { get => new List<ISleep> { SleepDbM }; set => throw new NotImplementedException(); }
-    [JsonIgnore]
-    public SleepDbM SleepDbM { get; set; }  
+     [NotMapped]
+    public override List<ISleep>Sleeps { get => SleepsDbM?.ToList<ISleep>(); set => throw new NotImplementedException(); }
 
+    [JsonIgnore]
+    [Required]
+    public List<SleepDbM> SleepsDbM { get; set; }
     
     public SleepLevelDbM() { }
     public SleepLevelDbM(SleepLevelCuDto org)

@@ -17,7 +17,7 @@ public class MoodDbM : Mood {
     public override string Notes { get; set; }
 
 
-    #region adding more readability to an enum type in the database
+    #region convert to string
     
 
      public virtual string strDayOfWeek

@@ -9,7 +9,7 @@ public interface IAppetiteLevel
   public int Rating { get; set; }       // Rating from 1 to 10
 
 
-  public List<IAppetite> Appetite { get; set; }
+  public List<IAppetite> Appetites { get; set; }
 
 
 

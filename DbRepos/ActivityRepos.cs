@@ -29,7 +29,6 @@ public class ActivityDbRepos
         {
             query = _dbContext.Activities.AsNoTracking()
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)
                 .Where(i => i.ActivityId == id);
         }
         else
@@ -46,7 +45,7 @@ public class ActivityDbRepos
         };
     }
 
-     public async Task<ResponsePageDto<IActivity>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+     public async Task<ResponsePageDto<IActivity>> ReadItemsAsync (bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 
@@ -60,9 +59,7 @@ public class ActivityDbRepos
          }
          
 
-        query = query.Where(i => 
-        
-               i.strActivityLevel.ToLower().Contains(filter) ||
+        query = query.Where(i =>      
                 i.strDate.ToLower().Contains(filter) ||
                 i.strDayOfWeek.ToLower().Contains(filter) ||
                 i.PatientDbM.FirstName.ToLower().Contains(filter) ||

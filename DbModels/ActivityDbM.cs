@@ -8,7 +8,7 @@ using Models.DTO;
 namespace DbModels;
 
 [Table("Activities", Schema = "supusr")]
-public class ActivityDbM : Activity
+
 public class ActivityDbM : Activity
 {
     [Key]
@@ -42,38 +42,20 @@ public class ActivityDbM : Activity
         return this;
     }
 
-
-    public Guid PatientDbMPatientId { get; set; }
-
-    [NotMapped]
-    public override IPatient Patient
-    {
-        get => PatientDbM; set => throw new NotImplementedException();
-    }
+   [NotMapped]
+    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
-    public PatientDbM PatientDbM { get; set; }
+    public  PatientDbM PatientDbM { get; set; }
 
-
-
-    [JsonIgnore]
-    [Required]
-    public GraphDbM GraphDbM { get; set; }  // This represents the relationship with GraphDbM
-
-    [NotMapped]
-    public override IGraph Graph
-    {
-        get => GraphDbM;
-        set => throw new NotImplementedException();
-    }
 
     public ActivityDbM() { }
-
     public ActivityDbM(ActivityCuDto org)
     {
         ActivityId = Guid.NewGuid();
         UpdateFromDTO(org);
     }
+    
 }
 

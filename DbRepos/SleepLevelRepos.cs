@@ -28,7 +28,7 @@ namespace DbRepos
             if (!flat)
             {
                 query = _dbContext.SleepLevels.AsNoTracking()
-                    .Include(i => i.SleepDbM) 
+                    .Include(i => i.SleepsDbM) 
                     .Where(i => i.SleepLevelId == id);  
             }
             else
@@ -46,7 +46,7 @@ namespace DbRepos
             };
         }
 
-        public async Task<ResponsePageDto<ISleepLevel>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+        public async Task<ResponsePageDto<ISleepLevel>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<SleepLevelDbM> query;
@@ -58,7 +58,7 @@ namespace DbRepos
         else
         {
             query = _dbContext.SleepLevels.AsNoTracking()
-                .Include(i => i.SleepDbM);
+                .Include(i => i.SleepsDbM);
         }
 
         var ret = new ResponsePageDto<ISleepLevel>()
@@ -114,7 +114,7 @@ namespace DbRepos
                 .Where(i => i.SleepLevelId == itemDto.SleepLevelId);
 
             var item = await query1
-                    .Include(i => i.SleepDbM) 
+                    .Include(i => i.SleepsDbM) 
                     .FirstOrDefaultAsync();
 
             if (item == null) throw new ArgumentException($"Item {itemDto.SleepLevelId} is not existing");
@@ -142,5 +142,6 @@ namespace DbRepos
 
         return await ReadItemAsync(item.SleepLevelId, false);    
     }
+
     }
 }

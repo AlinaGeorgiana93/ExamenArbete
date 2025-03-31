@@ -49,7 +49,7 @@ public class PatientDbRepos
         };
     }
 
-   public async Task<ResponsePageDto<IPatient>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+   public async Task<ResponsePageDto<IPatient>> ReadItemsAsync (bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 

@@ -63,12 +63,22 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSingleton<ILoggerProvider, InMemoryLoggerProvider>();
 
 builder.Services.AddScoped<AdminDbRepos>();
+builder.Services.AddScoped<IAdminService, AdminServiceDb>();
+
+builder.Services.AddScoped<LoginDbRepos>();
+builder.Services.AddScoped<ILoginService, LoginServiceDb>();
+
 builder.Services.AddScoped<MoodDbRepos>();
-builder.Services.AddScoped<ActivityDbRepos>();
-builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+builder.Services.AddScoped<IMoodService, MoodServiceDb>();
+
+builder.Services.AddScoped<MoodKindDbRepos>();
+builder.Services.AddScoped<IMoodKindService, MoodKindServiceDb>();
 
 builder.Services.AddScoped<SleepDbRepos>();
 builder.Services.AddScoped<ISleepService, SleepServiceDb>();
+
+builder.Services.AddScoped<SleepLevelDbRepos>();
+builder.Services.AddScoped<ISleepLevelService, SleepLevelServiceDb>();
 
 builder.Services.AddScoped<StaffDbRepos>();
 builder.Services.AddScoped<IStaffService, StaffServiceDb>();
@@ -77,21 +87,26 @@ builder.Services.AddScoped<PatientDbRepos>();
 builder.Services.AddScoped<IPatientService, PatientServiceDb>();
 
 builder.Services.AddScoped<GraphDbRepos>();
-builder.Services.AddScoped<AppetiteDbRepos>();
-builder.Services.AddScoped<PatientDbRepos>();
-builder.Services.AddScoped<SleepDbRepos>();
-builder.Services.AddScoped<ActivityDbRepos>();
-
-builder.Services.AddScoped<IActivityLevelService, IActivityLevelService>();
 builder.Services.AddScoped<IGraphService, GraphServiceDb>();
-builder.Services.AddScoped<IAdminService, AdminServiceDb>();
-builder.Services.AddScoped<IMoodService, MoodServiceDb>();
-builder.Services.AddScoped<ILoginService, LoginServiceDb>();
-builder.Services.AddScoped<IStaffService, StaffServiceDb>();
+
+builder.Services.AddScoped<AppetiteDbRepos>();
 builder.Services.AddScoped<IAppetiteService, AppetiteServiceDb>();
-builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+
+builder.Services.AddScoped<AppetiteLevelDbRepos>();
+builder.Services.AddScoped<IAppetiteLevelService, AppetiteLevelServiceDb>();
+
+builder.Services.AddScoped<PatientDbRepos>();
 builder.Services.AddScoped<IPatientService, PatientServiceDb>();
-builder.Services.AddScoped<ISleepService, SleepServiceDb>();
+
+builder.Services.AddScoped<ActivityDbRepos>();
+builder.Services.AddScoped<IActivityService, ActivityServiceDb>();
+
+builder.Services.AddScoped<ActivityLevelDbRepos>();
+builder.Services.AddScoped<IActivityLevelService, IActivityLevelService>();
+
+builder.Services.AddScoped<StaffDbRepos>();
+builder.Services.AddScoped<IStaffService, StaffServiceDb>();
+
 
 var app = builder.Build();
 

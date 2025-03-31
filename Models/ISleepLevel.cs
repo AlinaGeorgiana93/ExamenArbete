@@ -9,7 +9,7 @@ public interface ISleepLevel
   public int Rating { get; set; }   
 
 
-  public List<ISleep> Sleep { get; set; }
+  public List<ISleep> Sleeps { get; set; }
 
 
 

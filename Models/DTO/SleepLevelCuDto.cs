@@ -1,4 +1,9 @@
-using Models;
+using System;
+using System.Diagnostics.Metrics;
+using System.Reflection.Emit;
+using System.Xml.Linq;
+
+namespace Models.DTO;
 
 public class SleepLevelCuDto
 {
@@ -8,7 +13,9 @@ public class SleepLevelCuDto
     public int Rating { get; set; } 
 
     
-    public virtual Guid? SleepId{ get; set; }
+  
+  public virtual List<Guid> SleepsId { get; set; } = null;
+  public virtual Guid? SleepId { get; set; }
 
     public SleepLevelCuDto() { }
     public SleepLevelCuDto(ISleepLevel org)
@@ -19,7 +26,7 @@ public class SleepLevelCuDto
         Label = org.Label;
         Rating = org.Rating;
         
-
+     SleepsId = org.Sleeps?.Select(i => i.SleepId).ToList(); 
 
       
     }

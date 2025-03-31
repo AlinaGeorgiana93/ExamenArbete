@@ -18,6 +18,21 @@ namespace DbContext.Migrations.SqlServerDbContext
                 name: "dbo");
 
             migrationBuilder.CreateTable(
+                name: "AppetiteLevels",
+                schema: "supusr",
+                columns: table => new
+                {
+                    AppetiteLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppetiteLevels", x => x.AppetiteLevelId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Graphs",
                 schema: "supusr",
                 columns: table => new
@@ -43,6 +58,21 @@ namespace DbContext.Migrations.SqlServerDbContext
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MoodKinds", x => x.MoodKindId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SleepLevels",
+                schema: "supusr",
+                columns: table => new
+                {
+                    SleepLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SleepLevels", x => x.SleepLevelId);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,15 +141,13 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: table => new
                 {
                     ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Day = table.Column<int>(type: "int", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strActivityLevel = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ActivityLevel = table.Column<int>(type: "int", nullable: false),
-                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Day = table.Column<int>(type: "int", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,19 +167,24 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: table => new
                 {
                     AppetiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    strAppetiteLevel = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AppetiteLevel = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AppetiteLevelDbMAppetiteLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Appetites", x => x.AppetiteId);
+                    table.ForeignKey(
+                        name: "FK_Appetites_AppetiteLevels_AppetiteLevelDbMAppetiteLevelId",
+                        column: x => x.AppetiteLevelDbMAppetiteLevelId,
+                        principalSchema: "supusr",
+                        principalTable: "AppetiteLevels",
+                        principalColumn: "AppetiteLevelId");
                     table.ForeignKey(
                         name: "FK_Appetites_Patients_PatientDbMPatientId",
                         column: x => x.PatientDbMPatientId,
@@ -198,14 +231,13 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: table => new
                 {
                     SleepId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    strSleepLevel = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SleepLevel = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SleepLevelDbMSleepLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -217,6 +249,33 @@ namespace DbContext.Migrations.SqlServerDbContext
                         principalSchema: "supusr",
                         principalTable: "Patients",
                         principalColumn: "PatientId");
+                    table.ForeignKey(
+                        name: "FK_Sleeps_SleepLevels_SleepLevelDbMSleepLevelId",
+                        column: x => x.SleepLevelDbMSleepLevelId,
+                        principalSchema: "supusr",
+                        principalTable: "SleepLevels",
+                        principalColumn: "SleepLevelId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActivityLevels",
+                schema: "supusr",
+                columns: table => new
+                {
+                    ActivityLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    ActivityDbMActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityLevels", x => x.ActivityLevelId);
+                    table.ForeignKey(
+                        name: "FK_ActivityLevels_Activities_ActivityDbMActivityId",
+                        column: x => x.ActivityDbMActivityId,
+                        principalSchema: "supusr",
+                        principalTable: "Activities",
+                        principalColumn: "ActivityId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -224,6 +283,18 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr",
                 table: "Activities",
                 column: "PatientDbMPatientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActivityLevels_ActivityDbMActivityId",
+                schema: "supusr",
+                table: "ActivityLevels",
+                column: "ActivityDbMActivityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appetites_AppetiteLevelDbMAppetiteLevelId",
+                schema: "supusr",
+                table: "Appetites",
+                column: "AppetiteLevelDbMAppetiteLevelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appetites_PatientDbMPatientId",
@@ -262,13 +333,19 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr",
                 table: "Sleeps",
                 column: "PatientDbMPatientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sleeps_SleepLevelDbMSleepLevelId",
+                schema: "supusr",
+                table: "Sleeps",
+                column: "SleepLevelDbMSleepLevelId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Activities",
+                name: "ActivityLevels",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
@@ -288,7 +365,19 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "dbo");
 
             migrationBuilder.DropTable(
+                name: "Activities",
+                schema: "supusr");
+
+            migrationBuilder.DropTable(
+                name: "AppetiteLevels",
+                schema: "supusr");
+
+            migrationBuilder.DropTable(
                 name: "MoodKinds",
+                schema: "supusr");
+
+            migrationBuilder.DropTable(
+                name: "SleepLevels",
                 schema: "supusr");
 
             migrationBuilder.DropTable(

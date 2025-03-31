@@ -8,20 +8,16 @@ using Models.DTO;
 
 namespace DbModels;
 [Table("Appetites", Schema = "supusr")]
-public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
+public class AppetiteDbM : Appetite 
 {
-    [Key]
+      [Key]
     public override Guid AppetiteId { get; set; }
+    public override DateTime Date {get;set; }
+    public override DayOfWeek Day { get; set; }
+    public override string Notes { get; set; }
 
 
-
-    #region adding more readability to an enum type in the database
-    public virtual string strAppetiteLevel
-    {
-        get => AppetiteLevel.ToString();
-        set { }
-    }
-    
+    #region convert to string
   public virtual string strDayOfWeek
         {
             get => Day.ToString();
@@ -41,7 +37,7 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
     {
         if (org == null) return null;
 
-        AppetiteLevel = org.AppetiteLevel;
+     
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
@@ -51,20 +47,19 @@ public class AppetiteDbM : Appetite // ISeed<AppetiteDbM>
     }
 
 
-    [NotMapped]
+        [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-  
-    public  PatientDbM PatientDbM { get; set; }
+    
+    public PatientDbM PatientDbM { get; set; }
 
-    //     [NotMapped]
-    // public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
+    [NotMapped]
+    public override IAppetiteLevel AppetiteLevel { get => AppetiteLevelDbM; set => throw new NotImplementedException(); }
 
-    // [JsonIgnore]
-
-    // public  GraphDbM GraphDbM { get; set; }
-
+    [JsonIgnore]
+    
+    public AppetiteLevelDbM AppetiteLevelDbM { get; set; }
 
     public AppetiteDbM() { }
     public AppetiteDbM(AppetiteCuDto org)

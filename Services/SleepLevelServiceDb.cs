@@ -17,7 +17,7 @@ public class SleepLevelServiceDb : ISleepLevelService {
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<ISleepLevel>> ReadSleepLevelsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _sleeplevelRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponsePageDto<ISleepLevel>> ReadSleepLevelsAsync(bool flat, string filter, int pageNumber, int pageSize) => _sleeplevelRepo.ReadItemsAsync(flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<ISleepLevel>> ReadSleepLevelAsync(Guid id, bool flat) => _sleeplevelRepo.ReadItemAsync(id, flat);
     public Task<ResponseItemDto<ISleepLevel>> DeleteSleepLevelAsync(Guid id) => _sleeplevelRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<ISleepLevel>> UpdateSleepLevelAsync(SleepLevelCuDto item) => _sleeplevelRepo.UpdateItemAsync(item);

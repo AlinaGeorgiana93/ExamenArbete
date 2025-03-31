@@ -29,7 +29,7 @@ public class SleepDbRepos
         {
             query = _dbContext.Sleeps.AsNoTracking()
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)
+                .Include(i => i.SleepLevelDbM)
                 .Where(i => i.SleepId == id);
         }
         else
@@ -46,7 +46,7 @@ public class SleepDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<ISleep>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
+      public async Task<ResponsePageDto<ISleep>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<SleepDbM> query;
@@ -57,8 +57,7 @@ public class SleepDbRepos
         else
         {
             query = _dbContext.Sleeps.AsNoTracking()
-                .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM);
+                .Include(i => i.SleepLevelDbM);
         }
 
         var ret = new ResponsePageDto<ISleep>()
@@ -66,23 +65,22 @@ public class SleepDbRepos
             DbConnectionKeyUsed = _dbContext.dbConnection,
             DbItemsCount = await query
 
-                .Where(i =>
-              
+                // Adding filter functionality
+                .Where(i => 
+                 i.strDayOfWeek.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
-                 i.strDayOfWeek.ToLower().Contains(filter) ||
-                 i.Notes.ToLower().Contains(filter))
-                 i.strDayOfWeek.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
             PageItems = await query
 
-                     .Where(i =>
-                      i.strSleepLevel.ToLower().Contains(filter) ||
-                      i.strDayOfWeek.ToLower().Contains(filter) ||
-                      i.strDayOfWeek.ToLower().Contains(filter) ||
-                      i.Notes.ToLower().Contains(filter))
+                    // Adding filter functionality
+                .Where(i => 
+                    i.strDayOfWeek.ToLower().Contains(filter) ||
+                    i.strDate.ToLower().Contains(filter) ||
+                    i.Notes.ToLower().Contains(filter))
 
+                // Adding paging
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
 
@@ -93,6 +91,7 @@ public class SleepDbRepos
         };
         return ret;
     }
+
 
     public async Task<ResponseItemDto<ISleep>> DeleteItemAsync(Guid id)
     {
@@ -120,15 +119,12 @@ public class SleepDbRepos
             .Where(i => i.SleepId == itemDto.SleepId);
         var item = await query1
                 .Include(i => i.PatientDbM)
-                .Include(i => i.GraphDbM)  // Include Graph
                 .FirstOrDefaultAsync<SleepDbM>();
 
         if (item == null) throw new ArgumentException($"Item {itemDto.SleepId} is not existing");
 
        
         item.UpdateFromDTO(itemDto);
-
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         _dbContext.Sleeps.Update(item);
 
@@ -145,8 +141,6 @@ public class SleepDbRepos
        
         var item = new SleepDbM(itemDto);
 
-        await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
-
         _dbContext.Sleeps.Add(item);
 
         await _dbContext.SaveChangesAsync();
@@ -154,22 +148,14 @@ public class SleepDbRepos
         return await ReadItemAsync(item.SleepId, false);
     }
 
-    private async Task navProp_ItemCUdto_to_ItemDbM(SleepCuDto itemDtoSrc, SleepDbM itemDst)
+    public async Task UpdateNavigationProp(SleepCuDto itemDto, SleepDbM item)
     {
-        var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-            a => a.PatientId == itemDtoSrc.PatientId);
-
-        if (patient == null)
-            throw new ArgumentException($"Item id {itemDtoSrc.PatientId} not existing");
-
-        itemDst.PatientDbM = patient;
-
-        var graph = await _dbContext.Graphs.FirstOrDefaultAsync(
-       g => g.GraphId == itemDtoSrc.GraphId);
-
-        if (graph == null)
-            throw new ArgumentException($"Graph ID {itemDtoSrc.GraphId} does not exist");
-
-        itemDst.GraphDbM = graph;
+      
+        // Update Patient
+        var updatedPatients = await _dbContext.Patients
+            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);
+        if (updatedPatients == null)
+            throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
+        item.PatientDbM = updatedPatients;
     }
 }

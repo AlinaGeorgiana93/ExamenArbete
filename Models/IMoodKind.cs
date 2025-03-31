@@ -9,7 +9,7 @@ public interface IMoodKind
     public int Rating { get; set; }            // Betyg mellan 1-10
 
 
-      public List<IMood> Moods {get; set;}
+    public List<IMood> Moods {get; set;}
 
 
 

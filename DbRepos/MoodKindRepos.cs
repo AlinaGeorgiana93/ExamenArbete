@@ -45,7 +45,7 @@ public class MoodKindDbRepos
         };
     }
 
-     public async Task<ResponsePageDto<IMoodKind>> ReadItemsAsync (bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+     public async Task<ResponsePageDto<IMoodKind>> ReadItemsAsync ( bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 

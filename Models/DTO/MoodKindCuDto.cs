@@ -5,11 +5,7 @@ using System.Xml.Linq;
 
 namespace Models.DTO;
 
-//DTO is a DataTransferObject, can be instanstiated by the controller logic
-//and represents a, fully instantiable, subset of the Database models
-//for a specific purpose.
 
-//These DTO are simplistic and used to Update and Create objects
 public class MoodKindCuDto
 {
 
@@ -19,8 +15,6 @@ public class MoodKindCuDto
 
   public virtual List<Guid> MoodsId { get; set; } = null;
   public virtual Guid? MoodId { get; set; }
-
-
 
   public MoodKindCuDto() { }
   public MoodKindCuDto(IMoodKind org)

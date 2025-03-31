@@ -33,9 +33,12 @@ public class AppetiteLevelDbM : AppetiteLevel
 
 
     [NotMapped]
-    public override List<IAppetite> Appetite { get => new List<IAppetite> { AppetiteDbM }; set => throw new NotImplementedException(); }
+    public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
+
     [JsonIgnore]
-    public AppetiteDbM AppetiteDbM { get; set; }  // This should be a real EF entity
+    [Required]
+    public List<AppetiteDbM> AppetitesDbM { get; set; }
+
 
     
     public AppetiteLevelDbM() { }

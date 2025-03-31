@@ -17,7 +17,7 @@ public class MoodKindServiceDb : IMoodKindService {
         _logger = logger;
     }
 
-    public Task<ResponsePageDto<IMoodKind>> ReadMoodKindsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _moodkindRepo.ReadItemsAsync(seeded, flat, filter, pageNumber, pageSize);
+    public Task<ResponsePageDto<IMoodKind>> ReadMoodKindsAsync(bool flat, string filter, int pageNumber, int pageSize) => _moodkindRepo.ReadItemsAsync( flat, filter, pageNumber, pageSize);
     public Task<ResponseItemDto<IMoodKind>> ReadMoodKindAsync(Guid id, bool flat) => _moodkindRepo.ReadItemAsync(id, flat);
     public Task<ResponseItemDto<IMoodKind>> DeleteMoodKindAsync(Guid id) => _moodkindRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<IMoodKind>> UpdateMoodKindAsync(MoodKindCuDto item) => _moodkindRepo.UpdateItemAsync(item);

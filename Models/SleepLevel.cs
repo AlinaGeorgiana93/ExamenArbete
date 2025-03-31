@@ -1,9 +1,9 @@
 using Configuration;
 using Microsoft.Identity.Client;
 using Models;
-//using Seido.Utilities.SeedGenerator;
 
 
+namespace Models;
 
 public class SleepLevel: ISleepLevel
 {
@@ -12,7 +12,6 @@ public class SleepLevel: ISleepLevel
     public virtual string Label { get; set; }     
     public virtual int Rating { get; set; }       
  
-    public virtual Guid? SleepId { get; set; } 
 
-    public virtual List <ISleep> Sleep { get; set; }
+    public virtual List <ISleep> Sleeps { get; set; }
 }
