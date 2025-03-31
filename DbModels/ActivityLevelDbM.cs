@@ -10,14 +10,14 @@ namespace DbModels;
 [Table("ActivityLevels", Schema = "supusr")]
 public class ActivityLevelDbM : ActivityLevel
 {
-     [Key]
-     public override Guid ActivityLevelId { get; set; }
-     public override string Name {get;set; }
-     public override int Rating { get; set; }
+    [Key]
+    public override Guid ActivityLevelId { get; set; }
+    public override string Name { get; set; }
+    public override int Rating { get; set; }
 
 
 
-    public override IActivityLevel UpdateFromDTO(ActivityLevelCuDto org)
+    public IActivityLevel UpdateFromDTO(ActivityLevelCuDto org)
     {
         if (org == null) return null;
 
@@ -25,17 +25,17 @@ public class ActivityLevelDbM : ActivityLevel
         Rating = org.Rating;
 
         return this;
-    }  
-  
+    }
+
 
 
     [NotMapped]
-    public override IActivity Activity
+    public override Activity Activity
     {
         get => ActivityDbM;
         set => throw new NotImplementedException();
     }
-    
+
 
     [JsonIgnore]
     public ActivityDbM ActivityDbM { get; set; }

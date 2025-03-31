@@ -12,7 +12,7 @@ public interface IActivity
     //Navigation properties
     public IPatient Patient { get; set; }
     public IGraph Graph { get; set; }
-    public List<IActivityLevel> ActivityLevels { get; set; }
+    public IActivityLevel ActivityLevel { get; set; }
 
 
 
