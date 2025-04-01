@@ -14,8 +14,6 @@ public class PatientCuDto
     public virtual List<Guid> AppetitesId { get; set; } = null;
     public virtual List<Guid> MoodsId { get; set; } = null;
     public virtual List<Guid> SleepsId { get; set; } = null;
-
-
    public virtual Guid? GraphId { get; set; } // ✅ Store Patient as a GUID instead of `IPatient`
 
     public PatientCuDto() { }

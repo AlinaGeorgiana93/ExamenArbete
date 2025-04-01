@@ -11,9 +11,7 @@ public class ActivityCuDto
 
   public Guid? ActivityId { get; set; }
   public DateTime Date { get; set; }
-
   public DayOfWeek Day { get; set; }
-
   public string Notes { get; set; }
 
   public virtual Guid PatientId { get; set; }
@@ -30,7 +28,6 @@ public class ActivityCuDto
     Notes = org.Notes;
 
     PatientId = org.Patient.PatientId;
-
     ActivityLevelId = org?.ActivityLevel?.ActivityLevelId;
     //GraphId = org.Graph.GraphId;
 

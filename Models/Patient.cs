@@ -1,6 +1,7 @@
 using Configuration;
 using Microsoft.Identity.Client;
 
+
 namespace Models;
 
 public class Patient : IPatient

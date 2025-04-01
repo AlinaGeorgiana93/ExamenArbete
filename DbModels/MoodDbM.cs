@@ -20,13 +20,13 @@ public class MoodDbM : Mood {
     #region convert to string
     
 
-     public virtual string strDayOfWeek
+     public virtual string StrDayOfWeek
         {
             get => Day.ToString();
             set { }
         }
         
-        public virtual string strDate
+        public virtual string StrDate
         {
             get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
             set { }
@@ -49,7 +49,6 @@ public class MoodDbM : Mood {
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    
     public PatientDbM PatientDbM { get; set; }
 
     [NotMapped]

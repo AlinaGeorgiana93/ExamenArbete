@@ -11,11 +11,9 @@ public class Activity : IActivity
 
     public virtual Guid? PatientId { get; set; } 
 
-
     //Navigation properties
     public virtual IPatient Patient { get; set; }
    // public virtual IGraph Graph { get; set; }
-
     public virtual IActivityLevel ActivityLevel { get; set; }
 
 

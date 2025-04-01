@@ -84,10 +84,7 @@ public class MoodKindDbRepos
     {
         var query = _dbContext.MoodKinds
         .Where(a => a.MoodKindId == id);
-        var item = await query.FirstOrDefaultAsync();
-
-        if(item == null) throw new ArgumentException($"Item: {id} is not existing");
-
+        var item = await query.FirstOrDefaultAsync() ?? throw new ArgumentException($"Item: {id} is not existing");
         _dbContext.MoodKinds.Remove(item);
 
         await _dbContext.SaveChangesAsync();
@@ -105,13 +102,10 @@ public class MoodKindDbRepos
 
             var item = await query1
                     .Include(i => i.MoodsDbM) // Include related entities if needed
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync() ?? throw new ArgumentException($"Item {itemDto.MoodKindId} is not existing");
 
-            // If the item does not exist
-            if (item == null) throw new ArgumentException($"Item {itemDto.MoodKindId} is not existing");
-
-            // Transfer any changes from DTO to database object
-            item.UpdateFromDTO(itemDto);
+        // Transfer any changes from DTO to database object
+        item.UpdateFromDTO(itemDto);
 
             // Save the updated entity in the database
             _dbContext.MoodKinds.Update(item);

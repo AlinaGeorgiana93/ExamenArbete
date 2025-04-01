@@ -84,10 +84,7 @@ public class StaffDbRepos
         var query1 = _dbContext.Staffs
             .Where(i => i.StaffId == id);
 
-        var item = await query1.FirstOrDefaultAsync<StaffDbM>();
-
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {id} is not existing");
+        var item = await query1.FirstOrDefaultAsync<StaffDbM>() ?? throw new ArgumentException($"Item {id} is not existing");
 
         //delete in the database model
         _dbContext.Staffs.Remove(item);
@@ -108,10 +105,7 @@ public class StaffDbRepos
             .Where(i => i.StaffId == itemDto.StaffId);
         var item = await query1
                 //.Include(i => i.AttractionDbM) // Commented out Attraction
-                .FirstOrDefaultAsync<StaffDbM>();
-
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {itemDto.StaffId} is not existing");
+                .FirstOrDefaultAsync<StaffDbM>() ?? throw new ArgumentException($"Item {itemDto.StaffId} is not existing");
 
         //transfer any changes from DTO to database objects
         //Update individual properties 

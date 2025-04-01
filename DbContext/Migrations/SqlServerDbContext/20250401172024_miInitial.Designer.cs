@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20250401141422_miInitial")]
+    [Migration("20250401172024_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -49,10 +49,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("ActivityId");
@@ -105,10 +105,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("AppetiteId");
@@ -181,10 +181,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("MoodId");
@@ -269,10 +269,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("SleepLevelDbMSleepLevelId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("SleepId");

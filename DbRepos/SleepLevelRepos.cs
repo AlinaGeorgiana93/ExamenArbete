@@ -92,11 +92,7 @@ namespace DbRepos
             var query1 = _dbContext.SleepLevels
                 .Where(i => i.SleepLevelId == id);
 
-            var item = await query1.FirstOrDefaultAsync();
-
-            if (item == null)
-                throw new ArgumentException($"Item {id} is not existing");
-
+            var item = await query1.FirstOrDefaultAsync() ?? throw new ArgumentException($"Item {id} is not existing");
             _dbContext.SleepLevels.Remove(item);
 
             await _dbContext.SaveChangesAsync();
@@ -115,10 +111,7 @@ namespace DbRepos
 
             var item = await query1
                     .Include(i => i.SleepsDbM) 
-                    .FirstOrDefaultAsync();
-
-            if (item == null) throw new ArgumentException($"Item {itemDto.SleepLevelId} is not existing");
-
+                    .FirstOrDefaultAsync() ?? throw new ArgumentException($"Item {itemDto.SleepLevelId} is not existing");
             item.UpdateFromDTO(itemDto);
 
             _dbContext.SleepLevels.Update(item);

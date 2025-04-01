@@ -17,13 +17,13 @@ public class ActivityDbM : Activity
 
     #region Adding more readability to an enum type in the database
 
-    public virtual string strDayOfWeek
+    public virtual string StrDayOfWeek
     {
         get => Day.ToString();
         set { }
     }
 
-    public virtual string strDate
+    public virtual string StrDate
     {
         get => Date.ToString("yyyy-MM-dd"); // To always get the format "2025-03-21"
         set { }
@@ -48,8 +48,6 @@ public class ActivityDbM : Activity
     [JsonIgnore]
     [Required]
     public PatientDbM PatientDbM { get; set; }
-
-
 
 
     [NotMapped]

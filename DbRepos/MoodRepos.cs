@@ -66,8 +66,8 @@ public class MoodDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                 i.strDayOfWeek.ToLower().Contains(filter) ||
-                 i.strDate.ToLower().Contains(filter) ||
+                 i.StrDayOfWeek.ToLower().Contains(filter) ||
+                 i.StrDate.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
@@ -75,8 +75,8 @@ public class MoodDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                    i.strDayOfWeek.ToLower().Contains(filter) ||
-                    i.strDate.ToLower().Contains(filter) ||
+                    i.StrDayOfWeek.ToLower().Contains(filter) ||
+                    i.StrDate.ToLower().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter))
 
                 // Adding paging
@@ -96,10 +96,7 @@ public class MoodDbRepos
         var query1 = _dbContext.Moods
             .Where(i => i.MoodId == id);
 
-        var item = await query1.FirstOrDefaultAsync<MoodDbM>();
-
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {id} is not existing");
+        var item = await query1.FirstOrDefaultAsync<MoodDbM>() ?? throw new ArgumentException($"Item {id} is not existing");
 
         //delete in the database model
         _dbContext.Moods.Remove(item);
@@ -179,17 +176,13 @@ public class MoodDbRepos
 
         // Update MoodKind
         var updatedMoodKinds = await _dbContext.MoodKinds
-            .FirstOrDefaultAsync(a => a.MoodKindId == itemDto.MoodKindId);
-        if (updatedMoodKinds == null)
-            throw new ArgumentException($"Patient with id {itemDto.MoodKindId} does not exist");
+            .FirstOrDefaultAsync(a => a.MoodKindId == itemDto.MoodKindId) ?? throw new ArgumentException($"Patient with id {itemDto.MoodKindId} does not exist");
         item.MoodKindDbM = updatedMoodKinds;
 
 
         // Update Patient
         var updatedPatients = await _dbContext.Patients
-            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);
-        if (updatedPatients == null)
-            throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
+            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId) ?? throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
         item.PatientDbM = updatedPatients;
 
     }

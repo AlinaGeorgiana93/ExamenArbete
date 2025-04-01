@@ -67,8 +67,8 @@ public class AppetiteDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                 i.strDayOfWeek.ToLower().Contains(filter) ||
-                 i.strDate.ToLower().Contains(filter) ||
+                 i.StrDayOfWeek.ToLower().Contains(filter) ||
+                 i.StrDate.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
@@ -76,8 +76,8 @@ public class AppetiteDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                    i.strDayOfWeek.ToLower().Contains(filter) ||
-                    i.strDate.ToLower().Contains(filter) ||
+                    i.StrDayOfWeek.ToLower().Contains(filter) ||
+                    i.StrDate.ToLower().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter))
 
                 // Adding paging
@@ -98,10 +98,7 @@ public class AppetiteDbRepos
         var query1 = _dbContext.Appetites
             .Where(i => i.AppetiteId == id);
 
-        var item = await query1.FirstOrDefaultAsync<AppetiteDbM>();
-
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {id} is not existing");
+        var item = await query1.FirstOrDefaultAsync<AppetiteDbM>() ?? throw new ArgumentException($"Item {id} is not existing");
 
         //delete in the database model
         _dbContext.Appetites.Remove(item);
@@ -172,16 +169,12 @@ public class AppetiteDbRepos
 
         // Update MoodKind
         var updateAppetiteLevels = await _dbContext.AppetiteLevels
-            .FirstOrDefaultAsync(a => a.AppetiteLevelId == itemDto.AppetiteLevelId);
-        if (updateAppetiteLevels == null)
-            throw new ArgumentException($"Patient with id {itemDto.AppetiteLevelId} does not exist");
+            .FirstOrDefaultAsync(a => a.AppetiteLevelId == itemDto.AppetiteLevelId) ?? throw new ArgumentException($"Patient with id {itemDto.AppetiteLevelId} does not exist");
         item.AppetiteLevelDbM = updateAppetiteLevels;
 
         // Update Patient
         var updatedPatients = await _dbContext.Patients
-            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);
-        if (updatedPatients == null)
-            throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
+            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId) ?? throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
         item.PatientDbM = updatedPatients;
     }
 }

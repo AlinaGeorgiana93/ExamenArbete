@@ -92,10 +92,7 @@ public class PatientDbRepos
         //Find the instance with matching id
         var query1 = _dbContext.Patients
             .Where(i => i.PatientId == id);
-        var item = await query1.FirstOrDefaultAsync<PatientDbM>();
-
-        //If the item does not exists
-        if (item == null) throw new ArgumentException($"Item {id} is not existing");
+        var item = await query1.FirstOrDefaultAsync<PatientDbM>() ?? throw new ArgumentException($"Item {id} is not existing");
 
         //delete in the database model
         _dbContext.Patients.Remove(item);

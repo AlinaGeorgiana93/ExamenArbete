@@ -155,8 +155,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: table => new
                 {
                     ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ActivityLevelDbMActivityLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -191,8 +191,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AppetiteLevelDbMAppetiteLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
@@ -223,8 +223,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     MoodKindDbMMoodKindId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
@@ -255,8 +255,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    StrDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SleepLevelDbMSleepLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)

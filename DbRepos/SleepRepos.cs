@@ -67,8 +67,8 @@ public class SleepDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                 i.strDayOfWeek.ToLower().Contains(filter) ||
-                 i.strDate.ToLower().Contains(filter) ||
+                 i.StrDayOfWeek.ToLower().Contains(filter) ||
+                 i.StrDate.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
                 .CountAsync(),
 
@@ -76,8 +76,8 @@ public class SleepDbRepos
 
                 // Adding filter functionality
                 .Where(i =>
-                    i.strDayOfWeek.ToLower().Contains(filter) ||
-                    i.strDate.ToLower().Contains(filter) ||
+                    i.StrDayOfWeek.ToLower().Contains(filter) ||
+                    i.StrDate.ToLower().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter))
 
                 // Adding paging
@@ -98,10 +98,7 @@ public class SleepDbRepos
         var query1 = _dbContext.Sleeps
             .Where(i => i.SleepId == id);
 
-        var item = await query1.FirstOrDefaultAsync<SleepDbM>();
-
-        if (item == null) throw new ArgumentException($"Item {id} is not existing");
-
+        var item = await query1.FirstOrDefaultAsync<SleepDbM>() ?? throw new ArgumentException($"Item {id} is not existing");
         _dbContext.Sleeps.Remove(item);
 
         await _dbContext.SaveChangesAsync();
@@ -119,11 +116,7 @@ public class SleepDbRepos
             .Where(i => i.SleepId == itemDto.SleepId);
         var item = await query1
                 .Include(i => i.PatientDbM)
-                .FirstOrDefaultAsync<SleepDbM>();
-
-        if (item == null) throw new ArgumentException($"Item {itemDto.SleepId} is not existing");
-
-
+                .FirstOrDefaultAsync<SleepDbM>() ?? throw new ArgumentException($"Item {itemDto.SleepId} is not existing");
         item.UpdateFromDTO(itemDto);
 
         _dbContext.Sleeps.Update(item);
@@ -154,16 +147,12 @@ public class SleepDbRepos
 
         // Update sleep
         var updatedSleepLevels = await _dbContext.SleepLevels
-            .FirstOrDefaultAsync(a => a.SleepLevelId == itemDto.SleepLevelId);
-        if (updatedSleepLevels == null)
-            throw new ArgumentException($"Patient with id {itemDto.SleepLevelId} does not exist");
+            .FirstOrDefaultAsync(a => a.SleepLevelId == itemDto.SleepLevelId) ?? throw new ArgumentException($"Patient with id {itemDto.SleepLevelId} does not exist");
         item.SleepLevelDbM = updatedSleepLevels;
 
         // Update Patient
         var updatedPatients = await _dbContext.Patients
-            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);
-        if (updatedPatients == null)
-            throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
+            .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId) ?? throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
         item.PatientDbM = updatedPatients;
     }
 }

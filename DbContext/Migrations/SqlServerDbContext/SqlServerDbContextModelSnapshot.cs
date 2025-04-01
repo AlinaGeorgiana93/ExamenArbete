@@ -46,10 +46,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("ActivityId");
@@ -102,10 +102,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("AppetiteId");
@@ -178,10 +178,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("MoodId");
@@ -266,10 +266,10 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<Guid?>("SleepLevelDbMSleepLevelId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("strDate")
+                    b.Property<string>("StrDate")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("strDayOfWeek")
+                    b.Property<string>("StrDayOfWeek")
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("SleepId");

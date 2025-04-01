@@ -31,28 +31,27 @@ public class PatientDbM : Patient
     public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<AppetiteDbM> AppetitesDbM { get; set; }  // Now using concrete class AppetiteDbM
+    public List<AppetiteDbM> AppetitesDbM { get; set; }
 
 
     [NotMapped]
     public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<MoodDbM> MoodsDbM { get; set; }  // Now using concrete class MoodDbM
+    public List<MoodDbM> MoodsDbM { get; set; }
 
-
-    [NotMapped]
+        [NotMapped]
     public override List<IActivity> Activities { get => ActivitiesDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<ActivityDbM> ActivitiesDbM { get; set; }  // Now using concrete class ActivityDbM
+    public List<ActivityDbM> ActivitiesDbM { get; set; }
 
 
     [NotMapped]
     public override List<ISleep> Sleeps { get => SleepsDbM?.ToList<ISleep>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public List<SleepDbM> SleepsDbM { get; set; }  // Now using concrete class SleepDbM
+    public List<SleepDbM> SleepsDbM { get; set; }
 
 
     public PatientDbM UpdateFromDTO(PatientCuDto org)
@@ -62,6 +61,7 @@ public class PatientDbM : Patient
         FirstName=org.FirstName;
         LastName=org.LastName;
         PersonalNumber = org.PersonalNumber;
+
 
         return this;
     }
