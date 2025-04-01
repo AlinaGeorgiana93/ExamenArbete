@@ -155,8 +155,8 @@ public class ActivityLevelDbRepos
         return await ReadItemAsync(item.ActivityLevelId, false);    
     }
 
-    public static implicit operator ActivityLevelDbRepos(ActivityDbRepos v)
-    {
-        throw new NotImplementedException();
-    }
+    // public static implicit operator ActivityLevelDbRepos(ActivityDbRepos v)
+    // {
+    //     throw new NotImplementedException();
+    // }
 }

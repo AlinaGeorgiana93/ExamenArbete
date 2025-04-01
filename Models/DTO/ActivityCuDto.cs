@@ -17,7 +17,8 @@ public class ActivityCuDto
   public string Notes { get; set; }
 
   public virtual Guid PatientId { get; set; }
- // public virtual Guid GraphId { get; set; }
+  public virtual Guid? ActivityLevelId { get; set; }
+  // public virtual Guid GraphId { get; set; }
 
 
   public ActivityCuDto() { }
@@ -29,7 +30,13 @@ public class ActivityCuDto
     Notes = org.Notes;
 
     PatientId = org.Patient.PatientId;
+
+    ActivityLevelId = org?.ActivityLevel?.ActivityLevelId;
     //GraphId = org.Graph.GraphId;
 
   }
 }
+
+
+
+

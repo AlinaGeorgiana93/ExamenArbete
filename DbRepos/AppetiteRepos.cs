@@ -46,7 +46,7 @@ public class AppetiteDbRepos
         };
     }
 
-   public async Task<ResponsePageDto<IAppetite>>ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IAppetite>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
         IQueryable<AppetiteDbM> query;
@@ -66,7 +66,7 @@ public class AppetiteDbRepos
             DbItemsCount = await query
 
                 // Adding filter functionality
-                .Where(i => 
+                .Where(i =>
                  i.strDayOfWeek.ToLower().Contains(filter) ||
                  i.strDate.ToLower().Contains(filter) ||
                  i.Notes.ToLower().Contains(filter))
@@ -74,8 +74,8 @@ public class AppetiteDbRepos
 
             PageItems = await query
 
-                    // Adding filter functionality
-                .Where(i => 
+                // Adding filter functionality
+                .Where(i =>
                     i.strDayOfWeek.ToLower().Contains(filter) ||
                     i.strDate.ToLower().Contains(filter) ||
                     i.Notes.ToLower().Contains(filter))
@@ -133,7 +133,7 @@ public class AppetiteDbRepos
         item.UpdateFromDTO(itemDto);
 
         //Update navigation properties
-     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+        //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.Appetites.Update(item);
@@ -155,7 +155,7 @@ public class AppetiteDbRepos
         var item = new AppetiteDbM(itemDto);
 
         //Update navigation properties
-      //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+        //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.Appetites.Add(item);
@@ -167,9 +167,16 @@ public class AppetiteDbRepos
         return await ReadItemAsync(item.AppetiteId, false);
     }
 
-  public async Task UpdateNavigationProp(AppetiteCuDto itemDto, AppetiteDbM item)
+    public async Task UpdateNavigationProp(AppetiteCuDto itemDto, AppetiteDbM item)
     {
-      
+
+        // Update MoodKind
+        var updateAppetiteLevels = await _dbContext.AppetiteLevels
+            .FirstOrDefaultAsync(a => a.AppetiteLevelId == itemDto.AppetiteLevelId);
+        if (updateAppetiteLevels == null)
+            throw new ArgumentException($"Patient with id {itemDto.AppetiteLevelId} does not exist");
+        item.AppetiteLevelDbM = updateAppetiteLevels;
+
         // Update Patient
         var updatedPatients = await _dbContext.Patients
             .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);

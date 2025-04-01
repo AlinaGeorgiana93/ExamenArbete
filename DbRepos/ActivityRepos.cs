@@ -22,7 +22,7 @@ public class ActivityDbRepos
     }
     #endregion
 
-   public async Task<ResponseItemDto<IActivity>> ReadItemAsync(Guid id, bool flat)
+    public async Task<ResponseItemDto<IActivity>> ReadItemAsync(Guid id, bool flat)
     {
         IQueryable<ActivityDbM> query;
         if (!flat)
@@ -35,9 +35,9 @@ public class ActivityDbRepos
         {
             query = _dbContext.Activities.AsNoTracking()
                 .Where(i => i.ActivityId == id);
-        }  
- 
-        var resp =  await query.FirstOrDefaultAsync<IActivity>();
+        }
+
+        var resp = await query.FirstOrDefaultAsync<IActivity>();
         return new ResponseItemDto<IActivity>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
@@ -45,21 +45,21 @@ public class ActivityDbRepos
         };
     }
 
-     public async Task<ResponsePageDto<IActivity>> ReadItemsAsync (bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IActivity>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 
         IQueryable<ActivityDbM> query = _dbContext.Activities.AsNoTracking();
 
-         if (!flat)
-         {
+        if (!flat)
+        {
             query = _dbContext.Activities.AsNoTracking()
             .Include(i => i.PatientDbM);
-            
-         }
-         
 
-        query = query.Where(i =>      
+        }
+
+
+        query = query.Where(i =>
                 i.strDate.ToLower().Contains(filter) ||
                 i.strDayOfWeek.ToLower().Contains(filter) ||
                 i.PatientDbM.FirstName.ToLower().Contains(filter) ||
@@ -78,7 +78,7 @@ public class ActivityDbRepos
             PageSize = pageSize
         };
 
-    } 
+    }
 
     public async Task<ResponseItemDto<IActivity>> DeleteItemAsync(Guid id)
     {
@@ -86,32 +86,32 @@ public class ActivityDbRepos
         .Where(a => a.ActivityId == id);
         var item = await query.FirstOrDefaultAsync();
 
-        if(item == null) throw new ArgumentException($"Item: {id} is not existing");
+        if (item == null) throw new ArgumentException($"Item: {id} is not existing");
 
         _dbContext.Activities.Remove(item);
 
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<IActivity> 
+        return new ResponseItemDto<IActivity>
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
     }
- public async Task<ResponseItemDto<IActivity>> CreateItemAsync(ActivityCuDto itemDto)
+    public async Task<ResponseItemDto<IActivity>> CreateItemAsync(ActivityCuDto itemDto)
     {
-        if (itemDto.ActivityId != null) 
-          throw new ArgumentException($"{nameof(itemDto.ActivityId)} must be null when creating a new object");
+        if (itemDto.ActivityId != null)
+            throw new ArgumentException($"{nameof(itemDto.ActivityId)} must be null when creating a new object");
 
-          var item = new ActivityDbM(itemDto);
+        var item = new ActivityDbM(itemDto);
 
-          await UpdateNavigationProp(itemDto, item);
+        await UpdateNavigationProp(itemDto, item);
 
-          _dbContext.Add(item);
+        _dbContext.Add(item);
 
-          await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
 
-          return await ReadItemAsync(item.ActivityId, true);
+        return await ReadItemAsync(item.ActivityId, true);
     }
     public async Task<ResponseItemDto<IActivity>> UpdateItemAsync(ActivityCuDto itemDto)
     {
@@ -136,7 +136,17 @@ public class ActivityDbRepos
 
     public async Task UpdateNavigationProp(ActivityCuDto itemDto, ActivityDbM item)
     {
-      
+
+
+        // Update ActivityLevel
+        var updatedActivityLevel = await _dbContext.ActivityLevels
+            .FirstOrDefaultAsync(a => a.ActivityLevelId == itemDto.ActivityLevelId);
+        if (updatedActivityLevel == null)
+            throw new ArgumentException($"ActivityLevel with id {itemDto.ActivityLevelId} does not exist");
+        item.ActivityLevelDbM = updatedActivityLevel;
+
+
+
         // Update Patient
         var updatedPatients = await _dbContext.Patients
             .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId);

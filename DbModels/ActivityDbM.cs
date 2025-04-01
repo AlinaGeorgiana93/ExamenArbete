@@ -16,7 +16,7 @@ public class ActivityDbM : Activity
 
 
     #region Adding more readability to an enum type in the database
-    
+
     public virtual string strDayOfWeek
     {
         get => Day.ToString();
@@ -34,7 +34,7 @@ public class ActivityDbM : Activity
     {
         if (org == null) return null;
 
-        
+
         Date = org.Date;
         Day = org.Day;
         Notes = org.Notes;
@@ -42,12 +42,22 @@ public class ActivityDbM : Activity
         return this;
     }
 
-   [NotMapped]
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
-    public  PatientDbM PatientDbM { get; set; }
+    public PatientDbM PatientDbM { get; set; }
+
+
+
+
+    [NotMapped]
+    public override IActivityLevel ActivityLevel { get => ActivityLevelDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+
+    public ActivityLevelDbM ActivityLevelDbM { get; set; }
 
 
     public ActivityDbM() { }
@@ -56,6 +66,6 @@ public class ActivityDbM : Activity
         ActivityId = Guid.NewGuid();
         UpdateFromDTO(org);
     }
-    
+
 }
 
