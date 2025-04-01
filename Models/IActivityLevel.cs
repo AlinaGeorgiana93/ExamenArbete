@@ -9,7 +9,7 @@ public interface IActivityLevel
     public int Rating { get; set; }            // Betyg mellan 1-10
 
 
-    public List<Activity> Activity { get; set; }
+    public List<Activity> Activities { get; set; }
 
 
 

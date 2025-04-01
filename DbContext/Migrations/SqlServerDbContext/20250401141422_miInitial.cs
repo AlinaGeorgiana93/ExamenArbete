@@ -18,6 +18,20 @@ namespace DbContext.Migrations.SqlServerDbContext
                 name: "dbo");
 
             migrationBuilder.CreateTable(
+                name: "ActivityLevels",
+                schema: "supusr",
+                columns: table => new
+                {
+                    ActivityLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityLevels", x => x.ActivityLevelId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppetiteLevels",
                 schema: "supusr",
                 columns: table => new
@@ -144,6 +158,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     strDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     strDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ActivityLevelDbMActivityLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
@@ -152,6 +167,12 @@ namespace DbContext.Migrations.SqlServerDbContext
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Activities", x => x.ActivityId);
+                    table.ForeignKey(
+                        name: "FK_Activities_ActivityLevels_ActivityLevelDbMActivityLevelId",
+                        column: x => x.ActivityLevelDbMActivityLevelId,
+                        principalSchema: "supusr",
+                        principalTable: "ActivityLevels",
+                        principalColumn: "ActivityLevelId");
                     table.ForeignKey(
                         name: "FK_Activities_Patients_PatientDbMPatientId",
                         column: x => x.PatientDbMPatientId,
@@ -257,38 +278,17 @@ namespace DbContext.Migrations.SqlServerDbContext
                         principalColumn: "SleepLevelId");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ActivityLevels",
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_ActivityLevelDbMActivityLevelId",
                 schema: "supusr",
-                columns: table => new
-                {
-                    ActivityLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Rating = table.Column<int>(type: "int", nullable: false),
-                    ActivityDbMActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ActivityLevels", x => x.ActivityLevelId);
-                    table.ForeignKey(
-                        name: "FK_ActivityLevels_Activities_ActivityDbMActivityId",
-                        column: x => x.ActivityDbMActivityId,
-                        principalSchema: "supusr",
-                        principalTable: "Activities",
-                        principalColumn: "ActivityId");
-                });
+                table: "Activities",
+                column: "ActivityLevelDbMActivityLevelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Activities_PatientDbMPatientId",
                 schema: "supusr",
                 table: "Activities",
                 column: "PatientDbMPatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ActivityLevels_ActivityDbMActivityId",
-                schema: "supusr",
-                table: "ActivityLevels",
-                column: "ActivityDbMActivityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appetites_AppetiteLevelDbMAppetiteLevelId",
@@ -345,7 +345,7 @@ namespace DbContext.Migrations.SqlServerDbContext
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ActivityLevels",
+                name: "Activities",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
@@ -365,7 +365,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "Activities",
+                name: "ActivityLevels",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
@@ -377,11 +377,11 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "SleepLevels",
+                name: "Patients",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Patients",
+                name: "SleepLevels",
                 schema: "supusr");
 
             migrationBuilder.DropTable(

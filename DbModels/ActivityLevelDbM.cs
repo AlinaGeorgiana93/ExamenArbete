@@ -29,16 +29,17 @@ public class ActivityLevelDbM : ActivityLevel
 
 
 
-    [NotMapped]
-    public override List<Activity> Activity
-    {
-        get => ActivityDbM != null ? new List<Activity> { ActivityDbM } : null;
-        set => throw new NotImplementedException();
-    }
 
+
+
+    [NotMapped]
+    public override List<Activity> Activities { get => ActivitiesDbM?.Cast<Activity>().ToList(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    public ActivityDbM ActivityDbM { get; set; }
+    [Required]
+    public List<ActivityDbM> ActivitiesDbM { get; set; }
+
+
 
 
     public ActivityLevelDbM() { }

@@ -28,6 +28,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ActivityLevelDbMActivityLevelId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -51,6 +54,8 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.HasKey("ActivityId");
 
+                    b.HasIndex("ActivityLevelDbMActivityLevelId");
+
                     b.HasIndex("PatientDbMPatientId");
 
                     b.ToTable("Activities", "supusr");
@@ -62,9 +67,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ActivityDbMActivityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(200)");
 
@@ -72,8 +74,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasColumnType("int");
 
                     b.HasKey("ActivityLevelId");
-
-                    b.HasIndex("ActivityDbMActivityId");
 
                     b.ToTable("ActivityLevels", "supusr");
                 });
@@ -396,22 +396,19 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("DbModels.ActivityDbM", b =>
                 {
+                    b.HasOne("DbModels.ActivityLevelDbM", "ActivityLevelDbM")
+                        .WithMany("ActivitiesDbM")
+                        .HasForeignKey("ActivityLevelDbMActivityLevelId");
+
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("ActivitiesDbM")
                         .HasForeignKey("PatientDbMPatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ActivityLevelDbM");
+
                     b.Navigation("PatientDbM");
-                });
-
-            modelBuilder.Entity("DbModels.ActivityLevelDbM", b =>
-                {
-                    b.HasOne("DbModels.ActivityDbM", "ActivityDbM")
-                        .WithMany()
-                        .HasForeignKey("ActivityDbMActivityId");
-
-                    b.Navigation("ActivityDbM");
                 });
 
             modelBuilder.Entity("DbModels.AppetiteDbM", b =>
@@ -470,6 +467,11 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Navigation("PatientDbM");
 
                     b.Navigation("SleepLevelDbM");
+                });
+
+            modelBuilder.Entity("DbModels.ActivityLevelDbM", b =>
+                {
+                    b.Navigation("ActivitiesDbM");
                 });
 
             modelBuilder.Entity("DbModels.AppetiteLevelDbM", b =>
