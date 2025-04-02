@@ -172,7 +172,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid?>("PatientDbMPatientId")
+                    b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("PatientId")
@@ -208,6 +208,38 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasKey("MoodKindId");
 
                     b.ToTable("MoodKinds", "supusr");
+
+                    b.HasData(
+                        new
+                        {
+                            MoodKindId = new Guid("32d0e298-f435-4975-aa0f-113838721c0e"),
+                            Name = "Very Happy",
+                            Rating = 10
+                        },
+                        new
+                        {
+                            MoodKindId = new Guid("c609393e-68e6-4870-8ef0-e4b63f6a3613"),
+                            Name = "Happy",
+                            Rating = 8
+                        },
+                        new
+                        {
+                            MoodKindId = new Guid("f323ed69-975c-4e07-bd93-22ffd4bc473c"),
+                            Name = "Neutral",
+                            Rating = 5
+                        },
+                        new
+                        {
+                            MoodKindId = new Guid("0a93f747-8600-4e06-9d78-15d219ac6163"),
+                            Name = "Sad",
+                            Rating = 5
+                        },
+                        new
+                        {
+                            MoodKindId = new Guid("3aacae7a-1bea-4395-8091-4c70431c9d86"),
+                            Name = "Angry",
+                            Rating = 3
+                        });
                 });
 
             modelBuilder.Entity("DbModels.PatientDbM", b =>
@@ -240,6 +272,50 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasIndex("StaffDbMStaffId");
 
                     b.ToTable("Patients", "supusr");
+
+                    b.HasData(
+                        new
+                        {
+                            PatientId = new Guid("f2d640c1-889f-403a-b2ed-b6cd5b54fe7c"),
+                            FirstName = "Madi",
+                            LastName = "Alabama",
+                            PersonalNumber = "19560831-1111"
+                        },
+                        new
+                        {
+                            PatientId = new Guid("f82cb9f5-13c5-4b48-a42a-1e439f902924"),
+                            FirstName = "John",
+                            LastName = "Doe",
+                            PersonalNumber = "19480516-2222"
+                        },
+                        new
+                        {
+                            PatientId = new Guid("a821ded8-2133-4e49-80b1-af80f274d4ce"),
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            PersonalNumber = "19610228-1212"
+                        },
+                        new
+                        {
+                            PatientId = new Guid("b1598d28-d10b-4afb-914d-321d0b0c8916"),
+                            FirstName = "Alice",
+                            LastName = "Johnson",
+                            PersonalNumber = "19450801-4444"
+                        },
+                        new
+                        {
+                            PatientId = new Guid("430e4789-b33f-4f9c-9827-611d375bb638"),
+                            FirstName = "Bob",
+                            LastName = "Brown",
+                            PersonalNumber = "19501110-1331"
+                        },
+                        new
+                        {
+                            PatientId = new Guid("25297ef6-172e-4863-8551-8c7319c3470a"),
+                            FirstName = "Charlie",
+                            LastName = "Davis",
+                            PersonalNumber = "19511231-1618'1"
+                        });
                 });
 
             modelBuilder.Entity("DbModels.SleepDbM", b =>
@@ -319,6 +395,43 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasKey("StaffId");
 
                     b.ToTable("Staffs", "supusr");
+
+                    b.HasData(
+                        new
+                        {
+                            StaffId = new Guid("4815e337-b6d1-47f8-a8dc-3d3ba359a2e4"),
+                            FirstName = "Moris",
+                            LastName = "Andre",
+                            PersonalNumber = "19750105-1111"
+                        },
+                        new
+                        {
+                            StaffId = new Guid("0e670c00-5fe7-4193-83ae-c8ab1d61eeb0"),
+                            FirstName = "Madi",
+                            LastName = "Alabama",
+                            PersonalNumber = "19800613-1111"
+                        },
+                        new
+                        {
+                            StaffId = new Guid("8dafc4e7-3900-4aa9-82f9-6666e2418db6"),
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            PersonalNumber = "19610228-1212"
+                        },
+                        new
+                        {
+                            StaffId = new Guid("fdf6881d-da65-4fab-ab47-01fcb1e4afb2"),
+                            FirstName = "Alice",
+                            LastName = "Johnson",
+                            PersonalNumber = "19931001-4444"
+                        },
+                        new
+                        {
+                            StaffId = new Guid("919d9d0c-0d1e-4661-bbf9-72288275f322"),
+                            FirstName = "John",
+                            LastName = "Doe",
+                            PersonalNumber = "19900516-2222"
+                        });
                 });
 
             modelBuilder.Entity("DbModels.UserDbM", b =>
@@ -436,7 +549,9 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("MoodsDbM")
-                        .HasForeignKey("PatientDbMPatientId");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MoodKindDbM");
 

@@ -155,27 +155,27 @@ namespace AppWebApi.Controllers
                 return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
             }
         }
-
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = "supusr, sysadmin")]
+            
         public async Task<IActionResult> CreateItem([FromBody] MoodKindCuDto item)
         {
             try
             {
-              _logger.LogInformation($"{nameof(CreateItem)}: Creating moodkind for moodId {item.MoodId}");
+                _logger.LogInformation($"{nameof(CreateItem)}:");
                 
                 var model = await _service.CreateMoodKindAsync(item);
-                 _logger.LogInformation($"MoodKind with ID {model.Item.MoodKindId} created for the Mood {item.MoodId}");
+                _logger.LogInformation($"item {model.Item.MoodKindId} created");
 
                 return Ok(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{nameof(CreateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not create. Error {ex.InnerException?.Message}");
+                _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
+                return BadRequest($"Could not create. Error {ex.Message}");
             }
         }
     }

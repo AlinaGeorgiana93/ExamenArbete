@@ -12,10 +12,9 @@ public class MoodCuDto
     public DayOfWeek Day { get; set; }
     public string Notes { get; set; } 
  
-    public virtual Guid? PatientId { get; set; } = null;
+    public virtual Guid PatientId { get; set; }
     public virtual Guid? MoodKindId { get; set; } // ✅ Store Patient as a GUID instead of `IPatient`
 
-   
 
 
     public MoodCuDto() { }
@@ -25,7 +24,7 @@ public class MoodCuDto
         Date = org.Date;
         Day = org.Day;
         
-      PatientId = org?.Patient?.PatientId;
+      PatientId = org.Patient.PatientId;
       MoodKindId = org?.MoodKind?.MoodKindId;
 
       

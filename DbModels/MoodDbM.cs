@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 using Models;
 using Models.DTO;
+using System.Linq;
 
 namespace DbModels;
 
@@ -34,6 +35,20 @@ public class MoodDbM : Mood {
 
      #endregion
 
+     [NotMapped]
+    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+     [Required]
+    public PatientDbM PatientDbM { get; set; }
+
+    [NotMapped]
+    public override IMoodKind MoodKind { get => MoodKindDbM; set => throw new NotImplementedException(); }
+    [JsonIgnore]
+    public MoodKindDbM MoodKindDbM { get; set; }
+        
+ 
+
     public MoodDbM UpdateFromDTO(MoodCuDto org)
     {
         if (org == null) return null;
@@ -45,20 +60,7 @@ public class MoodDbM : Mood {
 
         return this;
     }
-        [NotMapped]
-    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
-
-    [JsonIgnore]
-    public PatientDbM PatientDbM { get; set; }
-
-    [NotMapped]
-    public override IMoodKind MoodKind { get => MoodKindDbM; set => throw new NotImplementedException(); }
-
-    [JsonIgnore]
-    
-    public MoodKindDbM MoodKindDbM { get; set; }
-        
-    public MoodDbM() { }
+      public MoodDbM() { }
     public MoodDbM(MoodCuDto org)
     {
         MoodId = Guid.NewGuid();

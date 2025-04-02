@@ -11,12 +11,9 @@ public class Mood : IMood
     public virtual string Notes { get; set; } // Additional notes about the appetite
 
 
-
-
    //Navigation properties
 
-    public virtual Guid? PatientId { get; set; } 
-    
+     public virtual Guid? PatientId { get; set; } 
      public virtual IPatient Patient { get; set; }
      public virtual IMoodKind MoodKind { get; set; }
 

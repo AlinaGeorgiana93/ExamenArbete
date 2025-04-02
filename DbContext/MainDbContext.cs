@@ -76,8 +76,9 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
        modelBuilder.Ignore<ISleepLevel>();
        modelBuilder.Ignore<IActivityLevel>();
        modelBuilder.Ignore<IGraph>();
-
-       
+       modelBuilder.Entity<MoodKindDbM>().HasData(MoodKindDbM.GetSeedMoodKindData());
+       modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
+       modelBuilder.Entity<StaffDbM>().HasData(StaffDbM.GetSeedStaffData());
 
         #endregion
 
