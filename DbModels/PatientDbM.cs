@@ -31,7 +31,7 @@ public class PatientDbM : Patient
     public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
  
     [JsonIgnore]
-   // [Required]
+    [Required]
     public List<AppetiteDbM> AppetitesDbM { get; set; }
 
 

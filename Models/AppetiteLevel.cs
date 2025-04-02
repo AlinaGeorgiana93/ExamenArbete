@@ -11,4 +11,41 @@ public class AppetiteLevel : IAppetiteLevel
  
 
     public virtual List <IAppetite> Appetites { get; set; }
+
+     public static List<AppetiteLevel> GetSeedAppetiteLevelsData()
+    {
+        return
+        [
+            new AppetiteLevel { 
+                AppetiteLevelId = Guid.NewGuid(), 
+                Name = "Didn't Eat At All", 
+                Rating = 1, 
+                Label = "Didn't Eat At All 🤢"
+            },
+            new AppetiteLevel { 
+                AppetiteLevelId = Guid.NewGuid(), 
+                Name = "Little", 
+                Rating = 3, 
+                Label = "Little 🍽️"
+            },
+            new AppetiteLevel { 
+                AppetiteLevelId = Guid.NewGuid(), 
+                Name = "Normal", 
+                Rating = 5, 
+                Label = "Normal Appetite 🙂"
+            },
+            new AppetiteLevel { 
+                AppetiteLevelId = Guid.NewGuid(), 
+                Name = "Medium", 
+                Rating = 7, 
+                Label = "Medium 😋"
+            },
+            new AppetiteLevel { 
+                AppetiteLevelId = Guid.NewGuid(), 
+                Name = "Very Much", 
+                Rating = 10, 
+                Label = "Very Much 🍴"
+            }
+        ];
+}
 }

@@ -135,6 +135,43 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasKey("AppetiteLevelId");
 
                     b.ToTable("AppetiteLevels", "supusr");
+
+                    b.HasData(
+                        new
+                        {
+                            AppetiteLevelId = new Guid("622c54b6-b883-4eea-892c-6cd26bf3a45a"),
+                            Label = "Didn't Eat At All 🤢",
+                            Name = "Didn't Eat At All",
+                            Rating = 1
+                        },
+                        new
+                        {
+                            AppetiteLevelId = new Guid("bb2ebc1f-00f7-4164-ad57-3b2579a24cde"),
+                            Label = "Little 🍽️",
+                            Name = "Little",
+                            Rating = 3
+                        },
+                        new
+                        {
+                            AppetiteLevelId = new Guid("d394c53d-2644-483c-b3f6-ea3c47439e3f"),
+                            Label = "Normal Appetite 🙂",
+                            Name = "Normal",
+                            Rating = 5
+                        },
+                        new
+                        {
+                            AppetiteLevelId = new Guid("1acc0784-9895-48a3-b7e9-5e692392bb0b"),
+                            Label = "Medium 😋",
+                            Name = "Medium",
+                            Rating = 7
+                        },
+                        new
+                        {
+                            AppetiteLevelId = new Guid("39c1f9b0-031c-4688-aada-09b0d8ffe1de"),
+                            Label = "Very Much 🍴",
+                            Name = "Very Much",
+                            Rating = 10
+                        });
                 });
 
             modelBuilder.Entity("DbModels.GraphDbM", b =>
@@ -212,31 +249,31 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            MoodKindId = new Guid("32d0e298-f435-4975-aa0f-113838721c0e"),
+                            MoodKindId = new Guid("44fbc363-9c08-4e26-bb40-bd7a225e4a76"),
                             Name = "Very Happy",
                             Rating = 10
                         },
                         new
                         {
-                            MoodKindId = new Guid("c609393e-68e6-4870-8ef0-e4b63f6a3613"),
+                            MoodKindId = new Guid("547e2097-076b-4579-9a33-3b60ad8c8014"),
                             Name = "Happy",
                             Rating = 8
                         },
                         new
                         {
-                            MoodKindId = new Guid("f323ed69-975c-4e07-bd93-22ffd4bc473c"),
+                            MoodKindId = new Guid("09512ae5-67f8-4ce9-bd78-7c15d762ef6a"),
                             Name = "Neutral",
                             Rating = 5
                         },
                         new
                         {
-                            MoodKindId = new Guid("0a93f747-8600-4e06-9d78-15d219ac6163"),
+                            MoodKindId = new Guid("a492e48d-912e-4eca-aba6-7e5e28af82c9"),
                             Name = "Sad",
                             Rating = 5
                         },
                         new
                         {
-                            MoodKindId = new Guid("3aacae7a-1bea-4395-8091-4c70431c9d86"),
+                            MoodKindId = new Guid("1ab4de0b-7f0a-4bbe-8d77-12679ecde60c"),
                             Name = "Angry",
                             Rating = 3
                         });
@@ -276,45 +313,45 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            PatientId = new Guid("f2d640c1-889f-403a-b2ed-b6cd5b54fe7c"),
+                            PatientId = new Guid("bba8413e-5b6c-4d47-adec-4bf92f929d78"),
                             FirstName = "Madi",
                             LastName = "Alabama",
                             PersonalNumber = "19560831-1111"
                         },
                         new
                         {
-                            PatientId = new Guid("f82cb9f5-13c5-4b48-a42a-1e439f902924"),
+                            PatientId = new Guid("880ebcc9-9e32-4296-9967-92f3db395e68"),
                             FirstName = "John",
                             LastName = "Doe",
                             PersonalNumber = "19480516-2222"
                         },
                         new
                         {
-                            PatientId = new Guid("a821ded8-2133-4e49-80b1-af80f274d4ce"),
+                            PatientId = new Guid("5d700fad-070a-4aae-907b-21b4b0ab2e9d"),
                             FirstName = "Jane",
                             LastName = "Smith",
                             PersonalNumber = "19610228-1212"
                         },
                         new
                         {
-                            PatientId = new Guid("b1598d28-d10b-4afb-914d-321d0b0c8916"),
+                            PatientId = new Guid("8ba4f32c-4a68-44be-8ef8-ae5f13665346"),
                             FirstName = "Alice",
                             LastName = "Johnson",
                             PersonalNumber = "19450801-4444"
                         },
                         new
                         {
-                            PatientId = new Guid("430e4789-b33f-4f9c-9827-611d375bb638"),
+                            PatientId = new Guid("26043b24-c8a9-4b8c-af39-b1dda8c518e3"),
                             FirstName = "Bob",
                             LastName = "Brown",
                             PersonalNumber = "19501110-1331"
                         },
                         new
                         {
-                            PatientId = new Guid("25297ef6-172e-4863-8551-8c7319c3470a"),
+                            PatientId = new Guid("6afb9b62-3dbb-470c-9491-1d9da04e6631"),
                             FirstName = "Charlie",
                             LastName = "Davis",
-                            PersonalNumber = "19511231-1618'1"
+                            PersonalNumber = "19511231-16181"
                         });
                 });
 
@@ -399,35 +436,35 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            StaffId = new Guid("4815e337-b6d1-47f8-a8dc-3d3ba359a2e4"),
+                            StaffId = new Guid("4003d131-f388-44da-a90e-27dd8c004d90"),
                             FirstName = "Moris",
                             LastName = "Andre",
                             PersonalNumber = "19750105-1111"
                         },
                         new
                         {
-                            StaffId = new Guid("0e670c00-5fe7-4193-83ae-c8ab1d61eeb0"),
+                            StaffId = new Guid("e52647ab-76a7-4758-bbea-ca46ace660a8"),
                             FirstName = "Madi",
                             LastName = "Alabama",
                             PersonalNumber = "19800613-1111"
                         },
                         new
                         {
-                            StaffId = new Guid("8dafc4e7-3900-4aa9-82f9-6666e2418db6"),
+                            StaffId = new Guid("62b7e527-d64b-45f3-8367-05971c9b5bd0"),
                             FirstName = "Jane",
                             LastName = "Smith",
                             PersonalNumber = "19610228-1212"
                         },
                         new
                         {
-                            StaffId = new Guid("fdf6881d-da65-4fab-ab47-01fcb1e4afb2"),
+                            StaffId = new Guid("a3a17356-f8a6-428f-94bc-baf3a53955f2"),
                             FirstName = "Alice",
                             LastName = "Johnson",
                             PersonalNumber = "19931001-4444"
                         },
                         new
                         {
-                            StaffId = new Guid("919d9d0c-0d1e-4661-bbf9-72288275f322"),
+                            StaffId = new Guid("d93515bd-6996-4638-a793-e5889ce2e095"),
                             FirstName = "John",
                             LastName = "Doe",
                             PersonalNumber = "19900516-2222"

@@ -39,7 +39,17 @@ public class AppetiteLevelDbM : AppetiteLevel
     [Required]
     public List<AppetiteDbM> AppetitesDbM { get; set; }
 
-
+ public static new List<AppetiteLevelDbM> GetSeedAppetiteLevelsData()
+    {
+        return [.. AppetiteLevel.GetSeedAppetiteLevelsData()
+            .Select(a => new AppetiteLevelDbM
+            {
+                AppetiteLevelId = a.AppetiteLevelId,
+                Name = a.Name,
+                Rating = a.Rating,
+                Label = a.Label 
+            })];
+    }
     
     public AppetiteLevelDbM() { }
     public AppetiteLevelDbM(AppetiteLevelCuDto org)

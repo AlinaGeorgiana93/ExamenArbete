@@ -58,9 +58,9 @@ public class AppetiteDbM : Appetite
     public override IAppetiteLevel AppetiteLevel { get => AppetiteLevelDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    
-    
     public AppetiteLevelDbM AppetiteLevelDbM { get; set; }
+
+    
 
     public AppetiteDbM() { }
     public AppetiteDbM(AppetiteCuDto org)

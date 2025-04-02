@@ -79,6 +79,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
        modelBuilder.Entity<MoodKindDbM>().HasData(MoodKindDbM.GetSeedMoodKindData());
        modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
        modelBuilder.Entity<StaffDbM>().HasData(StaffDbM.GetSeedStaffData());
+       modelBuilder.Entity<AppetiteLevelDbM>().HasData(AppetiteLevelDbM.GetSeedAppetiteLevelsData());
 
         #endregion
 

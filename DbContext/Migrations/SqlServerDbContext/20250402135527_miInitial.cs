@@ -284,15 +284,28 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             migrationBuilder.InsertData(
                 schema: "supusr",
+                table: "AppetiteLevels",
+                columns: new[] { "AppetiteLevelId", "Label", "Name", "Rating" },
+                values: new object[,]
+                {
+                    { new Guid("1acc0784-9895-48a3-b7e9-5e692392bb0b"), "Medium 😋", "Medium", 7 },
+                    { new Guid("39c1f9b0-031c-4688-aada-09b0d8ffe1de"), "Very Much 🍴", "Very Much", 10 },
+                    { new Guid("622c54b6-b883-4eea-892c-6cd26bf3a45a"), "Didn't Eat At All 🤢", "Didn't Eat At All", 1 },
+                    { new Guid("bb2ebc1f-00f7-4164-ad57-3b2579a24cde"), "Little 🍽️", "Little", 3 },
+                    { new Guid("d394c53d-2644-483c-b3f6-ea3c47439e3f"), "Normal Appetite 🙂", "Normal", 5 }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "supusr",
                 table: "MoodKinds",
                 columns: new[] { "MoodKindId", "Name", "Rating" },
                 values: new object[,]
                 {
-                    { new Guid("0a93f747-8600-4e06-9d78-15d219ac6163"), "Sad", 5 },
-                    { new Guid("32d0e298-f435-4975-aa0f-113838721c0e"), "Very Happy", 10 },
-                    { new Guid("3aacae7a-1bea-4395-8091-4c70431c9d86"), "Angry", 3 },
-                    { new Guid("c609393e-68e6-4870-8ef0-e4b63f6a3613"), "Happy", 8 },
-                    { new Guid("f323ed69-975c-4e07-bd93-22ffd4bc473c"), "Neutral", 5 }
+                    { new Guid("09512ae5-67f8-4ce9-bd78-7c15d762ef6a"), "Neutral", 5 },
+                    { new Guid("1ab4de0b-7f0a-4bbe-8d77-12679ecde60c"), "Angry", 3 },
+                    { new Guid("44fbc363-9c08-4e26-bb40-bd7a225e4a76"), "Very Happy", 10 },
+                    { new Guid("547e2097-076b-4579-9a33-3b60ad8c8014"), "Happy", 8 },
+                    { new Guid("a492e48d-912e-4eca-aba6-7e5e28af82c9"), "Sad", 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -301,12 +314,12 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: new[] { "PatientId", "FirstName", "GraphId", "LastName", "PersonalNumber", "StaffDbMStaffId" },
                 values: new object[,]
                 {
-                    { new Guid("25297ef6-172e-4863-8551-8c7319c3470a"), "Charlie", null, "Davis", "19511231-1618'1", null },
-                    { new Guid("430e4789-b33f-4f9c-9827-611d375bb638"), "Bob", null, "Brown", "19501110-1331", null },
-                    { new Guid("a821ded8-2133-4e49-80b1-af80f274d4ce"), "Jane", null, "Smith", "19610228-1212", null },
-                    { new Guid("b1598d28-d10b-4afb-914d-321d0b0c8916"), "Alice", null, "Johnson", "19450801-4444", null },
-                    { new Guid("f2d640c1-889f-403a-b2ed-b6cd5b54fe7c"), "Madi", null, "Alabama", "19560831-1111", null },
-                    { new Guid("f82cb9f5-13c5-4b48-a42a-1e439f902924"), "John", null, "Doe", "19480516-2222", null }
+                    { new Guid("26043b24-c8a9-4b8c-af39-b1dda8c518e3"), "Bob", null, "Brown", "19501110-1331", null },
+                    { new Guid("5d700fad-070a-4aae-907b-21b4b0ab2e9d"), "Jane", null, "Smith", "19610228-1212", null },
+                    { new Guid("6afb9b62-3dbb-470c-9491-1d9da04e6631"), "Charlie", null, "Davis", "19511231-16181", null },
+                    { new Guid("880ebcc9-9e32-4296-9967-92f3db395e68"), "John", null, "Doe", "19480516-2222", null },
+                    { new Guid("8ba4f32c-4a68-44be-8ef8-ae5f13665346"), "Alice", null, "Johnson", "19450801-4444", null },
+                    { new Guid("bba8413e-5b6c-4d47-adec-4bf92f929d78"), "Madi", null, "Alabama", "19560831-1111", null }
                 });
 
             migrationBuilder.InsertData(
@@ -315,11 +328,11 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: new[] { "StaffId", "FirstName", "LastName", "PersonalNumber" },
                 values: new object[,]
                 {
-                    { new Guid("0e670c00-5fe7-4193-83ae-c8ab1d61eeb0"), "Madi", "Alabama", "19800613-1111" },
-                    { new Guid("4815e337-b6d1-47f8-a8dc-3d3ba359a2e4"), "Moris", "Andre", "19750105-1111" },
-                    { new Guid("8dafc4e7-3900-4aa9-82f9-6666e2418db6"), "Jane", "Smith", "19610228-1212" },
-                    { new Guid("919d9d0c-0d1e-4661-bbf9-72288275f322"), "John", "Doe", "19900516-2222" },
-                    { new Guid("fdf6881d-da65-4fab-ab47-01fcb1e4afb2"), "Alice", "Johnson", "19931001-4444" }
+                    { new Guid("4003d131-f388-44da-a90e-27dd8c004d90"), "Moris", "Andre", "19750105-1111" },
+                    { new Guid("62b7e527-d64b-45f3-8367-05971c9b5bd0"), "Jane", "Smith", "19610228-1212" },
+                    { new Guid("a3a17356-f8a6-428f-94bc-baf3a53955f2"), "Alice", "Johnson", "19931001-4444" },
+                    { new Guid("d93515bd-6996-4638-a793-e5889ce2e095"), "John", "Doe", "19900516-2222" },
+                    { new Guid("e52647ab-76a7-4758-bbea-ca46ace660a8"), "Madi", "Alabama", "19800613-1111" }
                 });
 
             migrationBuilder.CreateIndex(
