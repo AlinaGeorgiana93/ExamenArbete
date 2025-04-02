@@ -1,7 +1,6 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-
 using Models;
 using Models.DTO;
 using DbModels;
@@ -28,8 +27,8 @@ public class AppetiteDbRepos
         if (!flat)
         {
             query = _dbContext.Appetites.AsNoTracking()
+                .Include(i => i.AppetiteLevelDbM)
                 .Include(i => i.PatientDbM)
-                //.Include(i => i.GraphDbM)
                 .Where(i => i.AppetiteId == id);
         }
         else
@@ -46,135 +45,116 @@ public class AppetiteDbRepos
         };
     }
 
-    public async Task<ResponsePageDto<IAppetite>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
+   public async Task<ResponsePageDto<IAppetite>> ReadItemsAsync ( bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
-        IQueryable<AppetiteDbM> query;
-        if (flat)
-        {
-            query = _dbContext.Appetites.AsNoTracking();
-        }
-        else
-        {
-            query = _dbContext.Appetites.AsNoTracking()
-                .Include(i => i.AppetiteLevelDbM);
-        }
 
-        var ret = new ResponsePageDto<IAppetite>()
+        IQueryable<AppetiteDbM> query = _dbContext.Appetites.AsNoTracking();
+
+         if (!flat)
+         {
+            query = _dbContext.Appetites.AsNoTracking()
+            .Include(i => i.PatientDbM)
+            .Include(i => i.AppetiteLevelDbM);
+            
+         }
+         
+
+        query = query.Where(i => 
+        
+              i.StrDate.ToLower().Contains(filter) ||
+              i.StrDayOfWeek.ToLower().Contains(filter) ||
+              i.Notes.ToLower().Contains(filter) ||
+              i.PatientDbM.FirstName.ToLower().Contains(filter) ||
+              i.PatientDbM.LastName.ToLower().Contains(filter) ||
+              i.PatientDbM.PersonalNumber.ToLower().Contains(filter)||
+              i.AppetiteLevelDbM.Name.ToLower().Contains(filter) ||
+              i.AppetiteLevelDbM.Rating.ToString().ToLower().Contains(filter) 
+           );
+
+        return new ResponsePageDto<IAppetite>
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
-            DbItemsCount = await query
-
-                // Adding filter functionality
-                .Where(i =>
-                 i.StrDayOfWeek.ToLower().Contains(filter) ||
-                 i.StrDate.ToLower().Contains(filter) ||
-                 i.Notes.ToLower().Contains(filter))
-                .CountAsync(),
-
+            DbItemsCount = await query.CountAsync(),
             PageItems = await query
-
-                // Adding filter functionality
-                .Where(i =>
-                    i.StrDayOfWeek.ToLower().Contains(filter) ||
-                    i.StrDate.ToLower().Contains(filter) ||
-                    i.Notes.ToLower().Contains(filter))
-
-                // Adding paging
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
-
                 .ToListAsync<IAppetite>(),
-
             PageNr = pageNumber,
             PageSize = pageSize
         };
-        return ret;
-    }
 
+    } 
 
     public async Task<ResponseItemDto<IAppetite>> DeleteItemAsync(Guid id)
-    {
-        var query1 = _dbContext.Appetites
-            .Where(i => i.AppetiteId == id);
+    {  var query = _dbContext.Appetites
+        .Where(a => a.AppetiteId == id);
+        var item = await query.FirstOrDefaultAsync();
 
-        var item = await query1.FirstOrDefaultAsync<AppetiteDbM>() ?? throw new ArgumentException($"Item {id} is not existing");
+        if(item == null) throw new ArgumentException($"Item: {id} is not existing");
 
-        //delete in the database model
         _dbContext.Appetites.Remove(item);
 
-        //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<IAppetite>()
+        return new ResponseItemDto<IAppetite> 
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
     }
 
-    public async Task<ResponseItemDto<IAppetite>> UpdateItemAsync(AppetiteCuDto itemDto)
+    public async Task<ResponseItemDto<IAppetite>> CreateItemAsync(AppetiteCuDto itemDto)
+    {
+        if (itemDto.AppetiteId != null) 
+          throw new ArgumentException($"{nameof(itemDto.AppetiteId)} must be null when creating a new object");
+
+          var item = new AppetiteDbM(itemDto);
+
+          await UpdateNavigationProp(itemDto, item);
+
+          _dbContext.Add(item);
+
+          await _dbContext.SaveChangesAsync();
+
+          return await ReadItemAsync(item.AppetiteId, true);
+    }
+ public async Task<ResponseItemDto<IAppetite>> UpdateItemAsync(AppetiteCuDto itemDto)
     {
         var query1 = _dbContext.Appetites
             .Where(i => i.AppetiteId == itemDto.AppetiteId);
         var item = await query1
-                .Include(i => i.PatientDbM)
-                //.Include(i => i.GraphDbM)  // Include Graph
-                .FirstOrDefaultAsync<AppetiteDbM>();
+           .Include(i => i.AppetiteLevelDbM)
+            .Include(i => i.PatientDbM)
+           
+            .FirstOrDefaultAsync<AppetiteDbM>();
 
-        //If the item does not exists
         if (item == null) throw new ArgumentException($"Item {itemDto.AppetiteId} is not existing");
 
-        //transfer any changes from DTO to database objects
-        //Update individual properties 
         item.UpdateFromDTO(itemDto);
 
-        //Update navigation properties
-        //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+        await UpdateNavigationProp(itemDto, item);
 
-        //write to database model
-        _dbContext.Appetites.Update(item);
+        _dbContext.Update(item);
 
-        //write to database in a UoW
         await _dbContext.SaveChangesAsync();
 
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.AppetiteId, false);
-    }
-
-    public async Task<ResponseItemDto<IAppetite>> CreateItemAsync(AppetiteCuDto itemDto)
-    {
-        if (itemDto.AppetiteId != null)
-            throw new ArgumentException($"{nameof(itemDto.AppetiteId)} must be null when creating a new object");
-
-        //transfer any changes from DTO to database objects
-        //Update individual properties
-        var item = new AppetiteDbM(itemDto);
-
-        //Update navigation properties
-        //  await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
-
-        //write to database model
-        _dbContext.Appetites.Add(item);
-
-        //write to database in a UoW
-        await _dbContext.SaveChangesAsync();
-
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.AppetiteId, false);
+        return await ReadItemAsync(item.AppetiteId, true);
     }
 
     public async Task UpdateNavigationProp(AppetiteCuDto itemDto, AppetiteDbM item)
     {
 
-        // Update MoodKind
-        var updateAppetiteLevels = await _dbContext.AppetiteLevels
+        // Update AppetiteLevel
+        var updatedAppetiteLevels = await _dbContext.AppetiteLevels
             .FirstOrDefaultAsync(a => a.AppetiteLevelId == itemDto.AppetiteLevelId) ?? throw new ArgumentException($"Patient with id {itemDto.AppetiteLevelId} does not exist");
-        item.AppetiteLevelDbM = updateAppetiteLevels;
+        item.AppetiteLevelDbM = updatedAppetiteLevels;
+
 
         // Update Patient
         var updatedPatients = await _dbContext.Patients
             .FirstOrDefaultAsync(a => a.PatientId == itemDto.PatientId) ?? throw new ArgumentException($"Patient with id {itemDto.PatientId} does not exist");
         item.PatientDbM = updatedPatients;
+
     }
 }

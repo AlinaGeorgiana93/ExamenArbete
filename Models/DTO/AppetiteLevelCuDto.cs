@@ -13,7 +13,7 @@ public class AppetiteLevelCuDto
     public int Rating { get; set; } 
 
     
-    public virtual List<Guid> AppetitesId { get; set; } = null;
+    //public virtual List<Guid> AppetitesId { get; set; } = null;
 
     public AppetiteLevelCuDto() { }
     public AppetiteLevelCuDto(IAppetiteLevel org)
@@ -24,7 +24,7 @@ public class AppetiteLevelCuDto
         Label = org.Label;
         Rating = org.Rating;
 
-          AppetitesId = org.Appetites?.Select(i => i.AppetiteId).ToList(); 
+          //AppetitesId = org.Appetites?.Select(i => i.AppetiteId).ToList(); 
   
         
 

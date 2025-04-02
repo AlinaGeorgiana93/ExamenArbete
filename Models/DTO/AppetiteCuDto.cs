@@ -12,7 +12,7 @@ public class AppetiteCuDto
     public DayOfWeek Day { get; set; }
     public string Notes { get; set; } // Additional notes about the appetite
 
-    public virtual Guid? PatientId { get; set; } = null;
+    public virtual Guid? PatientId { get; set; }
     public virtual Guid? AppetiteLevelId { get; set; }
 
     public AppetiteCuDto() { }
@@ -25,7 +25,7 @@ public class AppetiteCuDto
         Day = org.Day;
         Notes = org.Notes;
 
-        PatientId = org?.Patient?.PatientId;
+        PatientId = org.Patient.PatientId;
          AppetiteLevelId = org?.AppetiteLevel?.AppetiteLevelId;
     }
 }

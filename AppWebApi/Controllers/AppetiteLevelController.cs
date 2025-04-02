@@ -13,7 +13,7 @@ namespace AppWebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class AppetiteLevelController : Controller
     {
-        readonly IAppetiteLevelService _service = null;
+         readonly IAppetiteLevelService _service = null;
         readonly ILogger<AppetiteLevelController> _logger = null;
 
         public AppetiteLevelController(IAppetiteLevelService service, ILogger<AppetiteLevelController> logger)
@@ -22,7 +22,6 @@ namespace AppWebApi.Controllers
             _logger = logger;
         }
 
-    
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponsePageDto<IAppetiteLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -36,11 +35,12 @@ namespace AppWebApi.Controllers
                 int pageNrArg = int.Parse(pageNr);
                 int pageSizeArg = int.Parse(pageSize);
 
-                _logger.LogInformation($"{nameof(ReadItems)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
+                _logger.LogInformation($"{nameof(ReadItems)}:{nameof(flatArg)}: {flatArg}, " +
                     $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
-
-                var resp = await _service.ReadAppetiteLevelsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
-                return Ok(resp);     
+                
+                var resp = await _service.ReadAppetiteLevelsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
+    
+                return Ok(resp);
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace AppWebApi.Controllers
                 var item = await _service.ReadAppetiteLevelAsync(idArg, flatArg);
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
-                return Ok(item);         
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+            Policy = null, Roles = " sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -91,7 +91,7 @@ namespace AppWebApi.Controllers
                 if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
         
                 _logger.LogInformation($"item {idArg} deleted");
-                return Ok(item);                
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -101,7 +101,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Policy = null, Roles = "staff, sysadmin")]
+            Policy = null, Roles = "sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<AppetiteLevelCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -121,7 +121,7 @@ namespace AppWebApi.Controllers
                     new ResponseItemDto<AppetiteLevelCuDto>() {
                     DbConnectionKeyUsed = item.DbConnectionKeyUsed,
                     Item = new AppetiteLevelCuDto(item.Item)
-                });
+                });   
             }
             catch (Exception ex)
             {
@@ -130,58 +130,54 @@ namespace AppWebApi.Controllers
             }
         }
 
-       [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Policy = null, Roles = "sysadmin")]
-         [HttpPut("{id}")]
-         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
-         [ProducesResponseType(400, Type = typeof(string))]
-         public async Task<IActionResult> UpdateItem(string id, [FromBody] AppetiteLevelCuDto item)
-         {
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = " sysadmin")]
+        [HttpPut("{id}")]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        public async Task<IActionResult> UpdateItem(string id, [FromBody] AppetiteLevelCuDto item)
+        {
             try
-             {
+            {
                 var idArg = Guid.Parse(id);
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
                 
-                 if (item.AppetiteLevelId != idArg) throw new ArgumentException("Id mismatch");
+                if (item.AppetiteLevelId != idArg) throw new ArgumentException("Id mismatch");
 
-                var _item = await _service.UpdateAppetiteLevelAsync(item);
+                var model = await _service.UpdateAppetiteLevelAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
                
-                 return Ok(_item);             
-             }
+                return Ok(model);
+            }
             catch (Exception ex)
-             {
+            {
                 _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message}");
                 return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
-             }
+            }
         }
-
-         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Policy = null, Roles = " sysadmin")]
-         [HttpPost()]
-         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
-         [ProducesResponseType(400, Type = typeof(string))]
-         public async Task<IActionResult> CreateItem([FromBody] AppetiteLevelCuDto item)
-         {
+        [HttpPost()]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = "supusr, sysadmin")]
+            
+        public async Task<IActionResult> CreateItem([FromBody] AppetiteLevelCuDto item)
+        {
             try
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
                 
-                var _item = await _service.CreateAppetiteLevelAsync(item);
-                _logger.LogInformation($"item {_item.Item.AppetiteLevelId} created");
+                var model = await _service.CreateAppetiteLevelAsync(item);
+                _logger.LogInformation($"item {model.Item.AppetiteLevelId} created");
 
-                return Ok(_item);       
+                return Ok(model);
             }
             catch (Exception ex)
             {
-                // Log the full exception first
-                _logger.LogError($"{nameof(CreateItem)}: {ex.Message}, {ex.StackTrace}");
-
-                // Then return the BadRequest response
+                _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
                 return BadRequest($"Could not create. Error {ex.Message}");
             }
-                }
-
+        }
     }
 }

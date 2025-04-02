@@ -47,17 +47,18 @@ public class AppetiteDbM : Appetite
     }
 
 
-        [NotMapped]
+    [NotMapped]
     public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-    
+    [Required]
     public PatientDbM PatientDbM { get; set; }
 
     [NotMapped]
     public override IAppetiteLevel AppetiteLevel { get => AppetiteLevelDbM; set => throw new NotImplementedException(); }
 
     [JsonIgnore]
+    
     
     public AppetiteLevelDbM AppetiteLevelDbM { get; set; }
 

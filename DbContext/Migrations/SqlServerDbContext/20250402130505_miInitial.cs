@@ -193,7 +193,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     StrDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     StrDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AppetiteLevelDbMAppetiteLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -211,7 +211,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.PatientDbMPatientId,
                         principalSchema: "supusr",
                         principalTable: "Patients",
-                        principalColumn: "PatientId");
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
