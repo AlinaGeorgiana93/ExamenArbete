@@ -53,7 +53,17 @@ public class PatientDbM : Patient
 
     [JsonIgnore]
     public List<SleepDbM> SleepsDbM { get; set; }
-
+    public static new List<PatientDbM> GetSeedPatientsData()
+    {
+        return [.. Patient.GetSeedPatientsData()
+            .Select(p => new PatientDbM
+            {
+                PatientId = p.PatientId,
+                FirstName = p.FirstName,
+                LastName = p.LastName,
+                PersonalNumber = p.PersonalNumber
+            })];
+    }
 
     public PatientDbM UpdateFromDTO(PatientCuDto org)
     {

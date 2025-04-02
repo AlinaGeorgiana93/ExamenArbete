@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 using Models;
 using Models.DTO;
+using System.Linq;
 
 namespace DbModels;
 
@@ -46,7 +47,7 @@ public class MoodDbM : Mood {
     [JsonIgnore]
     public MoodKindDbM MoodKindDbM { get; set; }
         
-
+ 
 
     public MoodDbM UpdateFromDTO(MoodCuDto org)
     {

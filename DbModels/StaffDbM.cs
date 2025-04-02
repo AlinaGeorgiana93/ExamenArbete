@@ -19,6 +19,18 @@ public class StaffDbM : Staff
      [Required]
      public  List <PatientDbM> PatientsDbM { get; set; }
 
+         public static new List<StaffDbM> GetSeedStaffData()
+    {
+        return [.. Staff.GetSeedStaffData()
+            .Select(p => new StaffDbM
+            {
+                StaffId = p.StaffId,
+                FirstName = p.FirstName,
+                LastName = p.LastName,
+                PersonalNumber = p.PersonalNumber
+            })];
+    }
+
     public StaffDbM UpdateFromDTO(StaffCuDto org)
     {
         if (org == null) return null;

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DbContext.Migrations.SqlServerDbContext
 {
     /// <inheritdoc />
@@ -277,6 +279,46 @@ namespace DbContext.Migrations.SqlServerDbContext
                         principalSchema: "supusr",
                         principalTable: "SleepLevels",
                         principalColumn: "SleepLevelId");
+                });
+
+            migrationBuilder.InsertData(
+                schema: "supusr",
+                table: "MoodKinds",
+                columns: new[] { "MoodKindId", "Name", "Rating" },
+                values: new object[,]
+                {
+                    { new Guid("0a93f747-8600-4e06-9d78-15d219ac6163"), "Sad", 5 },
+                    { new Guid("32d0e298-f435-4975-aa0f-113838721c0e"), "Very Happy", 10 },
+                    { new Guid("3aacae7a-1bea-4395-8091-4c70431c9d86"), "Angry", 3 },
+                    { new Guid("c609393e-68e6-4870-8ef0-e4b63f6a3613"), "Happy", 8 },
+                    { new Guid("f323ed69-975c-4e07-bd93-22ffd4bc473c"), "Neutral", 5 }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "supusr",
+                table: "Patients",
+                columns: new[] { "PatientId", "FirstName", "GraphId", "LastName", "PersonalNumber", "StaffDbMStaffId" },
+                values: new object[,]
+                {
+                    { new Guid("25297ef6-172e-4863-8551-8c7319c3470a"), "Charlie", null, "Davis", "19511231-1618'1", null },
+                    { new Guid("430e4789-b33f-4f9c-9827-611d375bb638"), "Bob", null, "Brown", "19501110-1331", null },
+                    { new Guid("a821ded8-2133-4e49-80b1-af80f274d4ce"), "Jane", null, "Smith", "19610228-1212", null },
+                    { new Guid("b1598d28-d10b-4afb-914d-321d0b0c8916"), "Alice", null, "Johnson", "19450801-4444", null },
+                    { new Guid("f2d640c1-889f-403a-b2ed-b6cd5b54fe7c"), "Madi", null, "Alabama", "19560831-1111", null },
+                    { new Guid("f82cb9f5-13c5-4b48-a42a-1e439f902924"), "John", null, "Doe", "19480516-2222", null }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "supusr",
+                table: "Staffs",
+                columns: new[] { "StaffId", "FirstName", "LastName", "PersonalNumber" },
+                values: new object[,]
+                {
+                    { new Guid("0e670c00-5fe7-4193-83ae-c8ab1d61eeb0"), "Madi", "Alabama", "19800613-1111" },
+                    { new Guid("4815e337-b6d1-47f8-a8dc-3d3ba359a2e4"), "Moris", "Andre", "19750105-1111" },
+                    { new Guid("8dafc4e7-3900-4aa9-82f9-6666e2418db6"), "Jane", "Smith", "19610228-1212" },
+                    { new Guid("919d9d0c-0d1e-4661-bbf9-72288275f322"), "John", "Doe", "19900516-2222" },
+                    { new Guid("fdf6881d-da65-4fab-ab47-01fcb1e4afb2"), "Alice", "Johnson", "19931001-4444" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -36,6 +36,16 @@ public class MoodKindDbM : MoodKind
     public List<MoodDbM> MoodsDbM { get; set; }
 
 
+public static new List<MoodKindDbM> GetSeedMoodKindData()
+{
+    return [..MoodKind.GetSeedMoodKindData()
+        .Select(m => new MoodKindDbM
+        {
+            MoodKindId = m.MoodKindId,
+            Name = m.Name,
+            Rating = m.Rating
+        })];
+}
 
 
     public MoodKindDbM() { }

@@ -11,7 +11,17 @@ public class MoodKind : IMoodKind
     
     public virtual List <IMood> Moods{ get; set; }
 
-
+ public static List<MoodKind> GetSeedMoodKindData()
+        {
+            return
+            [
+                new() { MoodKindId = Guid.NewGuid(), Name = "Very Happy", Rating = 10 },
+                new() { MoodKindId = Guid.NewGuid(), Name = "Happy", Rating = 8 },
+                new() { MoodKindId = Guid.NewGuid(), Name = "Neutral", Rating = 5 },
+                new() { MoodKindId = Guid.NewGuid(), Name = "Sad", Rating = 5 },
+                new() { MoodKindId = Guid.NewGuid(), Name = "Angry", Rating = 3 }
+            ];
+        }
 
 
 
