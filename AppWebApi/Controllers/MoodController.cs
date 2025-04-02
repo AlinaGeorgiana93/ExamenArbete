@@ -159,29 +159,39 @@ namespace AppWebApi.Controllers
             }
         }
 
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
-        [HttpPost()]
+            [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = "sysadmin")]
+        [HttpPost]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMood>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> CreateItem([FromBody] MoodCuDto item)
-        {
+            public async Task<IActionResult> CreateItem([FromBody] MoodCuDto item)
+            {
             try
             {
-                _logger.LogInformation($"{nameof(CreateItem)}:");
+                // Log received input
+                _logger.LogInformation($"[{nameof(CreateItem)}] Received request: {System.Text.Json.JsonSerializer.Serialize(item)}");
 
-                var _item = await _service.CreateMoodAsync(item);
-                _logger.LogInformation($"item {_item.Item.MoodId} created");
+                // Validate input
+                if (item == null)
+                {
+                    _logger.LogWarning($"[{nameof(CreateItem)}] Request body is null.");
+                    return BadRequest("Invalid request: item is null.");
+                }
 
-                return Ok(_item);
+                // Call service to create mood
+                var model = await _service.CreateMoodAsync(item);
+                
+                // Log the result
+                _logger.LogInformation($"[{nameof(CreateItem)}] Mood created successfully: MoodId={model.Item.MoodId}");
+
+                return Ok(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{nameof(CreateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not create. Error {ex.InnerException?.Message}");
+                _logger.LogError($"[{nameof(CreateItem)}] Error occurred: {ex}");
+                return BadRequest($"Could not create Mood. Error: {ex.Message}");
             }
         }
-    }
-
-}
+            }
+        }
 

@@ -172,7 +172,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid?>("PatientDbMPatientId")
+                    b.Property<Guid>("PatientDbMPatientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("PatientId")
@@ -434,7 +434,9 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.HasOne("DbModels.PatientDbM", "PatientDbM")
                         .WithMany("MoodsDbM")
-                        .HasForeignKey("PatientDbMPatientId");
+                        .HasForeignKey("PatientDbMPatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MoodKindDbM");
 

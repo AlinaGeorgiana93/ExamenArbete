@@ -13,9 +13,9 @@ public class PatientDbM : Patient
     public override Guid PatientId { get; set; }
 
     
-    public override string FirstName {get;set; }
-    public override string LastName { get; set; }
-    public override string PersonalNumber { get; set; }
+    // public override string FirstName {get;set; }
+    // public override string LastName { get; set; }
+    // public override string PersonalNumber { get; set; }
 
    [JsonIgnore]
     public virtual Guid? GraphId { get; set; }
@@ -38,6 +38,7 @@ public class PatientDbM : Patient
     public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
+     [Required]
     public List<MoodDbM> MoodsDbM { get; set; }
 
         [NotMapped]

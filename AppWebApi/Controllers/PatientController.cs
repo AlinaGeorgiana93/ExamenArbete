@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Models;
@@ -148,6 +149,8 @@ namespace AppWebApi.Controllers
             }
         }
 
+       [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = " sysadmin")]  
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IPatient>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -157,16 +160,16 @@ namespace AppWebApi.Controllers
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
                 
-                var _item = await _service.CreatePatientAsync(item);
-                _logger.LogInformation($"item {_item.Item.PatientId} created");
+                var model = await _service.CreatePatientAsync(item);
+                _logger.LogInformation($"item {model.Item.PatientId} created");
 
-                return Ok(_item);       
+                return Ok(model);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
                 return BadRequest($"Could not create. Error {ex.Message}");
             }
-        }
+    }
     }
 }

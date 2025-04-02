@@ -126,11 +126,11 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: table => new
                 {
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    StaffDbMStaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    PersonalNumber = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    GraphId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    StaffDbMStaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    PersonalNumber = table.Column<string>(type: "nvarchar(200)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -225,7 +225,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Notes = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     StrDayOfWeek = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     StrDate = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MoodKindDbMMoodKindId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -243,7 +243,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.PatientDbMPatientId,
                         principalSchema: "supusr",
                         principalTable: "Patients",
-                        principalColumn: "PatientId");
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
