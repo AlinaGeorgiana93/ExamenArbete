@@ -28,6 +28,7 @@ public class ActivityDbRepos
         if (!flat)
         {
             query = _dbContext.Activities.AsNoTracking()
+                .Include(i => i.ActivityLevelDbM)
                 .Include(i => i.PatientDbM)
                 .Where(i => i.ActivityId == id);
         }
@@ -54,7 +55,8 @@ public class ActivityDbRepos
         if (!flat)
         {
             query = _dbContext.Activities.AsNoTracking()
-            .Include(i => i.PatientDbM);
+            .Include(i => i.PatientDbM)
+            .Include(i => i.ActivityLevelDbM);
 
         }
 
@@ -62,8 +64,13 @@ public class ActivityDbRepos
         query = query.Where(i =>
                 i.StrDate.ToLower().Contains(filter) ||
                 i.StrDayOfWeek.ToLower().Contains(filter) ||
+                i.Notes.ToLower().Contains(filter) ||
                 i.PatientDbM.FirstName.ToLower().Contains(filter) ||
-                i.Notes.ToLower().Contains(filter)
+                i.PatientDbM.LastName.ToLower().Contains(filter) ||
+                i.PatientDbM.PersonalNumber.ToLower().Contains(filter) ||
+                i.ActivityLevelDbM.Name.ToLower().Contains(filter) ||
+                i.ActivityLevelDbM.Rating.ToString().ToLower().Contains(filter)
+
            );
 
         return new ResponsePageDto<IActivity>
