@@ -13,22 +13,22 @@ public class ActivityLevelDbM : ActivityLevel
     [Key]
     public override Guid ActivityLevelId { get; set; }
     public override string Name { get; set; }
+
+    public override string Label { get; set; }
     public override int Rating { get; set; }
 
 
 
-    public IActivityLevel UpdateFromDTO(ActivityLevelCuDto org)
+    public ActivityLevelDbM UpdateFromDTO(ActivityLevelCuDto org)
     {
         if (org == null) return null;
 
         Name = org.Name;
+        Label = org.Label;
         Rating = org.Rating;
 
         return this;
     }
-
-
-
 
 
 
@@ -38,6 +38,21 @@ public class ActivityLevelDbM : ActivityLevel
     [JsonIgnore]
     [Required]
     public List<ActivityDbM> ActivitiesDbM { get; set; }
+
+
+
+    public static new List<ActivityLevelDbM> GetSeedActivityLevelsData()
+    {
+        return [.. ActivityLevel.GetSeedActivityLevelsData()
+            .Select(a => new ActivityLevelDbM
+            {
+                ActivityLevelId = a.ActivityLevelId,
+                Name = a.Name,
+                Label = a.Label,
+                Rating = a.Rating,
+
+            })];
+    }
 
 
 

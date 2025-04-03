@@ -67,12 +67,14 @@ public class ActivityLevelDbRepos
             DbItemsCount = await query
                 .Where(i =>
                     i.Name.ToLower().Contains(filter) ||
+                    i.Label.ToLower().Contains(filter) ||
                     i.Rating.ToString().ToLower().Contains(filter)
                 ).CountAsync(),
 
             PageItems = await query
                 .Where(i =>
                     i.Name.ToLower().Contains(filter) ||
+                    i.Label.ToLower().Contains(filter) ||
                     i.Rating.ToString().ToLower().Contains(filter)
                 )
                 .Skip(pageNumber * pageSize)

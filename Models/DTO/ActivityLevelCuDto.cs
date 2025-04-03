@@ -15,10 +15,11 @@ public class ActivityLevelCuDto
 
   public virtual Guid? ActivityLevelId { get; set; }     // Primary Key
   public virtual string Name { get; set; }      // e.g., "Hig", "Medel", Low.
+  public virtual string Label { get; set; }
   public virtual int Rating { get; set; }       // Rating from 1 to 10
 
-  public virtual List<Guid> ActivitiesId { get; set; } = null; // List of Activity Ids that are related to this ActivityLevel
-  public virtual Guid? ActivityId { get; set; }
+  // public virtual List<Guid> ActivitiesId { get; set; } = null; // List of Activity Ids that are related to this ActivityLevel
+  //public virtual Guid? ActivityId { get; set; }
 
 
 
@@ -29,7 +30,7 @@ public class ActivityLevelCuDto
     Name = org.Name;
     Rating = org.Rating;
 
-    ActivitiesId = org.Activities?.Select(i => i.ActivityId).ToList();
+    // ActivitiesId = org.Activities?.Select(i => i.ActivityId).ToList();
 
 
   }

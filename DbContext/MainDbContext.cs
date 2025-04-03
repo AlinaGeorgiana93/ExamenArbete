@@ -27,17 +27,17 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<StaffDbM> Staffs { get; set; }
     public DbSet<PatientDbM> Patients { get; set; }
     public DbSet<UserDbM> Users { get; set; }
-    
+
     public DbSet<SleepDbM> Sleeps { get; set; }
-    public DbSet<SleepLevelDbM> SleepLevels { get; set; }  
+    public DbSet<SleepLevelDbM> SleepLevels { get; set; }
 
     public DbSet<MoodDbM> Moods { get; set; }
-    public DbSet<MoodKindDbM> MoodKinds { get; set; }   
+    public DbSet<MoodKindDbM> MoodKinds { get; set; }
 
     public DbSet<GraphDbM> Graphs { get; set; }
 
     public DbSet<AppetiteDbM> Appetites { get; set; }
-    public DbSet<AppetiteLevelDbM> AppetiteLevels { get; set; } 
+    public DbSet<AppetiteLevelDbM> AppetiteLevels { get; set; }
 
     public DbSet<ActivityDbM> Activities { get; set; }
     public DbSet<ActivityLevelDbM> ActivityLevels { get; set; }
@@ -70,16 +70,18 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
         modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();
 
-       modelBuilder.Ignore<IPatient>(); //  Ensure IPatient is ignored
-       modelBuilder.Ignore<IMoodKind>();
-       modelBuilder.Ignore<IAppetiteLevel>();
-       modelBuilder.Ignore<ISleepLevel>();
-       modelBuilder.Ignore<IActivityLevel>();
-       modelBuilder.Ignore<IGraph>();
-       modelBuilder.Entity<MoodKindDbM>().HasData(MoodKindDbM.GetSeedMoodKindData());
-       modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
-       modelBuilder.Entity<StaffDbM>().HasData(StaffDbM.GetSeedStaffData());
-       modelBuilder.Entity<AppetiteLevelDbM>().HasData(AppetiteLevelDbM.GetSeedAppetiteLevelsData());
+        modelBuilder.Ignore<IPatient>(); //  Ensure IPatient is ignored
+        modelBuilder.Ignore<IMoodKind>();
+        modelBuilder.Ignore<IAppetiteLevel>();
+        modelBuilder.Ignore<ISleepLevel>();
+        modelBuilder.Ignore<IActivityLevel>();
+        modelBuilder.Ignore<IGraph>();
+        modelBuilder.Entity<MoodKindDbM>().HasData(MoodKindDbM.GetSeedMoodKindsData());
+        modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
+        modelBuilder.Entity<StaffDbM>().HasData(StaffDbM.GetSeedStaffData());
+        modelBuilder.Entity<AppetiteLevelDbM>().HasData(AppetiteLevelDbM.GetSeedAppetiteLevelsData());
+        //modelBuilder.Entity<SleepLevelDbM>().HasData(SleepLevelDbM.GetSeedSleepLevelsData());
+        modelBuilder.Entity<ActivityLevelDbM>().HasData(ActivityLevelDbM.GetSeedActivityLevelsData());
 
         #endregion
 

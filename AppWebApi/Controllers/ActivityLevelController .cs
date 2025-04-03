@@ -18,9 +18,9 @@ namespace AppWebApi.Controllers
         readonly IActivityLevelService _service = null;
         readonly ILogger<ActivityLevelController> _logger = null;
 
-        public ActivityLevelController(ActivityLevel service, ILogger<ActivityLevelController> logger)
+        public ActivityLevelController(IActivityLevelService service, ILogger<ActivityLevelController> logger)
         {
-            _service = (IActivityLevelService)service;
+            _service = service;
             _logger = logger;
         }
 

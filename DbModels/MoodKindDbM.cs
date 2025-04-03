@@ -13,15 +13,18 @@ public class MoodKindDbM : MoodKind
     [Key]
     public override Guid MoodKindId { get; set; }
     public override string Name { get; set; }
+
+    public override string Label { get; set; }
     public override int Rating { get; set; }
 
 
 
-    public IMoodKind UpdateFromDTO(MoodKindCuDto org)
+    public MoodKindDbM UpdateFromDTO(MoodKindCuDto org)
     {
         if (org == null) return null;
 
         Name = org.Name;
+        Label = org.Label;
         Rating = org.Rating;
 
         return this;
@@ -29,23 +32,23 @@ public class MoodKindDbM : MoodKind
 
 
     [NotMapped]
-    public override List<IMood>Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
+    public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
     public List<MoodDbM> MoodsDbM { get; set; }
 
-
-public static new List<MoodKindDbM> GetSeedMoodKindData()
-{
-    return [..MoodKind.GetSeedMoodKindData()
-        .Select(m => new MoodKindDbM
-        {
-            MoodKindId = m.MoodKindId,
-            Name = m.Name,
-            Rating = m.Rating
-        })];
-}
+    public static new List<MoodKindDbM> GetSeedMoodKindsData()
+    {
+        return [.. MoodKind.GetSeedMoodKindsData()
+            .Select(a => new MoodKindDbM
+            {
+                MoodKindId = a.MoodKindId,
+                Name = a.Name,
+                Label = a.Label,
+                Rating = a.Rating
+            })];
+    }
 
 
     public MoodKindDbM() { }

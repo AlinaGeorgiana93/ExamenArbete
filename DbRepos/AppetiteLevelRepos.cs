@@ -41,46 +41,46 @@ namespace DbRepos
             };
         }
 
-        public async Task<ResponsePageDto<IAppetiteLevel>> ReadItemsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
-    {
-        filter ??= "";
-        IQueryable<AppetiteLevelDbM> query;
-
-        if (flat)
+        public async Task<ResponsePageDto<IAppetiteLevel>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
         {
-            query = _dbContext.AppetiteLevels.AsNoTracking();
+            filter ??= "";
+            IQueryable<AppetiteLevelDbM> query;
+
+            if (flat)
+            {
+                query = _dbContext.AppetiteLevels.AsNoTracking();
+            }
+            else
+            {
+                query = _dbContext.AppetiteLevels.AsNoTracking()
+                    .Include(i => i.AppetitesDbM);
+            }
+
+            var ret = new ResponsePageDto<IAppetiteLevel>()
+            {
+                DbConnectionKeyUsed = _dbContext.dbConnection,
+                DbItemsCount = await query
+                    .Where(i =>
+                        i.Name.ToLower().Contains(filter) ||
+                        i.Label.ToLower().Contains(filter) ||
+                        i.Rating.ToString().ToLower().Contains(filter)
+                    ).CountAsync(),
+
+                PageItems = await query
+                    .Where(i =>
+                        i.Name.ToLower().Contains(filter) ||
+                        i.Label.ToLower().Contains(filter) ||
+                        i.Rating.ToString().ToLower().Contains(filter)
+                    )
+                    .Skip(pageNumber * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync<IAppetiteLevel>(),
+
+                PageNr = pageNumber,
+                PageSize = pageSize
+            };
+            return ret;
         }
-        else
-        {
-            query = _dbContext.AppetiteLevels.AsNoTracking()
-                .Include(i => i.AppetitesDbM);
-        }
-
-        var ret = new ResponsePageDto<IAppetiteLevel>()
-        {
-            DbConnectionKeyUsed = _dbContext.dbConnection,
-            DbItemsCount = await query
-                .Where(i => 
-                    i.Name.ToLower().Contains(filter) ||
-                    i.Label.ToLower().Contains(filter) ||
-                    i.Rating.ToString().ToLower().Contains(filter)
-                ).CountAsync(),
-
-            PageItems = await query
-                .Where(i => 
-                    i.Name.ToLower().Contains(filter)||
-                    i.Label.ToLower().Contains(filter)||
-                    i.Rating.ToString().ToLower().Contains(filter)
-                )
-                .Skip(pageNumber * pageSize)
-                .Take(pageSize)
-                .ToListAsync<IAppetiteLevel>(),
-
-            PageNr = pageNumber,
-            PageSize = pageSize
-        };
-        return ret;
-    }
 
         public async Task<ResponseItemDto<IAppetiteLevel>> DeleteItemAsync(Guid id)
         {
@@ -131,26 +131,26 @@ namespace DbRepos
         }
 
         public async Task<ResponseItemDto<IAppetiteLevel>> CreateItemAsync(AppetiteLevelCuDto itemDto)
-    {
-        if (itemDto.AppetiteLevelId != null)
-            throw new ArgumentException($"{nameof(itemDto.AppetiteLevelId)} must be null when creating a new object");
+        {
+            if (itemDto.AppetiteLevelId != null)
+                throw new ArgumentException($"{nameof(itemDto.AppetiteLevelId)} must be null when creating a new object");
 
-        //transfer any changes from DTO to database objects
-        //Update individual properties
-        var item = new AppetiteLevelDbM(itemDto);
+            //transfer any changes from DTO to database objects
+            //Update individual properties
+            var item = new AppetiteLevelDbM(itemDto);
 
-        //Update navigation properties
-     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+            //Update navigation properties
+            //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
-        //write to database model
-        _dbContext.AppetiteLevels.Add(item);
+            //write to database model
+            _dbContext.AppetiteLevels.Add(item);
 
-        //write to database in a UoW
-        await _dbContext.SaveChangesAsync();
+            //write to database in a UoW
+            await _dbContext.SaveChangesAsync();
 
-        //return the updated item in non-flat mode
-        return await ReadItemAsync(item.AppetiteLevelId, false);    
-    }
+            //return the updated item in non-flat mode
+            return await ReadItemAsync(item.AppetiteLevelId, false);
+        }
 
     }
 }

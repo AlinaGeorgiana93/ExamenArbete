@@ -12,24 +12,24 @@ public class PatientDbM : Patient
     [Key]
     public override Guid PatientId { get; set; }
 
-    
+
     // public override string FirstName {get;set; }
     // public override string LastName { get; set; }
     // public override string PersonalNumber { get; set; }
 
-   [JsonIgnore]
+    [JsonIgnore]
     public virtual Guid? GraphId { get; set; }
 
     [NotMapped]
     public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }
     [JsonIgnore]
-  
-    [ForeignKey ("GraphId")] //Connecting FK above with GraphDbM.GraphId
-    public  GraphDbM  GraphDbM { get; set; } = null;
 
-   [NotMapped]
+    [ForeignKey("GraphId")] //Connecting FK above with GraphDbM.GraphId
+    public GraphDbM GraphDbM { get; set; } = null;
+
+    [NotMapped]
     public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
- 
+
     [JsonIgnore]
     [Required]
     public List<AppetiteDbM> AppetitesDbM { get; set; }
@@ -39,14 +39,14 @@ public class PatientDbM : Patient
     public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-     [Required]
+    [Required]
     public List<MoodDbM> MoodsDbM { get; set; }
 
-        [NotMapped]
+    [NotMapped]
     public override List<IActivity> Activities { get => ActivitiesDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-      // [Required]
+    [Required]
     public List<ActivityDbM> ActivitiesDbM { get; set; }
 
 
@@ -54,7 +54,7 @@ public class PatientDbM : Patient
     public override List<ISleep> Sleeps { get => SleepsDbM?.ToList<ISleep>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
-      // [Required]
+    // [Required]
     public List<SleepDbM> SleepsDbM { get; set; }
     public static new List<PatientDbM> GetSeedPatientsData()
     {
@@ -72,8 +72,8 @@ public class PatientDbM : Patient
     {
         if (org == null) return null;
 
-        FirstName=org.FirstName;
-        LastName=org.LastName;
+        FirstName = org.FirstName;
+        LastName = org.LastName;
         PersonalNumber = org.PersonalNumber;
 
 
