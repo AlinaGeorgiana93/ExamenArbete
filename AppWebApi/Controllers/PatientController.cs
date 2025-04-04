@@ -24,12 +24,12 @@ namespace AppWebApi.Controllers
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponsePageDto<IPatient>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> ReadItems(string seeded = "true", string flat = "true",
+        public async Task<IActionResult> ReadItems( string flat = "true",
             string filter = null, string pageNr = "0", string pageSize = "10")
         {
             try
             {
-                bool seededArg = bool.Parse(seeded);
+               
                 bool flatArg = bool.Parse(flat);
                 int pageNrArg = int.Parse(pageNr);
                 int pageSizeArg = int.Parse(pageSize);

@@ -28,10 +28,6 @@ public class GraphDbRepos
         if (!flat)
         {
             query = _dbContext.Graphs.AsNoTracking()
-                // .Include(i => i.MoodsDbM)
-                // .Include(i => i.ActivitiesDbM)
-                // .Include(i => i.SleepsDbM)
-                // .Include(i => i.AppetitesDbM)
                 .Include(i => i.PatientDbM)
                 .Where(i => i.GraphId == id);
         }
@@ -60,10 +56,6 @@ public class GraphDbRepos
         else
         {
             query = _dbContext.Graphs.AsNoTracking()
-                // .Include(i => i.MoodsDbM)
-                // .Include(i => i.ActivitiesDbM)
-                // .Include(i => i.SleepsDbM)
-                // .Include(i => i.AppetitesDbM)
                 .Include(i => i.PatientDbM);
         }
 
@@ -73,18 +65,12 @@ public class GraphDbRepos
             DbItemsCount = await query
 
             //Adding filter functionality
-            .Where(i => //(i.Seeded == seeded) && 
-                        // (i.Date.ToLower().Contains(filter) ||
-                        //  i..ToLower().Contains(filter) ||
-                         i.Date.ToString().ToLower().Contains(filter)).CountAsync(),
+            .Where(i => i.Date.ToString().ToLower().Contains(filter)).CountAsync(),
 
             PageItems = await query
 
             //Adding filter functionality
-            .Where(i => //(i.Seeded == seeded) && 
-                        // (i.Date.ToLower().Contains(filter) ||
-                        //  i..ToLower().Contains(filter) ||
-                         i.Date.ToString().ToLower().Contains(filter))
+            .Where(i =>   i.Date.ToString().ToLower().Contains(filter))
 
             //Adding paging
             .Skip(pageNumber * pageSize)
@@ -126,10 +112,6 @@ public class GraphDbRepos
         var query1 = _dbContext.Graphs
             .Where(i => i.GraphId == itemDto.GraphId);
         var item = await query1
-        //    .Include(i => i.MoodsDbM)
-        //         .Include(i => i.ActivitiesDbM)
-        //         .Include(i => i.SleepsDbM)
-        //         .Include(i => i.AppetitesDbM)
              .Include(i => i.PatientDbM)
             .FirstOrDefaultAsync<GraphDbM>();
 

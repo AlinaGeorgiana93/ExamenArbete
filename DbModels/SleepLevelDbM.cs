@@ -37,7 +37,8 @@ public class SleepLevelDbM : SleepLevel
     [Required]
     public List<SleepDbM> SleepsDbM { get; set; }
 
-    public static new List<SleepLevelDbM> GetSeedSleepLevelsData()
+   
+  public static new List<SleepLevelDbM> GetSeedSleepLevelsData()
     {
         return [.. SleepLevel.GetSeedSleepLevelsData()
             .Select(a => new SleepLevelDbM
@@ -48,7 +49,6 @@ public class SleepLevelDbM : SleepLevel
                 Rating = a.Rating
             })];
     }
-
 
     public SleepLevelDbM() { }
 

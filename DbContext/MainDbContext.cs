@@ -80,7 +80,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
         modelBuilder.Entity<StaffDbM>().HasData(StaffDbM.GetSeedStaffData());
         modelBuilder.Entity<AppetiteLevelDbM>().HasData(AppetiteLevelDbM.GetSeedAppetiteLevelsData());
-        //modelBuilder.Entity<SleepLevelDbM>().HasData(SleepLevelDbM.GetSeedSleepLevelsData());
+        modelBuilder.Entity<SleepLevelDbM>().HasData(SleepLevelDbM.GetSeedSleepLevelsData());
         modelBuilder.Entity<ActivityLevelDbM>().HasData(ActivityLevelDbM.GetSeedActivityLevelsData());
 
         #endregion
