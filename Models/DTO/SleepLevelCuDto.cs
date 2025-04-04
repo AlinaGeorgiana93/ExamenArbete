@@ -8,9 +8,11 @@ namespace Models.DTO;
 public class SleepLevelCuDto
 {
     public virtual Guid? SleepLevelId { get; set; }
-    public string Name { get; set; }
-    public string Label { get; set; }
-    public int Rating { get; set; } 
+    public Guid SleepId { get; set; }
+
+    public virtual string Name { get; set; }
+    public virtual string Label { get; set; }
+    public virtual int Rating { get; set; } 
 
     
    // public virtual Guid? SleepId{ get; set; }
