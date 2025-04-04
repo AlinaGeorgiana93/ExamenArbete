@@ -11,7 +11,4 @@ public interface ISleepLevel
 
   public List<ISleep> Sleeps { get; set; }
 
-
-
-
 }

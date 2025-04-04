@@ -4,13 +4,13 @@ using Newtonsoft.Json;
 
 using Models;
 using Models.DTO;
-
+using System.Linq;
 
 namespace DbModels;
-[Table("Sleeps", Schema = "supusr")]
-public class SleepDbM : Sleep 
 
-{
+[Table("Sleeps", Schema = "supusr")]
+public class SleepDbM : Sleep {
+    
     [Key]
     public override Guid SleepId { get; set; }
     public override DateTime Date {get;set; }
@@ -18,7 +18,7 @@ public class SleepDbM : Sleep
     public override string Notes { get; set; }
 
 
-    #region adding more readability to an enum type in the database
+    #region convert to string
     
 
      public virtual string StrDayOfWeek
@@ -35,6 +35,20 @@ public class SleepDbM : Sleep
 
      #endregion
 
+     [NotMapped]
+    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
+
+    [JsonIgnore]
+     [Required]
+    public PatientDbM PatientDbM { get; set; }
+
+    [NotMapped]
+    public override ISleepLevel SleepLevel { get => SleepLevelDbM; set => throw new NotImplementedException(); }
+    [JsonIgnore]
+    public SleepLevelDbM SleepLevelDbM { get; set; }
+        
+ 
+
     public SleepDbM UpdateFromDTO(SleepCuDto org)
     {
         if (org == null) return null;
@@ -46,30 +60,11 @@ public class SleepDbM : Sleep
 
         return this;
     }
-
-     [NotMapped]
-    public override IPatient Patient { get => PatientDbM; set => throw new NotImplementedException(); }
-
-    [JsonIgnore]
-    
-    public PatientDbM PatientDbM { get; set; }
-
-    [NotMapped]
-    public override ISleepLevel SleepLevel { get => SleepLevelDbM; set => throw new NotImplementedException(); }
-
-    [JsonIgnore]
-    
-    public SleepLevelDbM SleepLevelDbM { get; set; }
-        
-
-    public SleepDbM() { }
+      public SleepDbM() { }
     public SleepDbM(SleepCuDto org)
     {
         SleepId = Guid.NewGuid();
         UpdateFromDTO(org);
     }
-
-
-
 
 }
