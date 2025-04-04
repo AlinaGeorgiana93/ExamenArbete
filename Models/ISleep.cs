@@ -9,7 +9,7 @@ public interface ISleep
 
 
     public IPatient Patient { get; set; }
-    public IGraph Graph { get; set; }
+    // public IGraph Graph { get; set; }
     public ISleepLevel SleepLevel { get; set; }
 
 }
