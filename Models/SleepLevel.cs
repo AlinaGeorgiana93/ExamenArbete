@@ -21,31 +21,31 @@ public class SleepLevel: ISleepLevel
             SleepLevelId = Guid.NewGuid(),
             Name = "Very Low",
             Rating = 1,
-            Label = "Very Low Mood Level 😞"
+            Label = "Very Low Sleep Level 😞"
         },
         new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "Low",
             Rating = 3,
-            Label = "Low Mood Level 🙁"
+            Label = "Low Sleep Level 🙁"
         },
         new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "Medium",
             Rating = 5,
-            Label = "Medium Mood Level 😐"
+            Label = "Medium Sleep Level 😐"
         },
         new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "High",
             Rating = 7,
-            Label = "High Mood Level 🙂"
+            Label = "High Sleep Level 🙂"
         },
         new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "Very High",
             Rating = 10,
-            Label = "Very High Mood Level 😃"
+            Label = "Very High Sleep Level 😃"
         }
         ];
     }
