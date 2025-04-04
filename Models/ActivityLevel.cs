@@ -20,33 +20,39 @@ public static List<ActivityLevel> GetSeedActivityLevelsData()
         [
             new ActivityLevel { 
                 ActivityLevelId = Guid.NewGuid(), 
-                Name = "Very Low", 
+                Name = "Resting", 
                 Rating = 1, 
-                Label = "Very Low Activity Level 🛌"
+                Label = "Resting 🛌"
             },
             new ActivityLevel { 
                 ActivityLevelId = Guid.NewGuid(), 
-                Name = "Low", 
+                Name = "Reading", 
                 Rating = 3, 
-                Label = "Low Activity Level 🚶‍♂️"
+                Label = "Reading 📖"
             },
             new ActivityLevel { 
                 ActivityLevelId = Guid.NewGuid(), 
-                Name = "Medium", 
+                Name = "Take a Walk", 
                 Rating = 5, 
-                Label = "Medium Activity Level 🏃‍♂️"
+                Label = "Take a Walk 🚶‍♂️"
             },
             new ActivityLevel { 
                 ActivityLevelId = Guid.NewGuid(), 
-                Name = "High", 
-                Rating = 7, 
-                Label = "High Activity Level 🏋️‍♂️"
-            },
-            new ActivityLevel { 
-                ActivityLevelId = Guid.NewGuid(), 
-                Name = "Very High", 
+                Name = "Jogging", 
                 Rating = 10, 
-                Label = "Very High Activity Level 🏆"
+                Label = "Jogging 🏃‍♂️"
+            },
+            new ActivityLevel { 
+                ActivityLevelId = Guid.NewGuid(), 
+                Name = "Swimming", 
+                Rating = 7, 
+                Label = "Swimming 🏊‍♂️"
+            },
+            new ActivityLevel { 
+                ActivityLevelId = Guid.NewGuid(), 
+                Name = "Training", 
+                Rating = 9, 
+                Label = "Training 🏋️‍♂️"
             }
         ];
     }
