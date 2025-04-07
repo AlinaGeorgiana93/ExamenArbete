@@ -9,6 +9,7 @@ module.exports = {
   },
   module: {
     rules: [
+      // JavaScript files - Using babel-loader to transpile JS
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -16,15 +17,28 @@ module.exports = {
           loader: 'babel-loader',
         },
       },
+      // CSS files - Using style-loader and css-loader for CSS
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
+      },
+      // Image files - Using file-loader to handle images
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]',
+            },
+          },
+        ],
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: './public/index.html', // Path to your HTML file
     }),
   ],
   devServer: {
