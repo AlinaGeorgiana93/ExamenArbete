@@ -34,14 +34,16 @@ body {
     font-size: 1.2em;
     line-height: 1.5;
   }
-
-  .page-container {
+  body {
+    background: linear-gradient(135deg, #33787c, #00d4ff);
     min-height: 100vh;
-    background: linear-gradient(135deg, #a0e9fd, #00d4ff); /* light turquoise gradient */
+    margin: 0;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    height: 100vh;
+    margin: 0;
   }
   
 
