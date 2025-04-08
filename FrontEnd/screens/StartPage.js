@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Times New Roman', cursive, sans-serif;
     background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); /* More colors in the gradient */
     display: flex;
     justify-content: center;

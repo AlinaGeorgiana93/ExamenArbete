@@ -45,6 +45,7 @@ module.exports = {
     static: {
       directory: path.resolve(__dirname, 'dist'), // Serve static files from dist
     },
+    historyApiFallback: true, // Ensure your routing works for direct page refreshes
     port: 3000,
     open: true, // Automatically open the browser
     hot: true, // Enable Hot Module Replacement
