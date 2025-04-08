@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import styled, { createGlobalStyle } from 'styled-components'; // Correct import
+import logo1 from '../src/logo1.png';
 import '../src/index.css'
 
 
