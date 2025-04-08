@@ -1,14 +1,13 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '../src/index.css';
 import logo1 from '../src/logo1.png';
-// import StartPage from '../screens/StartPage'; 
-import PatientPage from '../screens/PatientPage';
+import StartPage from '../screens/StartPage'; 
 
 function App() {
   return (
     <div className="App">
-    {/* <StartPage /> */}
-    < PatientPage/>
+    <StartPage />
   </div>
   );
 }
