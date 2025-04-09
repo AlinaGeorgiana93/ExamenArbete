@@ -1,13 +1,18 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import StartPage from '../screens/StartPage';
+import StaffPage from '../screens/StaffPage';
 import '../src/index.css';
-import logo1 from '../src/logo1.png';
-import StartPage from '../screens/StartPage'; 
+
 
 function App() {
   return (
-    <div className="App">
-    <StartPage />
-  </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<StartPage />} />
+        <Route path="/start" element={<StaffPage />} />
+      </Routes>
+    </Router>
   );
 }
 
