@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';  // Import the translation hook
 // Navigation bar at the bottom
 const Nav = styled.nav`
   background-color: #125358;
-  padding: 10px 25px;
+  padding: 5px 15px; /* Reduced padding for a slimmer nav */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,7 +20,7 @@ const Nav = styled.nav`
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 15px; /* Reduced gap between links */
 `;
 
 const StyledLink = styled(Link)`
@@ -30,6 +30,7 @@ const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
   gap: 5px;
+  font-size: 14px; /* Reduced font size for a more compact look */
 
   &:hover {
     color: #00d4ff;
@@ -49,12 +50,12 @@ const Navigation = () => {
 
   return (
     <Nav>
-      <StyledHomeLink to="/"><FaHome /> {t('home')}</StyledHomeLink>
+      <StyledHomeLink to="/"><FaHome size={18} /> {t('home')}</StyledHomeLink> {/* Adjusted icon size */}
       <NavLinks>
-        <StyledLink to="/about"><FaInfoCircle /> {t('about Us')}</StyledLink>
-        <StyledLink to="/admin"><FaUserShield /> {t('admin')}</StyledLink>
-        <StyledLink to="/staff"><FaUserNurse /> {t('staff')}</StyledLink>
-        <StyledLink to="/patient"><FaUserInjured /> {t('patient')}</StyledLink>
+        <StyledLink to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink> {/* Adjusted icon size */}
+        <StyledLink to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> {/* Adjusted icon size */}
+        <StyledLink to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink> {/* Adjusted icon size */}
+        <StyledLink to="/patient"><FaUserInjured size={18} /> {t('patient')}</StyledLink> {/* Adjusted icon size */}
       </NavLinks>
     </Nav>
   );

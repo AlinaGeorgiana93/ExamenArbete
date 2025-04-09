@@ -6,8 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setLanguage } from '../language/languageSlice'; 
 import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
 import '../language/i18n.js';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -139,6 +138,7 @@ const LanguageButton = styled.button`
     background-color: #00d4ff;
   }
 `;
+
 const NavigateButton = styled.button`
   padding: 12px;
   background-color: #125358;
@@ -161,7 +161,6 @@ const StartPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate(); 
 
-
   // Define the changeLanguage function here
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));  // Dispatch Redux action
@@ -172,25 +171,24 @@ const StartPage = () => {
   const goToAdminDashboard = () => {
     navigate('/admin');  // ✅ Navigate to AdminDashboard route
   };
+
   const goToPatientPage = () => {
     navigate('/patient');  // ✅ Navigate to PatientPage route
   };
 
-
   return (
     <>
       <GlobalStyle />
-      <img
-        src={logo1}
-        alt="Logo"
-        style={{
-          position: 'fixed',
-          top: '15px',
-          right: '15px',
-          width: '150px',
-          zIndex: '2',
-        }}
-      />
+      {/* Logo clickable to navigate to the start page */}
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+        <img
+          src={logo1}
+          alt="Logo"
+          style={{
+            width: '150px', // Adjust logo size as needed
+          }}
+        />
+      </Link>
       <StartPageContainer>
         <Header>
           <Title>{t('app_title')}</Title>
@@ -210,13 +208,13 @@ const StartPage = () => {
           <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
         </LanguageButtons>
 
-         {/* Navigation buttons at the bottom of the page */}
-      <NavigateButton onClick={goToAdminDashboard}>
-      <Label>{t('Go to Admin Dashboard')}</Label>
-      </NavigateButton>
-      <NavigateButton onClick={goToPatientPage}>
-      <Label>{t('Go to Patient Page')}</Label>
-      </NavigateButton>
+        {/* Navigation buttons at the bottom of the page */}
+        <NavigateButton onClick={goToAdminDashboard}>
+          {t('Go to Admin Dashboard')}
+        </NavigateButton>
+        <NavigateButton onClick={goToPatientPage}>
+          {t('Go to Patient Page')}
+        </NavigateButton>
 
         <Footer>
           <p>

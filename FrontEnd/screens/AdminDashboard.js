@@ -3,7 +3,8 @@ import styled, { createGlobalStyle } from 'styled-components'; // Correct import
 import logo1 from '../src/media/logo1.png';
 import '../src/index.css'
 import '../language/i18n.js';
-import { useTranslation } from 'react-i18next';
+import { useTranslation} from 'react-i18next';
+import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
 
 
 const GlobalStyle = createGlobalStyle`
@@ -14,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); /* More colors in the gradient */
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,20 +61,18 @@ const AdminDashboard = () => {
     
   return (
     <>
-      <GlobalStyle />
-      {/* Logo positioned directly in the body, without a container */}
-      <img
-        src={logo1}
-        alt="Logo"
-        style={{
-          position: 'fixed',
-          top: '15px',
-          right: '15px',
-          width: '150px', // Adjust the logo size as needed
-          zIndex: '2', // Ensure it stays above other elements
-        }}
-      />
-
+       <GlobalStyle />
+             {/* Logo clickable to navigate to the start page */}
+             <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+               <img
+                 src={logo1}
+                 alt="Logo"
+                 style={{
+                   width: '150px', // Adjust logo size as needed
+                 }}
+               />
+             </Link>
+             
       <AdminDashboardContainer>
         <Header>
         <Title>{t('admin')}</Title>
