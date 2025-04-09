@@ -2,6 +2,11 @@ import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components'; // Correct import
 import logo1 from '../src/logo1.png';
 import '../src/index.css'
+import { useSelector, useDispatch } from 'react-redux';
+import { setLanguage } from '../language/languageSlice'; // Adjust the import path as necessary
+import { createSlice } from '@reduxjs/toolkit';
+
+
 
 
 // Styled Components
@@ -137,7 +142,16 @@ const LanguageButton = styled.button`
   }
 `;
 
+
 const StartPage = () => {
+  const dispatch = useDispatch();
+  const selectedLanguage = useSelector((state) => state.language.language);
+
+  const handleLanguageSelect = (lang) => {
+    dispatch(setLanguage(lang));
+    console.log("Selected language:", lang); // For testing
+  };
+
   return (
     <>
       <GlobalStyle />
@@ -149,8 +163,8 @@ const StartPage = () => {
           position: 'fixed',
           top: '15px',
           right: '15px',
-          width: '150px', // Adjust the logo size as needed
-          zIndex: '2', // Ensure it stays above other elements
+          width: '150px',
+          zIndex: '2',
         }}
       />
       <StartPageContainer>
@@ -168,8 +182,8 @@ const StartPage = () => {
         </LoginForm>
 
         <LanguageButtons>
-          <LanguageButton>En</LanguageButton>
-          <LanguageButton>Sv</LanguageButton>
+          <LanguageButton onClick={() => handleLanguageSelect('en')}>En</LanguageButton>
+          <LanguageButton onClick={() => handleLanguageSelect('sv')}>Sv</LanguageButton>
         </LanguageButtons>
 
         <Footer>
