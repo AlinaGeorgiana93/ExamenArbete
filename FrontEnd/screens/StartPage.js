@@ -1,10 +1,13 @@
 import React from 'react';
-import styled, { createGlobalStyle } from 'styled-components'; // Correct import
-import logo1 from '../src/logo1.png';
-import '../src/index.css'
+import { useTranslation } from 'react-i18next';
+import styled, { createGlobalStyle } from 'styled-components'; 
+import logo1 from '../src/media/logo1.png';
+import { useDispatch } from 'react-redux';
+import { setLanguage } from '../language/languageSlice'; 
+import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
+import '../language/i18n.js';
+import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
 
-
-// Styled Components
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -13,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); /* More colors in the gradient */
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,7 +79,7 @@ const Input = styled.input`
 
 const Button = styled.button`
   padding: 12px;
-   background-color: #125358;
+  background-color: #125358;
   color: white;
   font-size: 1rem;
   border: none;
@@ -95,7 +98,7 @@ const Footer = styled.footer`
   font-size: 1rem;
 
   p {
-    font-size: 0.9rem; /* Smaller font size for the 'Forgot password?' text */
+    font-size: 0.9rem; 
   }
 
   a {
@@ -107,7 +110,6 @@ const Footer = styled.footer`
     }
   }
 `;
-
 
 const LanguageButtons = styled.div`
   display: flex;
@@ -121,16 +123,33 @@ const LanguageButton = styled.button`
   background-color: #125358;
   color: white;
   border: none;
-  border-radius: 50%; /* Make buttons round */
+  border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin: 0 10px;
-  width: 30px; /* Smaller button size */
-  height: 30px; /* Equal height to width for round shape */
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8rem; /* Smaller font size for the text inside the button */ 
+  font-size: 0.8rem;
+
+  &:hover {
+    background-color: #00d4ff;
+  }
+`;
+
+const NavigateButton = styled.button`
+  padding: 12px;
+  background-color: #125358;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  width: 100%;
 
   &:hover {
     background-color: #00d4ff;
@@ -138,43 +157,68 @@ const LanguageButton = styled.button`
 `;
 
 const StartPage = () => {
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const navigate = useNavigate(); 
+
+  // Define the changeLanguage function here
+  const changeLanguage = (lang) => {
+    dispatch(setLanguage(lang));  // Dispatch Redux action
+    const i18n = getI18n();  // Get i18n instance
+    i18n.changeLanguage(lang);    // Change language using i18n
+  };
+
+  const goToAdminDashboard = () => {
+    navigate('/admin');  // ✅ Navigate to AdminDashboard route
+  };
+
+  const goToPatientPage = () => {
+    navigate('/patient');  // ✅ Navigate to PatientPage route
+  };
+
   return (
     <>
       <GlobalStyle />
-      {/* Logo positioned directly in the body, without a container */}
-      <img
-        src={logo1}
-        alt="Logo"
-        style={{
-          position: 'fixed',
-          top: '15px',
-          right: '15px',
-          width: '150px', // Adjust the logo size as needed
-          zIndex: '2', // Ensure it stays above other elements
-        }}
-      />
+      {/* Logo clickable to navigate to the start page */}
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+        <img
+          src={logo1}
+          alt="Logo"
+          style={{
+            width: '150px', // Adjust logo size as needed
+          }}
+        />
+      </Link>
       <StartPageContainer>
         <Header>
-          <Title>HealthGraph</Title>
-          <SubTitle>Welcome</SubTitle>
+          <Title>{t('app_title')}</Title>
+          <SubTitle>{t('welcome')}</SubTitle>
         </Header>
 
         <LoginForm>
-          <Label>Username</Label>
-          <Input type="text" placeholder="Enter username" />
-          <Label>Password</Label>
-          <Input type="password" placeholder="Enter password" />
-          <Button>Login</Button>
+          <Label>{t('username')}</Label>
+          <Input type="text" placeholder={t('enter_username')} />
+          <Label>{t('password')}</Label>
+          <Input type="password" placeholder={t('enter_password')} />
+          <Button>{t('login')}</Button>
         </LoginForm>
 
         <LanguageButtons>
-          <LanguageButton>En</LanguageButton>
-          <LanguageButton>Sv</LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
         </LanguageButtons>
+
+        {/* Navigation buttons at the bottom of the page */}
+        <NavigateButton onClick={goToAdminDashboard}>
+          {t('Go to Admin Dashboard')}
+        </NavigateButton>
+        <NavigateButton onClick={goToPatientPage}>
+          {t('Go to Patient Page')}
+        </NavigateButton>
 
         <Footer>
           <p>
-            Forgot your password? <a href="/forgotpassword">Forgot password</a>
+            {t('forgot_password')} <a href="/forgotpassword">{t('forgot_password_link')}</a>
           </p>
         </Footer>
       </StartPageContainer>
