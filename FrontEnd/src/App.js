@@ -4,7 +4,7 @@ import '../src/index.css';
 import StartPage from '../screens/StartPage'; 
 //import StaffDashboard from '../screens/StaffDashboard';
 import AdminDashboard from '../screens/AdminDashboard';
-//import PatientPage from '../screens/PatientPage';
+import PatientPage from '../screens/PatientPage';
 //<Route path="/staff" element={<StaffDashboard />} />
 //<Route path="/admin" element={<AdminDashboard />} />
 //<Route path="/patient" element={<PatientPage />} />
@@ -15,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/admin" element={<AdminDashboard />} /> 
+        <Route path="/patient" element={<PatientPage />} />
       </Routes>
     </Router>
 
