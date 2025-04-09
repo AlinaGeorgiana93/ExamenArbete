@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import patient1 from '../src/patient1.jpg';
-import logo1 from '../src/logo1.png';
+import logo1 from '../src/media/logo1.png';
+import '../language/i18n.js';
+import { useTranslation } from 'react-i18next';
 // Global Style
 const GlobalStyle = createGlobalStyle`
   * {
@@ -155,6 +157,7 @@ const appetiteOptions = [
 ];
 
 const PatientPage = () => {
+  const { t } = useTranslation();
   const [selectedPatientId, setSelectedPatientId] = useState('');
   const [formData, setFormData] = useState({
     mood: '',

@@ -6,7 +6,7 @@ import './src/index.css';
 import StartPage from './screens/StartPage';
 import AdminDashboard from './screens/AdminDashboard';
 // import AboutPage from './screens/AboutPage';
-// import PatientDashboard from './screens/PatientDashboard';
+ import PatientPage from './screens/PatientPage';
 // import StaffDashboard from './screens/StaffDashboard';
 import { store } from './language/store/store';
 import './language/i18n.js';
@@ -25,7 +25,7 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             {/* <Route path="/about" element={<AboutPage />} /> */}
             {/* <Route path="/staff" element={<StaffDashboard />} /> */}
-            {/* <Route path="/patient" element={<PatientDashboard />} /> */}
+          <Route path="/patient" element={<PatientPage />} /> 
           </Route>
         </Routes>
       </Router>

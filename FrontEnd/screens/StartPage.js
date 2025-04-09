@@ -172,6 +172,9 @@ const StartPage = () => {
   const goToAdminDashboard = () => {
     navigate('/admin');  // ✅ Navigate to AdminDashboard route
   };
+  const goToPatientPage = () => {
+    navigate('/patient');  // ✅ Navigate to PatientPage route
+  };
 
 
   return (
@@ -210,6 +213,9 @@ const StartPage = () => {
          {/* Navigation buttons at the bottom of the page */}
       <NavigateButton onClick={goToAdminDashboard}>
       <Label>{t('Go to Admin Dashboard')}</Label>
+      </NavigateButton>
+      <NavigateButton onClick={goToPatientPage}>
+      <Label>{t('Go to Patient Page')}</Label>
       </NavigateButton>
 
         <Footer>

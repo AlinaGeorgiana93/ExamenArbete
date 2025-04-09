@@ -29,6 +29,8 @@
     "delete_staff": "Ta bort användare",
     "view_staff": "Visa användare",
     "staff_details": "Användardetaljer",
-    "Go to Admin Dashboard": "Gå till administratörsöversikt"
+    "Go to Admin Dashboard": "Gå till administratörsöversikt",
+    "Go to Staff Page": "Gå till användaröversikt",
+    "Go to Patient Page": "Gå till patientöversikt"
   }
   

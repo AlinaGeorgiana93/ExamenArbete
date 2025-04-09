@@ -31,7 +31,9 @@
     "delete_staff": "Delete Staff",
     "view_staff": "View Staff",
     "staff_details": "Staff Details",
-    "Go to Admin Dashboard": "Go to Admin Dashboard"
+    "Go to Admin Dashboard": "Go to Admin Dashboard",
+    "Go to Staff Page": "Go to Staff Page",
+    "Go to Patient Page": "Go to Patient Page"
     
     
   }
