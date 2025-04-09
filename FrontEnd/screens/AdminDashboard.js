@@ -1,7 +1,10 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components'; // Correct import
-import logo1 from '../src/logo1.png';
+import logo1 from '../src/media/logo1.png';
 import '../src/index.css'
+import '../language/i18n.js';
+import { useTranslation } from 'react-i18next';
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -50,7 +53,11 @@ const SubTitle = styled.p`
   margin-bottom: 20px;
 `;
 
+
 const AdminDashboard = () => {
+
+    const { t } = useTranslation();
+    
   return (
     <>
       <GlobalStyle />
@@ -69,8 +76,8 @@ const AdminDashboard = () => {
 
       <AdminDashboardContainer>
         <Header>
-          <Title>Admin Dashboard</Title>
-          <SubTitle>Welcome to the Admin Dashboard</SubTitle>
+        <Title>{t('admin')}</Title>
+        <SubTitle>{t('welcome')}</SubTitle>
         </Header>
 
         {/* You can add additional sections or buttons for managing patients, staff, etc. */}

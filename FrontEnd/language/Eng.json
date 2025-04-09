@@ -7,6 +7,32 @@
     "enter_username": "Enter username",
     "enter_password": "Enter password",
     "forgot_password": "Forgot your password?",
-    "forgot_password_link": "Forgot password"
+    "forgot_password_link": "Forgot password",
+    "reset_password": "Reset password",
+    "admin_dashboard": "Admin Dashboard",
+    "staff_dashboard": "User Dashboard",
+    "admin": "Admin",
+    "staff": "Staff",
+    "home": "Home",
+    "about Us": "About Us",
+    "Patient": "Patient",
+    "logout": "Logout",
+    "welcome_to_admin_dashboard": "Welcome to the Admin Dashboard",
+    "patient": "Patient",
+    "patients": "Patients",
+    "add_patient": "Add Patient",
+    "edit_patient": "Edit Patient",
+    "delete_patient": "Delete Patient",
+    "view_patient": "View Patient",
+    "patient_details": "Patient Details",
+    "patient_name": "Patient Name",
+    "add_staff": "Add Staff",
+    "edit_staff": "Edit Staff",
+    "delete_staff": "Delete Staff",
+    "view_staff": "View Staff",
+    "staff_details": "Staff Details",
+    "Go to Admin Dashboard": "Go to Admin Dashboard"
+    
+    
   }
   

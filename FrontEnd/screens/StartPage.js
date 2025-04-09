@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { createGlobalStyle } from 'styled-components'; 
-import logo1 from '../src/logo1.png';
+import logo1 from '../src/media/logo1.png';
 import { useDispatch } from 'react-redux';
 import { setLanguage } from '../language/languageSlice'; 
 import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
 import '../language/i18n.js';
+import { useNavigate } from 'react-router-dom';
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -137,10 +139,28 @@ const LanguageButton = styled.button`
     background-color: #00d4ff;
   }
 `;
+const NavigateButton = styled.button`
+  padding: 12px;
+  background-color: #125358;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  width: 100%;
+
+  &:hover {
+    background-color: #00d4ff;
+  }
+`;
 
 const StartPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const navigate = useNavigate(); 
+
 
   // Define the changeLanguage function here
   const changeLanguage = (lang) => {
@@ -148,6 +168,11 @@ const StartPage = () => {
     const i18n = getI18n();  // Get i18n instance
     i18n.changeLanguage(lang);    // Change language using i18n
   };
+
+  const goToAdminDashboard = () => {
+    navigate('/admin');  // ✅ Navigate to AdminDashboard route
+  };
+
 
   return (
     <>
@@ -181,6 +206,11 @@ const StartPage = () => {
           <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
           <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
         </LanguageButtons>
+
+         {/* Navigation buttons at the bottom of the page */}
+      <NavigateButton onClick={goToAdminDashboard}>
+      <Label>{t('Go to Admin Dashboard')}</Label>
+      </NavigateButton>
 
         <Footer>
           <p>

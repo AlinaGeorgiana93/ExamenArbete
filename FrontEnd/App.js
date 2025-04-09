@@ -1,21 +1,32 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';  // Import the Provider
+import { Provider } from 'react-redux';
 import './src/index.js';
-import './src/index.css'; // Import your CSS file here
-import StartPage from './screens/StartPage'; 
+import './src/index.css';
+import StartPage from './screens/StartPage';
 import AdminDashboard from './screens/AdminDashboard';
-import { store } from './language/store/store';  // Import your Redux store
-import './language/i18n.js'; // this needs to be imported *before* anything else that uses translations
-
+// import AboutPage from './screens/AboutPage';
+// import PatientDashboard from './screens/PatientDashboard';
+// import StaffDashboard from './screens/StaffDashboard';
+import { store } from './language/store/store';
+import './language/i18n.js';
+import Layout from './src/media/Layout.js'; // Layout will wrap all inner pages except StartPage
 
 function App() {
   return (
-    <Provider store={store}>  {/* Wrap the Router with the Redux Provider */}
+    <Provider store={store}>
       <Router>
         <Routes>
+          {/* Standalone StartPage */}
           <Route path="/" element={<StartPage />} />
-          <Route path="/admin" element={<AdminDashboard />} /> 
+
+          {/* All other routes with shared layout */}
+          <Route element={<Layout />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+            {/* <Route path="/about" element={<AboutPage />} /> */}
+            {/* <Route path="/staff" element={<StaffDashboard />} /> */}
+            {/* <Route path="/patient" element={<PatientDashboard />} /> */}
+          </Route>
         </Routes>
       </Router>
     </Provider>
