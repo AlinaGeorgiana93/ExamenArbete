@@ -1,15 +1,12 @@
 import React from 'react';
-import styled, { createGlobalStyle } from 'styled-components'; // Correct import
+import { useTranslation } from 'react-i18next';
+import styled, { createGlobalStyle } from 'styled-components'; 
 import logo1 from '../src/logo1.png';
-import '../src/index.css'
-import { useSelector, useDispatch } from 'react-redux';
-import { setLanguage } from '../language/languageSlice'; // Adjust the import path as necessary
-import { createSlice } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
+import { setLanguage } from '../language/languageSlice'; 
+import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
+import '../language/i18n.js';
 
-
-
-
-// Styled Components
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -18,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); /* More colors in the gradient */
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,7 +78,7 @@ const Input = styled.input`
 
 const Button = styled.button`
   padding: 12px;
-   background-color: #125358;
+  background-color: #125358;
   color: white;
   font-size: 1rem;
   border: none;
@@ -100,7 +97,7 @@ const Footer = styled.footer`
   font-size: 1rem;
 
   p {
-    font-size: 0.9rem; /* Smaller font size for the 'Forgot password?' text */
+    font-size: 0.9rem; 
   }
 
   a {
@@ -112,7 +109,6 @@ const Footer = styled.footer`
     }
   }
 `;
-
 
 const LanguageButtons = styled.div`
   display: flex;
@@ -126,36 +122,36 @@ const LanguageButton = styled.button`
   background-color: #125358;
   color: white;
   border: none;
-  border-radius: 50%; /* Make buttons round */
+  border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin: 0 10px;
-  width: 30px; /* Smaller button size */
-  height: 30px; /* Equal height to width for round shape */
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8rem; /* Smaller font size for the text inside the button */ 
+  font-size: 0.8rem;
 
   &:hover {
     background-color: #00d4ff;
   }
 `;
 
-
 const StartPage = () => {
   const dispatch = useDispatch();
-  const selectedLanguage = useSelector((state) => state.language.language);
+  const { t } = useTranslation();
 
-  const handleLanguageSelect = (lang) => {
-    dispatch(setLanguage(lang));
-    console.log("Selected language:", lang); // For testing
+  // Define the changeLanguage function here
+  const changeLanguage = (lang) => {
+    dispatch(setLanguage(lang));  // Dispatch Redux action
+    const i18n = getI18n();  // Get i18n instance
+    i18n.changeLanguage(lang);    // Change language using i18n
   };
 
   return (
     <>
       <GlobalStyle />
-      {/* Logo positioned directly in the body, without a container */}
       <img
         src={logo1}
         alt="Logo"
@@ -169,26 +165,26 @@ const StartPage = () => {
       />
       <StartPageContainer>
         <Header>
-          <Title>HealthGraph</Title>
-          <SubTitle>Welcome</SubTitle>
+          <Title>{t('app_title')}</Title>
+          <SubTitle>{t('welcome')}</SubTitle>
         </Header>
 
         <LoginForm>
-          <Label>Username</Label>
-          <Input type="text" placeholder="Enter username" />
-          <Label>Password</Label>
-          <Input type="password" placeholder="Enter password" />
-          <Button>Login</Button>
+          <Label>{t('username')}</Label>
+          <Input type="text" placeholder={t('enter_username')} />
+          <Label>{t('password')}</Label>
+          <Input type="password" placeholder={t('enter_password')} />
+          <Button>{t('login')}</Button>
         </LoginForm>
 
         <LanguageButtons>
-          <LanguageButton onClick={() => handleLanguageSelect('en')}>En</LanguageButton>
-          <LanguageButton onClick={() => handleLanguageSelect('sv')}>Sv</LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
         </LanguageButtons>
 
         <Footer>
           <p>
-            Forgot your password? <a href="/forgotpassword">Forgot password</a>
+            {t('forgot_password')} <a href="/forgotpassword">{t('forgot_password_link')}</a>
           </p>
         </Footer>
       </StartPageContainer>
