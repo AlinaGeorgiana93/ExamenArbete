@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import patient1 from '../src/patient1.jpg';
-
+import logo1 from '../src/logo1.png';
+// Global Style
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -9,17 +10,85 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Times New Roman', cursive, sans-serif;
     background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: #000;
+    color: #fff;
   }
 `;
 
-// Simulated list of registered patients
+// Styled Components
+const PageContainer = styled.div`
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: #000;
+`;
+
+const Header = styled.header`
+  text-align: center;
+  margin-bottom: 30px;
+`;
+
+const PatientImage = styled.img`
+  border-radius: 50%;
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+`;
+
+const Title = styled.h2`
+  color: #333;
+  margin-top: 15px;
+`;
+
+const SubTitle = styled.p`
+  color: #666;
+`;
+
+const Label = styled.label`
+  font-size: 1.1rem;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+
+  &:focus {
+    outline: none;
+    border-color: #3B878C;
+  }
+`;
+
+const Button = styled.button`
+  padding: 12px;
+  background-color: #125358;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+
+  &:hover {
+    background-color: #00d4ff;
+  }
+`;
+
+// Patient Options
 const patientOptions = [
   { id: 1, name: 'Madi Alabama', personalNumber: '19560831-1111' },
   { id: 2, name: 'John Doe', personalNumber: '19480516-2222' },
@@ -115,99 +184,57 @@ const PatientPage = () => {
     alert("Patient data saved!");
   };
 
-  const renderDropdown = (label, name, options) => (
-    <div style={{ marginBottom: '20px', textAlign: 'left' }}>
-      <label htmlFor={name} style={{ display: 'block', fontWeight: 'bold', marginBottom: '6px' }}>
-        {label}
-      </label>
-      <select
-        id={name}
-        name={name}
-        value={formData[name]}
-        onChange={handleChange}
-        style={{ width: '100%', padding: '8px', borderRadius: '5px' }}
-      >
+  const renderDropdown = (labelText, name, options) => (
+    <>
+      <Label htmlFor={name}>{labelText}</Label>
+      <Select id={name} name={name} value={formData[name]} onChange={handleChange}>
         <option value="">Select</option>
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
-      </select>
-    </div>
+      </Select>
+    </>
   );
 
   return (
-    <>
-      <GlobalStyle />
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '500px',
-          margin: '40px auto',
-          background: 'rgba(255, 255, 255, 0.95)',
-          padding: '30px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+     <>
+          <GlobalStyle />
+          {/* Logo positioned directly in the body, without a container */}
           <img
-            src={patient1}
-            alt="Patient"
-            style={{ borderRadius: '50%', width: '130px', height: '130px', objectFit: 'cover' }}
-          />
-          <h2 style={{ marginTop: '15px' }}>
-            {selectedPatient ? selectedPatient.name : 'Select a Patient'}
-          </h2>
-          <p>
-            {selectedPatient ? `Personal Number: ${selectedPatient.personalNumber}` : ''}
-          </p>
-        </div>
-
-        <form>
-          <div style={{ marginBottom: '25px', textAlign: 'left' }}>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '6px' }}>
-              Select Patient
-            </label>
-            <select
-              value={selectedPatientId}
-              onChange={handlePatientChange}
-              style={{ width: '100%', padding: '8px', borderRadius: '5px' }}
-            >
-              <option value="">-- Select Patient --</option>
-              {patientOptions.map((patient) => (
-                <option key={patient.id} value={patient.id}>
-                  {patient.name} - {patient.personalNumber}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {renderDropdown('Mood', 'mood', moodOptions)}
-          {renderDropdown('Sleep', 'sleep', sleepOptions)}
-          {renderDropdown('Activity', 'activity', activityOptions)}
-          {renderDropdown('Appetite', 'appetite', appetiteOptions)}
-
-          <button
-            type="button"
-            onClick={handleSave}
+            src={logo1}
+            alt="Logo"
             style={{
-              marginTop: '20px',
-              width: '100%',
-              padding: '10px',
-              backgroundColor: '#00d4ff',
-              border: 'none',
-              borderRadius: '6px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              fontSize: '16px',
+              position: 'fixed',
+              top: '15px',
+              right: '15px',
+              width: '150px', // Adjust the logo size as needed
+              zIndex: '2', // Ensure it stays above other elements
             }}
-          >
-            Save
-          </button>
-        </form>
-      </div>
+          />
+      <PageContainer>
+        <Header>
+          <PatientImage src={patient1} alt="Patient" />
+          {/* <Title>{selectedPatient ? selectedPatient.name : 'Select a Patient'}</Title> */}
+          <SubTitle>{selectedPatient ? `Personal Number: ${selectedPatient.personalNumber}` : ''}</SubTitle>
+        </Header>
+
+        <Label>Select Patient</Label>
+        <Select value={selectedPatientId} onChange={handlePatientChange}>
+          <option value="">-- Select Patient --</option>
+          {patientOptions.map((patient) => (
+            <option key={patient.id} value={patient.id}>
+              {patient.name}
+            </option>
+          ))}
+        </Select>
+
+        {renderDropdown('Mood', 'mood', moodOptions)}
+        {renderDropdown('Sleep', 'sleep', sleepOptions)}
+        {renderDropdown('Activity', 'activity', activityOptions)}
+        {renderDropdown('Appetite', 'appetite', appetiteOptions)}
+
+        <Button onClick={handleSave}>Save</Button>
+      </PageContainer>
     </>
   );
 };
