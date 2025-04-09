@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import patient1 from '../src/patient1.jpg';
 import logo1 from '../src/logo1.png';
+import axios from 'axios';
+
+
 // Global Style
 const GlobalStyle = createGlobalStyle`
   * {
