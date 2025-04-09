@@ -1,18 +1,9 @@
-<<<<<<< HEAD
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import styled, { createGlobalStyle } from 'styled-components'; // Correct import
+import logo1 from '../src/logo1.png';
 import '../src/index.css'
-
-
-
-
-
-
-=======
-import React, { useState } from 'react';
-import { createGlobalStyle } from 'styled-components';
-import patient1 from '../src/patient1.jpg';
+import patient1 from '../src/patient1.jpg'; // Import the patient image
+import { useState } from 'react';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -225,4 +216,4 @@ const PatientPage = () => {
 };
 
 export default PatientPage;
->>>>>>> a1c43f788560da0e9915da6f5ebc2b5b92a4fa1a
+
