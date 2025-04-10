@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { createGlobalStyle } from 'styled-components'; 
 import logo1 from '../src/media/logo1.png';
@@ -7,6 +7,8 @@ import { setLanguage } from '../language/languageSlice';
 import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
 import '../language/i18n.js';
 import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
+import axios from 'axios';  // Import axios for API calls
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -114,7 +116,7 @@ const Footer = styled.footer`
 const LanguageButtons = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 5px;
 `;
 
 const LanguageButton = styled.button`
@@ -160,7 +162,55 @@ const StartPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const navigate = useNavigate(); 
-
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  
+  const handleLogin = async () => {
+    const loginData = {
+      userNameOrEmail: username,  // Use state values
+      password: password,
+    };
+  
+    console.log('Sending login data:', loginData);  // Log to check the sent data
+  
+    try {
+      const response = await axios.post(
+        'https://localhost:7066/api/Guest/LoginUser',
+        loginData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        }
+      );
+  
+      // Handle success response
+      console.log('Login successful:', response.data);  // Full response
+  
+      // Save token to localStorage
+      localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+  
+      // Check the role and navigate accordingly
+      const role = response.data.item.userRole;  // Change 'role' to 'userRole'
+      console.log('Role from response:', role);  // Log the role for debugging
+  
+      if (role === 'sysadmin') {
+        localStorage.setItem('role', 'sysadmin');
+        navigate('/admin');  // Navigate to the admin page
+      } else if (role === 'staff') {
+        localStorage.setItem('role', 'staff');
+        navigate('/staff');  // Navigate to the staff page
+      } else {
+        alert('Access Denied: Invalid role.');
+      }
+    } catch (error) {
+      console.error('Login failed:', error.response?.data || error.message);
+      alert('Login failed: Check your credentials or backend connection.');
+    }
+  };
+  
   // Define the changeLanguage function here
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));  // Dispatch Redux action
@@ -175,6 +225,9 @@ const StartPage = () => {
   const goToPatientPage = () => {
     navigate('/patient');  // ✅ Navigate to PatientPage route
   };
+  const goToStaffPage = () => {
+    navigate('/staff');  // ✅ Navigate to StaffPage route
+  }
 
   return (
     <>
@@ -196,12 +249,27 @@ const StartPage = () => {
         </Header>
 
         <LoginForm>
-          <Label>{t('username')}</Label>
-          <Input type="text" placeholder={t('enter_username')} />
-          <Label>{t('password')}</Label>
-          <Input type="password" placeholder={t('enter_password')} />
-          <Button>{t('login')}</Button>
-        </LoginForm>
+  <Label>{t('username')}</Label>
+  <Input
+    type="text"
+    placeholder={t('enter_username')}
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+  />
+
+  <Label>{t('password')}</Label>
+  <Input
+    type="password"
+    placeholder={t('enter_password')}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
+
+  {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+
+  <Button onClick={handleLogin}>{t('login')}</Button>
+</LoginForm>
+
 
         <LanguageButtons>
           <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
@@ -214,6 +282,9 @@ const StartPage = () => {
         </NavigateButton>
         <NavigateButton onClick={goToPatientPage}>
           {t('Go to Patient Page')}
+        </NavigateButton>
+        <NavigateButton onClick={goToStaffPage}>
+          {t('Go to Staff Page')}
         </NavigateButton>
 
         <Footer>
