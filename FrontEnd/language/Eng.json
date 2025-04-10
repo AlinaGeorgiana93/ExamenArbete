@@ -53,8 +53,17 @@
     "patient_data_saved": "Patient data saved successfully.",
     "save": "Save",
     "cancel": "Cancel",
-    "delete": "Delete"
-  
+    "delete": "Delete",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "actions": "Actions",
+    "edit": "Edit",
+    "add": "Add",
+    "update": "Update",
+    "add_entry": "Add Entry",
+    "edit_entry": "Edit Entry"
+    
+    
 
 
     

@@ -44,9 +44,7 @@ namespace AppWebApi.Controllers
         }
 
 
-        [HttpPost]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<LoginUserSessionDto>))]
-        [ProducesResponseType(400, Type = typeof(string))]
+       
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<LoginUserSessionDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -60,13 +58,13 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"Attempting login with Username or Email: {userCreds.UserNameOrEmail} and Password: {userCreds.Password}");
 
                 // Validate credentials
-                if (string.IsNullOrEmpty(userCreds.UserNameOrEmail) || string.IsNullOrEmpty(userCreds.Password))
+               if (string.IsNullOrEmpty(userCreds.UserNameOrEmail) || string.IsNullOrEmpty(userCreds.Password))
                 {
                     _logger.LogWarning("Login credentials are empty or null.");
                     return BadRequest("Username or Password cannot be null or empty.");
                 }
 
-                // Regex checks for username/email and password format
+                            // Regex checks for username/email and password format
                 var pSimple = @"^([a-z]|[A-Z]|[0-9]){4,12}$";
                 var pEmail = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
                 var pUNoE = @$"({pSimple})|({pEmail})";

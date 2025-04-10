@@ -152,7 +152,7 @@ const StaffPage = () => {
 
   useEffect(() => {
     // Hämta patienter från backend (API)
-    axios.get('https://localhost:7066/api/patients')  // Backend API URL (med HTTPS)
+    axios.get('https://localhost:7066/api/Patient')  // Backend API URL (med HTTPS)
       .then(response => {
         setPatients(response.data);  // Sätt data från API i state
       })

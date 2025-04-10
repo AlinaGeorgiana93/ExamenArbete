@@ -52,6 +52,15 @@
     "patient_data_saved": "Patientdata har sparats.",
     "save": "Spara",
     "cancel": "Avbryt",
-    "delete": "Ta bort"
+    "delete": "Ta bort",
+    "first_name": "Förnamn",
+    "last_name": "Efternamn",
+    "actions": "Åtgärder",
+    "edit": "Redigera",
+    "view": "Visa",
+    "update": "Uppdatera",
+    "add_entry": "Lägg till ",
+    "edit_entry": "Redigera "
+   
   }
   
