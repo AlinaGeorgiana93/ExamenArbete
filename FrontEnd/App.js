@@ -23,8 +23,8 @@ function App() {
 
           {/* Alla andra sidor inuti Layout */}
           <Route element={<Layout />}>
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/staff" element={<StaffPage />} />
+            <Route path="/admin"   element={<AdminDashboard />} />
+            <Route path="/staff"   element={<StaffPage />} />
             <Route path="/patient" element={<PatientPage />} />
           </Route>
         </Routes>
