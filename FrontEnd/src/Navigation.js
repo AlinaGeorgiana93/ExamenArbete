@@ -54,7 +54,7 @@ const Navigation = () => {
       <NavLinks>
         <StyledLink to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink> {/* Adjusted icon size */}
         <StyledLink to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> {/* Adjusted icon size */}
-        <StyledLink to="/staff"><FaUserNurse size={18} />  {t('staff')}</StyledLink> {/* Adjusted icon size */}
+        <StyledLink to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink> {/* Adjusted icon size */}
         <StyledLink to="/patient"><FaUserInjured size={18} /> {t('patient')}</StyledLink> {/* Adjusted icon size */}
       </NavLinks>
     </Nav>
