@@ -114,7 +114,7 @@ const Footer = styled.footer`
 const LanguageButtons = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 5px;
 `;
 
 const LanguageButton = styled.button`
@@ -175,6 +175,9 @@ const StartPage = () => {
   const goToPatientPage = () => {
     navigate('/patient');  // ✅ Navigate to PatientPage route
   };
+  const goToStaffPage = () => {
+    navigate('/staff');  // ✅ Navigate to StaffPage route
+  }
 
   return (
     <>
@@ -214,6 +217,9 @@ const StartPage = () => {
         </NavigateButton>
         <NavigateButton onClick={goToPatientPage}>
           {t('Go to Patient Page')}
+        </NavigateButton>
+        <NavigateButton onClick={goToStaffPage}>
+          {t('Go to Staff Page')}
         </NavigateButton>
 
         <Footer>

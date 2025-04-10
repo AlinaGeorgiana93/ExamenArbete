@@ -24,7 +24,7 @@ const NavLinks = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  color:  #125358;
+   color: white;
   text-decoration: none;
   font-weight: bold;
   display: flex;
@@ -52,10 +52,10 @@ const Navigation = () => {
     <Nav>
       <StyledHomeLink to="/"><FaHome size={18} /> {t('home')}</StyledHomeLink> {/* Adjusted icon size */}
       <NavLinks>
-        <StyledLink to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink> {/* Adjusted icon size */}
-        <StyledLink to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> {/* Adjusted icon size */}
+       {/*  <StyledLink to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> {/* Adjusted icon size */}
         <StyledLink to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink> {/* Adjusted icon size */}
         <StyledLink to="/patient"><FaUserInjured size={18} /> {t('patient')}</StyledLink> {/* Adjusted icon size */}
+        <StyledLink to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink> {/* Adjusted icon size */}
       </NavLinks>
     </Nav>
   );

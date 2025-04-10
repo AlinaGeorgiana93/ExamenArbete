@@ -31,6 +31,27 @@
     "staff_details": "Användar detaljer",
     "Go to Admin Dashboard": "Gå till administratörs översikt",
     "Go to Staff Page": "Gå till användar översikt",
-    "Go to Patient Page": "Gå till patient översikt"
+    "Go to Patient Page": "Gå till patient översikt",
+    "staff_name": "Användar översikt",
+    "staff_select": "Välj användare",
+    "patient_select": "Välj patient",
+    "choose_patient": "Välj patient",
+    "choose_staff": "Välj användare",
+    "about-us": "Om oss",
+    "mood": "Mood",
+    "mood_select": "Välj Mood",
+    "activity": "Aktivitet",
+    "activity_select": "Välj aktivitet",
+    "sleep": "Sömn",
+    "sleep_select": "Välj sömn",
+    "appetite": "Appetit",
+    "appetite_select": "Välj aptit",
+    "select_patient": "Välj patient",
+    "select_patient_placeholder": "-- Välj patient --",
+    "personal_number": "Personnummer",
+    "patient_data_saved": "Patientdata har sparats.",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "delete": "Ta bort"
   }
   

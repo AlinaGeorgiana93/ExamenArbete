@@ -5,6 +5,9 @@ import logo1 from '../src/media/logo1.png';
 import '../language/i18n.js';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
+import { useDispatch } from 'react-redux';
+import { setLanguage } from '../language/languageSlice'; 
+import { getI18n } from 'react-i18next'; 
 // Global Style
 const GlobalStyle = createGlobalStyle`
   * {
@@ -157,10 +160,11 @@ const appetiteOptions = [
   { value: 1, label: "Didn't eat at all 🤢" },
   { value: 0, label: "Couldn't eat at all 🤮" },
 ];
-
 const PatientPage = () => {
   const { t } = useTranslation();
   const [selectedPatientId, setSelectedPatientId] = useState('');
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     mood: '',
     sleep: '',
@@ -186,14 +190,14 @@ const PatientPage = () => {
       patient: selectedPatient,
       ...formData,
     });
-    alert("Patient data saved!");
+    alert(t('patient_data_saved'));
   };
 
-  const renderDropdown = (labelText, name, options) => (
+  const renderDropdown = (labelKey, name, options) => (
     <>
-      <Label htmlFor={name}>{labelText}</Label>
+      <Label htmlFor={name}>{t(labelKey)}</Label>
       <Select id={name} name={name} value={formData[name]} onChange={handleChange}>
-        <option value="">Select</option>
+        <option value="">{t('select')}</option>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
@@ -202,28 +206,23 @@ const PatientPage = () => {
   );
 
   return (
-     <>
-        <GlobalStyle />
-             {/* Logo clickable to navigate to the start page */}
-             <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-               <img
-                 src={logo1}
-                 alt="Logo"
-                 style={{
-                   width: '150px', // Adjust logo size as needed
-                 }}
-               />
-             </Link>
+    <>
+      <GlobalStyle />
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
+      </Link>
+
       <PageContainer>
         <Header>
           <PatientImage src={patient1} alt="Patient" />
-          {/* <Title>{selectedPatient ? selectedPatient.name : 'Select a Patient'}</Title> */}
-          <SubTitle>{selectedPatient ? `Personal Number: ${selectedPatient.personalNumber}` : ''}</SubTitle>
+          <SubTitle>
+            {selectedPatient ? `${t('personal_number')}: ${selectedPatient.personalNumber}` : ''}
+          </SubTitle>
         </Header>
 
-        <Label>Select Patient</Label>
+        <Label>{t('select_patient')}</Label>
         <Select value={selectedPatientId} onChange={handlePatientChange}>
-          <option value="">-- Select Patient --</option>
+          <option value="">{t('select_patient_placeholder')}</option>
           {patientOptions.map((patient) => (
             <option key={patient.id} value={patient.id}>
               {patient.name}
@@ -231,16 +230,17 @@ const PatientPage = () => {
           ))}
         </Select>
 
-        {renderDropdown('Mood', 'mood', moodOptions)}
-        {renderDropdown('Sleep', 'sleep', sleepOptions)}
-        {renderDropdown('Activity', 'activity', activityOptions)}
-        {renderDropdown('Appetite', 'appetite', appetiteOptions)}
+        {renderDropdown('mood', 'mood', moodOptions)}
+        {renderDropdown('sleep', 'sleep', sleepOptions)}
+        {renderDropdown('activity', 'activity', activityOptions)}
+        {renderDropdown('appetite', 'appetite', appetiteOptions)}
 
-        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={handleSave}>{t('save')}</Button>
       </PageContainer>
     </>
   );
 };
 
 export default PatientPage;
+
 

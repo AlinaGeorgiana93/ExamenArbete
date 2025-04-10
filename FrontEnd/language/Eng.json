@@ -30,10 +30,33 @@
     "edit_staff": "Edit Staff",
     "delete_staff": "Delete Staff",
     "view_staff": "View Staff",
-    "staff_details": "Staff Details",
     "Go to Admin Dashboard": "Go to Admin Dashboard",
     "Go to Staff Page": "Go to Staff Page",
-    "Go to Patient Page": "Go to Patient Page"
+    "Go to Patient Page": "Go to Patient Page",
+    "staff_name": "Staff Dashboard",
+    "staff_details": "Staff Details",
+    "patient_select": "Select Patient",
+    "staff_select": "Select Staff",
+    "choose_patient": "Choose Patient",
+    "about-us": "About Us",
+    "mood"  : "Mood",
+    "mood_select": "Select Mood",
+    "activity": "Activity",
+    "activity_select": "Select Activity",
+    "sleep": "Sleep",
+    "sleep_select": "Select Sleep",
+    "appetite": "Appetite",
+    "appetite_select": "Select Appetite",
+    "select_patient": "Select Patient",
+    "select_patient_placeholder": "-- Select Patient --",
+    "personal_number": "Personal Number",
+    "patient_data_saved": "Patient data saved successfully.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  
+
+
     
     
   }
