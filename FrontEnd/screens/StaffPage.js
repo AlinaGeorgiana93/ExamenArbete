@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { createGlobalStyle } from 'styled-components';
+import axios from 'axios';  // Import axios for API calls
+import { useEffect } from 'react';  // Import useEffect for side effects
+import '../language/i18n.js';
 
 const StaffPageContainer = styled.div`
   background-color: #fff;
@@ -48,41 +50,41 @@ const AboutButton = styled.a`
 `;
 
 const StaffPage = () => {
-    const [patients, setPatients] = useState([]);  // Här sparas patientdata
-    const [selectedPatient, setSelectedPatient] = useState('');
+  const [patients, setPatients] = useState([]);  // Här sparas patientdata
+  const [selectedPatient, setSelectedPatient] = useState('');
 
-    useEffect(() => {
-        // Hämta patienter från backend (API)
-        axios.get('https://localhost:7066/api/patients')  // Backend API URL (med HTTPS)
-            .then(response => {
-                setPatients(response.data);  // Sätt data från API i state
-            })
-            .catch(error => {
-                console.error("Error fetching patients:", error);
-            });
-    }, []);  // Tom array så den bara körs en gång när komponenten laddas
+  useEffect(() => {
+    // Hämta patienter från backend (API)
+    axios.get('https://localhost:7066/api/patients')  // Backend API URL (med HTTPS)
+      .then(response => {
+        setPatients(response.data);  // Sätt data från API i state
+      })
+      .catch(error => {
+        console.error("Error fetching patients:", error);
+      });
+  }, []);  // Tom array så den bara körs en gång när komponenten laddas
 
-    return (
-        <StaffPageContainer>
-            <Title>Staff Dashboard</Title>
+  return (
+    <StaffPageContainer>
+      <Title>Staff Dashboard</Title>
 
-            <label htmlFor="patient-select">Select Patient:</label>
-            <Dropdown
-                id="patient-select"
-                value={selectedPatient}
-                onChange={(e) => setSelectedPatient(e.target.value)}
-            >
-                <option value="">-- Choose a patient --</option>
-                {patients.map((patient) => (
-                    <option key={patient._id} value={patient._id}>
-                        {patient.firstName} {patient.lastName} {/* Här visas både förnamn och efternamn */}
-                    </option>
-                ))}
-            </Dropdown>
+      <label htmlFor="patient-select">Select Patient:</label>
+      <Dropdown
+        id="patient-select"
+        value={selectedPatient}
+        onChange={(e) => setSelectedPatient(e.target.value)}
+      >
+        <option value="">-- Choose a patient --</option>
+        {patients.map((patient) => (
+          <option key={patient._id} value={patient._id}>
+            {patient.firstName} {patient.lastName} {/* Här visas både förnamn och efternamn */}
+          </option>
+        ))}
+      </Dropdown>
 
-            <AboutButton href="/about">About Us</AboutButton>
-        </StaffPageContainer>
-    );
+      <AboutButton href="/about">About Us</AboutButton>
+    </StaffPageContainer>
+  );
 };
 
 export default StaffPage;
