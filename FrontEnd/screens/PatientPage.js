@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import axios from "axios";
+import { useTranslation } from 'react-i18next';
 import styled, { createGlobalStyle } from 'styled-components';
 import patient1 from '../src/media/patient1.jpg';
-import logo1 from '../src/media/logo1.png';
-import '../language/i18n.js';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
-import { useDispatch } from 'react-redux';
-import { setLanguage } from '../language/languageSlice'; 
-import { getI18n } from 'react-i18next'; 
-// Global Style
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -17,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,7 +23,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-// Styled Components
 const PageContainer = styled.div`
   background-color: #fff;
   padding: 40px;
@@ -48,15 +43,6 @@ const PatientImage = styled.img`
   width: 130px;
   height: 130px;
   object-fit: cover;
-`;
-
-const Title = styled.h2`
-  color: #333;
-  margin-top: 15px;
-`;
-
-const SubTitle = styled.p`
-  color: #666;
 `;
 
 const Label = styled.label`
@@ -95,152 +81,150 @@ const Button = styled.button`
   }
 `;
 
-// Patient Options
-const patientOptions = [
-  { id: 1, name: 'Madi Alabama', personalNumber: '19560831-1111' },
-  { id: 2, name: 'John Doe', personalNumber: '19480516-2222' },
-  { id: 3, name: 'Jane Smith', personalNumber: '19610228-1212' },
-  { id: 4, name: 'Alice Johnson', personalNumber: '19450801-4444' },
-  { id: 5, name: 'Bob Brown', personalNumber: '19501110-1331' },
-  { id: 6, name: 'Charlie Davis', personalNumber: '19511231-16181' },
-];
-
-const moodOptions = [
-  { value: 10, label: 'Very happy 😃' },
-  { value: 9, label: 'Excited 🤩' },
-  { value: 8, label: 'Good mood 😄' },
-  { value: 7, label: 'Lovely 😍' },
-  { value: 6, label: 'Slightly positive 🙂' },
-  { value: 5, label: 'Neutral 😐' },
-  { value: 4, label: 'Bored 😒' },
-  { value: 3, label: 'Angry 😡' },
-  { value: 2, label: 'Very sad 🙁' },
-  { value: 1, label: 'Depressed 😢' },
-  { value: 0, label: 'Extremely low 😭' },
-];
-
-const sleepOptions = [
-  { value: 10, label: 'Too much sleep 😃' },
-  { value: 9, label: 'Slept more than usual' },
-  { value: 8, label: 'OK sleep level 🙂' },
-  { value: 7, label: 'Decent sleep' },
-  { value: 6, label: 'Medium sleep level 😐' },
-  { value: 5, label: 'Low sleep level 🙁' },
-  { value: 4, label: 'Poor sleep' },
-  { value: 3, label: 'Interrupted sleep' },
-  { value: 2, label: 'Very low sleep' },
-  { value: 1, label: 'Barely slept' },
-  { value: 0, label: 'No sleep at all 🫠' },
-];
-
-const activityOptions = [
-  { value: 10, label: 'Very intense (Jogging) 🏃‍♂️' },
-  { value: 9, label: 'Intense exercise (Training) 🏋️‍♂️' },
-  { value: 8, label: 'Active day' },
-  { value: 7, label: 'Moderate exercise (Swimming) 🏊‍♂️' },
-  { value: 6, label: 'Light exercise' },
-  { value: 5, label: 'Normal movement (Walking) 🚶‍♂️' },
-  { value: 4, label: 'Light chores' },
-  { value: 3, label: 'Light activity (Reading) 📖' },
-  { value: 2, label: 'Minimal movement' },
-  { value: 1, label: 'Resting' },
-  { value: 0, label: 'Completely inactive 🛌' },
-];
-
-const appetiteOptions = [
-  { value: 10, label: 'Very much 🍴' },
-  { value: 9, label: 'Large meal' },
-  { value: 8, label: 'Ate quite a lot' },
-  { value: 7, label: 'Medium 😋' },
-  { value: 6, label: 'Slightly more than usual' },
-  { value: 5, label: 'Normal appetite 🙂' },
-  { value: 4, label: 'Small portion' },
-  { value: 3, label: 'Very little 🍽️' },
-  { value: 2, label: 'Ate a bite or two' },
-  { value: 1, label: "Didn't eat at all 🤢" },
-  { value: 0, label: "Couldn't eat at all 🤮" },
-];
 const PatientPage = () => {
   const { t } = useTranslation();
-  const [selectedPatientId, setSelectedPatientId] = useState('');
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
 
   const [formData, setFormData] = useState({
-    mood: '',
-    sleep: '',
-    activity: '',
-    appetite: '',
+    patientId: '',
+    graphId: '',
+    graph: '',
+    appetites: '',
+    moods: '',
+    activities: '',
+    sleeps: '',
+    firstName: '',
+    lastName: '',
+    personalNumber: '',
   });
 
-  const selectedPatient = patientOptions.find(p => p.id.toString() === selectedPatientId);
+  const [loading, setLoading] = useState(true);
 
-  const handlePatientChange = (e) => {
-    setSelectedPatientId(e.target.value);
-  };
+  useEffect(() => {
+    if (!id) return;
 
-  const handleChange = (e) => {
+    const fetchData = async () => {
+      try {
+        const [patientRes, moodRes, sleepRes, activityRes, appetiteRes] = await Promise.all([
+          axios.get(`/api/patient?id=${id}`),
+          axios.get(`/api/Mood?patientId=${id}`),
+          axios.get(`/api/Sleep?patientId=${id}`),
+          axios.get(`/api/Activity?patientId=${id}`),
+          axios.get(`/api/Appetite?patientId=${id}`),
+        ]);
+
+        const patient = patientRes.data.item;
+        const latestMood = moodRes.data.at(-1)?.value || '';
+        const latestSleep = sleepRes.data.at(-1)?.value || '';
+        const latestActivity = activityRes.data.at(-1)?.value || '';
+        const latestAppetite = appetiteRes.data.at(-1)?.value || '';
+
+        setFormData({
+          patientId: patient.patientId,
+          graphId: patient.graphId,
+          graph: patient.graph,
+          firstName: patient.firstName,
+          lastName: patient.lastName,
+          personalNumber: patient.personalNumber,
+          moods: latestMood,
+          sleeps: latestSleep,
+          activities: latestActivity,
+          appetites: latestAppetite,
+        });
+      } catch (err) {
+        console.error("Failed to fetch data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  const handleChange = (field) => (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [field]: e.target.value
     }));
   };
 
-  const handleSave = () => {
-    console.log("Saved Data:", {
-      patient: selectedPatient,
-      ...formData,
-    });
-    alert(t('patient_data_saved'));
+  const handleSave = async () => {
+    const { patientId, moods, sleeps, activities, appetites } = formData;
+
+    if (!patientId || !moods || !sleeps || !activities || !appetites) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    try {
+      await axios.post('/api/saveData', {
+        patientId,
+        moods,
+        sleeps,
+        activities,
+        appetites
+      });
+
+      alert("Patient data saved successfully!");
+    } catch (error) {
+      console.error("Error saving data", error);
+      alert("Failed to save data.");
+    }
   };
 
-  const renderDropdown = (labelKey, name, options) => (
-    <>
-      <Label htmlFor={name}>{t(labelKey)}</Label>
-      <Select id={name} name={name} value={formData[name]} onChange={handleChange}>
-        <option value="">{t('select')}</option>
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>{opt.label}</option>
-        ))}
-      </Select>
-    </>
-  );
+  if (loading) return <div>Loading patient data...</div>;
 
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
-      </Link>
-
       <PageContainer>
         <Header>
           <PatientImage src={patient1} alt="Patient" />
-          <SubTitle>
-            {selectedPatient ? `${t('personal_number')}: ${selectedPatient.personalNumber}` : ''}
-          </SubTitle>
+          <h2>
+            {formData.firstName} {formData.lastName}
+          </h2>
         </Header>
 
-        <Label>{t('select_patient')}</Label>
-        <Select value={selectedPatientId} onChange={handlePatientChange}>
-          <option value="">{t('select_patient_placeholder')}</option>
-          {patientOptions.map((patient) => (
-            <option key={patient.id} value={patient.id}>
-              {patient.name}
-            </option>
+        <Label>Mood</Label>
+        <Select value={formData.moods} onChange={handleChange("moods")}>
+          <option value="">Select Mood</option>
+          {Array.from({ length: 11 }, (_, i) => (
+            <option key={i} value={i}>{i}</option>
           ))}
         </Select>
 
-        {renderDropdown('mood', 'mood', moodOptions)}
-        {renderDropdown('sleep', 'sleep', sleepOptions)}
-        {renderDropdown('activity', 'activity', activityOptions)}
-        {renderDropdown('appetite', 'appetite', appetiteOptions)}
+        <Label>Sleep</Label>
+        <Select value={formData.sleeps} onChange={handleChange("sleeps")}>
+          <option value="">Select Sleep</option>
+          {Array.from({ length: 11 }, (_, i) => (
+            <option key={i} value={i}>{i}</option>
+          ))}
+        </Select>
 
-        <Button onClick={handleSave}>{t('save')}</Button>
+        <Label>Activity</Label>
+        <Select value={formData.activities} onChange={handleChange("activities")}>
+          <option value="">Select Activity</option>
+          {Array.from({ length: 11 }, (_, i) => (
+            <option key={i} value={i}>{i}</option>
+          ))}
+        </Select>
+
+        <Label>Appetite</Label>
+        <Select value={formData.appetites} onChange={handleChange("appetites")}>
+          <option value="">Select Appetite</option>
+          {Array.from({ length: 11 }, (_, i) => (
+            <option key={i} value={i}>{i}</option>
+          ))}
+        </Select>
+
+        <Button onClick={handleSave}>Save</Button>
+
+        <br /><br />
+        <Link to="/">← Back to Home</Link>
       </PageContainer>
     </>
   );
 };
 
 export default PatientPage;
-
-
