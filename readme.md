@@ -5,3 +5,10 @@ npm install i18next react-i18next @reduxjs/toolkit react-icons
 npm install axios
 --------------------------
 To merge main in your branch: git pull origin main
+--------------------------
+Step by step cleaning dashboard, browser and rebuild:
+dotnet clean
+dotnet nuget locals all --clear
+dotnet restore
+dotnet build 
+browser: delete browsing data 
