@@ -95,14 +95,15 @@ const ButtonDelete = styled(Button)`
   }
 `;
 
-const CancelButton = styled(Button)`
-  background: #e4e4e4;
+const CloseButton = styled.button`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
   color: #333;
-  width: 100%;
-  margin-top: 15px;
-  &:hover {
-    background: #ddd;
-  }
 `;
 
 const InputGroup = styled.div`
@@ -136,19 +137,19 @@ const InputGroup = styled.div`
 
 
 
-const PatientDetailsModal = ({ patientMember, onClose, onEdit, onDelete }) => {
-    if (!patientMember) return null; // Don't render if no staff member is selected
+const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
+    if (!staffMember) return null; // Don't render if no staff member is selected
   
-    const [firstName, setFirstName] = useState(patientMember.firstName);
-    const [lastName, setLastName] = useState(patientMember.lastName);
-    const [personalNumber, setPersonalNumber] = useState(patientMember.personalNumber);
+    const [firstName, setFirstName] = useState(staffMember.firstName);
+    const [lastName, setLastName] = useState(staffMember.lastName);
+    const [personalNumber, setPersonalNumber] = useState(staffMember.personalNumber);
   
     const handleUpdate = () => {
-      onEdit({ ...patientMember, firstName, lastName, personalNumber });
+      onEdit({ ...staffMember, firstName, lastName, personalNumber });
     };
   
     const handleDelete = () => {
-      onDelete(patientMember.staffId);
+      onDelete(staffMember.staffId);
     };
   
     return (
@@ -187,9 +188,11 @@ const PatientDetailsModal = ({ patientMember, onClose, onEdit, onDelete }) => {
         {/* Buttons */}
         <Button onClick={handleUpdate}>Update</Button>
         <ButtonDelete onClick={handleDelete}>Delete</ButtonDelete>
-        <CancelButton onClick={onClose}>Cancel</CancelButton>
+        <CloseButton onClick={onClose} aria-label="Close modal">
+          &times;
+        </CloseButton>
       </ModalContent>
     </ModalContainer>
     );
   };
-  export default PatientDetailsModal;
+  export default DetailsModal;
