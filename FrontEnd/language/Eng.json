@@ -61,7 +61,14 @@
     "add": "Add",
     "update": "Update",
     "add_entry": "Add Entry",
-    "edit_entry": "Edit Entry"
+    "edit_entry": "Edit Entry",
+    "delete_entry": "Delete Entry",
+    "login_success": "Login successful.",
+    "login-fail": "Login failed. Please check your username and password.",
+    "logout_success": "Logout successful.",
+    "select_staff": "Select Staff",
+    "select_person": "Select Person",
+    "login_failed": "Login failed. Please check your username and password."
     
     
 
