@@ -8,6 +8,8 @@ import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
 import '../language/i18n.js';
 import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
 import axios from 'axios';  // Import axios for API calls
+import axiosInstance from '../src/axiosInstance.js'; // ✅ ADD THIS
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -130,29 +132,25 @@ const StartPage = () => {
   const [loginError, setLoginError] = useState('');
 
   const handleLogin = async () => {
-    const loginData = {
-      userNameOrEmail: username,
-      password: password,
-    };
-
     try {
-      const response = await axios.post(
-        'https://localhost:7066/api/Guest/LoginUser',
-        loginData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        }
-      );
-
-      // Save token to localStorage
+      const loginData = {
+        userNameOrEmail: username,
+        password: password,
+      };
+  
+      console.log('Sending login data:', loginData);
+  
+      const response = await axiosInstance.post('/Guest/LoginUser', loginData);
+  
+      console.log('Login successful:', response.data);
+  
       localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+      console.log('JWT Token stored in localStorage:', localStorage.getItem('jwtToken'));
 
-      // Check the role and navigate accordingly
+  
       const role = response.data.item.userRole;
-
+      console.log('Role from response:', role);
+  
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
         navigate('/admin');
@@ -162,18 +160,44 @@ const StartPage = () => {
       } else {
         alert('Access Denied: Invalid role.');
       }
+  
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
-      alert('Login failed: Check your credentials or backend connection.');
+      setLoginError('Login failed: Check your credentials or backend connection.');
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleLogin();
+  };
+  
+  <Input
+    type="password"
+    placeholder={t('enter_password')}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    onKeyDown={handleKeyDown}
+  />
+
+  
+  // Define the changeLanguage function here
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));
     const i18n = getI18n();
     i18n.changeLanguage(lang);
   };
 
+  const goToAdminDashboard = () => {
+    navigate('/admin');  // ✅ Navigate to AdminDashboard route
+  };
+
+  const goToPatientPage = () => {
+    navigate('/patient');  // ✅ Navigate to PatientPage route
+  };
+  const goToStaffPage = () => {
+    navigate('/staff');  // ✅ Navigate to StaffPage route
+  }
+  
   return (
     <>
       <GlobalStyle />
@@ -209,8 +233,11 @@ const StartPage = () => {
 
           {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
-          <Button onClick={handleLogin}>{t('login')}</Button>
-        </LoginForm>
+  <Button onClick={handleLogin} disabled={!username || !password}>
+  {t('login')}
+  </Button>
+
+  </LoginForm>
 
         <LanguageButtons>
           <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
