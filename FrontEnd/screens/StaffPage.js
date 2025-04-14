@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import axios from 'axios';  // Import axios for API calls
-import { useEffect } from 'react';  // Import useEffect for side effects
-import '../language/i18n.js';
-import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
+import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom'; // ← useNavigate tillagd
 import logo1 from '../src/media/logo1.png';
-import { useDispatch } from 'react-redux';
-import { setLanguage } from '../language/languageSlice'; 
-import { getI18n } from 'react-i18next'; 
-
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -30,7 +24,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const StaffPageContainer = styled.div`
-   background-color: #fff;
+  background-color: #fff;
   padding: 40px;
   border-radius: 8px;
   width: 100%;
@@ -40,78 +34,10 @@ const StaffPageContainer = styled.div`
   z-index: 1;
 `;
 
-const Header = styled.header`
-  text-align: center;
-  margin-bottom: 30px;
-`;
-
 const Title = styled.h1`
   color: #333;
   font-size: 2rem;
   margin-bottom: 10px;
-`;
-
-const SubTitle = styled.p`
-  font-size: 1.2rem;
-  color: #888;
-  margin-bottom: 20px;
-`;
-
-const LoginForm = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-`;
-
-const Input = styled.input`
-  padding: 12px;
-  font-size: 1rem;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-
-  &:focus {
-    outline: none;
-    border-color: #3B878C;
-  }
-`;
-
-const Button = styled.button`
-  padding: 12px;
-  background-color: #125358;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #00d4ff;
-  }
-`;
-
-const Footer = styled.footer`
-  text-align: center;
-  margin-top: 20px;
-  font-size: 1rem;
-
-  p {
-    font-size: 0.9rem; 
-  }
-
-  a {
-    color: #081630;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 `;
 
 const Dropdown = styled.select`
@@ -144,57 +70,62 @@ const AboutButton = styled.a`
 `;
 
 const StaffPage = () => {
-  const [patients, setPatients] = useState([]);  // Här sparas patientdata
+  const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState('');
-  const dispatch = useDispatch();
   const { t } = useTranslation();
-  
+  const navigate = useNavigate(); // ← Navigation-funktion
 
   useEffect(() => {
-    // Hämta patienter från backend (API)
-    axios.get('https://localhost:7066/api/Patient')  // Backend API URL (med HTTPS)
+    axios.get('https://localhost:7066/api/Patient/ReadItems')
       .then(response => {
-        setPatients(response.data);  // Sätt data från API i state
+        if (response.data && response.data.pageItems) {
+          setPatients(response.data.pageItems);
+        }
       })
       .catch(error => {
         console.error("Error fetching patients:", error);
       });
-  }, []);  // Tom array så den bara körs en gång när komponenten laddas
+  }, []);
+
+  // Funktion för att hantera val av patient
+  const handlePatientSelect = (e) => {
+    const patientId = e.target.value;
+    setSelectedPatient(patientId);
+    if (patientId) {
+      navigate(`/patient/${patientId}`); // Skicka till patientsidan
+    }
+  };
 
   return (
- <>
+    <>
       <GlobalStyle />
-      {/* Logo clickable to navigate to the start page */}
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-        <img
-          src={logo1}
-          alt="Logo"
-          style={{
-            width: '150px', // Adjust logo size as needed
-          }}
-        />
+        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
 
       <StaffPageContainer>
-  <Title>{t('staff_name')}</Title>
+        <Title>{t('staff_name')}</Title>
 
-  <label htmlFor="patient-select">{t('select_patient')}</label>
-  <Dropdown
-    id="patient-select"
-    value={selectedPatient}
-    onChange={(e) => setSelectedPatient(e.target.value)}
-  >
-    <option value="">{t('choose_patient')}</option>
-    {patients.map((patient) => (
-      <option key={patient._id} value={patient._id}>
-        {patient.firstName} {patient.lastName}
-      </option>
-    ))}
-  </Dropdown>
+        <label htmlFor="patient-select">{t('select_patient')}</label>
+        <Dropdown
+          id="patient-select"
+          value={selectedPatient}
+          onChange={handlePatientSelect} // ← Här är ändringen
+        >
+          <option value="">{t('choose_patient')}</option>
+          {patients.length > 0 ? (
+            patients.map((patient) => (
+              <option key={patient.patientId} value={patient.patientId}>
+                {patient.firstName} {patient.lastName}
+              </option>
+            ))
+          ) : (
+            <option disabled>{t('no_patients_available')}</option>
+          )}
+        </Dropdown>
 
-  <AboutButton href="/about">{t('about-us')}</AboutButton>
-</StaffPageContainer>
-
+        <AboutButton href="/about">{t('about-us')}</AboutButton>
+      </StaffPageContainer>
     </>
   );
 };

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled, { createGlobalStyle } from 'styled-components'; 
+import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
 import { useDispatch } from 'react-redux';
-import { setLanguage } from '../language/languageSlice'; 
+import { setLanguage } from '../language/languageSlice';
 import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
 import '../language/i18n.js';
 import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
 import axios from 'axios';  // Import axios for API calls
-
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -94,25 +93,6 @@ const Button = styled.button`
   }
 `;
 
-const Footer = styled.footer`
-  text-align: center;
-  margin-top: 20px;
-  font-size: 1rem;
-
-  p {
-    font-size: 0.9rem; 
-  }
-
-  a {
-    color: #081630;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
 const LanguageButtons = styled.div`
   display: flex;
   justify-content: center;
@@ -141,39 +121,20 @@ const LanguageButton = styled.button`
   }
 `;
 
-const NavigateButton = styled.button`
-  padding: 12px;
-  background-color: #125358;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-  width: 100%;
-
-  &:hover {
-    background-color: #00d4ff;
-  }
-`;
-
 const StartPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  
+
   const handleLogin = async () => {
     const loginData = {
-      userNameOrEmail: username,  // Use state values
+      userNameOrEmail: username,
       password: password,
     };
-  
-    console.log('Sending login data:', loginData);  // Log to check the sent data
-  
+
     try {
       const response = await axios.post(
         'https://localhost:7066/api/Guest/LoginUser',
@@ -185,23 +146,19 @@ const StartPage = () => {
           },
         }
       );
-  
-      // Handle success response
-      console.log('Login successful:', response.data);  // Full response
-  
+
       // Save token to localStorage
       localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
-  
+
       // Check the role and navigate accordingly
-      const role = response.data.item.userRole;  // Change 'role' to 'userRole'
-      console.log('Role from response:', role);  // Log the role for debugging
-  
+      const role = response.data.item.userRole;
+
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
-        navigate('/admin');  // Navigate to the admin page
+        navigate('/admin');
       } else if (role === 'staff') {
         localStorage.setItem('role', 'staff');
-        navigate('/staff');  // Navigate to the staff page
+        navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
@@ -210,36 +167,21 @@ const StartPage = () => {
       alert('Login failed: Check your credentials or backend connection.');
     }
   };
-  
-  // Define the changeLanguage function here
+
   const changeLanguage = (lang) => {
-    dispatch(setLanguage(lang));  // Dispatch Redux action
-    const i18n = getI18n();  // Get i18n instance
-    i18n.changeLanguage(lang);    // Change language using i18n
+    dispatch(setLanguage(lang));
+    const i18n = getI18n();
+    i18n.changeLanguage(lang);
   };
-
-  const goToAdminDashboard = () => {
-    navigate('/admin');  // ✅ Navigate to AdminDashboard route
-  };
-
-  const goToPatientPage = () => {
-    navigate('/patient');  // ✅ Navigate to PatientPage route
-  };
-  const goToStaffPage = () => {
-    navigate('/staff');  // ✅ Navigate to StaffPage route
-  }
 
   return (
     <>
       <GlobalStyle />
-      {/* Logo clickable to navigate to the start page */}
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img
           src={logo1}
           alt="Logo"
-          style={{
-            width: '150px', // Adjust logo size as needed
-          }}
+          style={{ width: '150px' }}
         />
       </Link>
       <StartPageContainer>
@@ -249,49 +191,31 @@ const StartPage = () => {
         </Header>
 
         <LoginForm>
-  <Label>{t('username')}</Label>
-  <Input
-    type="text"
-    placeholder={t('enter_username')}
-    value={username}
-    onChange={(e) => setUsername(e.target.value)}
-  />
+          <Label>{t('username')}</Label>
+          <Input
+            type="text"
+            placeholder={t('enter_username')}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-  <Label>{t('password')}</Label>
-  <Input
-    type="password"
-    placeholder={t('enter_password')}
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-  />
+          <Label>{t('password')}</Label>
+          <Input
+            type="password"
+            placeholder={t('enter_password')}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-  {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
-  <Button onClick={handleLogin}>{t('login')}</Button>
-</LoginForm>
-
+          <Button onClick={handleLogin}>{t('login')}</Button>
+        </LoginForm>
 
         <LanguageButtons>
           <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
           <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
         </LanguageButtons>
-
-        {/* Navigation buttons at the bottom of the page */}
-        <NavigateButton onClick={goToAdminDashboard}>
-          {t('Go to Admin Dashboard')}
-        </NavigateButton>
-        <NavigateButton onClick={goToPatientPage}>
-          {t('Go to Patient Page')}
-        </NavigateButton>
-        <NavigateButton onClick={goToStaffPage}>
-          {t('Go to Staff Page')}
-        </NavigateButton>
-
-        <Footer>
-          <p>
-            {t('forgot_password')} <a href="/forgotpassword">{t('forgot_password_link')}</a>
-          </p>
-        </Footer>
       </StartPageContainer>
     </>
   );

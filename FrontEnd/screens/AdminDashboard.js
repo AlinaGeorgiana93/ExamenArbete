@@ -4,10 +4,10 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import { useDispatch } from 'react-redux';
-import { setLanguage } from '../language/languageSlice'; 
-import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
+import { setLanguage } from '../language/languageSlice';
+import { getI18n } from 'react-i18next';
 import '../language/i18n.js';
-import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
+import { useNavigate, Link } from 'react-router-dom';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -26,6 +26,7 @@ const GlobalStyle = createGlobalStyle`
     position: relative;
   }
 `;
+
 const Container = styled.div`
   padding: 40px;
 
@@ -111,16 +112,23 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = (type, id) => {
-    axios.delete(`https://localhost:7066/api/${type}/${id}`).then(fetchData);
+    const endpoint = type === 'patients' ? 'Patient' : 'Staff';
+    axios.delete(`https://localhost:7066/api/${endpoint}/${id}`).then(fetchData);
   };
 
   const handleEdit = (entry) => {
-    setFormData({ ...entry, id: entry._id });
+    setFormData({
+      firstName: entry.firstName,
+      lastName: entry.lastName,
+      personalNumber: entry.personalNumber,
+      id: entry.id || entry._id,
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const endpoint = activeTab === 'patients' ? 'patients' : 'staff';
+    const endpoint = activeTab === 'patients' ? 'Patient' : 'Staff';
+
     const dataToSend = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -129,34 +137,34 @@ const AdminDashboard = () => {
 
     if (formData.id) {
       axios.put(`https://localhost:7066/api/${endpoint}/${formData.id}`, dataToSend).then(() => {
-        setFormData({ firstName: '', lastName: '', personalNumber: '', id: null });
+        resetForm();
         fetchData();
       });
     } else {
       axios.post(`https://localhost:7066/api/${endpoint}`, dataToSend).then(() => {
-        setFormData({ firstName: '', lastName: '', personalNumber: '', id: null });
+        resetForm();
         fetchData();
       });
     }
   };
 
+  const resetForm = () => {
+    setFormData({ firstName: '', lastName: '', personalNumber: '', id: null });
+  };
+
   const currentData = activeTab === 'patients' ? patients : staff;
 
   return (
-
-     <>
-          <GlobalStyle />
-          {/* Logo clickable to navigate to the start page */}
-          <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-            <img
-              src={logo1}
-              alt="Logo"
-              style={{
-                width: '150px', // Adjust logo size as needed
-              }}
-            />
-          </Link>
+    <>
       <GlobalStyle />
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+        <img
+          src={logo1}
+          alt="Logo"
+          style={{ width: '150px' }}
+        />
+      </Link>
+
       <Container>
         <h1>{t('admin_dashboard')}</h1>
 
@@ -171,17 +179,18 @@ const AdminDashboard = () => {
               <th>{t('first_name')}</th>
               <th>{t('last_name')}</th>
               <th>{t('personal_number')}</th>
+              <th>{t('actions')}</th>
             </tr>
           </thead>
           <tbody>
             {currentData.map(item => (
-              <tr key={item._id}>
+              <tr key={item.id || item._id}>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.personalNumber}</td>
                 <td>
                   <Button onClick={() => handleEdit(item)}>{t('edit')}</Button>
-                  <Button onClick={() => handleDelete(activeTab, item._id)}>{t('delete')}</Button>
+                  <Button onClick={() => handleDelete(activeTab, item.id || item._id)}>{t('delete')}</Button>
                 </td>
               </tr>
             ))}

@@ -6,7 +6,7 @@ import './src/index.css';
 import StartPage from './screens/StartPage';
 import AdminDashboard from './screens/AdminDashboard';
 // import AboutPage from './screens/AboutPage';
- import PatientPage from './screens/PatientPage';
+import PatientPage from './screens/PatientPage';
 import StaffPage from './screens/StaffPage';
 import { store } from './language/store/store';
 import './language/i18n.js';
@@ -22,11 +22,13 @@ function App() {
 
           {/* All other routes with shared layout */}
           <Route element={<Layout />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/staff" element={<StaffPage />} /> 
-          <Route path="/patient" element={<PatientPage />} /> 
-      {/* <Route path="/about" element={<AboutPage />} /> */}
-          
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/patient/:patientId" element={<PatientPage />} />
+
+            <Route path="/staff" element={<StaffPage />} />
+            <Route path="/patient" element={<PatientPage />} />
+            {/* <Route path="/about" element={<AboutPage />} /> */}
+
           </Route>
         </Routes>
       </Router>
