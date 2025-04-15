@@ -3,12 +3,11 @@ import { useTranslation } from 'react-i18next';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
 import { useDispatch } from 'react-redux';
-import { setLanguage } from '../language/languageSlice';
+import { setLanguage } from '../language/languageSlice.js';
 import { getI18n } from 'react-i18next';
 import '../language/i18n.js';
 import { useNavigate, Link } from 'react-router-dom';
-import axiosInstance from '../src/axiosInstance.js'; 
-import { FaSignOutAlt } from 'react-icons/fa';  // Import logout icon
+import axiosInstance from '../src/axiosInstance.js';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -81,23 +80,23 @@ const Input = styled.input`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center; /* Center the buttons horizontally */
-  gap: 10px; /* Space between the buttons */
-  margin-top: 20px; /* Add some space from the form */
-  width: 100%; /* Ensure the container takes full width */
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px; /* Smaller size */
+  padding: 10px 20px;
   background-color: #125358;
   color: white;
-  font-size: 0.9rem; /* Smaller font size */
+  font-size: 0.9rem;
   border: none;
-  border-radius: 30px; /* Rounded corners */
+  border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-  width: 48%; /* Buttons will take up half the width each */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 48%;
 
   &:hover {
     background-color: #00d4ff;
@@ -165,9 +164,8 @@ const StartPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  const [logoutMessage, setLogoutMessage] = useState('');  // State for logout message
-  const [loginMessage, setLoginMessage] = useState('');  // State for login success message
-  
+  const [loginMessage, setLoginMessage] = useState('');
+
   const handleLogin = async () => {
     try {
       const loginData = {
@@ -176,7 +174,6 @@ const StartPage = () => {
       };
 
       const response = await axiosInstance.post('/Guest/LoginUser', loginData);
-
       localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
 
       const role = response.data.item.userRole;
@@ -202,19 +199,6 @@ const StartPage = () => {
     if (e.key === 'Enter') handleLogin();
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('role');
-    setLogoutMessage(t('logout_success '));
-
-    setTimeout(() => {
-      setLogoutMessage(''); // Clear message after 2 seconds
-      navigate('/'); // Redirect to StartPage
-    }, 2000);
-  };
-
-  const isLoggedIn = !!localStorage.getItem('jwtToken');
-
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));
     const i18n = getI18n();
@@ -225,11 +209,7 @@ const StartPage = () => {
     <>
       <GlobalStyle />
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-        <img
-          src={logo1}
-          alt="Logo"
-          style={{ width: '150px' }}
-        />
+        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <StartPageContainer>
         <Header>
@@ -237,11 +217,7 @@ const StartPage = () => {
           <SubTitle>{t('welcome')}</SubTitle>
         </Header>
 
-        {/* Display login message if available */}
         {loginMessage && <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>}
-
-        {/* Display logout message if available */}
-        {logoutMessage && <p style={{ color: 'green', textAlign: 'center' }}>{logoutMessage}</p>}
 
         <LoginForm>
           <Label>{t('username')}</Label>
@@ -264,16 +240,10 @@ const StartPage = () => {
           {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
           <ButtonContainer>
-  {!isLoggedIn ? (
-    <Button onClick={handleLogin} disabled={!username || !password}>
-      {t('login')}
-    </Button>
-  ) : (
-    <Button onClick={handleLogout}>
-      <FaSignOutAlt size={18} /> {t('logout')}
-    </Button>
-  )}
-</ButtonContainer>
+            <Button onClick={handleLogin} disabled={!username || !password}>
+              {t('login')}
+            </Button>
+          </ButtonContainer>
         </LoginForm>
 
         <LanguageButtons>
@@ -283,7 +253,7 @@ const StartPage = () => {
 
         <Footer>
           <p>
-            {t('forgot_password')} <a href="/forgotpassword">{t('forgot_password_link')}</a>
+            <a href="/forgotpassword">{t('forgot_password_link')}</a>
           </p>
         </Footer>
       </StartPageContainer>

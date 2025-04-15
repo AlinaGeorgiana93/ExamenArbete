@@ -50,7 +50,7 @@ const Navigation = () => {
 
   return (
     <Nav>
-      <StyledHomeLink to="/"><FaHome size={18} /> {t('home')}</StyledHomeLink> {/* Adjusted icon size */}
+      <StyledHomeLink to="/"><FaHome size={18} /> {t('log out')}</StyledHomeLink> {/* Adjusted icon size */}
       <NavLinks>
        {/*  <StyledLink to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> {/* Adjusted icon size */}
         <StyledLink to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink> {/* Adjusted icon size */}
