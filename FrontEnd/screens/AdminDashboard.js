@@ -6,7 +6,7 @@ import axiosInstance from '../src/axiosInstance'; // adjust path as needed
 //import { MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom'; 
 import logo1 from '../src/media/logo1.png';
-import StaffDetailsModal from '../Modals/StaffDetailsModal';  // Import modal component
+import DetailsModal from '../Modals/DetailsModal';  // Import modal component
 
 
 const GlobalStyle = createGlobalStyle`
@@ -91,7 +91,7 @@ const Select = styled.select`
   border: 1px solid #ccc;
 `;
 
-const AdminDashboard = () => {
+  const AdminDashboard = () => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('patients');
   const [patients, setPatients] = useState([]);
@@ -100,10 +100,17 @@ const AdminDashboard = () => {
   const [selectedPerson, setSelectedPerson] = useState(null); // or an empty object {}
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  
+  
+  const onClose = () => {
+    setIsModalOpen(false); // Close the modal when the 'X' button is clicked
+  };
 
 
   useEffect(() => {
     fetchData();
+    fetchPatientData(); // Fetch patients data on component mount
   }, []);
 
   const fetchData = async () => {
@@ -121,94 +128,169 @@ const AdminDashboard = () => {
       console.error('Error fetching staff:', error.response ? error.response.data : error.message);
     }
   };
+  const fetchPatientData = async () => {
+    try {
+      const response = await axiosInstance.get('Patient/ReadItems', {
+        params: {
+          flat: true,
+          pageNr: 0,
+          pageSize: 10,
+        },
+      });
+      console.log('Fetched Patient:', response.data); // To inspect the response structure
+      setPatients(response.data.pageItems); 
+ // Ensure you update state with the patient data
+    } catch (error) {
+      console.error('Error fetching patient:', error.response ? error.response.data : error.message);
+    }
+  };
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const endpoint = activeTab === 'patients' ? 'Patient' : 'Staff';
-
-    const dataToSend = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      personalNumber: formData.personalNumber,
-    };
-
-    if (formData.id) {
-      axiosInstance.put(`${endpoint}/${formData.id}`, dataToSend)
-        .then(() => {
-          setFormData({ firstName: '', lastName: '', personalNumber: '', id: null });
-          fetchData();
-        })
-        .catch(error => {
-          console.error("Error updating:", error);
-        });
-    } else {
-      axiosInstance.post(`${endpoint}`, dataToSend)
-        .then(() => {
-          setFormData({ firstName: '', lastName: '', personalNumber: '', id: null });
-          fetchData();
-        })
-        .catch(error => {
-          console.error("Error adding:", error);
-        });
+  const handleSubmit = async (e) => {
+    e.preventDefault();  // Prevent form submission from reloading the page
+  
+    setIsLoading(true);  // Set loading state
+  
+    try {
+      const isStaff = activeTab === 'staff';  // Check if it's staff or patient
+      const endpoint = isStaff ? 'Staff' : 'Patient';  // Set the endpoint
+  
+      // Log the form data being sent for debugging purposes
+      console.log('Form data being sent:', formData);
+  
+      // Make the API request to create a new staff or patient
+      const response = await axiosInstance.post(
+        `/${endpoint}/CreateItem`,  // Use POST for creating
+        {
+          ...formData,  // Include form data for creation (firstName, lastName, personalNumber, etc.)
+        }
+      );
+  
+      console.log(`${endpoint} created:`, response.data);
+  
+      // Show success message
+      setSuccessMessage(`${endpoint} created successfully!`);
+  
+      // Refresh data after the creation
+      if (isStaff) {
+        fetchData();  // Refresh the staff list
+      } else {
+        fetchPatientData();  // Refresh the patient list
+      }
+  
+      setIsModalOpen(false);  // Close the modal after creation
+    } catch (error) {
+      console.error(`Error creating ${activeTab}:`, error.response || error.message);
+  
+      // Show error message
+      setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
+    } finally {
+      setIsLoading(false);  // Reset loading state
     }
   };
   
+  
   {selectedPerson && (
-    <StaffDetailsModal
+    <DetailsModal
       staffMember={selectedPerson}
-      onClose={() => setSelectedPerson(null)}  // This will close the modal
+      onClose={() => setSelectedPerson(null)}
       onEdit={handleEdit}
       onDelete={handleDelete}
     />
   )}
   
+  
 
   const currentData = activeTab === 'patients' ? patients : staff;
 
   const handleSelectChange = (e) => {
-    const selectedStaffId = e.target.value;
-    console.log('Selected staff ID:', selectedStaffId); // Log the selected staff ID
-    const person = staff.find(item => item.staffId === selectedStaffId);
-    console.log('Found person:', person); // Log the person object that matches the selected ID
+    const id = e.target.value;
+    let person;
+  
+    if (activeTab === 'staff') {
+      person = staff.find(item => String(item.staffId) === id);
+    } else {
+      person = patients.find(item => String(item.patientId) === id);
+    }
+  
     setSelectedPerson(person);
   };
+  
 
   console.log('Staff:', staff); // Log the current staff data
   console.log('Selected Person:', selectedPerson); // Log the selected person
 
 
-  const handleDelete = async (staffId) => {
-    try {
-      await axiosInstance.delete(`/api/Staff/DeleteItem/${staffId}`); // Using axiosInstance
-      console.log('Staff deleted');
-      setStaff(); // Refresh the staff list after deletion
-      setModalVisible(false); // Close the modal after delete
-    } catch (error) {
-      console.error('Error deleting staff:', error);
-    }
-  };
 
-  const handleEdit = async (updatedStaff) => {
-    setIsLoading(true); // Set loading state to true
+  const handleDelete = async (personId) => {
     try {
-      console.log('Updating staff with:', updatedStaff);
+      const isStaff = activeTab === 'staff';
+      const endpoint = isStaff ? 'Staff' : 'Patient';
   
-      const response = await axiosInstance.put(`/Staff/UpdateItem/${updatedStaff.staffId}`, {
-        firstName: updatedStaff.firstName,
-        lastName: updatedStaff.lastName,
-        personalNumber: updatedStaff.personalNumber
-      });
+      console.log(`Deleting ${endpoint} with ID:`, personId);
   
-      console.log('Staff updated:', response.data);  // Log the response from API
-      fetchData(); // Refresh the staff list after update
-      setIsModalOpen(false); // Close the modal after update
+      await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
+  
+      console.log(`✅ ${endpoint} deleted successfully.`);
+      alert(`${endpoint} deleted successfully.`);
+  
+      // Refresh data depending on tab
+      if (isStaff) {
+        await fetchData();
+      } else {
+        await fetchPatientData();
+      }
+  
+      setIsModalOpen(false); // If that's the one you already use for modal visibility
+ // Close modal
     } catch (error) {
-      console.error('Error updating staff:', error.response || error.message);
-    } finally {
-      setIsLoading(false); // Set loading state to false once request is complete
+      console.error(`❌ Error deleting ${activeTab}:`, error.response || error.message);
+      alert(`Error deleting ${activeTab}. Please try again.`);
     }
   };
+  
+  const handleEdit = async (updatedPerson) => {
+    setIsLoading(true);
+  
+    try {
+      console.log('Updating person with:', updatedPerson);
+  
+      const isStaff = activeTab === 'staff';
+      const endpoint = isStaff ? 'Staff' : 'Patient';
+      const idField = isStaff ? 'staffId' : 'patientId';
+      const personId = updatedPerson[idField];
+  
+      const response = await axiosInstance.put(
+        `/${endpoint}/UpdateItem/${personId}`,
+        {
+          [idField]: personId,
+          firstName: updatedPerson.firstName,
+          lastName: updatedPerson.lastName,
+          personalNumber: updatedPerson.personalNumber,
+        }
+      );
+  
+      console.log(`${endpoint} updated:`, response.data);
+  
+      // ✅ Show success message
+      alert(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
+  
+      // ✅ Refresh correct list
+      if (endpoint === 'Staff') {
+        fetchData();
+      } else {
+        fetchPatientData();
+      }
+  
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error(`Error updating ${activeTab}:`, error.response || error.message);
+      alert(`Error updating ${isStaff ? 'staff' : 'patient'}.`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   
   
   return (
@@ -234,17 +316,27 @@ const AdminDashboard = () => {
           </TabButton>
         </Tabs>
 
-        <Select onChange={handleSelectChange} value={selectedPerson ? selectedPerson.staffId : ''}>
-        <option value=''>{t('select_person')}</option>
-        {staff.map(item => (
-          <option key={item.staffId} value={item.staffId}>
-            {item.firstName} {item.lastName}
-          </option>
-        ))}
-      </Select>
+            <Select onChange={handleSelectChange} value={selectedPerson?.staffId || ''} style={{ display: activeTab === 'staff' ? 'block' : 'none' }}>
+      <option value="">{t('select_staff')}</option>
+      {staff.map(item => (
+        <option key={item.staffId} value={item.staffId}>
+          {item.firstName} {item.lastName}
+        </option>
+      ))}
+    </Select>
+
+    <Select onChange={handleSelectChange} value={selectedPerson?.patientId || ''} style={{ display: activeTab === 'patients' ? 'block' : 'none' }}>
+      <option value="">{t('select_patient')}</option>
+      {patients.map(item => (
+        <option key={item.patientId} value={item.patientId}>
+          {item.firstName} {item.lastName}
+        </option>
+      ))}
+    </Select>
+
 
           {selectedPerson && (
-      <StaffDetailsModal
+      <DetailsModal
         staffMember={selectedPerson}
         onClose={() => setSelectedPerson(null)} 
         onEdit={handleEdit}
@@ -253,28 +345,37 @@ const AdminDashboard = () => {
     )}
 
 
-        <Form onSubmit={handleSubmit}>
-          <h2>{formData.id ? `${t('edit')} ${activeTab === 'patients' ? t('patient') : t('staff')}` : `${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
-          <Input
-            placeholder={t('first_name')}
-            value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            required
-          />
-          <Input
-            placeholder={t('last_name')}
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            required
-          />
-          <Input
-            placeholder={t('personal_number')}
-            value={formData.personalNumber}
-            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
-            required
-          />
-          <Button type="submit">{formData.id ? t('update') : t('add')}</Button>
-        </Form>
+<Form onSubmit={handleSubmit}>
+  <h2>
+    {`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}
+  </h2>
+
+  <Input
+    placeholder={t('first_name')}
+    value={formData.firstName}
+    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+    required
+  />
+  
+  <Input
+    placeholder={t('last_name')}
+    value={formData.lastName}
+    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+    required
+  />
+  
+  <Input
+    placeholder={t('personal_number')}
+    value={formData.personalNumber}
+    onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+    required
+  />
+  
+  <Button type="submit">{t('add')}</Button>
+</Form>
+
+{/* Modal Close Button */}
+<Button onClick={onClose}>X</Button>
       </Container>
     </>
   );
