@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaUserShield, FaInfoCircle, FaUserNurse, FaUserInjured, FaHome } from 'react-icons/fa';
+import { FaUserShield, FaInfoCircle, FaUserNurse, FaUserInjured, FaHome,  FaSignOutAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';  // Import the translation hook
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 // Navigation bar at the bottom
 const Nav = styled.nav`
@@ -44,20 +46,51 @@ const StyledHomeLink = styled(StyledLink)`
     color: #00d4ff; /* Hover effect stays the same */
   }
 `;
-
 const Navigation = () => {
-  const { t } = useTranslation(); // Get the translation function
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [logoutMessage, setLogoutMessage] = useState('');
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('role');
+    setLogoutMessage(t('logout_success'));
+
+    setTimeout(() => {
+      setLogoutMessage('');
+      window.location.replace('/'); // Force reload and reset history
+    }, 1500);
+  };
 
   return (
-    <Nav>
-      <StyledHomeLink to="/"><FaHome size={18} /> {t('log out')}</StyledHomeLink> {/* Adjusted icon size */}
-      <NavLinks>
-       {/*  <StyledLink to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> {/* Adjusted icon size */}
-        <StyledLink to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink> {/* Adjusted icon size */}
-        <StyledLink to="/patient"><FaUserInjured size={18} /> {t('patient')}</StyledLink> {/* Adjusted icon size */}
-        <StyledLink to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink> {/* Adjusted icon size */}
-      </NavLinks>
-    </Nav>
+    <>
+      <Nav>
+        <StyledLink onClick={handleLogout}>
+          < FaSignOutAlt size={18} /> {t('Log out')}
+        </StyledLink>
+        <NavLinks>
+          {/* <StyledLink as={Link} to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> */}
+          <StyledLink as={Link} to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink>
+          <StyledLink as={Link} to="/patient"><FaUserInjured size={18} /> {t('patient')}</StyledLink>
+          <StyledLink as={Link} to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink>
+        </NavLinks>
+      </Nav>
+      {logoutMessage && (
+        <div style={{
+          position: 'fixed',
+          bottom: '60px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: '#125358',
+          color: 'white',
+          padding: '10px 20px',
+          borderRadius: '5px',
+          fontSize: '14px'
+        }}>
+          {logoutMessage}
+        </div>
+      )}
+    </>
   );
 };
 
