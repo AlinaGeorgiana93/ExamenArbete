@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaUserShield, FaInfoCircle, FaUserNurse, FaUserInjured, FaHome,  FaSignOutAlt } from 'react-icons/fa';
+import { FaUserShield, FaInfoCircle, FaUserNurse, FaUserInjured, FaHome, FaSignOutAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';  // Import the translation hook
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -55,6 +55,7 @@ const Navigation = () => {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('role');
     setLogoutMessage(t('logout_success'));
+
 
     setTimeout(() => {
       setLogoutMessage('');
