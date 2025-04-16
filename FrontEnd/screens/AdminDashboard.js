@@ -223,31 +223,72 @@ const Select = styled.select`
 
 
   const handleDelete = async (personId) => {
+    console.log("personId before API call:", personId); // This should log the actual ID
+  
+    if (!personId) {
+      alert("Invalid ID provided. Please try again.");
+      return;
+    }
+  
+    const isStaff = activeTab === 'staff';
+    const endpoint = isStaff ? 'Staff' : 'Patient';
+  
+    console.log(`Deleting ${endpoint} with ID:`, personId); // Ensure the ID is correct
+  
     try {
-      const isStaff = activeTab === 'staff';
-      const endpoint = isStaff ? 'Staff' : 'Patient';
-  
-      console.log(`Deleting ${endpoint} with ID:`, personId);
-  
       await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
-  
-      console.log(`✅ ${endpoint} deleted successfully.`);
+      console.log(`${endpoint} deleted successfully.`);
       alert(`${endpoint} deleted successfully.`);
-  
-      // Refresh data depending on tab
+      
       if (isStaff) {
         await fetchData();
       } else {
         await fetchPatientData();
       }
   
-      setIsModalOpen(false); // If that's the one you already use for modal visibility
- // Close modal
+      setIsModalOpen(false);  // Close modal
     } catch (error) {
-      console.error(`❌ Error deleting ${activeTab}:`, error.response || error.message);
+      console.error(`Error deleting ${activeTab}:`, error.response || error.message);
       alert(`Error deleting ${activeTab}. Please try again.`);
     }
+
+    const handleDelete = async (personId) => {
+      console.log("personId before API call:", personId); // This should log the actual ID
+    
+      if (!personId) {
+        alert("Invalid ID provided. Please try again.");
+        return;
+      }
+    
+      const isStaff = activeTab === 'staff';
+      const endpoint = isStaff ? 'Staff' : 'Patient';
+    
+      console.log(`Deleting ${endpoint} with ID:`, personId); // Ensure the ID is correct
+    
+      try {
+        await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
+        console.log(`${endpoint} deleted successfully.`);
+        alert(`${endpoint} deleted successfully.`);
+        
+        if (isStaff) {
+          await fetchData();
+        } else {
+          await fetchPatientData();
+        }
+    
+        setIsModalOpen(false);  // Close modal
+      } catch (error) {
+        console.error(`Error deleting ${activeTab}:`, error.response || error.message);
+        alert(`Error deleting ${activeTab}. Please try again.`);
+      }
+    };
+    console.log("Selected Person before delete:", selectedPerson);
+    console.log("patientId:", selectedPerson ? selectedPerson.patientId : "No patientId");
+    handleDelete(selectedPerson.patientId);
+
   };
+  
+  
   
   const handleEdit = async (updatedPerson) => {
     setIsLoading(true);

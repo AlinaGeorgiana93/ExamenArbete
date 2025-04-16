@@ -95,15 +95,14 @@ const ButtonDelete = styled(Button)`
   }
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
+const CancelButton = styled(Button)`
+  background: #e4e4e4;
   color: #333;
+  width: 100%;
+  margin-top: 15px;
+  &:hover {
+    background: #ddd;
+  }
 `;
 
 const InputGroup = styled.div`
@@ -188,9 +187,7 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
         {/* Buttons */}
         <Button onClick={handleUpdate}>Update</Button>
         <ButtonDelete onClick={handleDelete}>Delete</ButtonDelete>
-        <CloseButton onClick={onClose} aria-label="Close modal">
-          &times;
-        </CloseButton>
+        <CancelButton onClick={onClose}>Cancel</CancelButton>
       </ModalContent>
     </ModalContainer>
     );
