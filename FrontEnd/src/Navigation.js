@@ -54,11 +54,13 @@ const Navigation = () => {
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('role');
+    setLogoutMessage(t('logout_success'));
+
 
     setTimeout(() => {
       setLogoutMessage('');
       window.location.replace('/'); // Force reload and reset history
-    }, 1000);
+    }, 1500);
   };
 
   return (
