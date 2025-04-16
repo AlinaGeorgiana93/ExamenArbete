@@ -198,7 +198,7 @@ const AdminDashboard = () => {
       const idField = isStaff ? 'staffId' : 'patientId';
       const personId = updatedPerson[idField];
 
-      const response = await axiosInstance.put(
+      await axiosInstance.put(
         `/${endpoint}/UpdateItem/${personId}`,
         {
           [idField]: personId,
@@ -208,20 +208,27 @@ const AdminDashboard = () => {
         }
       );
 
-      alert(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
-      setSelectedPerson(null);
+      setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
+      setShowSuccessMessage(true);
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setSuccessMessage('');
+      }, 2000);
 
-      if (endpoint === 'Staff') {
+      setSelectedPerson(null);
+      if (isStaff) {
         fetchData();
       } else {
         fetchPatientData();
       }
     } catch (error) {
-      alert(`Error updating ${isStaff ? 'staff' : 'patient'}.`);
+      setSuccessMessage(`Error updating ${activeTab}.`);
+      setShowSuccessMessage(true);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const currentData = activeTab === 'patients' ? patients : staff;
 
