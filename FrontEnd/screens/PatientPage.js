@@ -101,21 +101,31 @@ function PatientPage() {
   }, [patientId]);
 
   // Fetch available MoodKinds
-  useEffect(() => {
-    // Update the mood kinds API to remove pagination
-axios.get('https://localhost:7066/api/MoodKind/ReadItems')
-.then(response => {
-    if (response.data && response.data.pageItems) {
-    setMoodKinds(response.data.pageItems); // This should work fine if pageItems is returned
-  } else {
-    console.error("Error: No moodKinds found in response");
-  }
-})
-.catch(error => {
-  console.error("Error fetching moodkinds:", error);
-});
+  const token = localStorage.getItem('jwtToken'); // Get the correct token key
+console.log("Retrieved token from localStorage:", token); // Log token to see if it's there
 
-  }, []);
+if (!token) {
+  console.error("No token found in localStorage.");
+  return; // Stop the request if no token is found
+}
+
+axios
+  .get('https://localhost:7066/api/MoodKind/ReadItems', {
+    headers: {
+      Authorization: `Bearer ${token}`, // Add token in Authorization header
+    },
+  })
+  .then(response => {
+    if (response.data && response.data.pageItems) {
+      setMoodKinds(response.data.pageItems); // Use response data
+    } else {
+      console.error("Error: No moodKinds found in response");
+    }
+  })
+  .catch(error => {
+    console.error("Error fetching moodkinds:", error);
+  });
+
 
   // ✅ Handle the MoodKind selection
   const handleMoodKindSelect = (e) => {
