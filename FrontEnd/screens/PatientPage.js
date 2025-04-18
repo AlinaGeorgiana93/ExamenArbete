@@ -205,6 +205,8 @@ function PatientPage() {
       });
 
       alert("Symptom sparad!");
+      // After saving, navigate to the GraphPage
+      navigate(`/graph/${patientId}`);  // Navigate to the graph page with the patientId
     } catch (err) {
       console.error("Error saving symptom:", err);
       alert("Kunde inte spara symptom");

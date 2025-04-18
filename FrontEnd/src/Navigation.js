@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaUserShield, FaInfoCircle, FaUserNurse, FaUserInjured, FaHome, FaSignOutAlt } from 'react-icons/fa';
+import { FaUserShield, FaChartLine, FaInfoCircle, FaUserNurse, FaUserInjured, FaHome, FaSignOutAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';  // Import the translation hook
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -74,6 +74,7 @@ const Navigation = () => {
           <StyledLink as={Link} to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink>
           <StyledLink as={Link} to="/patient"><FaUserInjured size={18} /> {t('patient')}</StyledLink>
           <StyledLink as={Link} to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink>
+          <StyledLink as={Link} to="/graph"><FaChartLine size={18} /> {t('Graph')}</StyledLink> {/* Added Graph page link */}
         </NavLinks>
       </Nav>
       {logoutMessage && (
