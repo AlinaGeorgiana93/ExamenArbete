@@ -1,20 +1,20 @@
 namespace Models;
 
 
-public class SleepLevel: ISleepLevel
+public class SleepLevel : ISleepLevel
 {
-    public virtual Guid SleepLevelId { get; set; }    
-    public virtual string Name { get; set; }    
-    public virtual string Label { get; set; }     
+    public virtual Guid SleepLevelId { get; set; }
+    public virtual string Name { get; set; }
+    public virtual string Label { get; set; }
     public virtual int Rating { get; set; }        //sleep between 5-10 hours
 
-    public virtual List <ISleep> Sleeps { get; set; }
-   
+    public virtual List<ISleep> Sleeps { get; set; }
+
     public static List<SleepLevel> GetSeedSleepLevelsData()
     {
         return
         [
-        new SleepLevel {
+            new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "Low",
             Rating = 5,
@@ -37,7 +37,7 @@ public class SleepLevel: ISleepLevel
             Name = "Too much",
             Rating = 10,
             Label = "Too much Sleep Level 😃"
-        }
+        },
         ];
     }
 
