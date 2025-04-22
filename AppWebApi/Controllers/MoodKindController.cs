@@ -8,7 +8,7 @@ using Services;
 namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Policy = null, Roles = "staff, sysadmin")]
+        Policy = null, Roles = "staff,sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class MoodKindController : Controller
@@ -73,7 +73,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = "sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -130,7 +130,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = "sysadmin")]
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -159,7 +159,7 @@ namespace AppWebApi.Controllers
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = "supusr,sysadmin")]
 
         public async Task<IActionResult> CreateItem([FromBody] MoodKindCuDto item)
         {
