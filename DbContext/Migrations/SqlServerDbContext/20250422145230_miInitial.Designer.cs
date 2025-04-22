@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20250414121855_miInitial")]
+    [Migration("20250422145230_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -86,42 +86,42 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            ActivityLevelId = new Guid("f8e56e7b-0b64-4836-891c-c459d2ac3845"),
+                            ActivityLevelId = new Guid("3831de65-ebcc-4e4d-b903-578b26795a69"),
                             Label = "Resting 🛌",
                             Name = "Resting",
                             Rating = 1
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("2ce40068-000a-46b9-8efd-a39ea92c076c"),
+                            ActivityLevelId = new Guid("3e7513a1-00b6-4d6b-a86a-225fe66426f2"),
                             Label = "Reading 📖",
                             Name = "Reading",
                             Rating = 3
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("47cbc4b5-9ec7-47fc-9758-e2240d59d34f"),
+                            ActivityLevelId = new Guid("fd9da75b-61b6-4ff2-bdc2-144a6a1c8422"),
                             Label = "Take a Walk 🚶‍♂️",
                             Name = "Take a Walk",
                             Rating = 5
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("01f68b2b-abfe-4e3c-8697-d232d8b8cb02"),
+                            ActivityLevelId = new Guid("09847930-d3c7-4548-85f0-ed1277fc9217"),
                             Label = "Jogging 🏃‍♂️",
                             Name = "Jogging",
                             Rating = 10
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("37d95ed3-4903-4beb-bbab-66b3eb17260c"),
+                            ActivityLevelId = new Guid("b1787ea2-76a3-471b-bdbf-28a465eb2291"),
                             Label = "Swimming 🏊‍♂️",
                             Name = "Swimming",
                             Rating = 7
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("0317bf8d-bd36-4f55-ba22-3482963631b5"),
+                            ActivityLevelId = new Guid("c65c43e0-0e04-43ed-b67d-8e52944a2e84"),
                             Label = "Training 🏋️‍♂️",
                             Name = "Training",
                             Rating = 9
@@ -189,35 +189,35 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            AppetiteLevelId = new Guid("4688ee26-2078-4ce9-ace8-1ee16482803d"),
+                            AppetiteLevelId = new Guid("f0a47c30-9bc7-4b45-826d-4ed1337aa02b"),
                             Label = "Didn't Eat At All 🤢",
                             Name = "Didn't Eat At All",
                             Rating = 1
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("dc1bbd3d-762e-4ef3-b842-35fc056afe74"),
+                            AppetiteLevelId = new Guid("ead3f2d0-cf63-4edd-89e0-91d524d31098"),
                             Label = "Little 🍽️",
                             Name = "Little",
                             Rating = 3
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("863b8ce5-5292-4b4d-9733-91429803e1f5"),
+                            AppetiteLevelId = new Guid("8a5a6df3-a80f-43d9-b283-dc7d6b800f3c"),
                             Label = "Normal Appetite 🙂",
                             Name = "Normal",
                             Rating = 5
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("2edb5f7c-91a9-4106-8b51-095d8710b1b0"),
+                            AppetiteLevelId = new Guid("6a056a69-910d-45e9-a6b6-85f6b83d84ce"),
                             Label = "Medium 😋",
                             Name = "Medium",
                             Rating = 7
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("8b6fccde-f60f-4317-93fe-be8e3226b5f5"),
+                            AppetiteLevelId = new Guid("29124d76-489b-480a-b86f-f66da4e4802b"),
                             Label = "Very Much 🍴",
                             Name = "Very Much",
                             Rating = 10
@@ -302,49 +302,49 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            MoodKindId = new Guid("3ef27030-e094-4b94-87fb-475bccef902c"),
+                            MoodKindId = new Guid("eb0b8974-58c2-439f-95e5-b3d803450814"),
                             Label = "Happy 😃",
                             Name = "Happy",
                             Rating = 10
                         },
                         new
                         {
-                            MoodKindId = new Guid("d603e35c-18f6-48ae-baa8-fea6bd45c568"),
+                            MoodKindId = new Guid("bd4ea287-a8bc-4de1-85ab-49e9d890496d"),
                             Label = "Sad 🙁",
                             Name = "Sad",
                             Rating = 2
                         },
                         new
                         {
-                            MoodKindId = new Guid("92cd3a09-3078-4e78-975e-c1abb1a27878"),
+                            MoodKindId = new Guid("f4703908-956b-40ef-a426-c92f314ab9cc"),
                             Label = "Angry 😡",
                             Name = "Angry",
                             Rating = 3
                         },
                         new
                         {
-                            MoodKindId = new Guid("48953cde-3ae1-41b7-9475-173cac61ecdd"),
+                            MoodKindId = new Guid("480995ff-c22e-42a6-a259-5f8a2d77ee6e"),
                             Label = "Lovely 😍",
                             Name = "Lovely",
                             Rating = 7
                         },
                         new
                         {
-                            MoodKindId = new Guid("a6437241-771e-4c6c-83ed-4914a80020e9"),
+                            MoodKindId = new Guid("2ff7d8b3-5273-4dda-8e40-4a0290496bb6"),
                             Label = "Depressed 😢",
                             Name = "Depressed",
                             Rating = 1
                         },
                         new
                         {
-                            MoodKindId = new Guid("1a198452-a42e-4f32-a4ba-aee040f5234a"),
+                            MoodKindId = new Guid("4391f94a-1437-4e95-94d7-baa55df81f22"),
                             Label = "Excited 🤩",
                             Name = "Excited",
                             Rating = 9
                         },
                         new
                         {
-                            MoodKindId = new Guid("a67ee9ef-30b6-4815-9150-6c12e4e5ea34"),
+                            MoodKindId = new Guid("2446c7b1-24e2-40c3-8851-044526c6fd70"),
                             Label = "Bored 😒",
                             Name = "Bored",
                             Rating = 4
@@ -385,42 +385,42 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            PatientId = new Guid("ce06016b-cb85-410f-a6a0-ac33aad43f4b"),
+                            PatientId = new Guid("35f852d1-8a3b-4ac5-a0f6-d4ea75a16396"),
                             FirstName = "Madi",
                             LastName = "Alabama",
                             PersonalNumber = "19560831-1111"
                         },
                         new
                         {
-                            PatientId = new Guid("ee328f5a-7767-406d-9c03-16ecc4fe2fb5"),
+                            PatientId = new Guid("37a5c948-095d-4971-8b51-3a6baf778254"),
                             FirstName = "John",
                             LastName = "Doe",
                             PersonalNumber = "19480516-2222"
                         },
                         new
                         {
-                            PatientId = new Guid("f047247d-8502-4cc3-b3f7-089c9275c640"),
+                            PatientId = new Guid("a2bd6f1e-f4f6-4278-8b41-e46c7f72c236"),
                             FirstName = "Jane",
                             LastName = "Smith",
                             PersonalNumber = "19610228-1212"
                         },
                         new
                         {
-                            PatientId = new Guid("3a66a954-7c97-4b96-a4ab-00da0a33921a"),
+                            PatientId = new Guid("1f690a6e-799c-4173-a376-addaf0f3e24f"),
                             FirstName = "Alice",
                             LastName = "Johnson",
                             PersonalNumber = "19450801-4444"
                         },
                         new
                         {
-                            PatientId = new Guid("f7c351cc-59b5-4e36-bf92-63dc41c6b80d"),
+                            PatientId = new Guid("5b27fd3c-5457-446d-b191-70c2da2fa3ab"),
                             FirstName = "Bob",
                             LastName = "Brown",
                             PersonalNumber = "19501110-1331"
                         },
                         new
                         {
-                            PatientId = new Guid("c3a8da3b-3f9a-4a43-84b0-47595cb7cd67"),
+                            PatientId = new Guid("dd7ec33e-5e30-4514-b6cc-651973070441"),
                             FirstName = "Charlie",
                             LastName = "Davis",
                             PersonalNumber = "19511231-16181"
@@ -488,28 +488,28 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            SleepLevelId = new Guid("2ccdee84-3f3c-4ae2-9a22-53cbfd63372e"),
+                            SleepLevelId = new Guid("23afb319-920c-42e6-8931-5b9cba2c292e"),
                             Label = "Low Sleep Level 🙁",
                             Name = "Low",
                             Rating = 5
                         },
                         new
                         {
-                            SleepLevelId = new Guid("8dcfd54b-6e6f-41ad-b2ef-2dfa40f0b1ad"),
+                            SleepLevelId = new Guid("1d0a5335-a1f6-4862-bf28-34e860453057"),
                             Label = "Medium Sleep Level 😐",
                             Name = "Medium",
                             Rating = 6
                         },
                         new
                         {
-                            SleepLevelId = new Guid("51f521ce-7519-4f7a-9644-77fc4d9b3df6"),
+                            SleepLevelId = new Guid("571837eb-bbd2-4dff-b310-f2b78dcaeff2"),
                             Label = "OK Sleep Level 🙂",
                             Name = "OK",
                             Rating = 8
                         },
                         new
                         {
-                            SleepLevelId = new Guid("625613fe-d8d4-463c-8bcd-01a9415bf9da"),
+                            SleepLevelId = new Guid("1677692a-5512-4b93-80f9-1d2953c9cb2c"),
                             Label = "Too much Sleep Level 😃",
                             Name = "Too much",
                             Rating = 10
@@ -538,35 +538,35 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            StaffId = new Guid("1061f5fa-ebcb-4157-99b2-da354e407dec"),
+                            StaffId = new Guid("bf240d82-1f49-4dad-a4aa-da8b11d134ef"),
                             FirstName = "Moris",
                             LastName = "Andre",
                             PersonalNumber = "19750105-1111"
                         },
                         new
                         {
-                            StaffId = new Guid("d1ce741e-8f97-4634-85a1-a50b2b137202"),
+                            StaffId = new Guid("fe963ffd-e1a8-4180-a9c5-ca4d92c987f7"),
                             FirstName = "Madi",
                             LastName = "Alabama",
                             PersonalNumber = "19800613-1111"
                         },
                         new
                         {
-                            StaffId = new Guid("dff6e514-06df-49f3-a993-8057324368bf"),
+                            StaffId = new Guid("3086594b-738e-4674-9b72-2540ab8ed300"),
                             FirstName = "Jane",
                             LastName = "Smith",
                             PersonalNumber = "19610228-1212"
                         },
                         new
                         {
-                            StaffId = new Guid("f6168696-712c-4dad-97bc-5d498cb6c5d8"),
+                            StaffId = new Guid("ddc39d25-f058-4d16-a5bb-d81bdc740e5e"),
                             FirstName = "Alice",
                             LastName = "Johnson",
                             PersonalNumber = "19931001-4444"
                         },
                         new
                         {
-                            StaffId = new Guid("e21c348a-95d0-4e94-b946-59b1c67a68eb"),
+                            StaffId = new Guid("ebd2d874-c816-4ff0-bf70-f4761b47fb26"),
                             FirstName = "John",
                             LastName = "Doe",
                             PersonalNumber = "19900516-2222"

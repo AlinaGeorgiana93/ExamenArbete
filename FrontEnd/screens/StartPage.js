@@ -185,8 +185,8 @@ const StartPage = () => {
         console.log('Sysadmin logged in }');
         setLoginMessage(t('login_success'));
         navigate('/admin');
-      } else if (role === 'staff') {
-        localStorage.setItem('role', 'staff');
+      } else if (role === 'usr') {
+        localStorage.setItem('role', 'usr');
         console.log('Staff logged in');
         setLoginMessage(t('login_success'));
         navigate('/staff');

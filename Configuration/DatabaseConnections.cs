@@ -32,11 +32,15 @@ public class DatabaseConnections
         },
 
     };
-
+   
     public DbConnectionDetail GetDataConnectionDetails(string user) => GetLoginDetails(user, _activeDataSet);
 
    DbConnectionDetail GetLoginDetails(string user, DbSetDetailOptions dataSet)
-{
+
+   
+{  Console.WriteLine($"Looking for user: '{user}'");
+   Console.WriteLine($"Available users: {string.Join(", ", dataSet.DbConnections.Select(c => $"'{c.DbUserLogin}'"))}");
+
     if (string.IsNullOrEmpty(user) || string.IsNullOrWhiteSpace(user))
         throw new ArgumentNullException(nameof(user));
 
