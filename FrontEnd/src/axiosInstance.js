@@ -8,6 +8,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('jwtToken'); // ✅ match the login key name
   console.log("Retrieved token from localStorage:", token);
+  
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

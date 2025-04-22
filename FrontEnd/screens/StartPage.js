@@ -173,17 +173,21 @@ const StartPage = () => {
         password: password,
       };
 
+      console.log('Rigth before the execution of axiosInstance.Post:');
       const response = await axiosInstance.post('/Guest/LoginUser', loginData);
       localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+      console.log('jwtToken:', response.data.item.jwtToken.encryptedToken);
 
       const role = response.data.item.userRole;
 
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
+        console.log('Sysadmin logged in }');
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'staff') {
         localStorage.setItem('role', 'staff');
+        console.log('Staff logged in');
         setLoginMessage(t('login_success'));
         navigate('/staff');
       } else {
