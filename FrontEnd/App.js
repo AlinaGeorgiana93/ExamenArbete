@@ -11,6 +11,7 @@ import StaffPage from './screens/StaffPage';
 import { store } from './language/store/store';
 import './language/i18n.js';
 import Layout from './src/media/Layout.js'; // Layout will wrap all inner pages except StartPage
+import AboutUs from './screens/AboutUs';
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/staff" element={<StaffPage />} /> 
           <Route path="/patient" element={<PatientPage />} /> 
-      {/* <Route path="/about" element={<AboutPage />} /> */}
+      { <Route path="/about" element={<AboutUs />} /> }
           
           </Route>
         </Routes>
