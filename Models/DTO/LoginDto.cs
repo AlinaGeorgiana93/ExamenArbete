@@ -10,8 +10,7 @@ public class LoginCredentialsDto
 }
 
 public class LoginUserSessionDto
-{
-    public Guid? UserId { get; set; }
+{    public Guid? UserId { get; set; }
     public string UserName { get; set; }
     public string UserRole { get; set; }
     public JwtUserToken JwtToken { get; set; }
