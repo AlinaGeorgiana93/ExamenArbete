@@ -14,7 +14,7 @@ public class SleepLevelDbRepos
     private readonly ILogger<SleepLevelDbRepos> _logger;
     private readonly MainDbContext _dbContext;
 
-    #region contructors
+    #region Constructors
     public SleepLevelDbRepos(ILogger<SleepLevelDbRepos> logger, MainDbContext context)
     {
         _logger = logger;
@@ -22,7 +22,7 @@ public class SleepLevelDbRepos
     }
     #endregion
 
-   public async Task<ResponseItemDto<ISleepLevel>> ReadItemAsync(Guid id, bool flat)
+    public async Task<ResponseItemDto<ISleepLevel>> ReadItemAsync(Guid id, bool flat)
     {
         IQueryable<SleepLevelDbM> query;
         if (!flat)
@@ -35,9 +35,10 @@ public class SleepLevelDbRepos
         {
             query = _dbContext.SleepLevels.AsNoTracking()
                 .Where(i => i.SleepLevelId == id);
-        }  
- 
-        var resp =  await query.FirstOrDefaultAsync<ISleepLevel>();
+        }
+
+        var resp = await query.FirstOrDefaultAsync<ISleepLevel>();
+
         return new ResponseItemDto<ISleepLevel>()
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
@@ -45,22 +46,22 @@ public class SleepLevelDbRepos
         };
     }
 
-     public async Task<ResponsePageDto<ISleepLevel>> ReadItemsAsync ( bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<ISleepLevel>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
 
         IQueryable<SleepLevelDbM> query = _dbContext.SleepLevels.AsNoTracking();
 
-         if (!flat)
-         {
+        if (!flat)
+        {
             query = _dbContext.SleepLevels.AsNoTracking()
             .Include(i => i.SleepsDbM);
-            
-         }
-         
 
-        query = query.Where(i => 
-        
+        }
+
+
+        query = query.Where(i =>
+
                 i.Name.ToLower().Contains(filter) ||
                 i.Rating.ToString().ToLower().Contains(filter)
 
@@ -78,7 +79,8 @@ public class SleepLevelDbRepos
             PageSize = pageSize
         };
 
-    } 
+    }
+
 
     public async Task<ResponseItemDto<ISleepLevel>> DeleteItemAsync(Guid id)
     {
@@ -89,34 +91,35 @@ public class SleepLevelDbRepos
 
         await _dbContext.SaveChangesAsync();
 
-        return new ResponseItemDto<ISleepLevel> 
+        return new ResponseItemDto<ISleepLevel>
         {
             DbConnectionKeyUsed = _dbContext.dbConnection,
             Item = item
         };
     }
-   public async Task<ResponseItemDto<ISleepLevel>> UpdateItemAsync(SleepLevelCuDto itemDto)
-        {
-            var query1 = _dbContext.SleepLevels
-                .Where(i => i.SleepLevelId == itemDto.SleepLevelId);
 
-            var item = await query1
-                    .Include(i => i.SleepsDbM) // Include related entities if needed
-                    .FirstOrDefaultAsync() ?? throw new ArgumentException($"Item {itemDto.SleepLevelId} is not existing");
+    public async Task<ResponseItemDto<ISleepLevel>> UpdateItemAsync(SleepLevelCuDto itemDto)
+    {
+        var query1 = _dbContext.SleepLevels
+            .Where(i => i.SleepLevelId == itemDto.SleepLevelId);
+
+        var item = await query1
+                .Include(i => i.SleepsDbM) // Include related entities if needed
+                .FirstOrDefaultAsync() ?? throw new ArgumentException($"Item {itemDto.SleepLevelId} is not existing");
 
         // Transfer any changes from DTO to database object
         item.UpdateFromDTO(itemDto);
 
-            // Save the updated entity in the database
-            _dbContext.SleepLevels.Update(item);
+        // Save the updated entity in the database
+        _dbContext.SleepLevels.Update(item);
 
-            await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
 
-            // Return the updated item
-            return await ReadItemAsync(item.SleepLevelId, false);
-        }
+        // Return the updated item
+        return await ReadItemAsync(item.SleepLevelId, false);
+    }
 
-       public async Task<ResponseItemDto<ISleepLevel>> CreateItemAsync(SleepLevelCuDto itemDto)
+    public async Task<ResponseItemDto<ISleepLevel>> CreateItemAsync(SleepLevelCuDto itemDto)
     {
         if (itemDto.SleepLevelId != null)
             throw new ArgumentException($"{nameof(itemDto.SleepLevelId)} must be null when creating a new object");
@@ -126,7 +129,7 @@ public class SleepLevelDbRepos
         var item = new SleepLevelDbM(itemDto);
 
         //Update navigation properties
-     //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
+        //   await navProp_ItemCUdto_to_ItemDbM(itemDto, item);
 
         //write to database model
         _dbContext.SleepLevels.Add(item);
@@ -135,13 +138,10 @@ public class SleepLevelDbRepos
         await _dbContext.SaveChangesAsync();
 
         //return the updated item in non-flat mode
-        return await ReadItemAsync(item.SleepLevelId, false);    
+        return await ReadItemAsync(item.SleepLevelId, false);
     }
 
-    public static implicit operator SleepLevelDbRepos(SleepDbRepos v)
-    {
-        throw new NotImplementedException();
-    }
 
 }
+
 
