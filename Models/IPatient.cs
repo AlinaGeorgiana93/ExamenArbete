@@ -11,9 +11,9 @@ public interface IPatient
 
 
     //Navigation properties
-    public List<IMood> Moods {get; set;}
-    public List <IActivity> Activities{ get; set; }
-    public List <ISleep> Sleeps{ get; set; }
-    public List <IAppetite> Appetites{ get; set; }
+    public List<IMoodKind> MoodKinds {get; set;}
+    public List <IActivityLevel> ActivityLevels{ get; set; }
+    public List <ISleepLevel> SleepLevels{ get; set; }
+    public List <IAppetiteLevel> AppetiteLevels{ get; set; }
     public IGraph Graph { get; set; }
 }

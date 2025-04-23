@@ -20,36 +20,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                 name: "dbo");
 
             migrationBuilder.CreateTable(
-                name: "ActivityLevels",
-                schema: "supusr",
-                columns: table => new
-                {
-                    ActivityLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Rating = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ActivityLevels", x => x.ActivityLevelId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AppetiteLevels",
-                schema: "supusr",
-                columns: table => new
-                {
-                    AppetiteLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Rating = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppetiteLevels", x => x.AppetiteLevelId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Graphs",
                 schema: "supusr",
                 columns: table => new
@@ -61,36 +31,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Graphs", x => x.GraphId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MoodKinds",
-                schema: "supusr",
-                columns: table => new
-                {
-                    MoodKindId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Rating = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MoodKinds", x => x.MoodKindId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SleepLevels",
-                schema: "supusr",
-                columns: table => new
-                {
-                    SleepLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    Rating = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SleepLevels", x => x.SleepLevelId);
                 });
 
             migrationBuilder.CreateTable(
@@ -151,6 +91,94 @@ namespace DbContext.Migrations.SqlServerDbContext
                         principalSchema: "supusr",
                         principalTable: "Staffs",
                         principalColumn: "StaffId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActivityLevels",
+                schema: "supusr",
+                columns: table => new
+                {
+                    ActivityLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityLevels", x => x.ActivityLevelId);
+                    table.ForeignKey(
+                        name: "FK_ActivityLevels_Patients_PatientDbMPatientId",
+                        column: x => x.PatientDbMPatientId,
+                        principalSchema: "supusr",
+                        principalTable: "Patients",
+                        principalColumn: "PatientId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppetiteLevels",
+                schema: "supusr",
+                columns: table => new
+                {
+                    AppetiteLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppetiteLevels", x => x.AppetiteLevelId);
+                    table.ForeignKey(
+                        name: "FK_AppetiteLevels_Patients_PatientDbMPatientId",
+                        column: x => x.PatientDbMPatientId,
+                        principalSchema: "supusr",
+                        principalTable: "Patients",
+                        principalColumn: "PatientId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MoodKinds",
+                schema: "supusr",
+                columns: table => new
+                {
+                    MoodKindId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MoodKinds", x => x.MoodKindId);
+                    table.ForeignKey(
+                        name: "FK_MoodKinds_Patients_PatientDbMPatientId",
+                        column: x => x.PatientDbMPatientId,
+                        principalSchema: "supusr",
+                        principalTable: "Patients",
+                        principalColumn: "PatientId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SleepLevels",
+                schema: "supusr",
+                columns: table => new
+                {
+                    SleepLevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    PatientDbMPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SleepLevels", x => x.SleepLevelId);
+                    table.ForeignKey(
+                        name: "FK_SleepLevels_Patients_PatientDbMPatientId",
+                        column: x => x.PatientDbMPatientId,
+                        principalSchema: "supusr",
+                        principalTable: "Patients",
+                        principalColumn: "PatientId");
                 });
 
             migrationBuilder.CreateTable(
@@ -288,43 +316,43 @@ namespace DbContext.Migrations.SqlServerDbContext
             migrationBuilder.InsertData(
                 schema: "supusr",
                 table: "ActivityLevels",
-                columns: new[] { "ActivityLevelId", "Label", "Name", "Rating" },
+                columns: new[] { "ActivityLevelId", "Label", "Name", "PatientDbMPatientId", "Rating" },
                 values: new object[,]
                 {
-                    { new Guid("01f68b2b-abfe-4e3c-8697-d232d8b8cb02"), "Jogging 🏃‍♂️", "Jogging", 10 },
-                    { new Guid("0317bf8d-bd36-4f55-ba22-3482963631b5"), "Training 🏋️‍♂️", "Training", 9 },
-                    { new Guid("2ce40068-000a-46b9-8efd-a39ea92c076c"), "Reading 📖", "Reading", 3 },
-                    { new Guid("37d95ed3-4903-4beb-bbab-66b3eb17260c"), "Swimming 🏊‍♂️", "Swimming", 7 },
-                    { new Guid("47cbc4b5-9ec7-47fc-9758-e2240d59d34f"), "Take a Walk 🚶‍♂️", "Take a Walk", 5 },
-                    { new Guid("f8e56e7b-0b64-4836-891c-c459d2ac3845"), "Resting 🛌", "Resting", 1 }
+                    { new Guid("04e9aca4-c07b-41a0-9bbb-cb73fa445eca"), "Reading 📖", "Reading", null, 3 },
+                    { new Guid("45eefd8e-4e6f-4a04-9324-0735f65fadd3"), "Swimming 🏊‍♂️", "Swimming", null, 7 },
+                    { new Guid("4b3369d6-0d61-4291-a881-abfc029ce2f1"), "Jogging 🏃‍♂️", "Jogging", null, 10 },
+                    { new Guid("609c6682-64b0-4879-ae26-01f2674d9d00"), "Training 🏋️‍♂️", "Training", null, 9 },
+                    { new Guid("803b7531-4896-4bd1-9668-b1f052a3575e"), "Resting 🛌", "Resting", null, 1 },
+                    { new Guid("e93a5173-9234-4ce0-a3d3-1f2f163f0968"), "Take a Walk 🚶‍♂️", "Take a Walk", null, 5 }
                 });
 
             migrationBuilder.InsertData(
                 schema: "supusr",
                 table: "AppetiteLevels",
-                columns: new[] { "AppetiteLevelId", "Label", "Name", "Rating" },
+                columns: new[] { "AppetiteLevelId", "Label", "Name", "PatientDbMPatientId", "Rating" },
                 values: new object[,]
                 {
-                    { new Guid("2edb5f7c-91a9-4106-8b51-095d8710b1b0"), "Medium 😋", "Medium", 7 },
-                    { new Guid("4688ee26-2078-4ce9-ace8-1ee16482803d"), "Didn't Eat At All 🤢", "Didn't Eat At All", 1 },
-                    { new Guid("863b8ce5-5292-4b4d-9733-91429803e1f5"), "Normal Appetite 🙂", "Normal", 5 },
-                    { new Guid("8b6fccde-f60f-4317-93fe-be8e3226b5f5"), "Very Much 🍴", "Very Much", 10 },
-                    { new Guid("dc1bbd3d-762e-4ef3-b842-35fc056afe74"), "Little 🍽️", "Little", 3 }
+                    { new Guid("0b69eaa0-47cb-4e02-a2c6-f12837ee5664"), "Didn't Eat At All 🤢", "Didn't Eat At All", null, 1 },
+                    { new Guid("56e3b4e0-22b2-4992-ae59-40e3d2b526be"), "Normal Appetite 🙂", "Normal", null, 5 },
+                    { new Guid("577348d7-3039-42ae-8f55-44cc61832914"), "Very Much 🍴", "Very Much", null, 10 },
+                    { new Guid("9a11d776-8133-49b0-96c3-c82ae3f7f5d5"), "Little 🍽️", "Little", null, 3 },
+                    { new Guid("ddc09840-b31a-48f2-8ab4-0e1499abb54b"), "Medium 😋", "Medium", null, 7 }
                 });
 
             migrationBuilder.InsertData(
                 schema: "supusr",
                 table: "MoodKinds",
-                columns: new[] { "MoodKindId", "Label", "Name", "Rating" },
+                columns: new[] { "MoodKindId", "Label", "Name", "PatientDbMPatientId", "Rating" },
                 values: new object[,]
                 {
-                    { new Guid("1a198452-a42e-4f32-a4ba-aee040f5234a"), "Excited 🤩", "Excited", 9 },
-                    { new Guid("3ef27030-e094-4b94-87fb-475bccef902c"), "Happy 😃", "Happy", 10 },
-                    { new Guid("48953cde-3ae1-41b7-9475-173cac61ecdd"), "Lovely 😍", "Lovely", 7 },
-                    { new Guid("92cd3a09-3078-4e78-975e-c1abb1a27878"), "Angry 😡", "Angry", 3 },
-                    { new Guid("a6437241-771e-4c6c-83ed-4914a80020e9"), "Depressed 😢", "Depressed", 1 },
-                    { new Guid("a67ee9ef-30b6-4815-9150-6c12e4e5ea34"), "Bored 😒", "Bored", 4 },
-                    { new Guid("d603e35c-18f6-48ae-baa8-fea6bd45c568"), "Sad 🙁", "Sad", 2 }
+                    { new Guid("26e8e141-a1f4-41ca-b9fc-05cf8cbe0616"), "Angry 😡", "Angry", null, 3 },
+                    { new Guid("68c8f4d3-cb65-40de-9a0c-2ce3573d3d11"), "Excited 🤩", "Excited", null, 9 },
+                    { new Guid("a622103f-0771-4196-9d2c-96e6323b8409"), "Bored 😒", "Bored", null, 4 },
+                    { new Guid("c12f55f5-ea19-42a2-948e-5f267bbf741f"), "Sad 🙁", "Sad", null, 2 },
+                    { new Guid("c8ad9ef3-21a1-40b6-bbf2-cf23cab1e5f7"), "Happy 😃", "Happy", null, 10 },
+                    { new Guid("d1a6d258-c906-4336-bdb9-077d06604741"), "Lovely 😍", "Lovely", null, 7 },
+                    { new Guid("faea145e-01bf-4b58-af08-30c940c4c905"), "Depressed 😢", "Depressed", null, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -333,24 +361,24 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: new[] { "PatientId", "FirstName", "GraphId", "LastName", "PersonalNumber", "StaffDbMStaffId" },
                 values: new object[,]
                 {
-                    { new Guid("3a66a954-7c97-4b96-a4ab-00da0a33921a"), "Alice", null, "Johnson", "19450801-4444", null },
-                    { new Guid("c3a8da3b-3f9a-4a43-84b0-47595cb7cd67"), "Charlie", null, "Davis", "19511231-16181", null },
-                    { new Guid("ce06016b-cb85-410f-a6a0-ac33aad43f4b"), "Madi", null, "Alabama", "19560831-1111", null },
-                    { new Guid("ee328f5a-7767-406d-9c03-16ecc4fe2fb5"), "John", null, "Doe", "19480516-2222", null },
-                    { new Guid("f047247d-8502-4cc3-b3f7-089c9275c640"), "Jane", null, "Smith", "19610228-1212", null },
-                    { new Guid("f7c351cc-59b5-4e36-bf92-63dc41c6b80d"), "Bob", null, "Brown", "19501110-1331", null }
+                    { new Guid("04cd3287-2b4a-4392-bebb-75858184394c"), "Madi", null, "Alabama", "19560831-1111", null },
+                    { new Guid("0eb70961-b98d-4093-9068-2e47e75360fb"), "Alice", null, "Johnson", "19450801-4444", null },
+                    { new Guid("55c3ce79-d30a-4b9f-93ce-0612a389e8f5"), "John", null, "Doe", "19480516-2222", null },
+                    { new Guid("622ed5fd-fceb-433c-ba0f-a08861de4c56"), "Bob", null, "Brown", "19501110-1331", null },
+                    { new Guid("a7e34c59-559b-4904-b507-a4c1f85bb690"), "Jane", null, "Smith", "19610228-1212", null },
+                    { new Guid("f8deebe1-b069-4b4e-b122-64e9d58d836e"), "Charlie", null, "Davis", "19511231-16181", null }
                 });
 
             migrationBuilder.InsertData(
                 schema: "supusr",
                 table: "SleepLevels",
-                columns: new[] { "SleepLevelId", "Label", "Name", "Rating" },
+                columns: new[] { "SleepLevelId", "Label", "Name", "PatientDbMPatientId", "Rating" },
                 values: new object[,]
                 {
-                    { new Guid("2ccdee84-3f3c-4ae2-9a22-53cbfd63372e"), "Low Sleep Level 🙁", "Low", 5 },
-                    { new Guid("51f521ce-7519-4f7a-9644-77fc4d9b3df6"), "OK Sleep Level 🙂", "OK", 8 },
-                    { new Guid("625613fe-d8d4-463c-8bcd-01a9415bf9da"), "Too much Sleep Level 😃", "Too much", 10 },
-                    { new Guid("8dcfd54b-6e6f-41ad-b2ef-2dfa40f0b1ad"), "Medium Sleep Level 😐", "Medium", 6 }
+                    { new Guid("10cb79f5-c226-4be8-9438-ec39b2c52488"), "Too much Sleep Level 😃", "Too much", null, 10 },
+                    { new Guid("152b08b0-6988-4978-8836-98164371a8a7"), "Low Sleep Level 🙁", "Low", null, 5 },
+                    { new Guid("15a4cfe0-0bcd-4136-a0be-8338d6bf8f30"), "OK Sleep Level 🙂", "OK", null, 8 },
+                    { new Guid("7381a972-bf07-41e7-ab2c-53ba1c86d100"), "Medium Sleep Level 😐", "Medium", null, 6 }
                 });
 
             migrationBuilder.InsertData(
@@ -359,11 +387,11 @@ namespace DbContext.Migrations.SqlServerDbContext
                 columns: new[] { "StaffId", "FirstName", "LastName", "PersonalNumber" },
                 values: new object[,]
                 {
-                    { new Guid("1061f5fa-ebcb-4157-99b2-da354e407dec"), "Moris", "Andre", "19750105-1111" },
-                    { new Guid("d1ce741e-8f97-4634-85a1-a50b2b137202"), "Madi", "Alabama", "19800613-1111" },
-                    { new Guid("dff6e514-06df-49f3-a993-8057324368bf"), "Jane", "Smith", "19610228-1212" },
-                    { new Guid("e21c348a-95d0-4e94-b946-59b1c67a68eb"), "John", "Doe", "19900516-2222" },
-                    { new Guid("f6168696-712c-4dad-97bc-5d498cb6c5d8"), "Alice", "Johnson", "19931001-4444" }
+                    { new Guid("0bc53a1c-e2fa-4907-b14b-9fb51f76188b"), "Jane", "Smith", "19610228-1212" },
+                    { new Guid("21aa906d-05dd-4f59-a189-41890c85b735"), "Alice", "Johnson", "19931001-4444" },
+                    { new Guid("222f78a9-e094-4296-861a-a08957ed03f7"), "Madi", "Alabama", "19800613-1111" },
+                    { new Guid("272669c5-d8da-4fe9-b30e-6cb7112492f6"), "John", "Doe", "19900516-2222" },
+                    { new Guid("847e9f16-37d6-4fcb-8e23-da6be2523134"), "Moris", "Andre", "19750105-1111" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -379,6 +407,18 @@ namespace DbContext.Migrations.SqlServerDbContext
                 column: "PatientDbMPatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ActivityLevels_PatientDbMPatientId",
+                schema: "supusr",
+                table: "ActivityLevels",
+                column: "PatientDbMPatientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppetiteLevels_PatientDbMPatientId",
+                schema: "supusr",
+                table: "AppetiteLevels",
+                column: "PatientDbMPatientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Appetites_AppetiteLevelDbMAppetiteLevelId",
                 schema: "supusr",
                 table: "Appetites",
@@ -388,6 +428,12 @@ namespace DbContext.Migrations.SqlServerDbContext
                 name: "IX_Appetites_PatientDbMPatientId",
                 schema: "supusr",
                 table: "Appetites",
+                column: "PatientDbMPatientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MoodKinds_PatientDbMPatientId",
+                schema: "supusr",
+                table: "MoodKinds",
                 column: "PatientDbMPatientId");
 
             migrationBuilder.CreateIndex(
@@ -415,6 +461,12 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr",
                 table: "Patients",
                 column: "StaffDbMStaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SleepLevels_PatientDbMPatientId",
+                schema: "supusr",
+                table: "SleepLevels",
+                column: "PatientDbMPatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sleeps_PatientDbMPatientId",
@@ -465,11 +517,11 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Patients",
+                name: "SleepLevels",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "SleepLevels",
+                name: "Patients",
                 schema: "supusr");
 
             migrationBuilder.DropTable(

@@ -187,32 +187,56 @@ function PatientPage() {
     setter(e.target.value);
   };
 
-  // ✅ Save selected values
   const handleSave = async () => {
-    if (!selectedMoodKind || !selectedActivityLevel || !selectedAppetiteLevel || !selectedSleepLevel) {
-      alert("Vänligen välj alla nivåer.");
-      return;
-    }
-
     try {
-      await axios.post('https://localhost:7066/api/Graph/CreateItem', {
+      // Find the complete data objects for each selection
+      const moodData = moodKinds.find(m => m.moodKindId === selectedMoodKind);
+      const activityData = activityLevels.find(a => a.activityLevelId === selectedActivityLevel);
+      const appetiteData = appetiteLevels.find(a => a.appetiteLevelId === selectedAppetiteLevel);
+      const sleepData = sleepLevels.find(s => s.sleepLevelId === selectedSleepLevel);
+  
+      // Prepare data for API and state
+      const saveData = {
         patientId: patientId,
         moodKindId: selectedMoodKind,
         activityLevelId: selectedActivityLevel,
         appetiteLevelId: selectedAppetiteLevel,
         sleepLevelId: selectedSleepLevel,
         date: new Date().toISOString(),
+        // Include complete objects for review page
+        moodKind: moodData,
+        activityLevel: activityData,
+        appetiteLevel: appetiteData,
+        sleepLevel: sleepData,
+        // Include ratings for graph
+        moodRating: moodData?.rating,
+        activityRating: activityData?.rating,
+        appetiteRating: appetiteData?.rating,
+        sleepRating: sleepData?.rating
+      };
+  
+      // Save to API
+      await axios.post('https://localhost:7066/api/Graph/CreateItem', {
+        patientId: patientId,
+        moodKindId: selectedMoodKind,
+        activityLevelId: selectedActivityLevel,
+        appetiteLevelId: selectedAppetiteLevel,
+        sleepLevelId: selectedSleepLevel,
+        date: new Date().toISOString()
       });
-
-      alert("Symptom sparad!");
-      // After saving, navigate to the GraphPage
-      navigate(`/graph/${patientId}`);  // Navigate to the graph page with the patientId
+  
+      // Save to localStorage for graph data fallback
+      const existingData = JSON.parse(localStorage.getItem('graphData') || '[]');
+      localStorage.setItem('graphData', JSON.stringify([...existingData, saveData]));
+  
+      // Navigate to review page with full data
+      navigate(`/review/${patientId}`, { state: saveData });
+  
     } catch (err) {
-      console.error("Error saving symptom:", err);
-      alert("Kunde inte spara symptom");
+      console.error("Error saving data:", err);
+      alert("Could not save data");
     }
   };
-
   if (loading) return <div>Laddar patient...</div>;
   if (!patient) return <div>Ingen patient hittad.</div>;
 

@@ -15,10 +15,10 @@ public class Patient : IPatient
     public virtual Guid? GraphId { get ; set ; }  //FK
 
     public  virtual IGraph Graph { get; set; }
-    public virtual List<IMood> Moods {get; set;}
-    public virtual List<ISleep> Sleeps {get; set;}
-    public virtual List <IActivity> Activities{ get; set; }
-    public virtual List <IAppetite> Appetites{ get; set; }
+    public virtual List<IMoodKind> MoodKinds {get; set;}
+    public virtual List<ISleepLevel> SleepLevels {get; set;}
+    public virtual List <IActivityLevel> ActivityLevels{ get; set; }
+    public virtual List <IAppetiteLevel> AppetiteLevels{ get; set; }
 
     public static List<Patient> GetSeedPatientsData()
         {
