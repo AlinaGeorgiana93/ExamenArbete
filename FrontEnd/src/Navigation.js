@@ -72,9 +72,9 @@ const Navigation = () => {
         <NavLinks>
           {/* <StyledLink as={Link} to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> */}
           <StyledLink as={Link} to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink>
-          <StyledLink as={Link} to="/patient/:patientId"><FaUserInjured size={18} /> {t('patient')}</StyledLink>
+          <StyledLink as={Link} to="/patient/"><FaUserInjured size={18} /> {t('patient')}</StyledLink>
           <StyledLink as={Link} to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink>
-          <StyledLink as={Link} to="/graph/:id" ><FaChartLine size={18} /> {t('Graph')}</StyledLink> {/* Added Graph page link */}
+          <StyledLink as={Link} to="/graph"><FaChartLine size={18} /> {t('Graph')}</StyledLink> {/* Added Graph page link */}
         </NavLinks>
       </Nav>
       {logoutMessage && (
