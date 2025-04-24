@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import {
   LineChart, BarChart, AreaChart, PieChart, RadarChart, ScatterChart,
@@ -60,10 +61,8 @@ const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 const chartTypes = [
   { key: 'line', name: 'Line Chart' },
   { key: 'bar', name: 'Bar Chart' },
-  { key: 'area', name: 'Area Chart' },
   { key: 'pie', name: 'Pie Chart' },
-  { key: 'radar', name: 'Radar Chart' },
-  { key: 'scatter', name: 'Scatter Chart' }
+
 ];
 
 const metrics = [
@@ -179,29 +178,7 @@ function GraphPage() {
             ))}
           </BarChart>
         );
-      case 'area':
-        return (
-          <AreaChart data={formattedData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis domain={[0, 10]} />
-            <Tooltip />
-            <Legend />
-            {metrics.map(metric => (
-              activeMetrics[metric.key] && (
-                <Area
-                  key={metric.key}
-                  type="monotone"
-                  dataKey={metric.key}
-                  name={metric.name}
-                  stroke={metric.color}
-                  fill={metric.color}
-                  fillOpacity={0.4}
-                />
-              )
-            ))}
-          </AreaChart>
-        );
+      
       case 'pie':
         // Pie chart shows average values for all metrics
         const pieData = metrics.map(metric => {
@@ -236,68 +213,7 @@ function GraphPage() {
             <Legend />
           </PieChart>
         );
-      case 'radar':
-        // Radar chart shows all metrics
-        const radarData = metrics.map(metric => {
-          const values = formattedData.map(d => d[metric.key]).filter(v => v !== undefined);
-          const average = values.length > 0 ? 
-            values.reduce((a, b) => a + b, 0) / values.length : 0;
-          return {
-            subject: metric.name,
-            A: average,
-            fullMark: 10,
-            color: metric.color
-          };
-        });
-        
-        return (
-          <RadarChart outerRadius={150} width={600} height={400} data={radarData}>
-            <PolarGrid />
-            <PolarAngleAxis dataKey="subject" />
-            <PolarRadiusAxis angle={30} domain={[0, 10]} />
-            <Radar
-              name="Average"
-              dataKey="A"
-              stroke="#8884d8"
-              fill="#8884d8"
-              fillOpacity={0.6}
-            />
-            <Legend />
-            <Tooltip />
-          </RadarChart>
-        );
-      case 'scatter':
-        // Scatter chart shows all metrics
-        const scatterData = formattedData.map(dataPoint => {
-          const point = { date: dataPoint.date };
-          metrics.forEach(metric => {
-            point[metric.key] = dataPoint[metric.key];
-          });
-          return point;
-        });
-        
-        return (
-          <ScatterChart
-            width={600}
-            height={400}
-            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-            data={scatterData}
-          >
-            <CartesianGrid />
-            <XAxis dataKey="date" name="Date" />
-            <YAxis type="number" name="Rating" domain={[0, 10]} />
-            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-            <Legend />
-            {metrics.map(metric => (
-              <Scatter
-                key={metric.key}
-                name={metric.name}
-                dataKey={metric.key}
-                fill={metric.color}
-              />
-            ))}
-          </ScatterChart>
-        );
+     
       default:
         return null;
     }
@@ -348,37 +264,37 @@ function GraphPage() {
           Symptom Progress Visualization
         </h2>
         
-        <ChartControls>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {chartTypes.map(type => (
-              <ChartTypeButton
-                key={type.key}
-                active={chartType === type.key}
-                onClick={() => setChartType(type.key)}
-              >
-                {type.name}
-              </ChartTypeButton>
-            ))}
-          </div>
-          
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {metrics.map(metric => (
-              <MetricToggle 
-                key={metric.key}
-                active={activeMetrics[metric.key]}
-                onClick={() => toggleMetric(metric.key)}
-              >
-                <input
-                  type="checkbox"
-                  checked={activeMetrics[metric.key]}
-                  onChange={() => {}}
-                  style={{ accentColor: metric.color }}
-                />
-                {metric.name}
-              </MetricToggle>
-            ))}
-          </div>
-        </ChartControls>
+        {/* CHART TYPE BUTTONS */}
+  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', gap: '10px', flexWrap: 'wrap' }}>
+    {chartTypes.map(type => (
+      <ChartTypeButton
+        key={type.key}
+        active={chartType === type.key}
+        onClick={() => setChartType(type.key)}
+      >
+        {type.name}
+      </ChartTypeButton>
+    ))}
+  </div>
+
+  {/* METRIC CHECKBOXES */}
+  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px' }}>
+    {metrics.map(metric => (
+      <MetricToggle 
+        key={metric.key}
+        active={activeMetrics[metric.key]}
+        onClick={() => toggleMetric(metric.key)}
+      >
+        <input
+          type="checkbox"
+          checked={activeMetrics[metric.key]}
+          onChange={() => {}}
+          style={{ accentColor: metric.color }}
+        />
+        {metric.name}
+      </MetricToggle>
+    ))}
+  </div>
 
         <div style={{ width: '100%', height: '500px' }}>
           <ResponsiveContainer width="100%" height="100%">

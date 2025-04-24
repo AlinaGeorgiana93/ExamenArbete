@@ -5,7 +5,7 @@ npm install i18next react-i18next @reduxjs/toolkit react-icons
 npm install axios
 npm install recharts
 npm install react-select
-
+npm install react-datepicker
 --------------------------
 To merge main in your branch: git pull origin main
 --------------------------
