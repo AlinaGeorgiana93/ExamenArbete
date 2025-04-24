@@ -5,7 +5,7 @@ import './src/index.js';
 import './src/index.css';
 import StartPage from './screens/StartPage';
 import AdminDashboard from './screens/AdminDashboard';
-// import AboutPage from './screens/AboutPage';
+//import AboutPage from './screens/AboutPage';
 import PatientPage from './screens/PatientPage';
 import StaffPage from './screens/StaffPage';
 import GraphPage from './screens/GraphPage';
@@ -33,7 +33,7 @@ function App() {
             <Route path="/review/:patientId" element={<PatientDataReview />} />
             <Route path="/graph/:id" element={<GraphPage />} />
 
-            {/* <Route path="/about" element={<AboutPage />} /> */}
+            <Route path="/about" element={<AboutUs />} />
 
           </Route>
         </Routes>
