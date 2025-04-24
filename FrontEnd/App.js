@@ -13,6 +13,7 @@ import PatientDataReview from './screens/PatientDataReview';
 import { store } from './language/store/store';
 import './language/i18n.js';
 import Layout from './src/media/Layout.js'; // Layout will wrap all inner pages except StartPage
+import AboutUs from './screens/AboutUs';
 
 function App() {
   return (

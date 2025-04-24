@@ -7,3 +7,4 @@ npm install recharts
 npm install react-select
 
 --------------------------
+To merge main in your branch: git pull origin main
