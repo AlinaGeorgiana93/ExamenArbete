@@ -122,7 +122,7 @@ function PatientDataReview() {
 
       <ButtonGroup>
         <Button onClick={() => navigate(`/graph/${patientId}`)}>
-          View Full Graph
+          Save and Create a graph
         </Button>
         <Button onClick={() => navigate(`/patient/${patientId}`)}>
           Go Back
