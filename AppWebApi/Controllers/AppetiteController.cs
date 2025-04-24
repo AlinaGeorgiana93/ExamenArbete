@@ -8,7 +8,7 @@ using Services;
 namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Policy = null, Roles = "staff, sysadmin")]
+        Policy = null, Roles = "usr, sysadmin")]
 
     [ApiController]
     [Route("api/[controller]/[action]")]

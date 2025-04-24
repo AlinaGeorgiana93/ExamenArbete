@@ -88,42 +88,66 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             ActivityLevelId = new Guid("803b7531-4896-4bd1-9668-b1f052a3575e"),
+=======
+                            ActivityLevelId = new Guid("65b0bff4-8825-4de9-b63a-86902a53b953"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Resting 🛌",
                             Name = "Resting",
                             Rating = 1
                         },
                         new
                         {
+<<<<<<< HEAD
                             ActivityLevelId = new Guid("04e9aca4-c07b-41a0-9bbb-cb73fa445eca"),
+=======
+                            ActivityLevelId = new Guid("1867ef24-a234-434a-83a1-587b4020265c"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Reading 📖",
                             Name = "Reading",
                             Rating = 3
                         },
                         new
                         {
+<<<<<<< HEAD
                             ActivityLevelId = new Guid("e93a5173-9234-4ce0-a3d3-1f2f163f0968"),
+=======
+                            ActivityLevelId = new Guid("62545164-4872-4fc1-ba92-c47d660bc3a8"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Take a Walk 🚶‍♂️",
                             Name = "Take a Walk",
                             Rating = 5
                         },
                         new
                         {
+<<<<<<< HEAD
                             ActivityLevelId = new Guid("4b3369d6-0d61-4291-a881-abfc029ce2f1"),
+=======
+                            ActivityLevelId = new Guid("05fe1460-90e5-49f0-8b0c-7ecf27d1b9b1"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Jogging 🏃‍♂️",
                             Name = "Jogging",
                             Rating = 10
                         },
                         new
                         {
+<<<<<<< HEAD
                             ActivityLevelId = new Guid("45eefd8e-4e6f-4a04-9324-0735f65fadd3"),
+=======
+                            ActivityLevelId = new Guid("807a8f79-1621-476a-b70f-3b10199daf9d"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Swimming 🏊‍♂️",
                             Name = "Swimming",
                             Rating = 7
                         },
                         new
                         {
+<<<<<<< HEAD
                             ActivityLevelId = new Guid("609c6682-64b0-4879-ae26-01f2674d9d00"),
+=======
+                            ActivityLevelId = new Guid("0e97df90-5d21-436b-86a2-8f48bb79c7fc"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Training 🏋️‍♂️",
                             Name = "Training",
                             Rating = 9
@@ -196,35 +220,55 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             AppetiteLevelId = new Guid("0b69eaa0-47cb-4e02-a2c6-f12837ee5664"),
+=======
+                            AppetiteLevelId = new Guid("ff394870-be8d-448a-b6a3-5038360d5977"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Didn't Eat At All 🤢",
                             Name = "Didn't Eat At All",
                             Rating = 1
                         },
                         new
                         {
+<<<<<<< HEAD
                             AppetiteLevelId = new Guid("9a11d776-8133-49b0-96c3-c82ae3f7f5d5"),
+=======
+                            AppetiteLevelId = new Guid("8ae632ad-d731-47cd-ae0a-ec511b570df8"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Little 🍽️",
                             Name = "Little",
                             Rating = 3
                         },
                         new
                         {
+<<<<<<< HEAD
                             AppetiteLevelId = new Guid("56e3b4e0-22b2-4992-ae59-40e3d2b526be"),
+=======
+                            AppetiteLevelId = new Guid("bd3294be-4466-4d26-a8da-2df953100ba1"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Normal Appetite 🙂",
                             Name = "Normal",
                             Rating = 5
                         },
                         new
                         {
+<<<<<<< HEAD
                             AppetiteLevelId = new Guid("ddc09840-b31a-48f2-8ab4-0e1499abb54b"),
+=======
+                            AppetiteLevelId = new Guid("a18c9346-eab8-4070-8585-bf8053ec1976"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Medium 😋",
                             Name = "Medium",
                             Rating = 7
                         },
                         new
                         {
+<<<<<<< HEAD
                             AppetiteLevelId = new Guid("577348d7-3039-42ae-8f55-44cc61832914"),
+=======
+                            AppetiteLevelId = new Guid("8532b8f7-73b7-4e19-a448-b3295334d7a4"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Very Much 🍴",
                             Name = "Very Much",
                             Rating = 10
@@ -314,49 +358,77 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             MoodKindId = new Guid("c8ad9ef3-21a1-40b6-bbf2-cf23cab1e5f7"),
+=======
+                            MoodKindId = new Guid("644ca500-7847-4dc4-8dfb-db99157f8194"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Happy 😃",
                             Name = "Happy",
                             Rating = 10
                         },
                         new
                         {
+<<<<<<< HEAD
                             MoodKindId = new Guid("c12f55f5-ea19-42a2-948e-5f267bbf741f"),
+=======
+                            MoodKindId = new Guid("61967eb2-e900-46bd-9150-c718fddf011e"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Sad 🙁",
                             Name = "Sad",
                             Rating = 2
                         },
                         new
                         {
+<<<<<<< HEAD
                             MoodKindId = new Guid("26e8e141-a1f4-41ca-b9fc-05cf8cbe0616"),
+=======
+                            MoodKindId = new Guid("49eba48c-c9b6-401e-9cdc-9b755bc51b10"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Angry 😡",
                             Name = "Angry",
                             Rating = 3
                         },
                         new
                         {
+<<<<<<< HEAD
                             MoodKindId = new Guid("d1a6d258-c906-4336-bdb9-077d06604741"),
+=======
+                            MoodKindId = new Guid("4525d82e-ff94-4a2c-bcfe-4b19a3d65d05"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Lovely 😍",
                             Name = "Lovely",
                             Rating = 7
                         },
                         new
                         {
+<<<<<<< HEAD
                             MoodKindId = new Guid("faea145e-01bf-4b58-af08-30c940c4c905"),
+=======
+                            MoodKindId = new Guid("c35db38a-a179-4bb7-aa53-e39f12bbd3ec"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Depressed 😢",
                             Name = "Depressed",
                             Rating = 1
                         },
                         new
                         {
+<<<<<<< HEAD
                             MoodKindId = new Guid("68c8f4d3-cb65-40de-9a0c-2ce3573d3d11"),
+=======
+                            MoodKindId = new Guid("eab15868-aa6b-4dbd-91cc-fdc9d6bcfe6c"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Excited 🤩",
                             Name = "Excited",
                             Rating = 9
                         },
                         new
                         {
+<<<<<<< HEAD
                             MoodKindId = new Guid("a622103f-0771-4196-9d2c-96e6323b8409"),
+=======
+                            MoodKindId = new Guid("32f5ddf5-275b-4723-b344-e0a941eae8f8"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Bored 😒",
                             Name = "Bored",
                             Rating = 4
@@ -397,42 +469,66 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             PatientId = new Guid("04cd3287-2b4a-4392-bebb-75858184394c"),
+=======
+                            PatientId = new Guid("bfd07c5b-a54a-4eb9-a436-9be9547662c5"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Madi",
                             LastName = "Alabama",
                             PersonalNumber = "19560831-1111"
                         },
                         new
                         {
+<<<<<<< HEAD
                             PatientId = new Guid("55c3ce79-d30a-4b9f-93ce-0612a389e8f5"),
+=======
+                            PatientId = new Guid("ce776f78-3b7b-41bc-a008-8ab900d11c93"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "John",
                             LastName = "Doe",
                             PersonalNumber = "19480516-2222"
                         },
                         new
                         {
+<<<<<<< HEAD
                             PatientId = new Guid("a7e34c59-559b-4904-b507-a4c1f85bb690"),
+=======
+                            PatientId = new Guid("ab83108c-808d-4a1a-9db6-9acf49ef2543"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Jane",
                             LastName = "Smith",
                             PersonalNumber = "19610228-1212"
                         },
                         new
                         {
+<<<<<<< HEAD
                             PatientId = new Guid("0eb70961-b98d-4093-9068-2e47e75360fb"),
+=======
+                            PatientId = new Guid("66306187-c844-4a1d-acdd-352a36d268d5"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Alice",
                             LastName = "Johnson",
                             PersonalNumber = "19450801-4444"
                         },
                         new
                         {
+<<<<<<< HEAD
                             PatientId = new Guid("622ed5fd-fceb-433c-ba0f-a08861de4c56"),
+=======
+                            PatientId = new Guid("061153fc-78d9-409f-8662-25f162bd2bcc"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Bob",
                             LastName = "Brown",
                             PersonalNumber = "19501110-1331"
                         },
                         new
                         {
+<<<<<<< HEAD
                             PatientId = new Guid("f8deebe1-b069-4b4e-b122-64e9d58d836e"),
+=======
+                            PatientId = new Guid("047d0804-3bcd-4c60-b862-ba69266c83ee"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Charlie",
                             LastName = "Davis",
                             PersonalNumber = "19511231-16181"
@@ -505,28 +601,44 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             SleepLevelId = new Guid("152b08b0-6988-4978-8836-98164371a8a7"),
+=======
+                            SleepLevelId = new Guid("a504581f-febc-4c3c-a792-328b8bd2b633"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Low Sleep Level 🙁",
                             Name = "Low",
                             Rating = 5
                         },
                         new
                         {
+<<<<<<< HEAD
                             SleepLevelId = new Guid("7381a972-bf07-41e7-ab2c-53ba1c86d100"),
+=======
+                            SleepLevelId = new Guid("3eac0d4a-b287-496b-89ad-6123eaff68e5"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Medium Sleep Level 😐",
                             Name = "Medium",
                             Rating = 6
                         },
                         new
                         {
+<<<<<<< HEAD
                             SleepLevelId = new Guid("15a4cfe0-0bcd-4136-a0be-8338d6bf8f30"),
+=======
+                            SleepLevelId = new Guid("d1eb02f4-3943-496f-92be-7767b1183431"),
+>>>>>>> Userlogin-error-resolve
                             Label = "OK Sleep Level 🙂",
                             Name = "OK",
                             Rating = 8
                         },
                         new
                         {
+<<<<<<< HEAD
                             SleepLevelId = new Guid("10cb79f5-c226-4be8-9438-ec39b2c52488"),
+=======
+                            SleepLevelId = new Guid("7490c8ca-cbdd-46c7-8457-fd398260688f"),
+>>>>>>> Userlogin-error-resolve
                             Label = "Too much Sleep Level 😃",
                             Name = "Too much",
                             Rating = 10
@@ -555,35 +667,55 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             StaffId = new Guid("847e9f16-37d6-4fcb-8e23-da6be2523134"),
+=======
+                            StaffId = new Guid("803b3d5e-dc70-402c-87d5-cff15ab94dbe"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Moris",
                             LastName = "Andre",
                             PersonalNumber = "19750105-1111"
                         },
                         new
                         {
+<<<<<<< HEAD
                             StaffId = new Guid("222f78a9-e094-4296-861a-a08957ed03f7"),
+=======
+                            StaffId = new Guid("4529ab6c-b384-42ab-98ca-daecb9e62dc8"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Madi",
                             LastName = "Alabama",
                             PersonalNumber = "19800613-1111"
                         },
                         new
                         {
+<<<<<<< HEAD
                             StaffId = new Guid("0bc53a1c-e2fa-4907-b14b-9fb51f76188b"),
+=======
+                            StaffId = new Guid("55d210a3-7de2-4821-bf3e-1df73c5d81d8"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Jane",
                             LastName = "Smith",
                             PersonalNumber = "19610228-1212"
                         },
                         new
                         {
+<<<<<<< HEAD
                             StaffId = new Guid("21aa906d-05dd-4f59-a189-41890c85b735"),
+=======
+                            StaffId = new Guid("b9bcbe2c-bb5e-43ff-b5aa-30ece722be86"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "Alice",
                             LastName = "Johnson",
                             PersonalNumber = "19931001-4444"
                         },
                         new
                         {
+<<<<<<< HEAD
                             StaffId = new Guid("272669c5-d8da-4fe9-b30e-6cb7112492f6"),
+=======
+                            StaffId = new Guid("93fbe84f-5d85-489a-86f8-7324a8071398"),
+>>>>>>> Userlogin-error-resolve
                             FirstName = "John",
                             LastName = "Doe",
                             PersonalNumber = "19900516-2222"

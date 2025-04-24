@@ -42,48 +42,33 @@ public class AdminDbRepos
         };
     }
 
-    public async Task<UsrInfoDto> SeedUsersAsync(int nrOfUsers, int nrOfSysAdmin)
+   public async Task SeedDefaultUsersAsync()
+{
+    if (!_dbContext.Users.Any())
     {
-        _logger.LogInformation($"Seeding {nrOfUsers} staff ");
-
-        //First delete all existing users
-        foreach (var u in _dbContext.Users)
-            _dbContext.Users.Remove(u);
-
-        //add users
-        for (int i = 1; i <= nrOfUsers; i++)
+        _dbContext.Users.AddRange(new List<UserDbM>
         {
-            _dbContext.Users.Add(new UserDbM
+            new UserDbM
             {
                 UserId = Guid.NewGuid(),
-                UserName = $"staff{i}",
-                Email = $"staff{i}@gmail.com",
-                Password = _encryptions.EncryptPasswordToBase64($"staff{i}"),
-                Role = "staff"
-            });
-        }
-
-
-        //add system adminitrators
-        for (int i = 1; i <= nrOfSysAdmin; i++)
-        {
-            _dbContext.Users.Add(new UserDbM
-            {
-                UserId = Guid.NewGuid(),
-                UserName = $"sysadmin{i}",
-                Email = $"sysadmin{i}@gmail.com",
-                Password = _encryptions.EncryptPasswordToBase64($"sysadmin{i}"),
+                UserName = "sysadmin1",
+                Email = "sysadmin1@gmail.com",
+                Password = _encryptions.EncryptPasswordToBase64("sysadmin1"),
                 Role = "sysadmin"
-            });
-        }
+            },
+            new UserDbM
+            {
+                UserId = Guid.NewGuid(),
+                UserName = "user1",
+                Email = "user1@gmail.com",
+                Password = _encryptions.EncryptPasswordToBase64("user1"),
+                Role = "usr"
+            }
+        });
+
         await _dbContext.SaveChangesAsync();
-
-        var _info = new UsrInfoDto
-        {
-            NrStaff = await _dbContext.Users.CountAsync(i => i.Role == "staff"),
-            NrSystemAdmin = await _dbContext.Users.CountAsync(i => i.Role == "sysadmin")
-        };
-
-        return _info;
+        _logger.LogInformation("Default users seeded.");
     }
+}
+
 }

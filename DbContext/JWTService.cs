@@ -37,7 +37,7 @@ public class JWTService
     }
 
     public JwtUserToken CreateJwtUserToken(LoginUserSessionDto _usrSession)
-    {
+    {   
         if (_usrSession == null) throw new ArgumentException($"{nameof(_usrSession)} cannot be null");
 
         var _userToken = new JwtUserToken();
@@ -63,6 +63,7 @@ public class JWTService
         _userToken.UserName = _usrSession.UserName;
         _userToken.UserId = _usrSession.UserId.Value;
 
+        Console.WriteLine($"CreateJwtUserToken was called with UserId: {_usrSession.UserId}");
         return _userToken;
     }
 

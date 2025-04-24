@@ -48,73 +48,25 @@ namespace AppWebApi.Controllers
         }
 
 #if DEBUG
-        // [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        //     Policy = null, Roles = "sysadmin")]
-
-        // [HttpGet()]
-        // [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
-        // [ProducesResponseType(400, Type = typeof(string))]
-        // public async Task<IActionResult> Seed(string count = "10")
-        // {
-        //     try
-        //     {
-        //         int countArg = int.Parse(count);
-
-        //         _logger.LogInformation($"{nameof(Seed)}: {nameof(countArg)}: {countArg}");
-        //         var info = await _adminService.SeedAsync(countArg);
-        //         return Ok(info);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _logger.LogError($"{nameof(Seed)}: {ex.InnerException?.Message}");
-        //         return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
-        //     }
-        // }
-
-        // [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        //     Policy = null, Roles = "sysadmin")]
-
-        // [HttpGet()]
-        // [ProducesResponseType(200, Type = typeof(ResponseItemDto<GstUsrInfoAllDto>))]
-        // [ProducesResponseType(400, Type = typeof(string))]
-        // public async Task<IActionResult> RemoveSeed(string seeded = "true")
-        // {
-        //     try
-        //     {
-        //         bool seededArg = bool.Parse(seeded);
-
-        //         _logger.LogInformation($"{nameof(RemoveSeed)}: {nameof(seededArg)}: {seededArg}");
-        //         var info = await _adminService.RemoveSeedAsync(seededArg);
-        //         return Ok(info);        
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _logger.LogError($"{nameof(RemoveSeed)}: {ex.InnerException?.Message}");
-        //         return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
-        //     }
-        // }
-
+      
         //You need to run this with sysadmin connection string
-        [HttpGet()]
-        [ProducesResponseType(200, Type = typeof(UsrInfoDto))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> SeedUsers(string countUsr = "10", string countSysAdmin = "1")
-        {
-            try
-            {
-                int _countUsr = int.Parse(countUsr);
-                int _countSysAdmin = int.Parse(countSysAdmin);
+       [HttpPost("seed-default-users")]
+public async Task<IActionResult> SeedDefaultUsersAsync()
+{
+    try
+    {
+        _logger.LogInformation("Seeding default users (sysadmin1, staff1) if not already present.");
 
-                _logger.LogInformation($"{nameof(SeedUsers)}: {nameof(_countUsr)}: {_countUsr}, {nameof(_countSysAdmin)}: {_countSysAdmin}");
+        await _adminService.SeedDefaultUsersAsync(); // assumes this checks if users already exist
+        return Ok("Default users created or already exist.");
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error while seeding default users.");
+        return BadRequest($"{ex.Message} {ex.InnerException?.Message}");
+    }
+}
 
-                UsrInfoDto _info = await _adminService.SeedUsersAsync(_countUsr, _countSysAdmin);
-                return Ok(_info);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
-            }
-        }
 #endif
 
         [HttpGet()]
