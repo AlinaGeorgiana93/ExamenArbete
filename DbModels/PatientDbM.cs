@@ -28,34 +28,34 @@ public class PatientDbM : Patient
     public GraphDbM GraphDbM { get; set; } = null;
 
     [NotMapped]
-    public override List<IAppetite> Appetites { get => AppetitesDbM?.ToList<IAppetite>(); set => throw new NotImplementedException(); }
+    public override List<IAppetiteLevel> AppetiteLevels { get => AppetiteLevelsDbM?.ToList<IAppetiteLevel>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
-    public List<AppetiteDbM> AppetitesDbM { get; set; }
+    public List<AppetiteLevelDbM> AppetiteLevelsDbM { get; set; }
 
 
     [NotMapped]
-    public override List<IMood> Moods { get => MoodsDbM?.ToList<IMood>(); set => throw new NotImplementedException(); }
+    public override List<IMoodKind> MoodKinds { get => MoodKindsDbM?.ToList<IMoodKind>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
-    public List<MoodDbM> MoodsDbM { get; set; }
+    public List<MoodKindDbM> MoodKindsDbM { get; set; }
 
     [NotMapped]
-    public override List<IActivity> Activities { get => ActivitiesDbM?.ToList<IActivity>(); set => throw new NotImplementedException(); }
+    public override List<IActivityLevel> ActivityLevels { get => ActivityLevelsDbM?.ToList<IActivityLevel>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     [Required]
-    public List<ActivityDbM> ActivitiesDbM { get; set; }
+    public List<ActivityLevelDbM> ActivityLevelsDbM { get; set; }
 
 
     [NotMapped]
-    public override List<ISleep> Sleeps { get => SleepsDbM?.ToList<ISleep>(); set => throw new NotImplementedException(); }
+    public override List<ISleepLevel> SleepLevels { get => SleepLevelsDbM?.ToList<ISleepLevel>(); set => throw new NotImplementedException(); }
 
     [JsonIgnore]
     // [Required]
-    public List<SleepDbM> SleepsDbM { get; set; }
+    public List<SleepLevelDbM> SleepLevelsDbM { get; set; }
     public static new List<PatientDbM> GetSeedPatientsData()
     {
         return [.. Patient.GetSeedPatientsData()

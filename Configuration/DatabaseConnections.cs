@@ -32,27 +32,54 @@ public class DatabaseConnections
         },
 
     };
-
+   
     public DbConnectionDetail GetDataConnectionDetails(string user) => GetLoginDetails(user, _activeDataSet);
 
-    DbConnectionDetail GetLoginDetails(string user, DbSetDetailOptions dataSet)
-    {
-        if (string.IsNullOrEmpty(user) || string.IsNullOrWhiteSpace(user))
-            throw new ArgumentNullException(nameof(user));
+   DbConnectionDetail GetLoginDetails(string user, DbSetDetailOptions dataSet)
 
-        var conn = dataSet.DbConnections.First(m => m.DbUserLogin.Trim().ToLower() == user.Trim().ToLower());
-        return new DbConnectionDetail
-        {
-            DbUserLogin = conn.DbUserLogin,
-            DbConnection = conn.DbConnection,
-            DbConnectionString = _configuration.GetConnectionString(conn.DbConnection)
-        };
+   
+{  Console.WriteLine($"Looking for user: '{user}'");
+   Console.WriteLine($"Available users: {string.Join(", ", dataSet.DbConnections.Select(c => $"'{c.DbUserLogin}'"))}");
+
+    if (string.IsNullOrEmpty(user) || string.IsNullOrWhiteSpace(user))
+        throw new ArgumentNullException(nameof(user));
+
+    // Use FirstOrDefault instead of First
+    var conn = dataSet.DbConnections.FirstOrDefault(m => m.DbUserLogin.Trim().ToLower() == user.Trim().ToLower());
+
+    if (conn == null)
+    {
+        // Handle the case where no matching user was found.
+        // You can log, return null, or throw a more specific exception.
+        throw new InvalidOperationException($"No database connection found for user: {user}");
     }
 
-    //Not to revieal the connection string, I find the corresponding DbConnectionKey in the 
-    public string GetDbConnection(string DbConnectionString) =>
-            _activeDataSet.DbConnections.First(m => _configuration.GetConnectionString(m.DbConnection).Trim().ToLower() == DbConnectionString.Trim().ToLower())?.DbConnection;
+    Console.WriteLine($"Available users: {string.Join(", ", _activeDataSet.DbConnections.Select(c => c.DbUserLogin))}");
 
+    return new DbConnectionDetail
+    {
+        DbUserLogin = conn.DbUserLogin,
+        DbConnection = conn.DbConnection,
+        DbConnectionString = _configuration.GetConnectionString(conn.DbConnection)
+    };
+
+}
+
+
+    //Not to revieal the connection string, I find the corresponding DbConnectionKey in the 
+   public string GetDbConnection(string DbConnectionString)
+{
+    var connection = _activeDataSet.DbConnections
+        .FirstOrDefault(m => _configuration.GetConnectionString(m.DbConnection).Trim().ToLower() == DbConnectionString.Trim().ToLower());
+
+    if (connection == null)
+    {
+        // Handle the case where no matching DbConnection is found
+        throw new InvalidOperationException($"No matching database connection found for connection string: {DbConnectionString}");
+    }
+
+    return connection.DbConnection;
+}
 
 
     public DatabaseConnections(IConfiguration configuration, IOptions<DbConnectionSetsOptions> dbSetOption)
@@ -64,7 +91,7 @@ public class DatabaseConnections
         if (_activeDataSet == null)
             throw new ArgumentException($"Dataset with DbTag {configuration["DatabaseConnections:UseDataSetWithTag"]} not found");
     }
-
+   
 
     public class SetupInformation
     {
@@ -76,4 +103,5 @@ public class DatabaseConnections
         public DatabaseServer DataConnectionServer { get; init; }
         public string DataConnectionServerString => DataConnectionServer.ToString();  //for json clear text
     }
+    
 }

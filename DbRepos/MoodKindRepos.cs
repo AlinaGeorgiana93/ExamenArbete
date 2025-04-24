@@ -51,12 +51,12 @@ public class MoodKindDbRepos
 
         IQueryable<MoodKindDbM> query = _dbContext.MoodKinds.AsNoTracking();
 
-         if (!flat)
+        if (!flat)
          {
             query = _dbContext.MoodKinds.AsNoTracking()
             .Include(i => i.MoodsDbM);
             
-         }
+        }
          
 
         query = query.Where(i => 
@@ -138,10 +138,7 @@ public class MoodKindDbRepos
         return await ReadItemAsync(item.MoodKindId, false);    
     }
 
-    public static implicit operator MoodKindDbRepos(MoodDbRepos v)
-    {
-        throw new NotImplementedException();
-    }
+    
 
 }
 

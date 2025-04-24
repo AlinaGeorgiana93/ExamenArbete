@@ -24,21 +24,21 @@ namespace AppWebApi.Controllers
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponsePageDto<IPatient>))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> ReadItems( string flat = "true",
+        public async Task<IActionResult> ReadItems(string flat = "true",
             string filter = null, string pageNr = "0", string pageSize = "10")
         {
             try
             {
-               
+
                 bool flatArg = bool.Parse(flat);
                 int pageNrArg = int.Parse(pageNr);
                 int pageSizeArg = int.Parse(pageSize);
 
-                  _logger.LogInformation($"{nameof(ReadItems)}:{nameof(flatArg)}: {flatArg}, " +
-                    $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
-                    
-                var resp = await _service.ReadPatientsAsync(flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);     
-                return Ok(resp);     
+                _logger.LogInformation($"{nameof(ReadItems)}:{nameof(flatArg)}: {flatArg}, " +
+                  $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
+
+                var resp = await _service.ReadPatientsAsync(flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
+                return Ok(resp);
             }
             catch (Exception ex)
             {
@@ -59,11 +59,11 @@ namespace AppWebApi.Controllers
                 bool flatArg = bool.Parse(flat);
 
                 _logger.LogInformation($"{nameof(ReadItem)}: {nameof(idArg)}: {idArg}, {nameof(flatArg)}: {flatArg}");
-                
-                var item = await _service.ReadPatientAsync(idArg, flatArg);
-                if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
 
-                return Ok(item);         
+                var item = await _service.ReadPatientAsync(idArg, flatArg);
+                if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
+
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -71,28 +71,34 @@ namespace AppWebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+           Policy = null, Roles = " sysadmin")]
         [HttpDelete("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IPatient>))]
+        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> DeleteItem(string id)
         {
             try
             {
-                var idArg = Guid.Parse(id);
+                // Försök att validera att id är ett giltigt GUID innan parsing
+                if (!Guid.TryParse(id, out Guid idArg))
+                {
+                    _logger.LogError($"Invalid GUID format for id: {id}");
+                    return BadRequest("Invalid GUID format.");
+                }
 
                 _logger.LogInformation($"{nameof(DeleteItem)}: {nameof(idArg)}: {idArg}");
-                
+
                 var item = await _service.DeletePatientAsync(idArg);
-                if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
-        
-                _logger.LogInformation($"item {idArg} deleted");
-                return Ok(item);                
+                if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
+
+                _logger.LogInformation($"Item {idArg} deleted");
+                return Ok(item);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{nameof(DeleteItem)}: {ex.Message}");
-                return BadRequest(ex.Message);
+                _logger.LogError($"{nameof(DeleteItem)}: {ex.InnerException?.Message}");
+                return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
             }
         }
 
@@ -109,13 +115,14 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"{nameof(ReadItemDto)}: {nameof(idArg)}: {idArg}");
 
                 var item = await _service.ReadPatientAsync(idArg, false);
-                if (item?.Item == null) throw new ArgumentException ($"Item with id {id} does not exist");
+                if (item?.Item == null) throw new ArgumentException($"Item with id {id} does not exist");
 
                 return Ok(
-                    new ResponseItemDto<PatientCuDto>() {
-                    DbConnectionKeyUsed = item.DbConnectionKeyUsed,
-                    Item = new PatientCuDto(item.Item)
-                });
+                    new ResponseItemDto<PatientCuDto>()
+                    {
+                        DbConnectionKeyUsed = item.DbConnectionKeyUsed,
+                        Item = new PatientCuDto(item.Item)
+                    });
             }
             catch (Exception ex)
             {
@@ -134,13 +141,13 @@ namespace AppWebApi.Controllers
                 var idArg = Guid.Parse(id);
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
-                
+
                 if (item.PatientId != idArg) throw new ArgumentException("Id mismatch");
 
                 var _item = await _service.UpdatePatientAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
-               
-                return Ok(_item);             
+
+                return Ok(_item);
             }
             catch (Exception ex)
             {
@@ -149,8 +156,8 @@ namespace AppWebApi.Controllers
             }
         }
 
-       [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]  
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+             Policy = null, Roles = " sysadmin")]
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IPatient>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -159,7 +166,7 @@ namespace AppWebApi.Controllers
             try
             {
                 _logger.LogInformation($"{nameof(CreateItem)}:");
-                
+
                 var model = await _service.CreatePatientAsync(item);
                 _logger.LogInformation($"item {model.Item.PatientId} created");
 
@@ -170,6 +177,6 @@ namespace AppWebApi.Controllers
                 _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
                 return BadRequest($"Could not create. Error {ex.Message}");
             }
-    }
+        }
     }
 }

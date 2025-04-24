@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled, { createGlobalStyle } from 'styled-components'; 
+import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
 import { useDispatch } from 'react-redux';
-import { setLanguage } from '../language/languageSlice'; 
-import { getI18n } from 'react-i18next';  // <-- Use getI18n instead of i18n
+import { setLanguage } from '../language/languageSlice.js';
+import { getI18n } from 'react-i18next';
 import '../language/i18n.js';
-import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
-import axios from 'axios';  // Import axios for API calls
-
+import { useNavigate, Link } from 'react-router-dom';
+import axiosInstance from '../src/axiosInstance.js';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -18,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,18 +78,35 @@ const Input = styled.input`
   }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+`;
+
 const Button = styled.button`
-  padding: 12px;
+  padding: 10px 20px;
   background-color: #125358;
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 48%;
 
   &:hover {
     background-color: #00d4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -100,7 +116,7 @@ const Footer = styled.footer`
   font-size: 1rem;
 
   p {
-    font-size: 0.9rem; 
+    font-size: 0.9rem;
   }
 
   a {
@@ -141,106 +157,63 @@ const LanguageButton = styled.button`
   }
 `;
 
-const NavigateButton = styled.button`
-  padding: 12px;
-  background-color: #125358;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-  width: 100%;
-
-  &:hover {
-    background-color: #00d4ff;
-  }
-`;
-
 const StartPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  
+  const [loginMessage, setLoginMessage] = useState('');
+
   const handleLogin = async () => {
-    const loginData = {
-      userNameOrEmail: username,  // Use state values
-      password: password,
-    };
-  
-    console.log('Sending login data:', loginData);  // Log to check the sent data
-  
     try {
-      const response = await axios.post(
-        'https://localhost:7066/api/Guest/LoginUser',
-        loginData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        }
-      );
-  
-      // Handle success response
-      console.log('Login successful:', response.data);  // Full response
-  
-      // Save token to localStorage
+      const loginData = {
+        userNameOrEmail: username,
+        password: password,
+      };
+
+      console.log('Rigth before the execution of axiosInstance.Post:');
+      const response = await axiosInstance.post('/Guest/LoginUser', loginData);
       localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
-  
-      // Check the role and navigate accordingly
-      const role = response.data.item.userRole;  // Change 'role' to 'userRole'
-      console.log('Role from response:', role);  // Log the role for debugging
-  
+      console.log('jwtToken:', response.data.item.jwtToken.encryptedToken);
+
+      const role = response.data.item.userRole;
+
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
-        navigate('/admin');  // Navigate to the admin page
-      } else if (role === 'staff') {
-        localStorage.setItem('role', 'staff');
-        navigate('/staff');  // Navigate to the staff page
+        console.log('Sysadmin logged in }');
+        setLoginMessage(t('login_success'));
+        navigate('/admin');
+      } else if (role === 'usr') {
+        localStorage.setItem('role', 'usr');
+        console.log('Staff logged in');
+        setLoginMessage(t('login_success'));
+        navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
+
     } catch (error) {
-      console.error('Login failed:', error.response?.data || error.message);
-      alert('Login failed: Check your credentials or backend connection.');
+      setLoginError(t('login_failed'));
     }
   };
-  
-  // Define the changeLanguage function here
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleLogin();
+  };
+
   const changeLanguage = (lang) => {
-    dispatch(setLanguage(lang));  // Dispatch Redux action
-    const i18n = getI18n();  // Get i18n instance
-    i18n.changeLanguage(lang);    // Change language using i18n
+    dispatch(setLanguage(lang));
+    const i18n = getI18n();
+    i18n.changeLanguage(lang);
   };
-
-  const goToAdminDashboard = () => {
-    navigate('/admin');  // ✅ Navigate to AdminDashboard route
-  };
-
-  const goToPatientPage = () => {
-    navigate('/patient');  // ✅ Navigate to PatientPage route
-  };
-  const goToStaffPage = () => {
-    navigate('/staff');  // ✅ Navigate to StaffPage route
-  }
 
   return (
     <>
       <GlobalStyle />
-      {/* Logo clickable to navigate to the start page */}
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-        <img
-          src={logo1}
-          alt="Logo"
-          style={{
-            width: '150px', // Adjust logo size as needed
-          }}
-        />
+        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <StartPageContainer>
         <Header>
@@ -248,48 +221,43 @@ const StartPage = () => {
           <SubTitle>{t('welcome')}</SubTitle>
         </Header>
 
+        {loginMessage && <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>}
+
         <LoginForm>
-  <Label>{t('username')}</Label>
-  <Input
-    type="text"
-    placeholder={t('enter_username')}
-    value={username}
-    onChange={(e) => setUsername(e.target.value)}
-  />
+          <Label>{t('username')}</Label>
+          <Input
+            type="text"
+            placeholder={t('enter_username')}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-  <Label>{t('password')}</Label>
-  <Input
-    type="password"
-    placeholder={t('enter_password')}
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-  />
+          <Label>{t('password')}</Label>
+          <Input
+            type="password"
+            placeholder={t('enter_password')}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
 
-  {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
-  <Button onClick={handleLogin}>{t('login')}</Button>
-</LoginForm>
-
+          <ButtonContainer>
+            <Button onClick={handleLogin} disabled={!username || !password}>
+              {t('login')}
+            </Button>
+          </ButtonContainer>
+        </LoginForm>
 
         <LanguageButtons>
           <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
           <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
         </LanguageButtons>
 
-        {/* Navigation buttons at the bottom of the page */}
-        <NavigateButton onClick={goToAdminDashboard}>
-          {t('Go to Admin Dashboard')}
-        </NavigateButton>
-        <NavigateButton onClick={goToPatientPage}>
-          {t('Go to Patient Page')}
-        </NavigateButton>
-        <NavigateButton onClick={goToStaffPage}>
-          {t('Go to Staff Page')}
-        </NavigateButton>
-
         <Footer>
           <p>
-            {t('forgot_password')} <a href="/forgotpassword">{t('forgot_password_link')}</a>
+            <a href="/forgotpassword">{t('forgot_password_link')}</a>
           </p>
         </Footer>
       </StartPageContainer>

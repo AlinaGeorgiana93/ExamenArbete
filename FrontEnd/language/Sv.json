@@ -13,7 +13,7 @@
     "staff_dashboard": "Användar översikt",
     "admin": "Admin",
     "staff": "Användare",
-    "home": "Hem",
+    "Logg out": "Logga ut",
     "about Us": "Om oss",
     "logout": "Logga ut",
     "patient": "Patient",
@@ -60,7 +60,14 @@
     "view": "Visa",
     "update": "Uppdatera",
     "add_entry": "Lägg till ",
-    "edit_entry": "Redigera "
+    "edit_entry": "Redigera ",
+    "delete_entry": "Ta bort ",
+    "login_success": "Inloggning lyckades",
+    "logout_success": "Utloggning lyckades",
+    "select_staff": "Välj användare",
+    "select_person": "Välj person",
+    "login_failed": "Inloggning misslyckades"
+  
    
   }
   
