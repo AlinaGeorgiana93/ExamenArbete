@@ -18,6 +18,9 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": "prettier --write"
+    "*.js": "prettier --write",
+    "*.css": "prettier --write",
+    "*.scss": "prettier --write",
+    "*.html": "prettier --write"
   }
 }
