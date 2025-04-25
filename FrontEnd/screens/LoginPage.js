@@ -172,37 +172,70 @@ const StartPage = () => {
         userNameOrEmail: username,
         password: password,
       };
-
-      console.log('Rigth before the execution of axiosInstance.Post:');
-      const response = await axiosInstance.post('/Guest/LoginUser', loginData);
+  
+      console.log('Login Data:', loginData);
+  
+      // Try to login as a user
+      let response = await axiosInstance.post('/Guest/LoginUser', loginData);
+      console.log('User Login Response:', response); // Log the response to check the structure
+  
       localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
       console.log('jwtToken:', response.data.item.jwtToken.encryptedToken);
-
+  
       const role = response.data.item.userRole;
-
+      console.log('User Role:', role); // Log role to verify it
+  
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
-        console.log('Sysadmin logged in }');
+        console.log('Sysadmin logged in');
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'usr') {
         localStorage.setItem('role', 'usr');
-        console.log('Staff logged in');
+        console.log('User logged in');
         setLoginMessage(t('login_success'));
         navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
-
     } catch (error) {
-      setLoginError(t('login_failed'));
+      console.log('User login failed, trying staff login...');
+      console.error('Error details:', error.response?.data || error.message);
+  
+      // If user login failed, try staff login
+      const loginDataStaff = {
+        userNameOrEmail: username,
+        password: password
+      };
+
+      try {
+        const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
+        console.log('Staff Login Response:', response);
+  
+        localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+        console.log('jwtToken (Staff):', response.data.item.jwtToken.encryptedToken);
+  
+        const role = response.data.item.userRole;
+  
+        if (role === 'usr') {
+          localStorage.setItem('role', 'usr');
+          console.log('Staff logged in');
+          setLoginMessage(t('login_success'));
+          navigate('/staff');
+        } else {
+          alert('Access Denied: Invalid role.');
+        }
+      } catch (staffError) {
+        setLoginError(t('login_failed'));
+        console.error('Staff login error:', staffError.response?.data || staffError.message);
+      }
     }
   };
-
+  
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') handleLogin();
   };
-
+  
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));
     const i18n = getI18n();

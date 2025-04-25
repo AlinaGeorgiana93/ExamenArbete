@@ -56,7 +56,11 @@ const Form = styled.form`
   background: #fff;
   padding: 20px;
   border-radius: 8px;
+  width: ${props => (props.activeTab === 'staff' ? '60%' : '100%')}; /* Reduced width for staff */
+  max-width: 600px; /* Maximum width */
+  margin: 0 auto; /* Centering the form */
 `;
+
 
 const Input = styled.input`
   margin-bottom: 10px;
@@ -246,6 +250,9 @@ const AdminDashboard = () => {
   return (
     <>
       <GlobalStyle />
+            <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+              <img src={logo1} alt="Logo" style={{ width: '150px' }} />
+            </Link>
       <Container>
         <h1>{t('admin_dashboard')}</h1>
         <Tabs>
@@ -292,30 +299,60 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <Form onSubmit={handleSubmit}>
-          <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
-          <Input
-            placeholder={t('first_name')}
-            value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            required
-          />
-          <Input
-            placeholder={t('last_name')}
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            required
-          />
-          <Input
-            placeholder={t('personal_number')}
-            value={formData.personalNumber}
-            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
-            required
-          />
-          <Button type="submit">{t('add')}</Button>
-        </Form>
-      </Container>
+<Form onSubmit={handleSubmit}>
+  <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
+  
+  <Input
+    placeholder={t('first_name')}
+    value={formData.firstName}
+    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+    required
+  />
+  
+  <Input
+    placeholder={t('last_name')}
+    value={formData.lastName}
+    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+    required
+  />
+  
+  <Input
+    placeholder={t('personal_number')}
+    value={formData.personalNumber}
+    onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+    required
+  />
+
+  {/* Conditionally render email, username, and password for staff only */}
+  {activeTab === 'staff' && (
+    <>
+      <Input
+        placeholder={t('username')}
+        value={formData.username}
+        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+        required
+      />
+      
+      <Input
+        placeholder={t('password')}
+        value={formData.password}
+        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+        required
+      />
+      
+      <Input
+        placeholder={t('email')}
+        value={formData.email}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        required
+      />
     </>
+  )}
+  
+  <Button type="submit">{t('add')}</Button>
+</Form>       
+      </Container>
+    </> 
   );
 };
 

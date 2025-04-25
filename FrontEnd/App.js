@@ -3,16 +3,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import './src/index.js';
 import './src/index.css';
-import StartPage from './screens/StartPage';
+import LoginPage from './screens/LoginPage';
 import AdminDashboard from './screens/AdminDashboard';
-//import AboutPage from './screens/AboutPage';
 import PatientPage from './screens/PatientPage';
 import StaffPage from './screens/StaffPage';
 import GraphPage from './screens/GraphPage';
 import PatientDataReview from './screens/PatientDataReview';
 import { store } from './language/store/store';
 import './language/i18n.js';
-import Layout from './src/media/Layout.js'; // Layout will wrap all inner pages except StartPage
+import Layout from './src/media/Layout.js';
 import AboutUs from './screens/AboutUs';
 
 function App() {
@@ -21,7 +20,7 @@ function App() {
       <Router>
         <Routes>
           {/* Standalone StartPage */}
-          <Route path="/" element={<StartPage />} />
+          <Route path="/" element={<LoginPage />} />
 
           {/* All other routes with shared layout */}
           <Route element={<Layout />}>
