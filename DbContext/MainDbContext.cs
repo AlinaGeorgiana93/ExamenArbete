@@ -21,6 +21,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     IConfiguration _configuration;
     DatabaseConnections _databaseConnections;
 
+
     public string dbConnection => _databaseConnections.GetDbConnection(this.Database.GetConnectionString());
 
     #region C# model of database tables
@@ -59,6 +60,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         _databaseConnections = databaseConnections;
         _configuration = configuration;
+        
     }
     #endregion
 
@@ -69,7 +71,6 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         #region model the Views
         modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
         modelBuilder.Entity<GstUsrInfoStaffsDto>().ToView("vwInfoStaffs", "gstusr").HasNoKey();
-
         modelBuilder.Ignore<IPatient>(); //  Ensure IPatient is ignored
         modelBuilder.Ignore<IMoodKind>();
         modelBuilder.Ignore<IAppetiteLevel>();
@@ -78,7 +79,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Ignore<IGraph>();
         modelBuilder.Entity<MoodKindDbM>().HasData(MoodKindDbM.GetSeedMoodKindsData());
         modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
-        modelBuilder.Entity<StaffDbM>().HasData(StaffDbM.GetSeedStaffData());
+       // modelBuilder.Entity<StaffDbM>().HasData(StaffDbM.GetSeedStaffData(encryptions));
         modelBuilder.Entity<AppetiteLevelDbM>().HasData(AppetiteLevelDbM.GetSeedAppetiteLevelsData());
         modelBuilder.Entity<SleepLevelDbM>().HasData(SleepLevelDbM.GetSeedSleepLevelsData());
         modelBuilder.Entity<ActivityLevelDbM>().HasData(ActivityLevelDbM.GetSeedActivityLevelsData());

@@ -31,8 +31,31 @@ public class LoginServiceDb : ILoginService
 
 #if DEBUG
             //For test only, decypt the JWT token and compare.
-            var tmp = _jtwService.DecodeToken(usrSession.Item.JwtToken.EncryptedToken);
+            var tmp = _jtwService.DecodeToken(usrSession.Item.JwtToken.EncryptedToken.ToString());
             if (tmp.UserId != usrSession.Item.UserId) throw new SecurityException("JWT Token encryption error");
+#endif
+            return usrSession;
+        }
+        catch
+        {
+            //if there was an error during login, simply pass it on.
+            throw;
+        }
+    }
+
+      public async Task<ResponseItemDto<LoginStaffSessionDto>> LoginStaffAsync(LoginCredentialsDto usrCreds)
+    {
+        try
+        {
+            var usrSession = await _repo.LoginStaffAsync(usrCreds);
+
+            //Successful login. Create a JWT token
+            usrSession.Item.JwtToken = _jtwService.CreateJwtStaffToken(usrSession.Item);
+
+#if DEBUG
+            //For test only, decypt the JWT token and compare.
+            var tmp = _jtwService.DecodeTokenStaff(usrSession.Item.JwtToken.EncryptedToken);
+            if (tmp.StaffId != usrSession.Item.StaffId) throw new SecurityException("JWT Token encryption error");
 #endif
             return usrSession;
         }

@@ -50,7 +50,7 @@ namespace AppWebApi.Controllers
 #if DEBUG
       
         //You need to run this with sysadmin connection string
-       [HttpPost("seed-default-users")]
+       [HttpPost()]
 public async Task<IActionResult> SeedDefaultUsersAsync()
 {
     try

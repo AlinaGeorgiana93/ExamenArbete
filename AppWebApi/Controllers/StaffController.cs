@@ -10,7 +10,7 @@ using Services;
 namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Policy = null, Roles = "staff, sysadmin")]
+        Policy = null, Roles = "usr, sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class StaffController : Controller
@@ -101,7 +101,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "staff, sysadmin")]
+            Policy = null, Roles = "usr, sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<StaffCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -165,21 +165,28 @@ namespace AppWebApi.Controllers
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> CreateItem([FromBody] StaffCuDto item)
         {
+
+            
             try
             {
+
+                
                 _logger.LogInformation($"{nameof(CreateItem)}:");
 
                 var _item = await _service.CreateStaffAsync(item);
                 _logger.LogInformation($"item {_item.Item.StaffId} created");
 
+                if (string.IsNullOrWhiteSpace(item.Password))
+              throw new ArgumentException("Password is required.");
+
                 return Ok(_item);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(CreateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not create. Error {ex.InnerException?.Message}");
+                catch (Exception ex)
+    {
+        _logger.LogError(ex, $"{nameof(CreateItem)} failed: {ex.Message}");
+        return BadRequest($"Could not create. Error: {ex.Message}");
+    }
             }
-        }
     }
 
 }

@@ -129,3 +129,29 @@ CREATE OR ALTER PROC gstusr.spLogin
     END
 
 GO
+CREATE OR ALTER PROC gstusr.spLoginStaff
+    @UserNameOrEmail NVARCHAR(100),
+    @Password NVARCHAR(200),
+
+    @StaffId UNIQUEIDENTIFIER OUTPUT,
+    @UserName NVARCHAR(100) OUTPUT,
+    @Role NVARCHAR(100) OUTPUT
+    
+    AS
+
+    SET NOCOUNT ON;
+    
+    SET @StaffId = NULL;
+    SET @UserName = NULL;
+    SET @Role = NULL;
+    
+    SELECT Top 1 @StaffId = StaffId, @UserName = UserName, @Role = [Role] FROM  [graphefc].[supusr].[Staffs]
+    WHERE ((UserName = @UserNameOrEmail) OR
+           (Email IS NOT NULL AND (Email = @UserNameOrEmail))) AND ([Password] = @Password);
+    
+    IF (@StaffId IS NULL)
+    BEGIN
+        ;THROW 999999, 'Login error: wrong user or password', 1
+    END
+
+GO

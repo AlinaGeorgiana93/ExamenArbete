@@ -48,16 +48,14 @@ public class AdminDbRepos
     {
         _dbContext.Users.AddRange(new List<UserDbM>
         {
-            new UserDbM
-            {
+            new() {
                 UserId = Guid.NewGuid(),
                 UserName = "sysadmin1",
                 Email = "sysadmin1@gmail.com",
                 Password = _encryptions.EncryptPasswordToBase64("sysadmin1"),
                 Role = "sysadmin"
             },
-            new UserDbM
-            {
+            new() {
                 UserId = Guid.NewGuid(),
                 UserName = "user1",
                 Email = "user1@gmail.com",
@@ -65,6 +63,25 @@ public class AdminDbRepos
                 Role = "usr"
             }
         });
+
+        if (!_dbContext.Staffs.Any())
+{
+    var testStaff = new StaffDbM
+    {
+        StaffId = Guid.NewGuid(),
+        FirstName = "Charlie",
+        LastName = "Staff",
+        PersonalNumber = "199001011234",
+        Email = "charlie@mail.com",
+        Role = "usr",
+        UserName = "Charlie1",
+        Password = _encryptions.EncryptPasswordToBase64("1234") // encrypt it same as login
+    };
+
+    _dbContext.Staffs.Add(testStaff);
+    _logger.LogInformation($"Seeded test staff: {testStaff.UserName}");
+}
+
 
         await _dbContext.SaveChangesAsync();
         _logger.LogInformation("Default users seeded.");
