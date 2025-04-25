@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ReviewContainer = styled.div`
   background-color: #ffffffee;
@@ -46,23 +47,25 @@ const Button = styled.button`
   &:first-child {
     background-color: #125358;
     color: white;
-    
+
     &:hover {
       background-color: #0e4246;
     }
   }
-  
+
   &:last-child {
     background-color: #f5f5f5;
     color: #333;
-    
+
     &:hover {
       background-color: #e0e0e0;
     }
   }
 `;
 
+
 function PatientDataReview() {
+  const { t } = useTranslation(); // Access i18n translation function
   const { patientId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -89,10 +92,10 @@ function PatientDataReview() {
   if (!state) {
     return (
       <ReviewContainer>
-        <h2>No Data to Review</h2>
-        <p>No patient data was provided. Please go back and submit the form again.</p>
+        <h2>{t('no_data_to_review')}</h2>
+        <p>{t('no_patient_data')}</p>
         <Button onClick={() => navigate(`/patient/${patientId}`)}>
-          Go Back to Patient Page
+          {t('go_back_to_patient_page')}
         </Button>
       </ReviewContainer>
     );
@@ -100,41 +103,41 @@ function PatientDataReview() {
 
   return (
     <ReviewContainer>
-      <h2>Review Patient Data</h2>
-      
+      <h2>{t('review_patient_data')}</h2>
+
       <DataItem>
-        <Label>Patient ID:</Label>
+        <Label>{t('patient_id')}</Label>
         <Value>{patientId}</Value>
       </DataItem>
-      
+
       <DataItem>
-        <Label>Mood:</Label>
+        <Label>{t('mood')}</Label>
         <Value>
           {state.moodKind?.label} (Rating: {state.moodKind?.rating || 'N/A'}, ID: {state.moodKind?.moodKindId || 'N/A'})
         </Value>
       </DataItem>
-      
+
       <DataItem>
-        <Label>Activity:</Label>
+        <Label>{t('activity')}</Label>
         <Value>
           {state.activityLevel?.label} (Rating: {state.activityLevel?.rating || 'N/A'}, ID: {state.activityLevel?.activityLevelId || 'N/A'})
         </Value>
       </DataItem>
-      
+
       <DataItem>
-        <Label>Appetite:</Label>
+        <Label>{t('appetite')}</Label>
         <Value>
           {state.appetiteLevel?.label} (Rating: {state.appetiteLevel?.rating || 'N/A'}, ID: {state.appetiteLevel?.appetiteLevelId || 'N/A'})
         </Value>
       </DataItem>
-      
+
       <DataItem>
-        <Label>Sleep:</Label>
+        <Label>{t('sleep')}</Label>
         <Value>
           {state.sleepLevel?.label} (Rating: {state.sleepLevel?.rating || 'N/A'}, ID: {state.sleepLevel?.sleepLevelId || 'N/A'})
         </Value>
       </DataItem>
-      
+
       <DataItem>
         <Label>Date Recorded:</Label>
         <Value>{state.date ? new Date(state.date).toLocaleString() : 'Not recorded'}</Value>
@@ -145,7 +148,7 @@ function PatientDataReview() {
           Save and Create Graph
         </Button>
         <Button onClick={() => navigate(`/patient/${patientId}`)}>
-          Go Back
+          {t('go_back')}
         </Button>
       </ButtonGroup>
     </ReviewContainer>

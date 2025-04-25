@@ -35,14 +35,14 @@ const ChartTypeButton = styled.button`
   padding: 8px 16px;
   border: none;
   border-radius: 20px;
-  background-color: ${props => props.active ? '#125358' : '#e0e0e0'};
-  color: ${props => props.active ? 'white' : '#333'};
+  background-color: ${(props) => (props.active ? '#125358' : '#e0e0e0')};
+  color: ${(props) => (props.active ? 'white' : '#333')};
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
+    background-color: ${(props) => (props.active ? '#0e4246' : '#d0d0d0')};
   }
 `;
 
@@ -89,7 +89,7 @@ const metrics = [
   { key: 'moodRating', name: 'Mood', color: COLORS[0] },
   { key: 'activityRating', name: 'Activity', color: COLORS[1] },
   { key: 'appetiteRating', name: 'Appetite', color: COLORS[2] },
-  { key: 'sleepRating', name: 'Sleep', color: COLORS[3] }
+  { key: 'sleepRating', name: 'Sleep', color: COLORS[3] },
 ];
 
 const calculateDailyAverages = (data) => {
@@ -182,7 +182,7 @@ function GraphPage() {
     moodRating: true,
     activityRating: true,
     appetiteRating: true,
-    sleepRating: true
+    sleepRating: true,
   });
 
   useEffect(() => {
@@ -273,9 +273,9 @@ function GraphPage() {
   }, [rawData, timeRange, startDate, endDate]);
 
   const toggleMetric = (metric) => {
-    setActiveMetrics(prev => ({
+    setActiveMetrics((prev) => ({
       ...prev,
-      [metric]: !prev[metric]
+      [metric]: !prev[metric],
     }));
   };
 
@@ -325,16 +325,17 @@ function GraphPage() {
             <YAxis domain={[0, 10]} />
             <Tooltip />
             <Legend />
-            {metrics.map(metric => (
-              activeMetrics[metric.key] && (
-                <Bar
-                  key={metric.key}
-                  dataKey={metric.key}
-                  name={metric.name}
-                  fill={metric.color}
-                />
-              )
-            ))}
+            {metrics.map(
+              (metric) =>
+                activeMetrics[metric.key] && (
+                  <Bar
+                    key={metric.key}
+                    dataKey={metric.key}
+                    name={metric.name}
+                    fill={metric.color}
+                  />
+                )
+            )}
           </BarChart>
         );
         case 'line':
@@ -370,7 +371,7 @@ function GraphPage() {
             color: metric.color
           };
         });
-        
+
         return (
           <PieChart>
             <Pie
@@ -382,7 +383,9 @@ function GraphPage() {
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              label={({ name, percent }) =>
+                `${name}: ${(percent * 100).toFixed(0)}%`
+              }
             >
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -403,30 +406,35 @@ function GraphPage() {
 
   return (
     <>
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
   
       <GraphContainer>
         {patientInfo && (
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            marginBottom: '20px',
-            padding: '15px',
-            backgroundColor: '#f5f5f5',
-            borderRadius: '8px'
-          }}>
-            <img 
-              src={patient1} 
-              alt="Patient" 
-              style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '20px',
+              padding: '15px',
+              backgroundColor: '#f5f5f5',
+              borderRadius: '8px',
+            }}
+          >
+            <img
+              src={patient1}
+              alt="Patient"
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
                 objectFit: 'cover',
-                marginRight: '20px'
-              }} 
+                marginRight: '20px',
+              }}
             />
             <div>
               <h2 style={{ margin: 0, color: '#125358' }}>

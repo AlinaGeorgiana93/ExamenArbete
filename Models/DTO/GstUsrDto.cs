@@ -46,8 +46,8 @@ namespace Models.DTO
     public class GstUsrInfoAllDto
     {
         public GstUsrInfoDbDto Db { get; set; } = null; // General database info for guest
-        public List<GstUsrInfoActivitiesDto> Activities { get; set; } = new List<GstUsrInfoActivitiesDto>(); // List of activities info
-        public List<GstUsrInfoStaffsDto> Staffs { get; set; } = new List<GstUsrInfoStaffsDto>(); // List of staff info
-        public List<GstUsrInfoMoodsDto> Moods { get; set; } = new List<GstUsrInfoMoodsDto>(); // List of moods info
+        public List<GstUsrInfoActivitiesDto> Activities { get; set; } = []; // List of activities info
+        public List<GstUsrInfoStaffsDto> Staffs { get; set; } = []; // List of staff info
+        public List<GstUsrInfoMoodsDto> Moods { get; set; } = []; // List of moods info
     }
 }

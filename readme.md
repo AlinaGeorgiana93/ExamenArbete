@@ -1,5 +1,5 @@
-To Run Front-end project: npm install and then npm start
---------------------------
+## To Run Front-end project: npm install and then npm start
+
 To Run the app we need to : install npm install react-router-dom
 npm install i18next react-i18next @reduxjs/toolkit react-icons
 npm install axios
@@ -13,5 +13,5 @@ Step by step cleaning dashboard, browser and rebuild:
 dotnet clean
 dotnet nuget locals all --clear
 dotnet restore
-dotnet build 
-browser: delete browsing data 
+dotnet build
+browser: delete browsing data

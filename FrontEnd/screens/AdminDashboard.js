@@ -40,14 +40,14 @@ const Tabs = styled.div`
 
 const TabButton = styled.button`
   padding: 10px 20px;
-  background: ${props => (props.active ? '#125358' : '#eee')};
-  color: ${props => (props.active ? '#fff' : '#000')};
+  background: ${(props) => (props.active ? '#125358' : '#eee')};
+  color: ${(props) => (props.active ? '#fff' : '#000')};
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
   &:hover {
-    background: ${props => (props.active ? '#125358' : '#00d4ff')};
+    background: ${(props) => (props.active ? '#125358' : '#00d4ff')};
   }
 `;
 
@@ -56,6 +56,10 @@ const Form = styled.form`
   background: #fff;
   padding: 20px;
   border-radius: 8px;
+  width: ${(props) =>
+    props.activeTab === 'staff' ? '60%' : '100%'}; /* Reduced width for staff */
+  max-width: 600px; /* Maximum width */
+  margin: 0 auto; /* Centering the form */
 `;
 
 const Input = styled.input`
@@ -71,8 +75,9 @@ const Button = styled.button`
   border: none;
   margin-right: 10px;
   cursor: pointer;
-  background: ${props => (props.active === 'true' ? 'rgb(133, 200, 205)' : '#eee')};
-  color: ${props => (props.active === 'true' ? '#fff' : '#000')};
+  background: ${(props) =>
+    props.active === 'true' ? 'rgb(133, 200, 205)' : '#eee'};
+  color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
   &:hover {
     background: #00d4ff;
   }
@@ -88,15 +93,18 @@ const Select = styled.select`
   display: block;
 `;
 
-
-
 const AdminDashboard = () => {
   const { t } = useTranslation();
 
   const [activeTab, setActiveTab] = useState('patients');
   const [patients, setPatients] = useState([]);
   const [staff, setStaff] = useState([]);
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', personalNumber: '', id: null });
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    personalNumber: '',
+    id: null,
+  });
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -119,7 +127,10 @@ const AdminDashboard = () => {
       });
       setStaff(response.data.pageItems);
     } catch (error) {
-      console.error('Error fetching staff:', error.response ? error.response.data : error.message);
+      console.error(
+        'Error fetching staff:',
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
@@ -134,7 +145,10 @@ const AdminDashboard = () => {
       });
       setPatients(response.data.pageItems);
     } catch (error) {
-      console.error('Error fetching patient:', error.response ? error.response.data : error.message);
+      console.error(
+        'Error fetching patient:',
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
@@ -144,7 +158,9 @@ const AdminDashboard = () => {
     try {
       const isStaff = activeTab === 'staff';
       const endpoint = isStaff ? 'Staff' : 'Patient';
-      const response = await axiosInstance.post(`/${endpoint}/CreateItem`, { ...formData });
+      const response = await axiosInstance.post(`/${endpoint}/CreateItem`, {
+        ...formData,
+      });
       setSuccessMessage(`${endpoint} created successfully!`);
       setShowSuccessMessage(true);
       setTimeout(() => {
@@ -152,7 +168,12 @@ const AdminDashboard = () => {
         setSuccessMessage('');
       }, 2000);
 
-      setFormData({ firstName: '', lastName: '', personalNumber: '', id: null });
+      setFormData({
+        firstName: '',
+        lastName: '',
+        personalNumber: '',
+        id: null,
+      });
       if (isStaff) {
         fetchData();
       } else {
@@ -184,11 +205,12 @@ const AdminDashboard = () => {
       }
       setSelectedPerson(null);
     } catch (error) {
-      console.error(`Error deleting ${activeTab}:`, error.response || error.message);
+      console.error(
+        `Error deleting ${activeTab}:`,
+        error.response || error.message
+      );
     }
   };
-
-
 
   const handleEdit = async (updatedPerson) => {
     setIsLoading(true);
@@ -198,17 +220,16 @@ const AdminDashboard = () => {
       const idField = isStaff ? 'staffId' : 'patientId';
       const personId = updatedPerson[idField];
 
-      await axiosInstance.put(
-        `/${endpoint}/UpdateItem/${personId}`,
-        {
-          [idField]: personId,
-          firstName: updatedPerson.firstName,
-          lastName: updatedPerson.lastName,
-          personalNumber: updatedPerson.personalNumber,
-        }
-      );
+      await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
+        [idField]: personId,
+        firstName: updatedPerson.firstName,
+        lastName: updatedPerson.lastName,
+        personalNumber: updatedPerson.personalNumber,
+      });
 
-      setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
+      setSuccessMessage(
+        `${isStaff ? 'Staff' : 'Patient'} updated successfully.`
+      );
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
@@ -229,16 +250,15 @@ const AdminDashboard = () => {
     }
   };
 
-
   const currentData = activeTab === 'patients' ? patients : staff;
 
   const handleSelectChange = (e) => {
     const id = e.target.value;
     let person;
     if (activeTab === 'staff') {
-      person = staff.find(item => String(item.staffId) === id);
+      person = staff.find((item) => String(item.staffId) === id);
     } else {
-      person = patients.find(item => String(item.patientId) === id);
+      person = patients.find((item) => String(item.patientId) === id);
     }
     setSelectedPerson(person);
   };
@@ -246,25 +266,49 @@ const AdminDashboard = () => {
   return (
     <>
       <GlobalStyle />
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
+        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
+      </Link>
       <Container>
         <h1>{t('admin_dashboard')}</h1>
         <Tabs>
-          <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>{t('patients')}</TabButton>
-          <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>{t('staff')}</TabButton>
+          <TabButton
+            active={activeTab === 'patients'}
+            onClick={() => setActiveTab('patients')}
+          >
+            {t('patients')}
+          </TabButton>
+          <TabButton
+            active={activeTab === 'staff'}
+            onClick={() => setActiveTab('staff')}
+          >
+            {t('staff')}
+          </TabButton>
         </Tabs>
 
-        <Select onChange={handleSelectChange} value={selectedPerson?.staffId || ''} style={{ display: activeTab === 'staff' ? 'block' : 'none' }}>
+        <Select
+          onChange={handleSelectChange}
+          value={selectedPerson?.staffId || ''}
+          style={{ display: activeTab === 'staff' ? 'block' : 'none' }}
+        >
           <option value="">{t('select_staff')}</option>
-          {staff.map(item => (
+          {staff.map((item) => (
             <option key={item.staffId} value={item.staffId}>
               {item.firstName} {item.lastName}
             </option>
           ))}
         </Select>
 
-        <Select onChange={handleSelectChange} value={selectedPerson?.patientId || ''} style={{ display: activeTab === 'patients' ? 'block' : 'none' }}>
+        <Select
+          onChange={handleSelectChange}
+          value={selectedPerson?.patientId || ''}
+          style={{ display: activeTab === 'patients' ? 'block' : 'none' }}
+        >
           <option value="">{t('select_patient')}</option>
-          {patients.map(item => (
+          {patients.map((item) => (
             <option key={item.patientId} value={item.patientId}>
               {item.firstName} {item.lastName}
             </option>
@@ -275,43 +319,101 @@ const AdminDashboard = () => {
           staffMember={selectedPerson}
           onClose={() => setSelectedPerson(null)}
           onEdit={handleEdit}
-          onDelete={() => handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)}
+          onDelete={() =>
+            handleDelete(
+              activeTab === 'staff'
+                ? selectedPerson.staffId
+                : selectedPerson.patientId
+            )
+          }
         />
 
         {showSuccessMessage && (
-          <div style={{
-            backgroundColor: successMessage.toLowerCase().includes('successfully') ? '#d4edda' : '#f8d7da',
-            color: successMessage.toLowerCase().includes('successfully') ? '#155724' : '#721c24',
-            padding: '10px 15px',
-            borderRadius: '5px',
-            marginBottom: '20px',
-            border: '1px solid',
-            borderColor: successMessage.toLowerCase().includes('successfully') ? '#c3e6cb' : '#f5c6cb',
-          }}>
+          <div
+            style={{
+              backgroundColor: successMessage
+                .toLowerCase()
+                .includes('successfully')
+                ? '#d4edda'
+                : '#f8d7da',
+              color: successMessage.toLowerCase().includes('successfully')
+                ? '#155724'
+                : '#721c24',
+              padding: '10px 15px',
+              borderRadius: '5px',
+              marginBottom: '20px',
+              border: '1px solid',
+              borderColor: successMessage.toLowerCase().includes('successfully')
+                ? '#c3e6cb'
+                : '#f5c6cb',
+            }}
+          >
             {successMessage}
           </div>
         )}
 
         <Form onSubmit={handleSubmit}>
           <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
+
           <Input
             placeholder={t('first_name')}
             value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, firstName: e.target.value })
+            }
             required
           />
+
           <Input
             placeholder={t('last_name')}
             value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, lastName: e.target.value })
+            }
             required
           />
+
           <Input
             placeholder={t('personal_number')}
             value={formData.personalNumber}
-            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, personalNumber: e.target.value })
+            }
             required
           />
+
+          {/* Conditionally render email, username, and password for staff only */}
+          {activeTab === 'staff' && (
+            <>
+              <Input
+                placeholder={t('username')}
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                required
+              />
+
+              <Input
+                placeholder={t('password')}
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                required
+              />
+
+              <Input
+                placeholder={t('email')}
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                required
+              />
+            </>
+          )}
+
           <Button type="submit">{t('add')}</Button>
         </Form>
       </Container>

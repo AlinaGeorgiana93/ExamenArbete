@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 
-
 // Global Style
 const GlobalStyle = createGlobalStyle`
   * {
@@ -60,7 +59,7 @@ const Dropdown = styled.select`
 
   &:focus {
     outline: none;
-    border-color: #3B878C;
+    border-color: #3b878c;
     background-color: #fff;
   }
 `;
@@ -77,15 +76,17 @@ const Button = styled.button`
   width: 100%;
   font-weight: bold;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 
   &:hover {
     background-color: #00d4ff;
     color: #00363a;
     transform: scale(1.03);
   }
-      
 `;
+
 const PatientHeader = styled.div`
   display: flex;
   flex-direction: column;
@@ -108,9 +109,6 @@ const PatientName = styled.h2`
   text-align: center;
 `;
 
-
-
-
 function PatientPage() {
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);
@@ -130,52 +128,56 @@ function PatientPage() {
   const navigate = useNavigate();
 
   const formatLabel = (str) => {
-    return str.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+    return str
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
   };
-
 
   // Fetch patient details by patientId
   useEffect(() => {
-    axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`)
-      .then(res => {
+    axios
+      .get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`)
+      .then((res) => {
         setPatient(res.data.item);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Error fetching patient:', err);
         setLoading(false);
       });
-    console.log("Patient ID from URL:", patientId);
+    console.log('Patient ID from URL:', patientId);
   }, [patientId]);
 
   // Fetch available MoodKinds, ActivityLevels, AppetiteLevels, SleepLevels
-  const token = localStorage.getItem('jwtToken'); // Get the correct token key
-  console.log("Retrieved token from localStorage:", token); // Log token to see if it's there
+  const token = localStorage.getItem('jwtToken');
+  console.log('Retrieved token from localStorage:', token);
 
   if (!token) {
-    console.error("No token found in localStorage.");
-    return; // Stop the request if no token is found
+    console.error('No token found in localStorage.');
+    return;
   }
 
-
-
-  // Fetching all levels
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [moodResponse, activityResponse, appetiteResponse, sleepResponse] = await Promise.all([
+        const [
+          moodResponse,
+          activityResponse,
+          appetiteResponse,
+          sleepResponse,
+        ] = await Promise.all([
           axios.get('https://localhost:7066/api/MoodKind/ReadItems', {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get('https://localhost:7066/api/ActivityLevel/ReadItems', {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get('https://localhost:7066/api/AppetiteLevel/ReadItems', {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get('https://localhost:7066/api/SleepLevel/ReadItems', {
-            headers: { Authorization: `Bearer ${token}` }
-          })
+            headers: { Authorization: `Bearer ${token}` },
+          }),
         ]);
 
         setMoodKinds(moodResponse.data.pageItems || []);
@@ -183,26 +185,29 @@ function PatientPage() {
         setAppetiteLevels(appetiteResponse.data.pageItems || []);
         setSleepLevels(sleepResponse.data.pageItems || []);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
     fetchData();
   }, [token]);
 
-  // ✅ Handle selection change for each dropdown
   const handleSelectChange = (setter) => (e) => {
     setter(e.target.value);
   };
 
   const handleSave = async () => {
     try {
-      // Find the complete data objects for each selection
-      const moodData = moodKinds.find(m => m.moodKindId === selectedMoodKind);
-      const activityData = activityLevels.find(a => a.activityLevelId === selectedActivityLevel);
-      const appetiteData = appetiteLevels.find(a => a.appetiteLevelId === selectedAppetiteLevel);
-      const sleepData = sleepLevels.find(s => s.sleepLevelId === selectedSleepLevel);
-  
-      // Prepare data for API and state
+      const moodData = moodKinds.find((m) => m.moodKindId === selectedMoodKind);
+      const activityData = activityLevels.find(
+        (a) => a.activityLevelId === selectedActivityLevel
+      );
+      const appetiteData = appetiteLevels.find(
+        (a) => a.appetiteLevelId === selectedAppetiteLevel
+      );
+      const sleepData = sleepLevels.find(
+        (s) => s.sleepLevelId === selectedSleepLevel
+      );
+
       const saveData = {
         patientId: patientId,
         moodKindId: selectedMoodKind,
@@ -210,62 +215,70 @@ function PatientPage() {
         appetiteLevelId: selectedAppetiteLevel,
         sleepLevelId: selectedSleepLevel,
         date: new Date().toISOString(),
-        // Include complete objects for review page
         moodKind: moodData,
         activityLevel: activityData,
         appetiteLevel: appetiteData,
         sleepLevel: sleepData,
-        // Include ratings for graph
         moodRating: moodData?.rating,
         activityRating: activityData?.rating,
         appetiteRating: appetiteData?.rating,
-        sleepRating: sleepData?.rating
+        sleepRating: sleepData?.rating,
       };
-  
-      // Save to API
+
       await axios.post('https://localhost:7066/api/Graph/CreateItem', {
         patientId: patientId,
         moodKindId: selectedMoodKind,
         activityLevelId: selectedActivityLevel,
         appetiteLevelId: selectedAppetiteLevel,
         sleepLevelId: selectedSleepLevel,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
       });
-  
-      // Save to localStorage for graph data fallback
-      const existingData = JSON.parse(localStorage.getItem('graphData') || '[]');
-      localStorage.setItem('graphData', JSON.stringify([...existingData, saveData]));
-  
-      // Navigate to review page with full data
+
+      const existingData = JSON.parse(
+        localStorage.getItem('graphData') || '[]'
+      );
+      localStorage.setItem(
+        'graphData',
+        JSON.stringify([...existingData, saveData])
+      );
+
       navigate(`/review/${patientId}`, { state: saveData });
-  
     } catch (err) {
-      console.error("Error saving data:", err);
-      alert("Could not save data");
+      console.error('Error saving data:', err);
+      alert('Could not save data');
     }
   };
-  if (loading) return <div>Laddar patient...</div>;
-  if (!patient) return <div>Ingen patient hittad.</div>;
+
+  if (loading) return <div>{t('loading_patient')}</div>;
+  if (!patient) return <div>{t('no_patient_found')}</div>;
 
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
 
       <div>
         <PatientHeader>
           <PatientImage src={patient1} alt="Patient" />
-          <PatientName>{patient.firstName} {patient.lastName}</PatientName>
+          <PatientName>
+            {patient.firstName} {patient.lastName}
+          </PatientName>
         </PatientHeader>
-
 
         <PatientPageContainer>
           <FormGroup>
-            <label htmlFor="moodkind-select">{formatLabel('select_moodkind') || 'Välj humör'}</label>
-            <Dropdown id="moodkind-select" value={selectedMoodKind} onChange={handleSelectChange(setSelectedMoodKind)}>
-              <option value="">{formatLabel('choose_moodkind') || 'Välj humörnivå'}</option>
+            <label htmlFor="moodkind-select">{t('select_moodkind')}</label>
+            <Dropdown
+              id="moodkind-select"
+              value={selectedMoodKind}
+              onChange={handleSelectChange(setSelectedMoodKind)}
+            >
+              <option value="">{t('choose_moodkind')}</option>
               {moodKinds.map((mood) => (
                 <option key={mood.moodKindId} value={mood.moodKindId}>
                   {mood.label} {mood.rating}
@@ -275,11 +288,20 @@ function PatientPage() {
           </FormGroup>
 
           <FormGroup>
-            <label htmlFor="activitylevel-select">{formatLabel('select_activitylevel') || 'Välj aktivitetsnivå'}</label>
-            <Dropdown id="activitylevel-select" value={selectedActivityLevel} onChange={handleSelectChange(setSelectedActivityLevel)}>
-              <option value="">{formatLabel('choose_activitylevel') || 'Välj aktivitetsnivå'}</option>
+            <label htmlFor="activitylevel-select">
+              {t('select_activitylevel')}
+            </label>
+            <Dropdown
+              id="activitylevel-select"
+              value={selectedActivityLevel}
+              onChange={handleSelectChange(setSelectedActivityLevel)}
+            >
+              <option value="">{t('choose_activitylevel')}</option>
               {activityLevels.map((activity) => (
-                <option key={activity.activityLevelId} value={activity.activityLevelId}>
+                <option
+                  key={activity.activityLevelId}
+                  value={activity.activityLevelId}
+                >
                   {activity.label} {activity.rating}
                 </option>
               ))}
@@ -287,11 +309,20 @@ function PatientPage() {
           </FormGroup>
 
           <FormGroup>
-            <label htmlFor="appetitlevel-select">{formatLabel('select_appetitlevel') || 'Välj aptitnivå'}</label>
-            <Dropdown id="appetitlevel-select" value={selectedAppetiteLevel} onChange={handleSelectChange(setSelectedAppetiteLevel)}>
-              <option value="">{formatLabel('choose_appetitlevel') || 'Välj aptitnivå'}</option>
+            <label htmlFor="appetitelevel-select">
+              {t('select_appetitelevel')}
+            </label>
+            <Dropdown
+              id="appetitelevel-select"
+              value={selectedAppetiteLevel}
+              onChange={handleSelectChange(setSelectedAppetiteLevel)}
+            >
+              <option value="">{t('choose_appetitelevel')}</option>
               {appetiteLevels.map((appetite) => (
-                <option key={appetite.appetiteLevelId} value={appetite.appetiteLevelId}>
+                <option
+                  key={appetite.appetiteLevelId}
+                  value={appetite.appetiteLevelId}
+                >
                   {appetite.label} {appetite.rating}
                 </option>
               ))}
@@ -299,9 +330,13 @@ function PatientPage() {
           </FormGroup>
 
           <FormGroup>
-            <label htmlFor="sleeplevel-select">{formatLabel('select_sleeplevel') || 'Välj sömnnivå'}</label>
-            <Dropdown id="sleeplevel-select" value={selectedSleepLevel} onChange={handleSelectChange(setSelectedSleepLevel)}>
-              <option value="">{formatLabel('choose_sleeplevel') || 'Välj sömnnivå'}</option>
+            <label htmlFor="sleeplevel-select">{t('select_sleeplevel')}</label>
+            <Dropdown
+              id="sleeplevel-select"
+              value={selectedSleepLevel}
+              onChange={handleSelectChange(setSelectedSleepLevel)}
+            >
+              <option value="">{t('choose_sleeplevel')}</option>
               {sleepLevels.map((sleep) => (
                 <option key={sleep.sleepLevelId} value={sleep.sleepLevelId}>
                   {sleep.label} {sleep.rating}
@@ -310,12 +345,11 @@ function PatientPage() {
             </Dropdown>
           </FormGroup>
 
-          <Button onClick={handleSave}>Spara</Button>
+          <Button onClick={handleSave}>{t('save_button')}</Button>
         </PatientPageContainer>
       </div>
     </>
   );
 }
-
 
 export default PatientPage;

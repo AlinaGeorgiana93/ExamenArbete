@@ -3,16 +3,25 @@ import styled from 'styled-components';
 
 const ModalContainer = styled.div`
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.7);
-  display: flex; justify-content: center; align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 
   @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 `;
 
@@ -28,8 +37,14 @@ const ModalContent = styled.div`
   animation: slideUp 0.3s ease-out;
 
   @keyframes slideUp {
-    0% { transform: translateY(20px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 `;
 
@@ -120,7 +135,9 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
 
   const [firstName, setFirstName] = useState(staffMember.firstName);
   const [lastName, setLastName] = useState(staffMember.lastName);
-  const [personalNumber, setPersonalNumber] = useState(staffMember.personalNumber);
+  const [personalNumber, setPersonalNumber] = useState(
+    staffMember.personalNumber
+  );
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleUpdate = () => {
@@ -138,17 +155,29 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
 
         <InputGroup>
           <label>First Name</label>
-          <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          <input
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
         </InputGroup>
 
         <InputGroup>
           <label>Last Name</label>
-          <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+          <input
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
         </InputGroup>
 
         <InputGroup>
           <label>Personal Number</label>
-          <input type="text" value={personalNumber} onChange={(e) => setPersonalNumber(e.target.value)} />
+          <input
+            type="text"
+            value={personalNumber}
+            onChange={(e) => setPersonalNumber(e.target.value)}
+          />
         </InputGroup>
 
         <ConfirmActions>
@@ -156,17 +185,23 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
             <>
               <Button onClick={handleUpdate}>Update</Button>
               <Button onClick={onClose}>Cancel</Button>
-              <ButtonDelete onClick={() => setConfirmDelete(true)}>Delete</ButtonDelete>
+              <ButtonDelete onClick={() => setConfirmDelete(true)}>
+                Delete
+              </ButtonDelete>
             </>
           ) : (
             <>
-              <ButtonDelete onClick={handleConfirmDelete}>Yes, delete</ButtonDelete>
+              <ButtonDelete onClick={handleConfirmDelete}>
+                Yes, delete
+              </ButtonDelete>
               <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
             </>
           )}
         </ConfirmActions>
 
-        <CloseButton onClick={onClose} aria-label="Close modal">&times;</CloseButton>
+        <CloseButton onClick={onClose} aria-label="Close modal">
+          &times;
+        </CloseButton>
       </ModalContent>
     </ModalContainer>
   );

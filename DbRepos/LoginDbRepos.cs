@@ -64,6 +64,58 @@ public class LoginDbRepos
             };
         }
     }
+ public async Task<ResponseItemDto<LoginStaffSessionDto>> LoginStaffAsync(LoginCredentialsDto usrCreds)
+{
+    try
+    {
+        _logger.LogInformation("LoginStaffAsync started.");
+        _logger.LogInformation($"INPUT: UsernameOrEmail = {usrCreds.UserNameOrEmail}");
+
+        using (var cmd1 = _dbContext.Database.GetDbConnection().CreateCommand())
+        {
+            cmd1.CommandType = CommandType.StoredProcedure;
+            cmd1.CommandText = "gstusr.spLoginStaff";
+
+            cmd1.Parameters.Add(new SqlParameter("UserNameOrEmail", usrCreds.UserNameOrEmail));
+            cmd1.Parameters.Add(new SqlParameter("Password", _encryptions.EncryptPasswordToBase64(usrCreds.Password)));
+
+            int _staffIdIdx = cmd1.Parameters.Add(new SqlParameter("StaffId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output });
+            int _staffIdx = cmd1.Parameters.Add(new SqlParameter("UserName", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
+            int _roleIdx = cmd1.Parameters.Add(new SqlParameter("Role", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
+
+            _logger.LogInformation("Opening DB connection...");
+            _dbContext.Database.OpenConnection();
+
+            _logger.LogInformation("Executing stored procedure: gstusr.spLoginStaff");
+            await cmd1.ExecuteScalarAsync();
+            _logger.LogInformation("Stored procedure execution completed.");
+
+            var info = new LoginStaffSessionDto
+            {
+                StaffId = cmd1.Parameters[_staffIdIdx].Value as Guid?,
+                UserName = cmd1.Parameters[_staffIdx].Value as string,
+                UserRole = cmd1.Parameters[_roleIdx].Value as string
+            };
+
+            _logger.LogInformation($"Output: StaffId = {info.StaffId}, UserName = {info.UserName}, Role = {info.UserRole}");
+            var encryptedPassword = _encryptions.EncryptPasswordToBase64(usrCreds.Password);
+          _logger.LogInformation($"Encrypted Password: {encryptedPassword}");
+
+            return new ResponseItemDto<LoginStaffSessionDto>
+            {
+                DbConnectionKeyUsed = _dbContext.dbConnection,
+                Item = info
+            };
+        }
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"LoginStaffAsync error: {ex.Message}. StackTrace: {ex.StackTrace}");
+        throw;
+    }
+}
+
+
 }
 
 

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using Models;
 using Models.DTO;
 using Services;
@@ -74,7 +73,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = "usr, sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -100,7 +99,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+            Policy = null, Roles ="usr, sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<AppetiteLevelCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -131,7 +130,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
+            Policy = null, Roles = "usr, sysadmin")]
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -160,7 +159,7 @@ namespace AppWebApi.Controllers
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr, sysadmin")]
+            Policy = null, Roles = "usr, sysadmin")]
 
         public async Task<IActionResult> CreateItem([FromBody] AppetiteLevelCuDto item)
         {

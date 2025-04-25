@@ -1,8 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaUserShield, FaChartLine, FaInfoCircle, FaUserNurse, FaUserInjured, FaHome, FaSignOutAlt } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';  // Import the translation hook
+import {
+  FaUserShield,
+  FaChartLine,
+  FaInfoCircle,
+  FaUserNurse,
+  FaUserInjured,
+  FaHome,
+  FaSignOutAlt,
+} from 'react-icons/fa';
+import { useTranslation } from 'react-i18next'; // Import the translation hook
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -26,7 +34,7 @@ const NavLinks = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-   color: white;
+  color: white;
   text-decoration: none;
   font-weight: bold;
   display: flex;
@@ -41,7 +49,7 @@ const StyledLink = styled(Link)`
 
 const StyledHomeLink = styled(StyledLink)`
   color: white; /* Specific white color for the "Home" link */
-  
+
   &:hover {
     color: #00d4ff; /* Hover effect stays the same */
   }
@@ -56,7 +64,6 @@ const Navigation = () => {
     localStorage.removeItem('role');
     setLogoutMessage(t('logout_success'));
 
-
     setTimeout(() => {
       setLogoutMessage('');
       window.location.replace('/'); // Force reload and reset history
@@ -67,28 +74,39 @@ const Navigation = () => {
     <>
       <Nav>
         <StyledLink onClick={handleLogout}>
-          < FaSignOutAlt size={18} /> {t('Log out')}
+          <FaSignOutAlt size={18} /> {t('Log out')}
         </StyledLink>
         <NavLinks>
           {/* <StyledLink as={Link} to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> */}
-          <StyledLink as={Link} to="/staff"><FaUserNurse size={18} /> {t('staff')}</StyledLink>
-          <StyledLink as={Link} to="/patient/"><FaUserInjured size={18} /> {t('patient')}</StyledLink>
-          <StyledLink as={Link} to="/about"><FaInfoCircle size={18} /> {t('about Us')}</StyledLink>
-          <StyledLink as={Link} to="/graph"><FaChartLine size={18} /> {t('Graph')}</StyledLink> {/* Added Graph page link */}
+          <StyledLink as={Link} to="/staff">
+            <FaUserNurse size={18} /> {t('staff')}
+          </StyledLink>
+          <StyledLink as={Link} to="/patient/">
+            <FaUserInjured size={18} /> {t('patient')}
+          </StyledLink>
+          <StyledLink as={Link} to="/about">
+            <FaInfoCircle size={18} /> {t('about Us')}
+          </StyledLink>
+          <StyledLink as={Link} to="/graph">
+            <FaChartLine size={18} /> {t('Graph')}
+          </StyledLink>{' '}
+          {/* Added Graph page link */}
         </NavLinks>
       </Nav>
       {logoutMessage && (
-        <div style={{
-          position: 'fixed',
-          bottom: '60px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          backgroundColor: '#125358',
-          color: 'white',
-          padding: '10px 20px',
-          borderRadius: '5px',
-          fontSize: '14px'
-        }}>
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '60px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: '#125358',
+            color: 'white',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            fontSize: '14px',
+          }}
+        >
           {logoutMessage}
         </div>
       )}

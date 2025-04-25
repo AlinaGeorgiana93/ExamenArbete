@@ -9,7 +9,9 @@ const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container); // Create root using the container
 
 root.render(
-  <Provider store={store}> {/* Wrap your App with the Redux Provider */}
+  <Provider store={store}>
+    {' '}
+    {/* Wrap your App with the Redux Provider */}
     <App />
   </Provider>
 );

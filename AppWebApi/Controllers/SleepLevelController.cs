@@ -10,7 +10,7 @@ using Services;
 namespace AppWebApi.Controllers
 {
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Policy = null, Roles = "staff, sysadmin")]
+        Policy = null, Roles = "usr, sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class SleepLevelController : Controller
@@ -75,7 +75,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+            Policy = null, Roles = "usr, sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<ISleepLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -101,7 +101,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+            Policy = null, Roles = "usr, sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<SleepLevelCuDto>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -132,7 +132,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+            Policy = null, Roles = "usr, sysadmin")]
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<ISleepLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -163,7 +163,7 @@ namespace AppWebApi.Controllers
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<ISleepLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "supusr,sysadmin")]
+            Policy = null, Roles = "usr,sysadmin")]
 
         public async Task<IActionResult> CreateItem([FromBody] SleepLevelCuDto item)
         {
