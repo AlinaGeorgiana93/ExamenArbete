@@ -33,7 +33,6 @@ function App() {
             <Route path="/graph/:id" element={<GraphPage />} />
 
             <Route path="/about" element={<AboutUs />} />
-
           </Route>
         </Routes>
       </Router>

@@ -74,7 +74,7 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #3B878C;
+    border-color: #3b878c;
   }
 `;
 
@@ -172,19 +172,22 @@ const StartPage = () => {
         userNameOrEmail: username,
         password: password,
       };
-  
+
       console.log('Login Data:', loginData);
-  
+
       // Try to login as a user
       let response = await axiosInstance.post('/Guest/LoginUser', loginData);
       console.log('User Login Response:', response); // Log the response to check the structure
-  
-      localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+
+      localStorage.setItem(
+        'jwtToken',
+        response.data.item.jwtToken.encryptedToken
+      );
       console.log('jwtToken:', response.data.item.jwtToken.encryptedToken);
-  
+
       const role = response.data.item.userRole;
       console.log('User Role:', role); // Log role to verify it
-  
+
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
         console.log('Sysadmin logged in');
@@ -201,22 +204,31 @@ const StartPage = () => {
     } catch (error) {
       console.log('User login failed, trying staff login...');
       console.error('Error details:', error.response?.data || error.message);
-  
+
       // If user login failed, try staff login
       const loginDataStaff = {
         userNameOrEmail: username,
-        password: password
+        password: password,
       };
 
       try {
-        const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
+        const response = await axiosInstance.post(
+          '/Guest/LoginStaff',
+          loginDataStaff
+        );
         console.log('Staff Login Response:', response);
-  
-        localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
-        console.log('jwtToken (Staff):', response.data.item.jwtToken.encryptedToken);
-  
+
+        localStorage.setItem(
+          'jwtToken',
+          response.data.item.jwtToken.encryptedToken
+        );
+        console.log(
+          'jwtToken (Staff):',
+          response.data.item.jwtToken.encryptedToken
+        );
+
         const role = response.data.item.userRole;
-  
+
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
           console.log('Staff logged in');
@@ -227,15 +239,18 @@ const StartPage = () => {
         }
       } catch (staffError) {
         setLoginError(t('login_failed'));
-        console.error('Staff login error:', staffError.response?.data || staffError.message);
+        console.error(
+          'Staff login error:',
+          staffError.response?.data || staffError.message
+        );
       }
     }
   };
-  
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') handleLogin();
   };
-  
+
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));
     const i18n = getI18n();
@@ -245,7 +260,10 @@ const StartPage = () => {
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <StartPageContainer>
@@ -254,7 +272,9 @@ const StartPage = () => {
           <SubTitle>{t('welcome')}</SubTitle>
         </Header>
 
-        {loginMessage && <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>}
+        {loginMessage && (
+          <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>
+        )}
 
         <LoginForm>
           <Label>{t('username')}</Label>
@@ -284,8 +304,12 @@ const StartPage = () => {
         </LoginForm>
 
         <LanguageButtons>
-          <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
-          <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('en')}>
+            En
+          </LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('sv')}>
+            Sv
+          </LanguageButton>
         </LanguageButtons>
 
         <Footer>

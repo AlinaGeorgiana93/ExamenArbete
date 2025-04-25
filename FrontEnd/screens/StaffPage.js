@@ -47,10 +47,9 @@ const StaffPageContainer = styled.div`
   }
 `;
 
-
 // Titel på sidan (t.ex. "Staff Dashboard")
 const Title = styled.h1`
-  color: #1A5B61;
+  color: #1a5b61;
   font-size: 2.5rem;
   margin-bottom: 20px;
 `;
@@ -86,7 +85,7 @@ const Dropdown = styled.select`
 
   &:focus {
     outline: none;
-    border-color: #3B878C;
+    border-color: #3b878c;
     background-color: #fff;
   }
 `;
@@ -118,14 +117,15 @@ const StaffPage = () => {
   // useEffect körs när komponenten laddas första gången
   useEffect(() => {
     // Hämta patienter från API:t
-    axios.get('https://localhost:7066/api/Patient/ReadItems')
-      .then(response => {
+    axios
+      .get('https://localhost:7066/api/Patient/ReadItems')
+      .then((response) => {
         if (response.data && response.data.pageItems) {
           setPatients(response.data.pageItems); // Spara patientlistan i state
         }
       })
-      .catch(error => {
-        console.error("Error fetching patients:", error);
+      .catch((error) => {
+        console.error('Error fetching patients:', error);
       });
   }, []);
 
@@ -141,16 +141,16 @@ const StaffPage = () => {
   return (
     <>
       <GlobalStyle /> {/* Lägger till globala stilar */}
-
       {/* Logotyp som är klickbar och går till startsidan */}
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
       </Link>
-
       {/* Huvudsektionen med all innehåll */}
       <StaffPageContainer>
         <Title>{t('staff_name')}</Title> {/* Översatt rubrik */}
-
         {/* Label och dropdown för att välja patient */}
         <label htmlFor="patient-select">{t('select_patient')}</label>
         <DropdownWrapper>

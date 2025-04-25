@@ -72,7 +72,7 @@
   "select_sleeplevel": "Select Sleep Level",
   "select_moodlevel": "Select Mood Level",
   "select_moodkind": "Select Mood Kind",
-  "select_appetitelevel": "Select Appetite Level",  
+  "select_appetitelevel": "Select Appetite Level",
   "select_activitylevel": "Select Activity Level",
   "select_mood": "Select Mood",
   "select_activity": "Select Activity",
@@ -99,7 +99,7 @@
   "save_and_create_graph": "Save and Create Graph",
   "graph": "Graph",
   "review_patient_data": "Review Patient Data",
-  "patient_id" : "Patient ID",
+  "patient_id": "Patient ID",
   "go_back": "Go Back",
   "aboutUsTitle": "About Us",
   "description1": "We are four dedicated girls studying system development and have together developed this website as part of our educational project. Our goal is to create a smooth and user-friendly platform that helps patients report their well-being daily.",
@@ -111,8 +111,4 @@
   "team2": "Alina",
   "team3": "Mona",
   "team4": "Nagihan"
-  
-
- 
 }
-

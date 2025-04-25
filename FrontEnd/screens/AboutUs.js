@@ -1,10 +1,10 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
-import patient1 from '../src/media/patient1.jpg'; 
+import patient1 from '../src/media/patient1.jpg';
 import '../src/index.css';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';  // Import the translation hook
+import { useTranslation } from 'react-i18next'; // Import the translation hook
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -81,7 +81,10 @@ const AboutUsPage = () => {
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <PageContainer>

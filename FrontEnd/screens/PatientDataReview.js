@@ -47,16 +47,16 @@ const Button = styled.button`
   &:first-child {
     background-color: #125358;
     color: white;
-    
+
     &:hover {
       background-color: #0e4246;
     }
   }
-  
+
   &:last-child {
     background-color: #f5f5f5;
     color: #333;
-    
+
     &:hover {
       background-color: #e0e0e0;
     }
@@ -64,7 +64,7 @@ const Button = styled.button`
 `;
 
 function PatientDataReview() {
-  const { t } = useTranslation();  // Access i18n translation function
+  const { t } = useTranslation(); // Access i18n translation function
   const { patientId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -84,40 +84,46 @@ function PatientDataReview() {
   return (
     <ReviewContainer>
       <h2>{t('review_patient_data')}</h2>
-      
+
       <DataItem>
         <Label>{t('patient_id')}</Label>
         <Value>{patientId}</Value>
       </DataItem>
-      
+
       <DataItem>
         <Label>{t('mood')}</Label>
         <Value>
-          {state.moodKind?.label} ({t('rating')}: {state.moodKind?.rating}, {t('id')}: {state.moodKind?.moodKindId})
+          {state.moodKind?.label} ({t('rating')}: {state.moodKind?.rating},{' '}
+          {t('id')}: {state.moodKind?.moodKindId})
         </Value>
       </DataItem>
-      
+
       <DataItem>
         <Label>{t('activity')}</Label>
         <Value>
-          {state.activityLevel?.label} ({t('rating')}: {state.activityLevel?.rating}, {t('id')}: {state.activityLevel?.activityLevelId})
+          {state.activityLevel?.label} ({t('rating')}:{' '}
+          {state.activityLevel?.rating}, {t('id')}:{' '}
+          {state.activityLevel?.activityLevelId})
         </Value>
       </DataItem>
-      
+
       <DataItem>
         <Label>{t('appetite')}</Label>
         <Value>
-          {state.appetiteLevel?.label} ({t('rating')}: {state.appetiteLevel?.rating}, {t('id')}: {state.appetiteLevel?.appetiteLevelId})
+          {state.appetiteLevel?.label} ({t('rating')}:{' '}
+          {state.appetiteLevel?.rating}, {t('id')}:{' '}
+          {state.appetiteLevel?.appetiteLevelId})
         </Value>
       </DataItem>
-      
+
       <DataItem>
         <Label>{t('sleep')}</Label>
         <Value>
-          {state.sleepLevel?.label} ({t('rating')}: {state.sleepLevel?.rating}, {t('id')}: {state.sleepLevel?.sleepLevelId})
+          {state.sleepLevel?.label} ({t('rating')}: {state.sleepLevel?.rating},{' '}
+          {t('id')}: {state.sleepLevel?.sleepLevelId})
         </Value>
       </DataItem>
-      
+
       <DataItem>
         <Label>{t('date_recorded')}</Label>
         <Value>{new Date(state.date).toLocaleString()}</Value>

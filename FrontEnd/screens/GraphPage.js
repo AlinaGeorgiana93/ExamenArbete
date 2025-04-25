@@ -1,9 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import {
-  LineChart, BarChart, AreaChart, PieChart, RadarChart, ScatterChart,
-  Line, Bar, Area, Pie, Radar, Scatter, XAxis, YAxis, CartesianGrid,
-  Tooltip, Legend, ResponsiveContainer, PolarGrid, PolarAngleAxis, 
-  PolarRadiusAxis, Cell
+  LineChart,
+  BarChart,
+  AreaChart,
+  PieChart,
+  RadarChart,
+  ScatterChart,
+  Line,
+  Bar,
+  Area,
+  Pie,
+  Radar,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Cell,
 } from 'recharts';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
@@ -34,14 +52,14 @@ const ChartTypeButton = styled.button`
   padding: 8px 16px;
   border: none;
   border-radius: 20px;
-  background-color: ${props => props.active ? '#125358' : '#e0e0e0'};
-  color: ${props => props.active ? 'white' : '#333'};
+  background-color: ${(props) => (props.active ? '#125358' : '#e0e0e0')};
+  color: ${(props) => (props.active ? 'white' : '#333')};
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
+    background-color: ${(props) => (props.active ? '#0e4246' : '#d0d0d0')};
   }
 `;
 
@@ -52,7 +70,7 @@ const MetricToggle = styled.label`
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 15px;
-  background-color: ${props => props.active ? '#12535820' : 'transparent'};
+  background-color: ${(props) => (props.active ? '#12535820' : 'transparent')};
 `;
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
@@ -63,14 +81,14 @@ const chartTypes = [
   { key: 'area', name: 'Area Chart' },
   { key: 'pie', name: 'Pie Chart' },
   { key: 'radar', name: 'Radar Chart' },
-  { key: 'scatter', name: 'Scatter Chart' }
+  { key: 'scatter', name: 'Scatter Chart' },
 ];
 
 const metrics = [
   { key: 'moodRating', name: 'Mood', color: COLORS[0] },
   { key: 'activityRating', name: 'Activity', color: COLORS[1] },
   { key: 'appetiteRating', name: 'Appetite', color: COLORS[2] },
-  { key: 'sleepRating', name: 'Sleep', color: COLORS[3] }
+  { key: 'sleepRating', name: 'Sleep', color: COLORS[3] },
 ];
 
 function GraphPage() {
@@ -78,37 +96,41 @@ function GraphPage() {
   const [graphData, setGraphData] = useState([]);
   const [patientInfo, setPatientInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
   const [chartType, setChartType] = useState('line');
   const [activeMetrics, setActiveMetrics] = useState({
     moodRating: true,
     activityRating: true,
     appetiteRating: true,
-    sleepRating: true
+    sleepRating: true,
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${id}`);
+        const patientResponse = await axios.get(
+          `https://localhost:7066/api/Patient/ReadItem?id=${id}`
+        );
         setPatientInfo(patientResponse.data.item);
 
         const localData = JSON.parse(localStorage.getItem('graphData') || '[]');
-        const patientData = localData.filter(item => item.patientId === id);
-        
+        const patientData = localData.filter((item) => item.patientId === id);
+
         if (patientData.length > 0) {
           setGraphData(patientData);
         } else {
-          const response = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${id}`);
+          const response = await axios.get(
+            `https://localhost:7066/api/Graph/ReadItems?patientId=${id}`
+          );
           if (response.data?.pageItems?.length > 0) {
             setGraphData(response.data.pageItems);
           } else {
-            setErrorMsg("No data found for this patient.");
+            setErrorMsg('No data found for this patient.');
           }
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setErrorMsg("Could not fetch data. Please try again.");
+        console.error('Error fetching data:', error);
+        setErrorMsg('Could not fetch data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -117,23 +139,27 @@ function GraphPage() {
     fetchData();
   }, [id]);
 
-  const formattedData = graphData.map(item => ({
+  const formattedData = graphData.map((item) => ({
     date: new Date(item.date).toLocaleDateString(),
-    ...item
+    ...item,
   }));
 
   const toggleMetric = (metric) => {
-    setActiveMetrics(prev => ({
+    setActiveMetrics((prev) => ({
       ...prev,
-      [metric]: !prev[metric]
+      [metric]: !prev[metric],
     }));
   };
 
   const renderChart = () => {
-    const activeDataKeys = metrics.filter(m => activeMetrics[m.key]).map(m => m.key);
-    
+    const activeDataKeys = metrics
+      .filter((m) => activeMetrics[m.key])
+      .map((m) => m.key);
+
     if (formattedData.length === 0) {
-      return <div style={{ textAlign: 'center' }}>No data available to display.</div>;
+      return (
+        <div style={{ textAlign: 'center' }}>No data available to display.</div>
+      );
     }
 
     switch (chartType) {
@@ -145,18 +171,19 @@ function GraphPage() {
             <YAxis domain={[0, 10]} />
             <Tooltip />
             <Legend />
-            {metrics.map(metric => (
-              activeMetrics[metric.key] && (
-                <Line
-                  key={metric.key}
-                  type="monotone"
-                  dataKey={metric.key}
-                  name={metric.name}
-                  stroke={metric.color}
-                  activeDot={{ r: 8 }}
-                />
-              )
-            ))}
+            {metrics.map(
+              (metric) =>
+                activeMetrics[metric.key] && (
+                  <Line
+                    key={metric.key}
+                    type="monotone"
+                    dataKey={metric.key}
+                    name={metric.name}
+                    stroke={metric.color}
+                    activeDot={{ r: 8 }}
+                  />
+                )
+            )}
           </LineChart>
         );
       case 'bar':
@@ -167,16 +194,17 @@ function GraphPage() {
             <YAxis domain={[0, 10]} />
             <Tooltip />
             <Legend />
-            {metrics.map(metric => (
-              activeMetrics[metric.key] && (
-                <Bar
-                  key={metric.key}
-                  dataKey={metric.key}
-                  name={metric.name}
-                  fill={metric.color}
-                />
-              )
-            ))}
+            {metrics.map(
+              (metric) =>
+                activeMetrics[metric.key] && (
+                  <Bar
+                    key={metric.key}
+                    dataKey={metric.key}
+                    name={metric.name}
+                    fill={metric.color}
+                  />
+                )
+            )}
           </BarChart>
         );
       case 'area':
@@ -187,34 +215,39 @@ function GraphPage() {
             <YAxis domain={[0, 10]} />
             <Tooltip />
             <Legend />
-            {metrics.map(metric => (
-              activeMetrics[metric.key] && (
-                <Area
-                  key={metric.key}
-                  type="monotone"
-                  dataKey={metric.key}
-                  name={metric.name}
-                  stroke={metric.color}
-                  fill={metric.color}
-                  fillOpacity={0.4}
-                />
-              )
-            ))}
+            {metrics.map(
+              (metric) =>
+                activeMetrics[metric.key] && (
+                  <Area
+                    key={metric.key}
+                    type="monotone"
+                    dataKey={metric.key}
+                    name={metric.name}
+                    stroke={metric.color}
+                    fill={metric.color}
+                    fillOpacity={0.4}
+                  />
+                )
+            )}
           </AreaChart>
         );
       case 'pie':
         // Pie chart shows average values for all metrics
-        const pieData = metrics.map(metric => {
-          const values = formattedData.map(d => d[metric.key]).filter(v => v !== undefined);
-          const average = values.length > 0 ? 
-            values.reduce((a, b) => a + b, 0) / values.length : 0;
+        const pieData = metrics.map((metric) => {
+          const values = formattedData
+            .map((d) => d[metric.key])
+            .filter((v) => v !== undefined);
+          const average =
+            values.length > 0
+              ? values.reduce((a, b) => a + b, 0) / values.length
+              : 0;
           return {
             name: metric.name,
             value: average,
-            color: metric.color
+            color: metric.color,
           };
         });
-        
+
         return (
           <PieChart>
             <Pie
@@ -226,7 +259,9 @@ function GraphPage() {
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              label={({ name, percent }) =>
+                `${name}: ${(percent * 100).toFixed(0)}%`
+              }
             >
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -238,20 +273,29 @@ function GraphPage() {
         );
       case 'radar':
         // Radar chart shows all metrics
-        const radarData = metrics.map(metric => {
-          const values = formattedData.map(d => d[metric.key]).filter(v => v !== undefined);
-          const average = values.length > 0 ? 
-            values.reduce((a, b) => a + b, 0) / values.length : 0;
+        const radarData = metrics.map((metric) => {
+          const values = formattedData
+            .map((d) => d[metric.key])
+            .filter((v) => v !== undefined);
+          const average =
+            values.length > 0
+              ? values.reduce((a, b) => a + b, 0) / values.length
+              : 0;
           return {
             subject: metric.name,
             A: average,
             fullMark: 10,
-            color: metric.color
+            color: metric.color,
           };
         });
-        
+
         return (
-          <RadarChart outerRadius={150} width={600} height={400} data={radarData}>
+          <RadarChart
+            outerRadius={150}
+            width={600}
+            height={400}
+            data={radarData}
+          >
             <PolarGrid />
             <PolarAngleAxis dataKey="subject" />
             <PolarRadiusAxis angle={30} domain={[0, 10]} />
@@ -268,14 +312,14 @@ function GraphPage() {
         );
       case 'scatter':
         // Scatter chart shows all metrics
-        const scatterData = formattedData.map(dataPoint => {
+        const scatterData = formattedData.map((dataPoint) => {
           const point = { date: dataPoint.date };
-          metrics.forEach(metric => {
+          metrics.forEach((metric) => {
             point[metric.key] = dataPoint[metric.key];
           });
           return point;
         });
-        
+
         return (
           <ScatterChart
             width={600}
@@ -288,7 +332,7 @@ function GraphPage() {
             <YAxis type="number" name="Rating" domain={[0, 10]} />
             <Tooltip cursor={{ strokeDasharray: '3 3' }} />
             <Legend />
-            {metrics.map(metric => (
+            {metrics.map((metric) => (
               <Scatter
                 key={metric.key}
                 name={metric.name}
@@ -303,35 +347,41 @@ function GraphPage() {
     }
   };
 
-  if (loading) return <div style={{ padding: "2rem" }}>Loading graphs...</div>;
-  if (errorMsg) return <div style={{ padding: "2rem", color: "red" }}>{errorMsg}</div>;
+  if (loading) return <div style={{ padding: '2rem' }}>Loading graphs...</div>;
+  if (errorMsg)
+    return <div style={{ padding: '2rem', color: 'red' }}>{errorMsg}</div>;
 
   return (
     <>
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
 
       <GraphContainer>
         {patientInfo && (
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            marginBottom: '20px',
-            padding: '15px',
-            backgroundColor: '#f5f5f5',
-            borderRadius: '8px'
-          }}>
-            <img 
-              src={patient1} 
-              alt="Patient" 
-              style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '20px',
+              padding: '15px',
+              backgroundColor: '#f5f5f5',
+              borderRadius: '8px',
+            }}
+          >
+            <img
+              src={patient1}
+              alt="Patient"
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
                 objectFit: 'cover',
-                marginRight: '20px'
-              }} 
+                marginRight: '20px',
+              }}
             />
             <div>
               <h2 style={{ margin: 0, color: '#125358' }}>
@@ -344,13 +394,19 @@ function GraphPage() {
           </div>
         )}
 
-        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#125358' }}>
+        <h2
+          style={{
+            textAlign: 'center',
+            marginBottom: '20px',
+            color: '#125358',
+          }}
+        >
           Symptom Progress Visualization
         </h2>
-        
+
         <ChartControls>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {chartTypes.map(type => (
+            {chartTypes.map((type) => (
               <ChartTypeButton
                 key={type.key}
                 active={chartType === type.key}
@@ -360,10 +416,10 @@ function GraphPage() {
               </ChartTypeButton>
             ))}
           </div>
-          
+
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {metrics.map(metric => (
-              <MetricToggle 
+            {metrics.map((metric) => (
+              <MetricToggle
                 key={metric.key}
                 active={activeMetrics[metric.key]}
                 onClick={() => toggleMetric(metric.key)}
