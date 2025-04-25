@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using Models;
 using Models.DTO;
 using Services;
@@ -76,7 +75,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-           Policy = null, Roles = "sysadmin")]
+           Policy = null, Roles = "usr, sysadmin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetite>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -133,7 +132,7 @@ namespace AppWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-              Policy = null, Roles = "sysadmin")]
+              Policy = null, Roles = "usr, sysadmin")]
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetite>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -160,7 +159,7 @@ namespace AppWebApi.Controllers
         }
 
             [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "sysadmin")]
+            Policy = null, Roles ="usr, sysadmin")]
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetite>))]
         [ProducesResponseType(400, Type = typeof(string))]

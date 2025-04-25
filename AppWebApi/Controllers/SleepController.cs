@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Models;
@@ -20,6 +21,8 @@ namespace AppWebApi.Controllers
             _logger = logger;
         }
 
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = "usr, sysadmin")]
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(ResponsePageDto<ISleep>))]
         [ProducesResponseType(400, Type = typeof(string))]
