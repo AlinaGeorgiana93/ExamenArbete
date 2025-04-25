@@ -28,8 +28,10 @@ function App() {
             <Route path="/patient/:patientId" element={<PatientPage />} />
 
             <Route path="/staff" element={<StaffPage />} />
-            <Route path="/patient" element={<PatientPage />} />
+         
             <Route path="/review/:patientId" element={<PatientDataReview />} />
+            
+
             <Route path="/graph/:id" element={<GraphPage />} />
 
             <Route path="/about" element={<AboutUs />} />
