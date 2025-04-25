@@ -64,13 +64,13 @@ public class AdminDbRepos
             }
         });
 
-        if (!_dbContext.Staffs.Any())
+    if (!_dbContext.Staffs.Any())
 {
-    var testStaff = new StaffDbM
+    var testStaff1 = new StaffDbM
     {
         StaffId = Guid.NewGuid(),
         FirstName = "Charlie",
-        LastName = "Staff",
+        LastName = "Doddie",
         PersonalNumber = "199001011234",
         Email = "charlie@mail.com",
         Role = "usr",
@@ -78,8 +78,32 @@ public class AdminDbRepos
         Password = _encryptions.EncryptPasswordToBase64("1234") // encrypt it same as login
     };
 
-    _dbContext.Staffs.Add(testStaff);
-    _logger.LogInformation($"Seeded test staff: {testStaff.UserName}");
+    var testStaff2 = new StaffDbM
+    {
+        StaffId = Guid.NewGuid(),
+        FirstName = "Alice",
+        LastName = "Maor",
+        PersonalNumber = "199002022345",
+        Email = "alice@mail.com",
+        Role = "usr",
+        UserName = "Alice1",
+        Password = _encryptions.EncryptPasswordToBase64("1234") // encrypt it same as login
+    };
+
+    var testStaff3 = new StaffDbM
+    {
+        StaffId = Guid.NewGuid(),
+        FirstName = "Bob",
+        LastName = "Tom",
+        PersonalNumber = "199003033456",
+        Email = "bob@mail.com",
+        Role = "usr",
+        UserName = "Bob1",
+        Password = _encryptions.EncryptPasswordToBase64("1234") // encrypt it same as login
+    };
+
+    _dbContext.Staffs.AddRange(testStaff1, testStaff2, testStaff3);
+    await _dbContext.SaveChangesAsync();
 }
 
 
