@@ -108,7 +108,7 @@ public class AdminDbRepos
 
 
         await _dbContext.SaveChangesAsync();
-        _logger.LogInformation("Default users seeded.");
+        _logger.LogInformation("Default users and staffs seeded.");
     }
 }
 
