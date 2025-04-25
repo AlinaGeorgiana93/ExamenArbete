@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 
-
 // Global Style
 const GlobalStyle = createGlobalStyle`
   * {
@@ -84,8 +83,8 @@ const Button = styled.button`
     color: #00363a;
     transform: scale(1.03);
   }
-      
 `;
+
 const PatientHeader = styled.div`
   display: flex;
   flex-direction: column;
@@ -107,9 +106,6 @@ const PatientName = styled.h2`
   font-weight: bold;
   text-align: center;
 `;
-
-
-
 
 function PatientPage() {
   const { patientId } = useParams();
@@ -133,7 +129,6 @@ function PatientPage() {
     return str.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
   };
 
-
   // Fetch patient details by patientId
   useEffect(() => {
     axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`)
@@ -149,17 +144,14 @@ function PatientPage() {
   }, [patientId]);
 
   // Fetch available MoodKinds, ActivityLevels, AppetiteLevels, SleepLevels
-  const token = localStorage.getItem('jwtToken'); // Get the correct token key
-  console.log("Retrieved token from localStorage:", token); // Log token to see if it's there
+  const token = localStorage.getItem('jwtToken');
+  console.log("Retrieved token from localStorage:", token);
 
   if (!token) {
     console.error("No token found in localStorage.");
-    return; // Stop the request if no token is found
+    return;
   }
 
-
-
-  // Fetching all levels
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -189,20 +181,17 @@ function PatientPage() {
     fetchData();
   }, [token]);
 
-  // ✅ Handle selection change for each dropdown
   const handleSelectChange = (setter) => (e) => {
     setter(e.target.value);
   };
 
   const handleSave = async () => {
     try {
-      // Find the complete data objects for each selection
       const moodData = moodKinds.find(m => m.moodKindId === selectedMoodKind);
       const activityData = activityLevels.find(a => a.activityLevelId === selectedActivityLevel);
       const appetiteData = appetiteLevels.find(a => a.appetiteLevelId === selectedAppetiteLevel);
       const sleepData = sleepLevels.find(s => s.sleepLevelId === selectedSleepLevel);
-  
-      // Prepare data for API and state
+
       const saveData = {
         patientId: patientId,
         moodKindId: selectedMoodKind,
@@ -210,19 +199,16 @@ function PatientPage() {
         appetiteLevelId: selectedAppetiteLevel,
         sleepLevelId: selectedSleepLevel,
         date: new Date().toISOString(),
-        // Include complete objects for review page
         moodKind: moodData,
         activityLevel: activityData,
         appetiteLevel: appetiteData,
         sleepLevel: sleepData,
-        // Include ratings for graph
         moodRating: moodData?.rating,
         activityRating: activityData?.rating,
         appetiteRating: appetiteData?.rating,
         sleepRating: sleepData?.rating
       };
-  
-      // Save to API
+
       await axios.post('https://localhost:7066/api/Graph/CreateItem', {
         patientId: patientId,
         moodKindId: selectedMoodKind,
@@ -231,21 +217,20 @@ function PatientPage() {
         sleepLevelId: selectedSleepLevel,
         date: new Date().toISOString()
       });
-  
-      // Save to localStorage for graph data fallback
+
       const existingData = JSON.parse(localStorage.getItem('graphData') || '[]');
       localStorage.setItem('graphData', JSON.stringify([...existingData, saveData]));
-  
-      // Navigate to review page with full data
+
       navigate(`/review/${patientId}`, { state: saveData });
-  
+
     } catch (err) {
       console.error("Error saving data:", err);
       alert("Could not save data");
     }
   };
-  if (loading) return <div>Laddar patient...</div>;
-  if (!patient) return <div>Ingen patient hittad.</div>;
+
+  if (loading) return <div>{t('loading_patient')}</div>;
+  if (!patient) return <div>{t('no_patient_found')}</div>;
 
   return (
     <>
@@ -260,12 +245,11 @@ function PatientPage() {
           <PatientName>{patient.firstName} {patient.lastName}</PatientName>
         </PatientHeader>
 
-
         <PatientPageContainer>
           <FormGroup>
-            <label htmlFor="moodkind-select">{formatLabel('select_moodkind') || 'Välj humör'}</label>
+            <label htmlFor="moodkind-select">{t('select_moodkind')}</label>
             <Dropdown id="moodkind-select" value={selectedMoodKind} onChange={handleSelectChange(setSelectedMoodKind)}>
-              <option value="">{formatLabel('choose_moodkind') || 'Välj humörnivå'}</option>
+              <option value="">{t('choose_moodkind')}</option>
               {moodKinds.map((mood) => (
                 <option key={mood.moodKindId} value={mood.moodKindId}>
                   {mood.label} {mood.rating}
@@ -275,9 +259,9 @@ function PatientPage() {
           </FormGroup>
 
           <FormGroup>
-            <label htmlFor="activitylevel-select">{formatLabel('select_activitylevel') || 'Välj aktivitetsnivå'}</label>
+            <label htmlFor="activitylevel-select">{t('select_activitylevel')}</label>
             <Dropdown id="activitylevel-select" value={selectedActivityLevel} onChange={handleSelectChange(setSelectedActivityLevel)}>
-              <option value="">{formatLabel('choose_activitylevel') || 'Välj aktivitetsnivå'}</option>
+              <option value="">{t('choose_activitylevel')}</option>
               {activityLevels.map((activity) => (
                 <option key={activity.activityLevelId} value={activity.activityLevelId}>
                   {activity.label} {activity.rating}
@@ -287,9 +271,9 @@ function PatientPage() {
           </FormGroup>
 
           <FormGroup>
-            <label htmlFor="appetitlevel-select">{formatLabel('select_appetitlevel') || 'Välj aptitnivå'}</label>
-            <Dropdown id="appetitlevel-select" value={selectedAppetiteLevel} onChange={handleSelectChange(setSelectedAppetiteLevel)}>
-              <option value="">{formatLabel('choose_appetitlevel') || 'Välj aptitnivå'}</option>
+            <label htmlFor="appetitelevel-select">{t('select_appetitelevel')}</label>
+            <Dropdown id="appetitelevel-select" value={selectedAppetiteLevel} onChange={handleSelectChange(setSelectedAppetiteLevel)}>
+              <option value="">{t('choose_appetitelevel')}</option>
               {appetiteLevels.map((appetite) => (
                 <option key={appetite.appetiteLevelId} value={appetite.appetiteLevelId}>
                   {appetite.label} {appetite.rating}
@@ -299,9 +283,9 @@ function PatientPage() {
           </FormGroup>
 
           <FormGroup>
-            <label htmlFor="sleeplevel-select">{formatLabel('select_sleeplevel') || 'Välj sömnnivå'}</label>
+            <label htmlFor="sleeplevel-select">{t('select_sleeplevel')}</label>
             <Dropdown id="sleeplevel-select" value={selectedSleepLevel} onChange={handleSelectChange(setSelectedSleepLevel)}>
-              <option value="">{formatLabel('choose_sleeplevel') || 'Välj sömnnivå'}</option>
+              <option value="">{t('choose_sleeplevel')}</option>
               {sleepLevels.map((sleep) => (
                 <option key={sleep.sleepLevelId} value={sleep.sleepLevelId}>
                   {sleep.label} {sleep.rating}
@@ -310,12 +294,11 @@ function PatientPage() {
             </Dropdown>
           </FormGroup>
 
-          <Button onClick={handleSave}>Spara</Button>
+          <Button onClick={handleSave}>{t('save_button')}</Button>
         </PatientPageContainer>
       </div>
     </>
   );
 }
-
 
 export default PatientPage;

@@ -1,9 +1,10 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
-import patient1 from '../src/media/patient1.jpg'; // Bild på "er"
+import patient1 from '../src/media/patient1.jpg'; 
 import '../src/index.css';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';  // Import the translation hook
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -75,6 +76,8 @@ const Name = styled.span`
 `;
 
 const AboutUsPage = () => {
+  const { t } = useTranslation(); // Use the translation hook
+
   return (
     <>
       <GlobalStyle />
@@ -82,39 +85,29 @@ const AboutUsPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <PageContainer>
-        <Title>Om oss</Title>
-        <Text>
-          Vi är fyra engagerade tjejer som studerar systemutveckling och har tillsammans utvecklat den här webbplatsen som en del av vårt utbildningsprojekt. Vårt mål är att skapa en smidig och användarvänlig plattform som underlättar för patienter att rapportera sitt mående dagligen.
-        </Text>
-        <Text>
-          Genom att kombinera teknik med omtanke vill vi bidra till en bättre kommunikation mellan patienter och vårdpersonal. Vi tror att små insatser varje dag kan göra stor skillnad för människors hälsa över tid.
-        </Text>
-        <Text>
-          Plattformen är utformad med fokus på tillgänglighet, trygghet och enkelhet — och vi är stolta över att ha byggt något som kan göra vardagen lite lättare för andra.
-        </Text>
-        <Text>
-          Har du frågor, tankar eller feedback får du gärna höra av dig.
-        </Text>
-        <Text>
-          Tack för att du använder vår tjänst! 💙 
-        </Text>
+        <Title>{t('aboutUsTitle')}</Title>
+        <Text>{t('description1')}</Text>
+        <Text>{t('description2')}</Text>
+        <Text>{t('description3')}</Text>
+        <Text>{t('description4')}</Text>
+        <Text>{t('description5')}</Text>
 
         <TeamGrid>
           <TeamMember>
             <ProfileImage src={patient1} alt="Teammedlem 1" />
-            <Name>Parisa</Name>
+            <Name>{t('team1')}</Name>
           </TeamMember>
           <TeamMember>
             <ProfileImage src={patient1} alt="Teammedlem 2" />
-            <Name>Alina</Name>
+            <Name>{t('team2')}</Name>
           </TeamMember>
           <TeamMember>
             <ProfileImage src={patient1} alt="Teammedlem 3" />
-            <Name>Mona</Name>
+            <Name>{t('team3')}</Name>
           </TeamMember>
           <TeamMember>
             <ProfileImage src={patient1} alt="Teammedlem 4" />
-            <Name>Nagihan</Name>
+            <Name>{t('team4')}</Name>
           </TeamMember>
         </TeamGrid>
       </PageContainer>

@@ -171,9 +171,6 @@ const StaffPage = () => {
             )}
           </Dropdown>
         </DropdownWrapper>
-
-        {/* Länk till "About Us"-sidan */}
-        <AboutButton href="/about">{t('about-us')}</AboutButton>
       </StaffPageContainer>
     </>
   );
