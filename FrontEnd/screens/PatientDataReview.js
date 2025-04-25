@@ -61,10 +61,30 @@ const Button = styled.button`
     }
   }
 `;
+
 function PatientDataReview() {
   const { patientId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  const handleCreateGraph = () => {
+    // Prepare the complete data object to pass to GraphPage
+    const graphData = {
+      date: state.date || new Date().toISOString(),
+      moodRating: state.moodKind?.rating,
+      activityRating: state.activityLevel?.rating,
+      appetiteRating: state.appetiteLevel?.rating,
+      sleepRating: state.sleepLevel?.rating,
+      // Include the full objects for reference
+      moodKind: state.moodKind,
+      activityLevel: state.activityLevel,
+      appetiteLevel: state.appetiteLevel,
+      sleepLevel: state.sleepLevel,
+      patientId: patientId  // Ensure patientId is included
+    };
+
+    navigate(`/graph/${patientId}`, { state: graphData });
+  };
 
   if (!state) {
     return (
@@ -90,39 +110,39 @@ function PatientDataReview() {
       <DataItem>
         <Label>Mood:</Label>
         <Value>
-          {state.moodKind?.label} (Rating: {state.moodKind?.rating}, ID: {state.moodKind?.moodKindId})
+          {state.moodKind?.label} (Rating: {state.moodKind?.rating || 'N/A'}, ID: {state.moodKind?.moodKindId || 'N/A'})
         </Value>
       </DataItem>
       
       <DataItem>
         <Label>Activity:</Label>
         <Value>
-          {state.activityLevel?.label} (Rating: {state.activityLevel?.rating}, ID: {state.activityLevel?.activityLevelId})
+          {state.activityLevel?.label} (Rating: {state.activityLevel?.rating || 'N/A'}, ID: {state.activityLevel?.activityLevelId || 'N/A'})
         </Value>
       </DataItem>
       
       <DataItem>
         <Label>Appetite:</Label>
         <Value>
-          {state.appetiteLevel?.label} (Rating: {state.appetiteLevel?.rating}, ID: {state.appetiteLevel?.appetiteLevelId})
+          {state.appetiteLevel?.label} (Rating: {state.appetiteLevel?.rating || 'N/A'}, ID: {state.appetiteLevel?.appetiteLevelId || 'N/A'})
         </Value>
       </DataItem>
       
       <DataItem>
         <Label>Sleep:</Label>
         <Value>
-          {state.sleepLevel?.label} (Rating: {state.sleepLevel?.rating}, ID: {state.sleepLevel?.sleepLevelId})
+          {state.sleepLevel?.label} (Rating: {state.sleepLevel?.rating || 'N/A'}, ID: {state.sleepLevel?.sleepLevelId || 'N/A'})
         </Value>
       </DataItem>
       
       <DataItem>
         <Label>Date Recorded:</Label>
-        <Value>{new Date(state.date).toLocaleString()}</Value>
+        <Value>{state.date ? new Date(state.date).toLocaleString() : 'Not recorded'}</Value>
       </DataItem>
 
       <ButtonGroup>
-        <Button onClick={() => navigate(`/graph/${patientId}`)}>
-          Save and Create a graph
+        <Button onClick={handleCreateGraph}>
+          Save and Create Graph
         </Button>
         <Button onClick={() => navigate(`/patient/${patientId}`)}>
           Go Back

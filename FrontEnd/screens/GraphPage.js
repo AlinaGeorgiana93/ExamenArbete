@@ -1,16 +1,16 @@
-
 import React, { useEffect, useState } from 'react';
 import {
-  LineChart, BarChart, AreaChart, PieChart, RadarChart, ScatterChart,
-  Line, Bar, Area, Pie, Radar, Scatter, XAxis, YAxis, CartesianGrid,
-  Tooltip, Legend, ResponsiveContainer, PolarGrid, PolarAngleAxis, 
-  PolarRadiusAxis, Cell
+  LineChart, BarChart, PieChart,
+  Line, Bar, Pie, XAxis, YAxis, CartesianGrid,
+  Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 import styled from 'styled-components';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const GraphContainer = styled.div`
   background-color: #ffffffee;
@@ -56,13 +56,33 @@ const MetricToggle = styled.label`
   background-color: ${props => props.active ? '#12535820' : 'transparent'};
 `;
 
+const TimeRangeButton = styled.button`
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background-color: ${props => props.active ? '#125358' : '#e0e0e0'};
+  color: ${props => props.active ? 'white' : '#333'};
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
+  }
+`;
+
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
 const chartTypes = [
-  { key: 'line', name: 'Line Chart' },
   { key: 'bar', name: 'Bar Chart' },
-  { key: 'pie', name: 'Pie Chart' },
+  { key: 'line', name: 'Line Chart' },
+  { key: 'pie', name: 'Pie Chart' }
+];
 
+const timeRanges = [
+  { key: 'day', name: 'Daily' },
+  { key: 'month', name: 'Monthly' },
+  { key: 'year', name: 'Annual' }
 ];
 
 const metrics = [
@@ -72,13 +92,92 @@ const metrics = [
   { key: 'sleepRating', name: 'Sleep', color: COLORS[3] }
 ];
 
+const calculateDailyAverages = (data) => {
+  const dateMap = {};
+  
+  data.forEach(item => {
+    const dateKey = new Date(item.date).toLocaleDateString();
+    if (!dateMap[dateKey]) {
+      dateMap[dateKey] = {
+        date: dateKey,
+        count: 1,
+        moodRating: item.moodRating || 0,
+        activityRating: item.activityRating || 0,
+        appetiteRating: item.appetiteRating || 0,
+        sleepRating: item.sleepRating || 0
+      };
+    } else {
+      dateMap[dateKey].count += 1;
+      dateMap[dateKey].moodRating += item.moodRating || 0;
+      dateMap[dateKey].activityRating += item.activityRating || 0;
+      dateMap[dateKey].appetiteRating += item.appetiteRating || 0;
+      dateMap[dateKey].sleepRating += item.sleepRating || 0;
+    }
+  });
+
+  return Object.values(dateMap).map(entry => ({
+    date: entry.date,
+    moodRating: Math.round((entry.moodRating / entry.count) * 10) / 10,
+    activityRating: Math.round((entry.activityRating / entry.count) * 10) / 10,
+    appetiteRating: Math.round((entry.appetiteRating / entry.count) * 10) / 10,
+    sleepRating: Math.round((entry.sleepRating / entry.count) * 10) / 10
+  }));
+};
+
+const groupDataByTimePeriod = (data, period) => {
+  const groupedData = {};
+  
+  data.forEach(item => {
+    const date = new Date(item.date);
+    let key;
+    
+    if (period === 'month') {
+      key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+    } else if (period === 'year') {
+      key = date.getFullYear();
+    } else {
+      key = new Date(item.date).toLocaleDateString();
+    }
+    
+    if (!groupedData[key]) {
+      groupedData[key] = {
+        date: key,
+        count: 1,
+        moodRating: item.moodRating || 0,
+        activityRating: item.activityRating || 0,
+        appetiteRating: item.appetiteRating || 0,
+        sleepRating: item.sleepRating || 0
+      };
+    } else {
+      groupedData[key].count += 1;
+      groupedData[key].moodRating += item.moodRating || 0;
+      groupedData[key].activityRating += item.activityRating || 0;
+      groupedData[key].appetiteRating += item.appetiteRating || 0;
+      groupedData[key].sleepRating += item.sleepRating || 0;
+    }
+  });
+
+  return Object.values(groupedData).map(entry => ({
+    date: entry.date,
+    moodRating: Math.round((entry.moodRating / entry.count) * 10) / 10,
+    activityRating: Math.round((entry.activityRating / entry.count) * 10) / 10,
+    appetiteRating: Math.round((entry.appetiteRating / entry.count) * 10) / 10,
+    sleepRating: Math.round((entry.sleepRating / entry.count) * 10) / 10
+  }));
+};
+
 function GraphPage() {
   const { id } = useParams();
-  const [graphData, setGraphData] = useState([]);
+  const location = useLocation();
+  const [rawData, setRawData] = useState([]);
+  const [processedData, setProcessedData] = useState([]);
   const [patientInfo, setPatientInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const [chartType, setChartType] = useState('line');
+  const [chartType, setChartType] = useState('bar');
+  const [timeRange, setTimeRange] = useState('day');
+  const [startDate, setStartDate] = useState(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
+  const [endDate, setEndDate] = useState(new Date());
   const [activeMetrics, setActiveMetrics] = useState({
     moodRating: true,
     activityRating: true,
@@ -89,37 +188,89 @@ function GraphPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // First get patient info
         const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${id}`);
         setPatientInfo(patientResponse.data.item);
 
-        const localData = JSON.parse(localStorage.getItem('graphData') || '[]');
-        const patientData = localData.filter(item => item.patientId === id);
-        
-        if (patientData.length > 0) {
-          setGraphData(patientData);
-        } else {
-          const response = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${id}`);
-          if (response.data?.pageItems?.length > 0) {
-            setGraphData(response.data.pageItems);
-          } else {
-            setErrorMsg("No data found for this patient.");
+        // Initialize data array
+        let allData = [];
+
+        // 1. Get data from API
+        try {
+          const apiResponse = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${id}`);
+          if (apiResponse.data?.pageItems) {
+            allData = [...apiResponse.data.pageItems];
           }
+        } catch (apiError) {
+          console.error("API fetch error:", apiError);
         }
+
+        // 2. Get data from localStorage
+        const localData = JSON.parse(localStorage.getItem(`patientData_${id}`) || '[]');
+        allData = [...allData, ...localData];
+
+        // 3. Add new data from location.state if available
+        if (location.state) {
+          const newDataPoint = {
+            date: location.state.date,
+            moodRating: location.state.moodRating,
+            activityRating: location.state.activityRating,
+            appetiteRating: location.state.appetiteRating,
+            sleepRating: location.state.sleepRating,
+            patientId: id
+          };
+          allData.push(newDataPoint);
+          
+          // Update localStorage with the new data
+          localStorage.setItem(`patientData_${id}`, JSON.stringify([...localData, newDataPoint]));
+        }
+
+        // Process and filter data
+        const validData = allData.filter(item => 
+          item.date && 
+          (item.moodRating !== undefined || 
+           item.activityRating !== undefined || 
+           item.appetiteRating !== undefined || 
+           item.sleepRating !== undefined)
+        );
+
+        setRawData(validData);
+        
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setErrorMsg("Could not fetch data. Please try again.");
+        console.error("Error in fetchData:", error);
+        setErrorMsg("Could not load patient data");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [id]);
+  }, [id, location.state]);
 
-  const formattedData = graphData.map(item => ({
-    date: new Date(item.date).toLocaleDateString(),
-    ...item
-  }));
+  useEffect(() => {
+    if (rawData.length === 0) {
+      setProcessedData([]);
+      return;
+    }
+
+    const filteredData = rawData.filter(item => {
+      try {
+        const itemDate = new Date(item.date);
+        return !isNaN(itemDate) && itemDate >= startDate && itemDate <= endDate;
+      } catch (e) {
+        return false;
+      }
+    });
+
+    if (filteredData.length === 0) {
+      setProcessedData([]);
+      return;
+    }
+
+    const dailyAverages = calculateDailyAverages(filteredData);
+    const groupedData = groupDataByTimePeriod(dailyAverages, timeRange);
+    setProcessedData(groupedData);
+  }, [rawData, timeRange, startDate, endDate]);
 
   const toggleMetric = (metric) => {
     setActiveMetrics(prev => ({
@@ -129,16 +280,66 @@ function GraphPage() {
   };
 
   const renderChart = () => {
-    const activeDataKeys = metrics.filter(m => activeMetrics[m.key]).map(m => m.key);
-    
-    if (formattedData.length === 0) {
-      return <div style={{ textAlign: 'center' }}>No data available to display.</div>;
+    if (processedData.length === 0) {
+      return (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '40px',
+          color: '#666',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%'
+        }}>
+          <h3>No data available</h3>
+          <p>Please check your date range or submit patient data first.</p>
+          <button 
+            onClick={() => {
+              setStartDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
+              setEndDate(new Date());
+            }}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#125358',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              marginTop: '10px',
+              cursor: 'pointer'
+            }}
+          >
+            Reset Date Range
+          </button>
+        </div>
+      );
     }
 
     switch (chartType) {
-      case 'line':
+      
+      case 'bar':
         return (
-          <LineChart data={formattedData}>
+          <BarChart data={processedData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis domain={[0, 10]} />
+            <Tooltip />
+            <Legend />
+            {metrics.map(metric => (
+              activeMetrics[metric.key] && (
+                <Bar
+                  key={metric.key}
+                  dataKey={metric.key}
+                  name={metric.name}
+                  fill={metric.color}
+                />
+              )
+            ))}
+          </BarChart>
+        );
+        case 'line':
+        return (
+          <LineChart data={processedData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis domain={[0, 10]} />
@@ -158,36 +359,14 @@ function GraphPage() {
             ))}
           </LineChart>
         );
-      case 'bar':
-        return (
-          <BarChart data={formattedData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis domain={[0, 10]} />
-            <Tooltip />
-            <Legend />
-            {metrics.map(metric => (
-              activeMetrics[metric.key] && (
-                <Bar
-                  key={metric.key}
-                  dataKey={metric.key}
-                  name={metric.name}
-                  fill={metric.color}
-                />
-              )
-            ))}
-          </BarChart>
-        );
-      
       case 'pie':
-        // Pie chart shows average values for all metrics
         const pieData = metrics.map(metric => {
-          const values = formattedData.map(d => d[metric.key]).filter(v => v !== undefined);
+          const values = processedData.map(d => d[metric.key]).filter(v => v !== undefined);
           const average = values.length > 0 ? 
             values.reduce((a, b) => a + b, 0) / values.length : 0;
           return {
             name: metric.name,
-            value: average,
+            value: Math.round(average * 10) / 10,
             color: metric.color
           };
         });
@@ -209,25 +388,25 @@ function GraphPage() {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip formatter={(value) => [`Average: ${value}`, '']} />
             <Legend />
           </PieChart>
         );
-     
+        
       default:
         return null;
     }
   };
 
-  if (loading) return <div style={{ padding: "2rem" }}>Loading graphs...</div>;
-  if (errorMsg) return <div style={{ padding: "2rem", color: "red" }}>{errorMsg}</div>;
+  if (loading) return <div style={{ padding: "2rem", textAlign: "center" }}>Loading patient data...</div>;
+  if (errorMsg) return <div style={{ padding: "2rem", color: "red", textAlign: "center" }}>{errorMsg}</div>;
 
   return (
     <>
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
-
+  
       <GraphContainer>
         {patientInfo && (
           <div style={{ 
@@ -259,43 +438,98 @@ function GraphPage() {
             </div>
           </div>
         )}
-
+  
         <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#125358' }}>
-          Symptom Progress Visualization
+          {/* Symptom Progress Visualization */}
         </h2>
         
-        {/* CHART TYPE BUTTONS */}
-  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', gap: '10px', flexWrap: 'wrap' }}>
-    {chartTypes.map(type => (
-      <ChartTypeButton
-        key={type.key}
-        active={chartType === type.key}
-        onClick={() => setChartType(type.key)}
-      >
-        {type.name}
-      </ChartTypeButton>
-    ))}
-  </div>
-
-  {/* METRIC CHECKBOXES */}
-  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px' }}>
-    {metrics.map(metric => (
-      <MetricToggle 
-        key={metric.key}
-        active={activeMetrics[metric.key]}
-        onClick={() => toggleMetric(metric.key)}
-      >
-        <input
-          type="checkbox"
-          checked={activeMetrics[metric.key]}
-          onChange={() => {}}
-          style={{ accentColor: metric.color }}
-        />
-        {metric.name}
-      </MetricToggle>
-    ))}
-  </div>
-
+        {/* METRIC SELECTION - MOVED HERE */}
+        <div style={{ 
+          marginBottom: '25px',
+          padding: '15px',
+          backgroundColor: '#f9f9f9',
+          borderRadius: '8px',
+          border: '1px solid #eee'
+        }}>
+          <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '10px'
+          }}>
+            {metrics.map(metric => (
+              <MetricToggle 
+                key={metric.key}
+                active={activeMetrics[metric.key]}
+                onClick={() => toggleMetric(metric.key)}
+              >
+                <input
+                  type="checkbox"
+                  checked={activeMetrics[metric.key]}
+                  onChange={() => {}}
+                  style={{ accentColor: metric.color }}
+                />
+                <span style={{ color: metric.color, fontWeight: '500' }}>
+                  {metric.name}
+                </span>
+              </MetricToggle>
+            ))}
+          </div>
+        </div>
+        
+        {/* DATE CONTROLS */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontWeight: '500' }}>From:</span>
+            <DatePicker
+              selected={startDate}
+              onChange={date => setStartDate(date)}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              maxDate={endDate}
+            />
+            <span style={{ fontWeight: '500' }}>To:</span>
+            <DatePicker
+              selected={endDate}
+              onChange={date => setEndDate(date)}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+              maxDate={new Date()}
+            />
+          </div>
+          
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {timeRanges.map(range => (
+              <TimeRangeButton
+                key={range.key}
+                active={timeRange === range.key}
+                onClick={() => setTimeRange(range.key)}
+              >
+                {range.name}
+              </TimeRangeButton>
+            ))}
+          </div>
+        </div>
+        
+        {/* CHART TYPE SELECTION */}
+        <ChartControls>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {chartTypes.map(type => (
+              <ChartTypeButton
+                key={type.key}
+                active={chartType === type.key}
+                onClick={() => setChartType(type.key)}
+              >
+                {type.name}
+              </ChartTypeButton>
+            ))}
+          </div>
+        </ChartControls>
+  
+        {/* CHART AREA */}
         <div style={{ width: '100%', height: '500px' }}>
           <ResponsiveContainer width="100%" height="100%">
             {renderChart()}
@@ -305,5 +539,4 @@ function GraphPage() {
     </>
   );
 }
-
 export default GraphPage;
