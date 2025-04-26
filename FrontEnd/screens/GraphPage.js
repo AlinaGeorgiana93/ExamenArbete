@@ -167,7 +167,7 @@ const groupDataByTimePeriod = (data, period) => {
 };
 
 function GraphPage() {
-  const { id } = useParams();
+  const { patientId } = useParams(); // Changed from id to patientId
   const location = useLocation();
   const [rawData, setRawData] = useState([]);
   const [processedData, setProcessedData] = useState([]);
@@ -189,7 +189,7 @@ function GraphPage() {
     const fetchData = async () => {
       try {
         // First get patient info
-        const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${id}`);
+        const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`);
         setPatientInfo(patientResponse.data.item);
 
         // Initialize data array
@@ -197,7 +197,7 @@ function GraphPage() {
 
         // 1. Get data from API
         try {
-          const apiResponse = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${id}`);
+          const apiResponse = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${patientId}`);
           if (apiResponse.data?.pageItems) {
             allData = [...apiResponse.data.pageItems];
           }
@@ -206,7 +206,7 @@ function GraphPage() {
         }
 
         // 2. Get data from localStorage
-        const localData = JSON.parse(localStorage.getItem(`patientData_${id}`) || '[]');
+        const localData = JSON.parse(localStorage.getItem(`patientData_${patientId}`) || '[]');
         allData = [...allData, ...localData];
 
         // 3. Add new data from location.state if available
@@ -217,12 +217,12 @@ function GraphPage() {
             activityRating: location.state.activityRating,
             appetiteRating: location.state.appetiteRating,
             sleepRating: location.state.sleepRating,
-            patientId: id
+            patientId: patientId
           };
           allData.push(newDataPoint);
           
           // Update localStorage with the new data
-          localStorage.setItem(`patientData_${id}`, JSON.stringify([...localData, newDataPoint]));
+          localStorage.setItem(`patientData_${patientId}`, JSON.stringify([...localData, newDataPoint]));
         }
 
         // Process and filter data
@@ -245,7 +245,7 @@ function GraphPage() {
     };
 
     fetchData();
-  }, [id, location.state]);
+  }, [patientId, location.state]);
 
   useEffect(() => {
     if (rawData.length === 0) {
@@ -316,7 +316,6 @@ function GraphPage() {
     }
 
     switch (chartType) {
-      
       case 'bar':
         return (
           <BarChart data={processedData}>
@@ -338,7 +337,7 @@ function GraphPage() {
             )}
           </BarChart>
         );
-        case 'line':
+      case 'line':
         return (
           <LineChart data={processedData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -395,7 +394,6 @@ function GraphPage() {
             <Legend />
           </PieChart>
         );
-        
       default:
         return null;
     }
@@ -441,17 +439,16 @@ function GraphPage() {
                 {patientInfo.firstName} {patientInfo.lastName}
               </h2>
               <p style={{ margin: '5px 0 0 0', color: '#666' }}>
-                Patient ID: {id}
+                Patient ID: {patientId}
               </p>
             </div>
           </div>
         )}
   
         <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#125358' }}>
-          {/* Symptom Progress Visualization */}
+          Symptom Progress Visualization
         </h2>
         
-        {/* METRIC SELECTION - MOVED HERE */}
         <div style={{ 
           marginBottom: '25px',
           padding: '15px',
@@ -485,7 +482,6 @@ function GraphPage() {
           </div>
         </div>
         
-        {/* DATE CONTROLS */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
             <span style={{ fontWeight: '500' }}>From:</span>
@@ -522,7 +518,6 @@ function GraphPage() {
           </div>
         </div>
         
-        {/* CHART TYPE SELECTION */}
         <ChartControls>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {chartTypes.map(type => (
@@ -537,7 +532,6 @@ function GraphPage() {
           </div>
         </ChartControls>
   
-        {/* CHART AREA */}
         <div style={{ width: '100%', height: '500px' }}>
           <ResponsiveContainer width="100%" height="100%">
             {renderChart()}
@@ -547,4 +541,5 @@ function GraphPage() {
     </>
   );
 }
+
 export default GraphPage;
