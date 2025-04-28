@@ -5,11 +5,12 @@ import Alina from '../src/media/Alina.jpg';
 import Parisa from '../src/media/Parisa.jpg'; 
 import Mona from '../src/media/Mona.jpg'; 
 import Nagi from '../src/media/Nagi.jpg';
+import checklist from '../src/media/checklist.jpg';
 
 import '../src/index.css';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Import the translation hook
-import videoFile from '../src/media/patient.mp4'; // Importera videon
+import { useTranslation } from 'react-i18next'; 
+import videoFile from '../src/media/patient.mp4'; 
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -137,7 +138,7 @@ const VideoContainer = styled.div`
 `;
 
 const AboutUsPage = () => {
-  const { t } = useTranslation(); // Use the translation hook
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -149,21 +150,24 @@ const AboutUsPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <PageContainer>
+        {/* Lägg till bilden här */}
+        <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} />
+        
         <Title>Om AutiGraph</Title>
         <Text>
-          Vi är fyra engagerade tjejer som studerar systemutveckling och har tillsammans utvecklat den här webbplatsen som en del av vårt utbildningsprojekt. Vårt mål är att skapa en smidig och användarvänlig plattform som underlättar för patienter att rapportera sitt mående dagligen.
+          Vi är fyra engagerade tjejer som studerar systemutveckling och har tillsammans utvecklat den här webbplatsen som en del av vårt utbildningsprojekt. Vårt mål är att skapa en smidig och användarvänlig plattform som underlättar för vårdpersonal att spåra och rapportera patienters mående dagligen.
         </Text>
         <Text>
-          Genom att kombinera teknik med omtanke vill vi bidra till en bättre kommunikation mellan patienter och vårdpersonal. Vi tror att små insatser varje dag kan göra stor skillnad för människors hälsa över tid.
+          Genom att kombinera teknik med omtanke vill vi bidra till en bättre kommunikation mellan vårdpersonal och patienter. Vi tror att små insatser varje dag kan göra stor skillnad för människors hälsa över tid.
         </Text>
         <Text>
-          Plattformen är utformad med fokus på tillgänglighet, trygghet och enkelhet — och vi är stolta över att ha byggt något som kan göra vardagen lite lättare för andra.
+          Plattformen är utformad med fokus på tillgänglighet, trygghet och enkelhet — och vi är stolta över att ha byggt något som kan göra vården mer effektiv och ge patienter en bättre upplevelse.
         </Text>
 
         <Section>
           <SectionTitle>Vad är AutiGraph?</SectionTitle>
           <SectionText>
-            AutiGraph är en digital plattform som gör det enkelt för patienter att dagligen rapportera sitt mående. Genom att visualisera hälsodata hjälper vi både patienter och vårdpersonal att följa utvecklingen över tid och fatta bättre beslut tillsammans.
+            AutiGraph är en digital plattform som gör det enkelt för vårdpersonal att dagligen rapportera och spåra patienternas mående. Genom att visualisera hälsodata hjälper vi vårdpersonal att följa utvecklingen över tid och fatta bättre beslut tillsammans med patienterna. Plattformen gör det möjligt att få en tydlig översikt av varje individs välmående, vilket underlättar kommunikationen och ger en mer effektiv vård.
           </SectionText>
         </Section>
 
@@ -184,7 +188,12 @@ const AboutUsPage = () => {
         <Section>
           <SectionTitle>Vår historia</SectionTitle>
           <SectionText>
-            AutiGraph föddes 2025 som ett utbildningsprojekt, helt självfinansierat, med syftet att skapa en plattform som gör vardagen enklare för personer med behov av att kontinuerligt dokumentera sitt mående.
+            <ul>
+              <li>Grundades 2025</li>
+              <li>Självfinansierat: Projektet startades utan externa investeringar.</li>
+              <li>Mål: Att skapa en plattform som underlättar för personer att kontinuerligt dokumentera sitt mående på ett enkelt och tryggt sätt.</li>
+              <li>Utvecklingsfokus: Vi fokuserade på användarvänlighet, tillgänglighet och att göra det möjligt för både patienter och vårdpersonal att följa utvecklingen över tid.</li>
+            </ul>
           </SectionText>
           <Text>
             Tack för att du använder vår tjänst! 💙
@@ -219,19 +228,19 @@ const AboutUsPage = () => {
       {/* Video container with the updated video settings */}
       <VideoContainer>
         <video
-          src={videoFile} // Källan för videon
-          autoPlay={true}  // Starta automatiskt
-          loop={true}      // Spela om när den är klar
-          muted={true}     // Håll videon ljudlös (valfritt)
-          controls={false} // Döljer kontrollerna
+          src={videoFile} 
+          autoPlay={true}  
+          loop={true}      
+          muted={true}     
+          controls={false} 
           style={{
-            objectFit: 'cover', // Gör att videon täcker hela området utan att förvrängas
-            width: '100%',      // Responsiv bredd
-            height: '100%',     // Responsiv höjd
-            position: 'absolute', // Så att den täcker hela skärmen
+            objectFit: 'cover', 
+            width: '100%',      
+            height: '100%',     
+            position: 'absolute', 
             top: 0,
             left: 0,
-            zIndex: -1, // Håller videon bakom innehållet
+            zIndex: -1, 
           }}
         />
       </VideoContainer>
