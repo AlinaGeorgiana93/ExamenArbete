@@ -12,7 +12,7 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-<<<<<<< HEAD
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -38,9 +38,6 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `;
-=======
-
->>>>>>> fa2a3fc854afbcd7f7542b92ac4b2d20c704e16f
 
 const GraphContainer = styled.div`
   background-color: #ffffffee;
