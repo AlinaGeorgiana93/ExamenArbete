@@ -35,6 +35,10 @@ const PatientPageContainer = styled.div`
   position: relative;
   z-index: 1;
   backdrop-filter: blur(6px);
+
+  /* Lägg till en maxhöjd och rullning inuti denna container */
+  max-height: 80vh; /* Höjden kan justeras efter behov */
+  overflow-y: auto; /* Aktiverar scroll om innehållet är för stort */
 `;
 
 const FormGroup = styled.div`
@@ -62,6 +66,17 @@ const Dropdown = styled.select`
     border-color: #3b878c;
     background-color: #fff;
   }
+`;
+
+const Textarea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  resize: vertical;
+  min-height: 50px;
 `;
 
 const Button = styled.button`
@@ -123,6 +138,11 @@ function PatientPage() {
   const [selectedActivityLevel, setSelectedActivityLevel] = useState('');
   const [selectedAppetiteLevel, setSelectedAppetiteLevel] = useState('');
   const [selectedSleepLevel, setSelectedSleepLevel] = useState('');
+
+  const [moodComment, setMoodComment] = useState('');
+  const [activityComment, setActivityComment] = useState('');
+  const [appetiteComment, setAppetiteComment] = useState('');
+  const [sleepComment, setSleepComment] = useState('');
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -191,7 +211,13 @@ function PatientPage() {
     fetchData();
   }, [token]);
 
+  // Handle select change for all dropdowns
   const handleSelectChange = (setter) => (e) => {
+    setter(e.target.value);
+  };
+
+  // Handle comment change for all comment inputs
+  const handleCommentChange = (setter) => (e) => {
     setter(e.target.value);
   };
 
@@ -223,6 +249,10 @@ function PatientPage() {
         activityRating: activityData?.rating,
         appetiteRating: appetiteData?.rating,
         sleepRating: sleepData?.rating,
+        moodComment,
+        activityComment,
+        appetiteComment,
+        sleepComment,
       };
 
       await axios.post('https://localhost:7066/api/Graph/CreateItem', {
@@ -285,6 +315,11 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
+            <Textarea
+              placeholder={t('Optional comment')}
+              value={moodComment}
+              onChange={handleCommentChange(setMoodComment)}
+            />
           </FormGroup>
 
           <FormGroup>
@@ -306,6 +341,11 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
+            <Textarea
+              placeholder={t('Optional comment')}
+              value={activityComment}
+              onChange={handleCommentChange(setActivityComment)}
+            />
           </FormGroup>
 
           <FormGroup>
@@ -327,6 +367,11 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
+            <Textarea
+              placeholder={t('Optional comment')}
+              value={appetiteComment}
+              onChange={handleCommentChange(setAppetiteComment)}
+            />
           </FormGroup>
 
           <FormGroup>
@@ -343,6 +388,11 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
+            <Textarea
+              placeholder={t('Optional comment')}
+              value={sleepComment}
+              onChange={handleCommentChange(setSleepComment)}
+            />
           </FormGroup>
 
           <Button onClick={handleSave}>{t('save_button')}</Button>
