@@ -102,11 +102,23 @@
   "patient_id": "Patient ID",
   "go_back": "Go Back",
   "aboutUsTitle": "About Us",
-  "description1": "We are four dedicated girls studying system development and have together developed this website as part of our educational project. Our goal is to create a smooth and user-friendly platform that helps patients report their well-being daily.",
-  "description2": "By combining technology with care, we aim to improve communication between patients and healthcare professionals. We believe that small daily actions can make a big difference for people's health over time.",
-  "description3": "The platform is designed with a focus on accessibility, security, and simplicity — and we are proud to have built something that can make everyday life a little easier for others.",
-  "description4": "If you have any questions, thoughts, or feedback, please feel free to reach out.",
-  "description5": "Thank you for using our service! 💙",
+  "aboutUsText1":
+      "We are four dedicated girls studying system development and have together developed this website as part of our educational project. Our goal is to create a smooth and user-friendly platform that helps healthcare staff track and report patients' well-being daily.",
+    "aboutUsText2":
+      "By combining technology with care, we want to contribute to better communication between healthcare staff and patients. We believe small efforts every day can make a big difference to people's health over time.",
+    "aboutUsText3":
+      "The platform is designed with a focus on accessibility, security, and simplicity — and we are proud to have built something that can make healthcare more efficient and give patients a better experience.",
+    "whatIsAutiGraphTitle": "What is AutiGraph?",
+    "whatIsAutiGraphText":
+      "AutiGraph is a digital platform that makes it easy for healthcare staff to report and track patients' well-being daily. By visualizing health data, we help healthcare professionals monitor progress over time and make better decisions together with the patients.",
+    "ourVisionTitle": "Our Vision",
+    "ourVisionText":
+      "We believe that everyone should be able to communicate their well-being easily, securely, and visually. Our vision is to make it possible for people to express their inner state in a way that both they and others can understand.",
+    "meetTeamTitle": "Meet the AutiGraph Team",
+    "founded": "Founded in 2025",
+    "selfFinanced": "Self-financed: The project started without external investments.",
+    "goal": "Goal: To create a platform that helps people document their well-being continuously in a simple and secure way.",
+    "developmentFocus": "Development Focus: We focused on user-friendliness, accessibility, and enabling both patients and healthcare staff to track development over time.",
   "team1": "Parisa",
   "team2": "Alina",
   "team3": "Mona",
