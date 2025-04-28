@@ -34,6 +34,18 @@ module.exports = {
           },
         ],
       },
+      // Video files - Using file-loader to handle .mp4 files
+      {
+        test: /\.mp4$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash].[ext]', // To avoid caching issues
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [

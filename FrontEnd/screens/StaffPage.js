@@ -106,7 +106,11 @@ const AboutButton = styled.a`
     background-color: #00d4ff;
   }
 `;
-
+const WarningText = styled.p`
+  color: red;
+  margin-top: 10px;
+  font-size: 1rem;
+`;
 // Själva StaffPage-komponenten
 const StaffPage = () => {
   const [patients, setPatients] = useState([]); // Här sparar vi alla patienter
@@ -150,7 +154,8 @@ const StaffPage = () => {
       </Link>
       {/* Huvudsektionen med all innehåll */}
       <StaffPageContainer>
-        <Title>{t('staff_name')}</Title> {/* Översatt rubrik */}
+        <Title>{t('staff_name')}</Title>   <WarningText>★ Välj en patient</WarningText>
+        {/* Översatt rubrik */}
         {/* Label och dropdown för att välja patient */}
         <label htmlFor="patient-select">{t('select_patient')}</label>
         <DropdownWrapper>
