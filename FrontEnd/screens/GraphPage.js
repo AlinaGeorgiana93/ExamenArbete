@@ -12,6 +12,8 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+
+
 const GraphContainer = styled.div`
   background-color: #ffffffee;
   padding: 30px;

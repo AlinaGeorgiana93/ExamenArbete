@@ -153,7 +153,7 @@ const AboutUsPage = () => {
         {/* Lägg till bilden här */}
         <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} />
         
-        <Title>Om AutiGraph</Title>
+        <Title>About Us</Title>
         <Text>
           Vi är fyra engagerade tjejer som studerar systemutveckling och har tillsammans utvecklat den här webbplatsen som en del av vårt utbildningsprojekt. Vårt mål är att skapa en smidig och användarvänlig plattform som underlättar för vårdpersonal att spåra och rapportera patienters mående dagligen.
         </Text>
