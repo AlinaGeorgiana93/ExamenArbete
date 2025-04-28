@@ -6,6 +6,7 @@ npm install axios
 npm install recharts
 npm install react-select
 npm install react-datepicker
+npm update react-datepicker
 --------------------------
 To merge main in your branch: git pull origin main
 --------------------------
