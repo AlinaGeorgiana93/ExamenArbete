@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
   font-family: 'Times New Roman', cursive, sans-serif;
   background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
   min-height: 100vh;
-  color:  #006E75;
+  color:  black;
   overflow-y: auto;
 }
 `;
