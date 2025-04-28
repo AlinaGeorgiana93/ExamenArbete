@@ -4,13 +4,39 @@ import {
   Line, Bar, Pie, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Times New Roman', cursive, sans-serif;
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    color: #fff;
+    position: relative;
+    padding: 20px 0;
+
+    /* Mobile (320px – 480px) */
+    @media (max-width: 480px) {
+      padding: 10px 0;
+      align-items: center;
+    }
+  }
+`;
 
 const GraphContainer = styled.div`
   background-color: #ffffffee;
@@ -20,6 +46,27 @@ const GraphContainer = styled.div`
   width: 100%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   margin: 20px auto;
+
+  /* Tablet (481px – 1024px) */
+  @media (min-width: 481px) and (max-width: 1024px) {
+    width: 95%;
+    padding: 25px;
+  }
+
+  /* Desktop (1025px and up) */
+  @media (min-width: 1025px) {
+    width: 80%;
+    padding: 40px;
+    max-width: 1100px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    width: 95%;
+    padding: 15px;
+    margin: 10px auto;
+    border-radius: 12px;
+  }
 `;
 
 const ChartControls = styled.div`
@@ -29,6 +76,17 @@ const ChartControls = styled.div`
   margin-bottom: 20px;
   justify-content: center;
   align-items: center;
+
+  /* Tablet (481px – 1024px) */
+  @media (min-width: 481px) and (max-width: 1024px) {
+    gap: 10px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 15px;
+  }
 `;
 
 const ChartTypeButton = styled.button`
@@ -44,6 +102,19 @@ const ChartTypeButton = styled.button`
   &:hover {
     background-color: ${(props) => (props.active ? '#0e4246' : '#d0d0d0')};
   }
+
+  /* Desktop (1025px and up) */
+  @media (min-width: 1025px) {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 15px;
+  }
 `;
 
 const MetricToggle = styled.label`
@@ -54,6 +125,13 @@ const MetricToggle = styled.label`
   padding: 5px 10px;
   border-radius: 15px;
   background-color: ${props => props.active ? '#12535820' : 'transparent'};
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    padding: 4px 8px;
+    font-size: 12px;
+    gap: 3px;
+  }
 `;
 
 const TimeRangeButton = styled.button`
@@ -69,7 +147,21 @@ const TimeRangeButton = styled.button`
   &:hover {
     background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
   }
+
+  /* Desktop (1025px and up) */
+  @media (min-width: 1025px) {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 15px;
+  }
 `;
+
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
@@ -81,7 +173,7 @@ const chartTypes = [
 
 const timeRanges = [
   { key: 'day', name: 'Daily' },
-  { key: 'week', name: 'Weekly' },  // Added weekly option
+  { key: 'week', name: 'Weekly' },
   { key: 'month', name: 'Monthly' },
   { key: 'year', name: 'Annual' }
 ];
