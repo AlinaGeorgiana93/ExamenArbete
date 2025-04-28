@@ -12,6 +12,8 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+
+
 const GraphContainer = styled.div`
   background-color: #ffffffee;
   padding: 30px;
@@ -81,6 +83,7 @@ const chartTypes = [
 
 const timeRanges = [
   { key: 'day', name: 'Daily' },
+  { key: 'week', name: 'Weekly' },  // Added weekly option
   { key: 'month', name: 'Monthly' },
   { key: 'year', name: 'Annual' }
 ];
@@ -135,6 +138,10 @@ const groupDataByTimePeriod = (data, period) => {
       key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
     } else if (period === 'year') {
       key = date.getFullYear();
+    } else if (period === 'week') {
+      // Get week number and year for weekly grouping
+      const weekNumber = getWeekNumber(date);
+      key = `${date.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`;
     } else {
       key = new Date(item.date).toLocaleDateString();
     }
@@ -165,6 +172,15 @@ const groupDataByTimePeriod = (data, period) => {
     sleepRating: Math.round((entry.sleepRating / entry.count) * 10) / 10
   }));
 };
+
+// Helper function to get week number
+function getWeekNumber(date) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+  const week1 = new Date(d.getFullYear(), 0, 4);
+  return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+}
 
 function GraphPage() {
   const { patientId } = useParams(); // Changed from id to patientId
@@ -314,15 +330,37 @@ function GraphPage() {
         </div>
       );
     }
-
+  
     switch (chartType) {
       case 'bar':
         return (
           <BarChart data={processedData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
+            <XAxis 
+              dataKey="date" 
+              tickFormatter={(value) => {
+                if (timeRange === 'week') {
+                  // Format as "YYYY Week WW"
+                  const match = value.match(/(\d{4})-W(\d{2})/);
+                  if (match) {
+                    return `${match[1]} Week ${match[2]}`;
+                  }
+                }
+                return value;
+              }}
+            />
             <YAxis domain={[0, 10]} />
-            <Tooltip />
+            <Tooltip 
+              labelFormatter={(value) => {
+                if (timeRange === 'week') {
+                  const match = value.match(/(\d{4})-W(\d{2})/);
+                  if (match) {
+                    return `Week ${match[2]}, ${match[1]}`;
+                  }
+                }
+                return value;
+              }}
+            />
             <Legend />
             {metrics.map(
               (metric) =>
@@ -341,9 +379,31 @@ function GraphPage() {
         return (
           <LineChart data={processedData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
+            <XAxis 
+              dataKey="date" 
+              tickFormatter={(value) => {
+                if (timeRange === 'week') {
+                  // Format as "YYYY Week WW"
+                  const match = value.match(/(\d{4})-W(\d{2})/);
+                  if (match) {
+                    return `${match[1]} Week ${match[2]}`;
+                  }
+                }
+                return value;
+              }}
+            />
             <YAxis domain={[0, 10]} />
-            <Tooltip />
+            <Tooltip 
+              labelFormatter={(value) => {
+                if (timeRange === 'week') {
+                  const match = value.match(/(\d{4})-W(\d{2})/);
+                  if (match) {
+                    return `Week ${match[2]}, ${match[1]}`;
+                  }
+                }
+                return value;
+              }}
+            />
             <Legend />
             {metrics.map(metric => (
               activeMetrics[metric.key] && (
@@ -370,7 +430,7 @@ function GraphPage() {
             color: metric.color
           };
         });
-
+  
         return (
           <PieChart>
             <Pie
@@ -446,7 +506,7 @@ function GraphPage() {
         )}
   
         <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#125358' }}>
-          Symptom Progress Visualization
+       
         </h2>
         
         <div style={{ 

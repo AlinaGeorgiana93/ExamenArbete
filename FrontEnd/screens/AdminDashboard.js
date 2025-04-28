@@ -5,6 +5,7 @@ import axiosInstance from '../src/axiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
+import Select from 'react-select'; // Importing react-select
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -12,16 +13,13 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-  body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #fff;
-    position: relative;
-  }
+ body {
+  font-family: 'Times New Roman', cursive, sans-serif;
+  background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
+  min-height: 100vh;
+  color:  #006E75;
+  overflow-y: auto;
+}
 `;
 
 const Container = styled.div`
@@ -57,9 +55,9 @@ const Form = styled.form`
   padding: 20px;
   border-radius: 8px;
   width: ${(props) =>
-    props.activeTab === 'staff' ? '60%' : '100%'}; /* Reduced width for staff */
-  max-width: 600px; /* Maximum width */
-  margin: 0 auto; /* Centering the form */
+    props.activeTab === 'staff' ? '60%' : '100%'};
+  max-width: 600px;
+  margin: 0 auto;
 `;
 
 const Input = styled.input`
@@ -83,19 +81,8 @@ const Button = styled.button`
   }
 `;
 
-const Select = styled.select`
-  padding: 10px;
-  margin-bottom: 20px;
-  width: 100%;
-  border: 1px solid #ccc;
-  max-height: 200px; /* Maximal höjd på dropdown */
-  overflow-y: auto; /* Aktivera vertikal scrollbar när innehållet är för stort */
-  display: block;
-`;
-
 const AdminDashboard = () => {
   const { t } = useTranslation();
-
   const [activeTab, setActiveTab] = useState('patients');
   const [patients, setPatients] = useState([]);
   const [staff, setStaff] = useState([]);
@@ -103,6 +90,9 @@ const AdminDashboard = () => {
     firstName: '',
     lastName: '',
     personalNumber: '',
+    username: '',    
+    email: '',      
+    password: '',     
     id: null,
   });
   const [selectedPerson, setSelectedPerson] = useState(null);
@@ -119,36 +109,22 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get('Staff/ReadItems', {
-        params: {
-          flat: true,
-          pageNr: 0,
-          pageSize: 10,
-        },
+        params: { flat: true, pageNr: 0, pageSize: 10 },
       });
       setStaff(response.data.pageItems);
     } catch (error) {
-      console.error(
-        'Error fetching staff:',
-        error.response ? error.response.data : error.message
-      );
+      console.error('Error fetching staff:', error.response || error.message);
     }
   };
 
   const fetchPatientData = async () => {
     try {
       const response = await axiosInstance.get('Patient/ReadItems', {
-        params: {
-          flat: true,
-          pageNr: 0,
-          pageSize: 10,
-        },
+        params: { flat: true, pageNr: 0, pageSize: 10 },
       });
       setPatients(response.data.pageItems);
     } catch (error) {
-      console.error(
-        'Error fetching patient:',
-        error.response ? error.response.data : error.message
-      );
+      console.error('Error fetching patient:', error.response || error.message);
     }
   };
 
@@ -172,6 +148,9 @@ const AdminDashboard = () => {
         firstName: '',
         lastName: '',
         personalNumber: '',
+        username: '',  
+        email: '',     
+        password: '',  
         id: null,
       });
       if (isStaff) {
@@ -205,10 +184,7 @@ const AdminDashboard = () => {
       }
       setSelectedPerson(null);
     } catch (error) {
-      console.error(
-        `Error deleting ${activeTab}:`,
-        error.response || error.message
-      );
+      console.error(`Error deleting ${activeTab}:`, error.response || error.message);
     }
   };
 
@@ -227,9 +203,7 @@ const AdminDashboard = () => {
         personalNumber: updatedPerson.personalNumber,
       });
 
-      setSuccessMessage(
-        `${isStaff ? 'Staff' : 'Patient'} updated successfully.`
-      );
+      setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
@@ -252,8 +226,8 @@ const AdminDashboard = () => {
 
   const currentData = activeTab === 'patients' ? patients : staff;
 
-  const handleSelectChange = (e) => {
-    const id = e.target.value;
+  const handleSelectChange = (selectedOption) => {
+    const id = selectedOption?.value;
     let person;
     if (activeTab === 'staff') {
       person = staff.find((item) => String(item.staffId) === id);
@@ -266,74 +240,49 @@ const AdminDashboard = () => {
   return (
     <>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <Container>
         <h1>{t('admin_dashboard')}</h1>
         <Tabs>
-          <TabButton
-            active={activeTab === 'patients'}
-            onClick={() => setActiveTab('patients')}
-          >
+          <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
             {t('patients')}
           </TabButton>
-          <TabButton
-            active={activeTab === 'staff'}
-            onClick={() => setActiveTab('staff')}
-          >
+          <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
             {t('staff')}
           </TabButton>
         </Tabs>
 
         <Select
           onChange={handleSelectChange}
-          value={selectedPerson?.staffId || ''}
-          style={{ display: activeTab === 'staff' ? 'block' : 'none' }}
-        >
-          <option value="">{t('select_staff')}</option>
-          {staff.map((item) => (
-            <option key={item.staffId} value={item.staffId}>
-              {item.firstName} {item.lastName}
-            </option>
-          ))}
-        </Select>
-
-        <Select
-          onChange={handleSelectChange}
-          value={selectedPerson?.patientId || ''}
-          style={{ display: activeTab === 'patients' ? 'block' : 'none' }}
-        >
-          <option value="">{t('select_patient')}</option>
-          {patients.map((item) => (
-            <option key={item.patientId} value={item.patientId}>
-              {item.firstName} {item.lastName}
-            </option>
-          ))}
-        </Select>
+          options={activeTab === 'staff'
+            ? staff.map(item => ({
+                value: item.staffId,
+                label: `${item.firstName} ${item.lastName}`,
+              }))
+            : patients.map(item => ({
+                value: item.patientId,
+                label: `${item.firstName} ${item.lastName}`,
+              }))
+          }
+          value={selectedPerson ? { value: selectedPerson.id, label: `${selectedPerson.firstName} ${selectedPerson.lastName}` } : null}
+          placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
+        />
 
         <DetailsModal
           staffMember={selectedPerson}
           onClose={() => setSelectedPerson(null)}
           onEdit={handleEdit}
           onDelete={() =>
-            handleDelete(
-              activeTab === 'staff'
-                ? selectedPerson.staffId
-                : selectedPerson.patientId
-            )
+            handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
           }
         />
 
         {showSuccessMessage && (
           <div
             style={{
-              backgroundColor: successMessage
-                .toLowerCase()
-                .includes('successfully')
+              backgroundColor: successMessage.toLowerCase().includes('successfully')
                 ? '#d4edda'
                 : '#f8d7da',
               color: successMessage.toLowerCase().includes('successfully')
@@ -358,63 +307,52 @@ const AdminDashboard = () => {
           <Input
             placeholder={t('first_name')}
             value={formData.firstName}
-            onChange={(e) =>
-              setFormData({ ...formData, firstName: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             required
           />
 
           <Input
             placeholder={t('last_name')}
             value={formData.lastName}
-            onChange={(e) =>
-              setFormData({ ...formData, lastName: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             required
           />
 
           <Input
             placeholder={t('personal_number')}
             value={formData.personalNumber}
-            onChange={(e) =>
-              setFormData({ ...formData, personalNumber: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
             required
           />
 
-          {/* Conditionally render email, username, and password for staff only */}
           {activeTab === 'staff' && (
             <>
               <Input
                 placeholder={t('username')}
                 value={formData.username}
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
-                required
-              />
-
-              <Input
-                placeholder={t('password')}
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 required
               />
 
               <Input
                 placeholder={t('email')}
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+              />
+
+              <Input
+                placeholder={t('password')}
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
               />
             </>
           )}
 
-          <Button type="submit">{t('add')}</Button>
+          <Button type="submit" active="true">
+            {isLoading ? t('loading') : t('submit')}
+          </Button>
         </Form>
       </Container>
     </>
