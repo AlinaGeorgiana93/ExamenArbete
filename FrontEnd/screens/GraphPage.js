@@ -5,6 +5,7 @@ import {
   Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import logo1 from '../src/media/logo1.png';
@@ -37,6 +38,33 @@ const GraphContainer = styled.div`
   width: 100%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   margin: 20px auto;
+
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
+
+  /* Tablet (481px – 1024px) */
+  @media (min-width: 481px) and (max-width: 1024px) {
+    width: 95%;
+    padding: 25px;
+  }
+
+  /* Desktop (1025px and up) */
+  @media (min-width: 1025px) {
+    width: 80%;
+    padding: 40px;
+    max-width: 1100px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    width: 95%;
+    padding: 15px;
+    margin: 10px auto;
+    border-radius: 12px;
+  }
 `;
 
 const ChartControls = styled.div`
@@ -46,6 +74,17 @@ const ChartControls = styled.div`
   margin-bottom: 20px;
   justify-content: center;
   align-items: center;
+
+  /* Tablet (481px – 1024px) */
+  @media (min-width: 481px) and (max-width: 1024px) {
+    gap: 10px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 15px;
+  }
 `;
 
 const ChartTypeButton = styled.button`
@@ -61,6 +100,19 @@ const ChartTypeButton = styled.button`
   &:hover {
     background-color: ${(props) => (props.active ? '#0e4246' : '#d0d0d0')};
   }
+
+  /* Desktop (1025px and up) */
+  @media (min-width: 1025px) {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 15px;
+  }
 `;
 
 const MetricToggle = styled.label`
@@ -71,6 +123,13 @@ const MetricToggle = styled.label`
   padding: 5px 10px;
   border-radius: 15px;
   background-color: ${props => props.active ? '#12535820' : 'transparent'};
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    padding: 4px 8px;
+    font-size: 12px;
+    gap: 3px;
+  }
 `;
 
 const TimeRangeButton = styled.button`
@@ -82,9 +141,77 @@ const TimeRangeButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
+  text-align: center;
+  white-space: nowrap;
 
   &:hover {
     background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
+  }
+
+  /* Desktop (1025px and up) */
+  @media (min-width: 1025px) {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  /* Mobile (320px – 480px) */
+  @media (max-width: 480px) {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 15px;
+    width: auto;
+  }
+`;
+
+
+// First, update the ChartWrapper styled component to include space for the buttons
+const ChartWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: 500px;
+  transition: all 0.3s ease;
+  
+  /* Desktop */
+  @media (min-width: 1025px) {
+    height: 550px;
+  }
+  
+  /* Tablet */
+  @media (max-width: 1024px) {
+    height: 450px;
+  }
+  
+  /* Mobile */
+  @media (max-width: 480px) {
+    height: 350px;
+    flex-direction: column;
+  }
+  
+  .recharts-wrapper {
+    transition: all 0.5s ease;
+    flex: 1;
+  }
+  
+  &:hover .recharts-wrapper {
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  }
+`;
+
+// Add a new styled component for the time period buttons container
+const TimePeriodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 15px;
+  gap: 10px;
+  width: 120px;
+  
+  @media (max-width: 480px) {
+    flex-direction: row;
+    width: 100%;
+    padding: 15px 0 0 0;
+    justify-content: center;
   }
 `;
 
@@ -184,6 +311,7 @@ const groupDataByTimePeriod = (data, period) => {
 };
 
 function GraphPage() {
+  const { patientId } = useParams();
   const { patientId } = useParams();
   const location = useLocation();
   const [rawData, setRawData] = useState([]);
@@ -362,7 +490,20 @@ function GraphPage() {
                   dataKey={metric.key}
                   name={metric.name}
                   stroke={metric.color}
-                  activeDot={{ r: 8 }}
+                  strokeWidth={3}
+                  activeDot={{ 
+                    r: 8,
+                    strokeWidth: 2,
+                    stroke: '#fff',
+                    fill: metric.color
+                  }}
+                  dot={{ 
+                    r: 4,
+                    strokeWidth: 2,
+                    stroke: '#fff',
+                    fill: metric.color
+                  }}
+                  animationDuration={1500}
                 />
               )
             ))}
@@ -382,25 +523,41 @@ function GraphPage() {
 
         return (
           <PieChart>
+            <defs>
+              {pieData.map((entry, index) => (
+                <linearGradient id={`pieColor${index}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={entry.color} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={entry.color} stopOpacity={0.4}/>
+                </linearGradient>
+              ))}
+            </defs>
             <Pie
               data={pieData}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              outerRadius={150}
-              fill="#8884d8"
+              innerRadius="60%"
+              outerRadius="80%"
+              paddingAngle={5}
               dataKey="value"
-              nameKey="name"
-              label={({ name, percent }) =>
-                `${name}: ${(percent * 100).toFixed(0)}%`
-              }
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              labelLine={false}
             >
               {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell key={`cell-${index}`} fill={`url(#pieColor${index})`} />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => [`Average: ${value}`, '']} />
-            <Legend />
+            <Tooltip 
+              formatter={(value) => [`Average: ${value}`, '']}
+              contentStyle={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '8px',
+                border: 'none',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }}
+            />
+            <Legend 
+              wrapperStyle={{ paddingTop: '20px' }}
+            />
           </PieChart>
         );
       default:
@@ -525,7 +682,7 @@ function GraphPage() {
                 {range.name}
               </TimeRangeButton>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <ChartControls>

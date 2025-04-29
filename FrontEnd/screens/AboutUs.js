@@ -1,5 +1,7 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import Alina from '../src/media/Alina.jpg';
 import Parisa from '../src/media/Parisa.jpg';
@@ -101,6 +103,14 @@ const Text = styled.p`
   text-align: center;
 `;
 
+const SectionText = styled.p`
+  font-size: 17px;
+  color: #333;
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 30px;
+`;
+
 const TeamGrid = styled.div`
   display: flex;
   justify-content: space-around;
@@ -148,12 +158,6 @@ const ProfileImage = styled.img`
   }
 `;
 
-const Role = styled.span`
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: 5px;
-`;
-
 
 
 const AboutUsPage = () => {
@@ -162,10 +166,7 @@ const AboutUsPage = () => {
   return (
     <div>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <PageContainer>
@@ -183,17 +184,13 @@ const AboutUsPage = () => {
         </Text>
 
         <Section>
-          <SectionTitle>Vad är AutiGraph?</SectionTitle>
-          <SectionText>
-            AutiGraph är en digital plattform som gör det enkelt för vårdpersonal att dagligen rapportera och spåra patienternas mående. Genom att visualisera hälsodata hjälper vi vårdpersonal att följa utvecklingen över tid och fatta bättre beslut tillsammans med patienterna. Plattformen gör det möjligt att få en tydlig översikt av varje individs välmående, vilket underlättar kommunikationen och ger en mer effektiv vård.
-          </SectionText>
+          <SectionTitle>{t('whatIsAutiGraphTitle')}</SectionTitle>
+          <SectionText>{t('whatIsAutiGraphText')}</SectionText>
         </Section>
 
         <Section>
-          <SectionTitle>Vår vision</SectionTitle>
-          <SectionText>
-            Vi tror att alla ska kunna kommunicera sitt välmående enkelt, tryggt och visuellt. Vår vision är att göra det möjligt för människor att uttrycka sitt inre tillstånd på ett sätt som både de själva och andra kan förstå.
-          </SectionText>
+          <SectionTitle>{t('ourVisionTitle')}</SectionTitle>
+          <SectionText>{t('ourVisionText')}</SectionText>
         </Section>
 
         <Section>
@@ -218,25 +215,24 @@ const AboutUsPage = () => {
           </Text>
         </Section>
 
-        <TeamHeading>Träffa AutiGraph-teamet</TeamHeading>
         <TeamGrid>
           <TeamMember>
-            <ProfileImage src={Parisa} alt="Teammedlem 1" />
+            <ProfileImage src={Parisa} alt="Parisa" />
             <Name>Parisa A.</Name>
             <Role>Fullstack Developer</Role>
           </TeamMember>
           <TeamMember>
-            <ProfileImage src={Alina} alt="Teammedlem 2" />
+            <ProfileImage src={Alina} alt="Alina" />
             <Name>Alina M.</Name>
             <Role>Fullstack Developer</Role>
           </TeamMember>
           <TeamMember>
-            <ProfileImage src={Mona} alt="Teammedlem 3" />
+            <ProfileImage src={Mona} alt="Mona" />
             <Name>Mona E.</Name>
             <Role>Fullstack Developer</Role>
           </TeamMember>
           <TeamMember>
-            <ProfileImage src={Nagi} alt="Teammedlem 4" />
+            <ProfileImage src={Nagi} alt="Nagi" />
             <Name>Nagihan C.</Name>
             <Role>Fullstack Developer</Role>
           </TeamMember>
