@@ -6,24 +6,24 @@ import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 
-// Global Style
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 1.3rem;
   }
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #fff;
-    position: relative;
+    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
+    min-height: 100vh;
+    color: rgb(29, 29, 29);
+    overflow-y: auto;
   }
 `;
+
+
 
 const PatientPageContainer = styled.div`
   background-color: #ffffffee;

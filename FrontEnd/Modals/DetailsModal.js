@@ -26,30 +26,23 @@ const ModalContainer = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  width: 450px;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  position: relative;
-  animation: slideUp 0.3s ease-out;
+  background-color: #ffffff;
+  padding: 80px 60px;
+  border-radius: 16px;
+  width: 800px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin: 20px auto;
 
-  @keyframes slideUp {
-    0% {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
+  @media (max-width: 760px) {
+    padding: 30px 20px;
+    width: 100%;
+    margin-top: 10px;
   }
 `;
 
 const ModalHeader = styled.h3`
-  font-size: 20px;
+  font-size: 45px;
   margin-bottom: 20px;
   text-align: center;
   color: #333;
@@ -63,13 +56,13 @@ const InputGroup = styled.div`
 
   label {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 27px;  // Ändrat från 14px till 18px (eller valfri storlek)
     color: #444;
   }
 
   input {
     padding: 12px;
-    font-size: 16px;
+    font-size: 25px;
     border: 1px solid #ddd;
     border-radius: 8px;
     outline: none;
@@ -83,7 +76,7 @@ const InputGroup = styled.div`
 
 const Button = styled.button`
   padding: 12px 24px;
-  font-size: 16px;
+  font-size: 25px;  // Större text i knappar
   border: none;
   background: rgb(133, 200, 205);
   color: white;
@@ -96,11 +89,6 @@ const Button = styled.button`
     background: #00d4ff;
     transform: translateY(-2px);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active {
-    background: #0099cc;
-    transform: translateY(1px);
   }
 `;
 
@@ -117,7 +105,6 @@ const CloseButton = styled.button`
   right: 12px;
   background: transparent;
   border: none;
-  font-size: 24px;
   cursor: pointer;
   color: #333;
 `;
@@ -135,17 +122,21 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
 
   const [firstName, setFirstName] = useState(staffMember.firstName);
   const [lastName, setLastName] = useState(staffMember.lastName);
-  const [personalNumber, setPersonalNumber] = useState(
-    staffMember.personalNumber
-  );
+  const [personalNumber, setPersonalNumber] = useState(staffMember.personalNumber);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleUpdate = () => {
     onEdit({ ...staffMember, firstName, lastName, personalNumber });
+    onClose();  // Close modal after update
   };
 
   const handleConfirmDelete = () => {
     onDelete(staffMember.staffId || staffMember.patientId);
+    onClose();  // Close modal after delete
+  };
+
+  const handleCancel = () => {
+    onClose();  // Close modal when cancel is clicked
   };
 
   return (
@@ -183,23 +174,21 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
         <ConfirmActions>
           {!confirmDelete ? (
             <>
-              <Button onClick={handleUpdate}>Update</Button>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={handleUpdate}>Save</Button>
+              <Button onClick={handleCancel}>Cancel</Button>
               <ButtonDelete onClick={() => setConfirmDelete(true)}>
                 Delete
               </ButtonDelete>
             </>
           ) : (
             <>
-              <ButtonDelete onClick={handleConfirmDelete}>
-                Yes, delete
-              </ButtonDelete>
+              <ButtonDelete onClick={handleConfirmDelete}>Yes, delete</ButtonDelete>
               <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
             </>
           )}
         </ConfirmActions>
 
-        <CloseButton onClick={onClose} aria-label="Close modal">
+        <CloseButton onClick={handleCancel} aria-label="Close modal">
           &times;
         </CloseButton>
       </ModalContent>
