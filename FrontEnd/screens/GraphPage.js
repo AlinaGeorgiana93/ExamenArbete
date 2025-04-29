@@ -18,12 +18,14 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 1rem;
   }
 
   body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
+    font-family: 'Times New Roman', cursive, sans-serif;
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     min-height: 100vh;
     color: #fff;
     position: relative;
@@ -236,6 +238,7 @@ const chartTypes = [
 
 const timeRanges = [
   { key: 'day', name: 'Daily' },
+  { key: 'week', name: 'Weekly' },
   { key: 'month', name: 'Monthly' },
   { key: 'year', name: 'Annual' }
 ];
@@ -249,7 +252,7 @@ const metrics = [
 
 const calculateDailyAverages = (data) => {
   const dateMap = {};
-
+  
   data.forEach(item => {
     const dateKey = new Date(item.date).toLocaleDateString();
     if (!dateMap[dateKey]) {
@@ -281,11 +284,11 @@ const calculateDailyAverages = (data) => {
 
 const groupDataByTimePeriod = (data, period) => {
   const groupedData = {};
-
+  
   data.forEach(item => {
     const date = new Date(item.date);
     let key;
-
+    
     if (period === 'month') {
       key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
     } else if (period === 'year') {
@@ -296,7 +299,7 @@ const groupDataByTimePeriod = (data, period) => {
     } else {
       key = new Date(item.date).toLocaleDateString();
     }
-
+    
     if (!groupedData[key]) {
       groupedData[key] = {
         date: key,
@@ -408,7 +411,7 @@ function GraphPage() {
         }));
 
         setRawData(validData);
-
+        
       } catch (error) {
         console.error("Error fetching data:", error);
         setErrorMsg("Could not load patient data. Please try again later.");
@@ -444,8 +447,8 @@ function GraphPage() {
 
     if (!processedData.length) {
       return (
-        <div style={{
-          textAlign: 'center',
+        <div style={{ 
+          textAlign: 'center', 
           padding: '40px',
           color: '#666',
           display: 'flex',
@@ -456,7 +459,7 @@ function GraphPage() {
         }}>
           <h3>No data available</h3>
           <p>Please check your date range or submit patient data first.</p>
-          <button
+          <button 
             onClick={() => {
               setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
               setEndDate(new Date());
@@ -692,7 +695,6 @@ function GraphPage() {
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
 
-
       <GraphContainer>
         {patientInfo && (
           <div style={{
@@ -733,13 +735,13 @@ function GraphPage() {
           border: '1px solid #eee'
         }}>
           <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
-          <div style={{
+          <div style={{ 
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
             gap: '10px'
           }}>
             {metrics.map(metric => (
-              <MetricToggle
+              <MetricToggle 
                 key={metric.key}
                 active={activeMetrics[metric.key]}
                 onClick={() => toggleMetric(metric.key)}
