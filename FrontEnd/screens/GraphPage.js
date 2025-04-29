@@ -5,7 +5,6 @@ import {
   Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 import styled, { createGlobalStyle } from 'styled-components';
-import styled, { createGlobalStyle } from 'styled-components';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import logo1 from '../src/media/logo1.png';
@@ -312,7 +311,6 @@ const groupDataByTimePeriod = (data, period) => {
 
 function GraphPage() {
   const { patientId } = useParams();
-  const { patientId } = useParams();
   const location = useLocation();
   const [rawData, setRawData] = useState([]);
   const [processedData, setProcessedData] = useState([]);
@@ -491,13 +489,13 @@ function GraphPage() {
                   name={metric.name}
                   stroke={metric.color}
                   strokeWidth={3}
-                  activeDot={{ 
+                  activeDot={{
                     r: 8,
                     strokeWidth: 2,
                     stroke: '#fff',
                     fill: metric.color
                   }}
-                  dot={{ 
+                  dot={{
                     r: 4,
                     strokeWidth: 2,
                     stroke: '#fff',
@@ -526,8 +524,8 @@ function GraphPage() {
             <defs>
               {pieData.map((entry, index) => (
                 <linearGradient id={`pieColor${index}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={entry.color} stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor={entry.color} stopOpacity={0.4}/>
+                  <stop offset="5%" stopColor={entry.color} stopOpacity={0.8} />
+                  <stop offset="95%" stopColor={entry.color} stopOpacity={0.4} />
                 </linearGradient>
               ))}
             </defs>
@@ -546,7 +544,7 @@ function GraphPage() {
                 <Cell key={`cell-${index}`} fill={`url(#pieColor${index})`} />
               ))}
             </Pie>
-            <Tooltip 
+            <Tooltip
               formatter={(value) => [`Average: ${value}`, '']}
               contentStyle={{
                 background: 'rgba(255, 255, 255, 0.9)',
@@ -555,7 +553,7 @@ function GraphPage() {
                 boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
               }}
             />
-            <Legend 
+            <Legend
               wrapperStyle={{ paddingTop: '20px' }}
             />
           </PieChart>
@@ -682,7 +680,7 @@ function GraphPage() {
                 {range.name}
               </TimeRangeButton>
             ))}
-          </div> */}
+          </div>
         </div>
 
         <ChartControls>

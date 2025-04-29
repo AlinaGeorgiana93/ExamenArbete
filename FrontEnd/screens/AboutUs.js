@@ -1,17 +1,13 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import Alina from '../src/media/Alina.jpg';
 import Parisa from '../src/media/Parisa.jpg';
 import Mona from '../src/media/Mona.jpg';
 import Nagi from '../src/media/Nagi.jpg';
-import checklist from '../src/media/checklist.jpg';
-
 import '../src/index.css';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -42,15 +38,7 @@ const SectionTitle = styled.h2`
   text-align: center;
 `;
 
-const SectionText = styled.p`
-  font-size: 17px;
-  color: #333;
-  line-height: 1.6;
-  text-align: center;
-  font-size: 30px;
 
-  margin-bottom: 30px; /* Mer mellanrum efter texten */
-`;
 
 const PageContainer = styled.div`
   background-color: rgba(255, 255, 255, 0.8);
