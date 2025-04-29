@@ -14,146 +14,116 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 1.2rem;
   }
+
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #fff;
-    position: relative;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
+    min-height: 100vh;
+    overflow-y: auto;
+    transition: background 0.6s ease-in-out;
   }
 `;
 
-const StartPageContainer = styled.div`
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+const LoginContainer = styled.div`
   position: relative;
-  z-index: 1;
-`;
-
-const Header = styled.header`
+  background-color: #fff;
+  padding: 80px 60px;
+  border-radius: 16px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin: 80px auto;
   text-align: center;
-  margin-bottom: 30px;
+  z-index: 2;
 `;
 
 const Title = styled.h1`
-  color: #333;
-  font-size: 2rem;
+  color: #1a5b61;
+  font-size: 2.5rem;
   margin-bottom: 10px;
 `;
 
 const SubTitle = styled.p`
   font-size: 1.2rem;
-  color: #888;
-  margin-bottom: 20px;
+  color: #444;
+  margin-bottom: 30px;
 `;
 
-const LoginForm = styled.div`
-  display: flex;
-  flex-direction: column;
+const FormField = styled.div`
+  margin-bottom: 20px;
+  text-align: left;
 `;
 
 const Label = styled.label`
-  font-size: 1.1rem;
+  display: block;
   margin-bottom: 8px;
+  font-weight: bold;
+  color: #1a5b61;
 `;
 
 const Input = styled.input`
+  width: 100%;
   padding: 12px;
   font-size: 1rem;
-  margin-bottom: 15px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
 
   &:focus {
     outline: none;
-    border-color: #3b878c;
+    border-color: #00d4ff;
   }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-  width: 100%;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
+  padding: 12px 20px;
   background-color: #125358;
   color: white;
-  font-size: 0.9rem;
+  font-size: 1rem;
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 48%;
+  width: 100%;
+  margin-top: 20px;
 
   &:hover {
     background-color: #00d4ff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const Footer = styled.footer`
-  text-align: center;
-  margin-top: 20px;
-  font-size: 1rem;
-
-  p {
-    font-size: 0.9rem;
-  }
-
-  a {
-    color: #081630;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 `;
 
 const LanguageButtons = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 5px;
+  margin-top: 20px;
 `;
 
 const LanguageButton = styled.button`
-  padding: 10px;
-  font-size: 1rem;
   background-color: #125358;
   color: white;
   border: none;
   border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  width: 35px;
+  height: 35px;
   margin: 0 10px;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.8rem;
+  cursor: pointer;
 
   &:hover {
     background-color: #00d4ff;
+  }
+`;
+
+const Footer = styled.footer`
+  margin-top: 30px;
+  font-size: 0.9rem;
+
+  a {
+    color: #1a5b61;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -173,39 +143,29 @@ const StartPage = () => {
         password: password,
       };
 
-      console.log('Login Data:', loginData);
-
-      // Try to login as a user
       let response = await axiosInstance.post('/Guest/LoginUser', loginData);
-      console.log('User Login Response:', response); // Log the response to check the structure
-
       localStorage.setItem(
         'jwtToken',
         response.data.item.jwtToken.encryptedToken
       );
-      console.log('jwtToken:', response.data.item.jwtToken.encryptedToken);
+      localStorage.setItem('userName', response.data.item.userName);
 
       const role = response.data.item.userRole;
-      console.log('User Role:', role); // Log role to verify it
 
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
-        console.log('Sysadmin logged in');
+        localStorage.setItem('userName', response.data.item.userName);
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'usr') {
         localStorage.setItem('role', 'usr');
-        console.log('User logged in');
+        localStorage.setItem('userName', response.data.item.userName);
         setLoginMessage(t('login_success'));
         navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
     } catch (error) {
-      console.log('User login failed, trying staff login...');
-      console.error('Error details:', error.response?.data || error.message);
-
-      // If user login failed, try staff login
       const loginDataStaff = {
         userNameOrEmail: username,
         password: password,
@@ -216,14 +176,8 @@ const StartPage = () => {
           '/Guest/LoginStaff',
           loginDataStaff
         );
-        console.log('Staff Login Response:', response);
-
         localStorage.setItem(
           'jwtToken',
-          response.data.item.jwtToken.encryptedToken
-        );
-        console.log(
-          'jwtToken (Staff):',
           response.data.item.jwtToken.encryptedToken
         );
 
@@ -231,7 +185,7 @@ const StartPage = () => {
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          console.log('Staff logged in');
+          localStorage.setItem('userName', response.data.item.userName); 
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {
@@ -239,10 +193,6 @@ const StartPage = () => {
         }
       } catch (staffError) {
         setLoginError(t('login_failed'));
-        console.error(
-          'Staff login error:',
-          staffError.response?.data || staffError.message
-        );
       }
     }
   };
@@ -260,23 +210,19 @@ const StartPage = () => {
   return (
     <>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
+
+      <Link to="/" style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 2 }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
-      <StartPageContainer>
-        <Header>
-          <Title>{t('app_title')}</Title>
-          <SubTitle>{t('welcome')}</SubTitle>
-        </Header>
 
-        {loginMessage && (
-          <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>
-        )}
+      <LoginContainer>
+        <Title>{t('app_title')}</Title>
+        <SubTitle>{t('welcome')}</SubTitle>
 
-        <LoginForm>
+        {loginMessage && <p style={{ color: 'green' }}>{loginMessage}</p>}
+        {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+
+        <FormField>
           <Label>{t('username')}</Label>
           <Input
             type="text"
@@ -284,7 +230,9 @@ const StartPage = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+        </FormField>
 
+        <FormField>
           <Label>{t('password')}</Label>
           <Input
             type="password"
@@ -293,31 +241,21 @@ const StartPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown}
           />
+        </FormField>
 
-          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
-
-          <ButtonContainer>
-            <Button onClick={handleLogin} disabled={!username || !password}>
-              {t('login')}
-            </Button>
-          </ButtonContainer>
-        </LoginForm>
+        <Button onClick={handleLogin} disabled={!username || !password}>
+          {t('login')}
+        </Button>
 
         <LanguageButtons>
-          <LanguageButton onClick={() => changeLanguage('en')}>
-            En
-          </LanguageButton>
-          <LanguageButton onClick={() => changeLanguage('sv')}>
-            Sv
-          </LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
+          <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
         </LanguageButtons>
 
         <Footer>
-          <p>
-            <a href="/forgotpassword">{t('forgot_password_link')}</a>
-          </p>
+          <p><a href="/forgotpassword">{t('forgot_password_link')}</a></p>
         </Footer>
-      </StartPageContainer>
+      </LoginContainer>
     </>
   );
 };

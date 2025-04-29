@@ -4,7 +4,7 @@ import {
   Line, Bar, Pie, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import logo1 from '../src/media/logo1.png';
@@ -12,7 +12,22 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
 
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
+    min-height: 100vh;
+    overflow-y: auto;
+    transition: background 0.6s ease-in-out;
+  }
+`;
 
 const GraphContainer = styled.div`
   background-color: #ffffffee;
@@ -83,7 +98,6 @@ const chartTypes = [
 
 const timeRanges = [
   { key: 'day', name: 'Daily' },
-  { key: 'week', name: 'Weekly' },  // Added weekly option
   { key: 'month', name: 'Monthly' },
   { key: 'year', name: 'Annual' }
 ];
@@ -97,7 +111,7 @@ const metrics = [
 
 const calculateDailyAverages = (data) => {
   const dateMap = {};
-  
+
   data.forEach(item => {
     const dateKey = new Date(item.date).toLocaleDateString();
     if (!dateMap[dateKey]) {
@@ -129,23 +143,19 @@ const calculateDailyAverages = (data) => {
 
 const groupDataByTimePeriod = (data, period) => {
   const groupedData = {};
-  
+
   data.forEach(item => {
     const date = new Date(item.date);
     let key;
-    
+
     if (period === 'month') {
       key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
     } else if (period === 'year') {
       key = date.getFullYear();
-    } else if (period === 'week') {
-      // Get week number and year for weekly grouping
-      const weekNumber = getWeekNumber(date);
-      key = `${date.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`;
     } else {
       key = new Date(item.date).toLocaleDateString();
     }
-    
+
     if (!groupedData[key]) {
       groupedData[key] = {
         date: key,
@@ -173,17 +183,8 @@ const groupDataByTimePeriod = (data, period) => {
   }));
 };
 
-// Helper function to get week number
-function getWeekNumber(date) {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
-  const week1 = new Date(d.getFullYear(), 0, 4);
-  return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
-}
-
 function GraphPage() {
-  const { patientId } = useParams(); // Changed from id to patientId
+  const { patientId } = useParams();
   const location = useLocation();
   const [rawData, setRawData] = useState([]);
   const [processedData, setProcessedData] = useState([]);
@@ -204,14 +205,11 @@ function GraphPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // First get patient info
         const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`);
         setPatientInfo(patientResponse.data.item);
 
-        // Initialize data array
         let allData = [];
 
-        // 1. Get data from API
         try {
           const apiResponse = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${patientId}`);
           if (apiResponse.data?.pageItems) {
@@ -221,11 +219,9 @@ function GraphPage() {
           console.error("API fetch error:", apiError);
         }
 
-        // 2. Get data from localStorage
         const localData = JSON.parse(localStorage.getItem(`patientData_${patientId}`) || '[]');
         allData = [...allData, ...localData];
 
-        // 3. Add new data from location.state if available
         if (location.state) {
           const newDataPoint = {
             date: location.state.date,
@@ -236,22 +232,19 @@ function GraphPage() {
             patientId: patientId
           };
           allData.push(newDataPoint);
-          
-          // Update localStorage with the new data
           localStorage.setItem(`patientData_${patientId}`, JSON.stringify([...localData, newDataPoint]));
         }
 
-        // Process and filter data
-        const validData = allData.filter(item => 
-          item.date && 
-          (item.moodRating !== undefined || 
-           item.activityRating !== undefined || 
-           item.appetiteRating !== undefined || 
-           item.sleepRating !== undefined)
+        const validData = allData.filter(item =>
+          item.date &&
+          (item.moodRating !== undefined ||
+            item.activityRating !== undefined ||
+            item.appetiteRating !== undefined ||
+            item.sleepRating !== undefined)
         );
 
         setRawData(validData);
-        
+
       } catch (error) {
         console.error("Error in fetchData:", error);
         setErrorMsg("Could not load patient data");
@@ -298,8 +291,8 @@ function GraphPage() {
   const renderChart = () => {
     if (processedData.length === 0) {
       return (
-        <div style={{ 
-          textAlign: 'center', 
+        <div style={{
+          textAlign: 'center',
           padding: '40px',
           color: '#666',
           display: 'flex',
@@ -310,7 +303,7 @@ function GraphPage() {
         }}>
           <h3>No data available</h3>
           <p>Please check your date range or submit patient data first.</p>
-          <button 
+          <button
             onClick={() => {
               setStartDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
               setEndDate(new Date());
@@ -330,37 +323,15 @@ function GraphPage() {
         </div>
       );
     }
-  
+
     switch (chartType) {
       case 'bar':
         return (
           <BarChart data={processedData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="date" 
-              tickFormatter={(value) => {
-                if (timeRange === 'week') {
-                  // Format as "YYYY Week WW"
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `${match[1]} Week ${match[2]}`;
-                  }
-                }
-                return value;
-              }}
-            />
+            <XAxis dataKey="date" />
             <YAxis domain={[0, 10]} />
-            <Tooltip 
-              labelFormatter={(value) => {
-                if (timeRange === 'week') {
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `Week ${match[2]}, ${match[1]}`;
-                  }
-                }
-                return value;
-              }}
-            />
+            <Tooltip />
             <Legend />
             {metrics.map(
               (metric) =>
@@ -379,31 +350,9 @@ function GraphPage() {
         return (
           <LineChart data={processedData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="date" 
-              tickFormatter={(value) => {
-                if (timeRange === 'week') {
-                  // Format as "YYYY Week WW"
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `${match[1]} Week ${match[2]}`;
-                  }
-                }
-                return value;
-              }}
-            />
+            <XAxis dataKey="date" />
             <YAxis domain={[0, 10]} />
-            <Tooltip 
-              labelFormatter={(value) => {
-                if (timeRange === 'week') {
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `Week ${match[2]}, ${match[1]}`;
-                  }
-                }
-                return value;
-              }}
-            />
+            <Tooltip />
             <Legend />
             {metrics.map(metric => (
               activeMetrics[metric.key] && (
@@ -422,7 +371,7 @@ function GraphPage() {
       case 'pie':
         const pieData = metrics.map(metric => {
           const values = processedData.map(d => d[metric.key]).filter(v => v !== undefined);
-          const average = values.length > 0 ? 
+          const average = values.length > 0 ?
             values.reduce((a, b) => a + b, 0) / values.length : 0;
           return {
             name: metric.name,
@@ -430,7 +379,7 @@ function GraphPage() {
             color: metric.color
           };
         });
-  
+
         return (
           <PieChart>
             <Pie
@@ -464,13 +413,14 @@ function GraphPage() {
 
   return (
     <>
+      <GlobalStyle />
       <Link
         to="/"
         style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
       >
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
-  
+
       <GraphContainer>
         {patientInfo && (
           <div
@@ -504,12 +454,12 @@ function GraphPage() {
             </div>
           </div>
         )}
-  
+
         <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#125358' }}>
-       
+          Symptom Progress Visualization
         </h2>
-        
-        <div style={{ 
+
+        <div style={{
           marginBottom: '25px',
           padding: '15px',
           backgroundColor: '#f9f9f9',
@@ -517,13 +467,13 @@ function GraphPage() {
           border: '1px solid #eee'
         }}>
           <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
-          <div style={{ 
+          <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
             gap: '10px'
           }}>
             {metrics.map(metric => (
-              <MetricToggle 
+              <MetricToggle
                 key={metric.key}
                 active={activeMetrics[metric.key]}
                 onClick={() => toggleMetric(metric.key)}
@@ -531,7 +481,7 @@ function GraphPage() {
                 <input
                   type="checkbox"
                   checked={activeMetrics[metric.key]}
-                  onChange={() => {}}
+                  onChange={() => { }}
                   style={{ accentColor: metric.color }}
                 />
                 <span style={{ color: metric.color, fontWeight: '500' }}>
@@ -541,7 +491,7 @@ function GraphPage() {
             ))}
           </div>
         </div>
-        
+
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
             <span style={{ fontWeight: '500' }}>From:</span>
@@ -564,7 +514,7 @@ function GraphPage() {
               maxDate={new Date()}
             />
           </div>
-          
+
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {timeRanges.map(range => (
               <TimeRangeButton
@@ -577,7 +527,7 @@ function GraphPage() {
             ))}
           </div>
         </div>
-        
+
         <ChartControls>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {chartTypes.map(type => (
@@ -591,7 +541,7 @@ function GraphPage() {
             ))}
           </div>
         </ChartControls>
-  
+
         <div style={{ width: '100%', height: '500px' }}>
           <ResponsiveContainer width="100%" height="100%">
             {renderChart()}

@@ -5,33 +5,60 @@ import axiosInstance from '../src/axiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
-import Select from 'react-select'; // Importing react-select
+import Select from 'react-select';
 
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 1.3rem;
   }
- body {
-  font-family: 'Times New Roman', cursive, sans-serif;
-  background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-  min-height: 100vh;
-  color:  #006E75;
-  overflow-y: auto;
-}
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
+    min-height: 100vh;
+    overflow-y: auto;
+    color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 0;
+    transition: background 0.6s ease-in-out;
+  }
 `;
 
-const Container = styled.div`
-  padding: 40px;
-  h1 {
-    color: white;
-    margin-bottom: 30px;
+const AdminContainer = styled.div`
+  background-color: #ffffff;
+  padding: 80px 60px;
+  border-radius: 16px;
+  width: 800px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin: 20px auto;
+
+  @media (max-width: 760px) {
+    padding: 30px 20px;
+    width: 100%;
+    margin-top: 10px;
   }
+`;
+
+const LoggedInInfo = styled.p`
+  font-size: 1.5rem;
+  color: rgb(12, 53, 57);
+  margin-bottom: 20px;
+`;
+
+const Title = styled.h1`
+  color: #1a5b61;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
 `;
 
 const Tabs = styled.div`
   display: flex;
+  justify-content: center;
   gap: 20px;
   margin-bottom: 20px;
 `;
@@ -43,21 +70,10 @@ const TabButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   &:hover {
-    background: ${(props) => (props.active ? '#125358' : '#00d4ff')};
+    background: #00d4ff;
   }
-`;
-
-const Form = styled.form`
-  margin-top: 30px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  width: ${(props) =>
-    props.activeTab === 'staff' ? '60%' : '100%'};
-  max-width: 600px;
-  margin: 0 auto;
 `;
 
 const Input = styled.input`
@@ -67,18 +83,20 @@ const Input = styled.input`
   border: 1px solid #ccc;
 `;
 
-const Button = styled.button`
+const SubmitButton = styled.button`
   padding: 10px 20px;
+  background-color: #125358;
   color: white;
   border: none;
-  margin-right: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  background: ${(props) =>
-    props.active === 'true' ? 'rgb(133, 200, 205)' : '#eee'};
-  color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
   &:hover {
-    background: #00d4ff;
+    background-color: #00d4ff;
   }
+`;
+
+const SelectWrapper = styled.div`
+  margin: 20px 0;
 `;
 
 const AdminDashboard = () => {
@@ -86,156 +104,133 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('patients');
   const [patients, setPatients] = useState([]);
   const [staff, setStaff] = useState([]);
+  const [selectedPerson, setSelectedPerson] = useState(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     personalNumber: '',
-    username: '',    
-    email: '',      
-    password: '',     
-    id: null,
+    username: '',
+    email: '',
+    password: '',
   });
-  const [selectedPerson, setSelectedPerson] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [staffName, setStaffName] = useState('');
 
   useEffect(() => {
-    fetchData();
-    fetchPatientData();
+    fetchPatients();
+    fetchStaff();
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setStaffName(storedName);
+    }
   }, []);
 
-  const fetchData = async () => {
+  const fetchPatients = async () => {
     try {
-      const response = await axiosInstance.get('Staff/ReadItems', {
-        params: { flat: true, pageNr: 0, pageSize: 10 },
-      });
-      setStaff(response.data.pageItems);
-    } catch (error) {
-      console.error('Error fetching staff:', error.response || error.message);
-    }
-  };
-
-  const fetchPatientData = async () => {
-    try {
-      const response = await axiosInstance.get('Patient/ReadItems', {
+      const response = await axiosInstance.get('/Patient/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
       });
       setPatients(response.data.pageItems);
     } catch (error) {
-      console.error('Error fetching patient:', error.response || error.message);
+      console.error('Error fetching patients:', error);
     }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      const response = await axiosInstance.get('/Staff/ReadItems', {
+        params: { flat: true, pageNr: 0, pageSize: 10 },
+      });
+      setStaff(response.data.pageItems);
+    } catch (error) {
+      console.error('Error fetching staff:', error);
+    }
+  };
+
+  const handleSelectChange = (selectedOption) => {
+    const id = selectedOption?.value;
+    const list = activeTab === 'staff' ? staff : patients;
+    const found = list.find((item) =>
+      String(activeTab === 'staff' ? item.staffId : item.patientId) === id
+    );
+    setSelectedPerson(found);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    const endpoint = activeTab === 'staff' ? 'Staff' : 'Patient';
     try {
-      const isStaff = activeTab === 'staff';
-      const endpoint = isStaff ? 'Staff' : 'Patient';
-      const response = await axiosInstance.post(`/${endpoint}/CreateItem`, {
-        ...formData,
-      });
+      await axiosInstance.post(`/${endpoint}/CreateItem`, formData);
       setSuccessMessage(`${endpoint} created successfully!`);
-      setShowSuccessMessage(true);
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-        setSuccessMessage('');
-      }, 2000);
-
+      if (activeTab === 'staff') {
+        fetchStaff();
+      } else {
+        fetchPatients();
+      }
       setFormData({
         firstName: '',
         lastName: '',
         personalNumber: '',
-        username: '',  
-        email: '',     
-        password: '',  
-        id: null,
+        username: '',
+        email: '',
+        password: '',
       });
-      if (isStaff) {
-        fetchData();
-      } else {
-        fetchPatientData();
-      }
     } catch (error) {
-      setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
-      setShowSuccessMessage(true);
+      setSuccessMessage(`Failed to create ${endpoint}.`);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleDelete = async (personId) => {
-    try {
-      const isStaff = activeTab === 'staff';
-      const endpoint = isStaff ? 'Staff' : 'Patient';
-      await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
-      setSuccessMessage(`${endpoint} deleted successfully!`);
-      setShowSuccessMessage(true);
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-        setSuccessMessage('');
-      }, 2000);
-      if (isStaff) {
-        await fetchData();
-      } else {
-        await fetchPatientData();
-      }
-      setSelectedPerson(null);
-    } catch (error) {
-      console.error(`Error deleting ${activeTab}:`, error.response || error.message);
+      setTimeout(() => setSuccessMessage(''), 3000);
     }
   };
 
   const handleEdit = async (updatedPerson) => {
-    setIsLoading(true);
+    const isStaff = activeTab === 'staff';
+    const endpoint = isStaff ? 'Staff' : 'Patient';
+    const idField = isStaff ? 'staffId' : 'patientId';
+    const id = updatedPerson[idField];
+
     try {
-      const isStaff = activeTab === 'staff';
-      const endpoint = isStaff ? 'Staff' : 'Patient';
-      const idField = isStaff ? 'staffId' : 'patientId';
-      const personId = updatedPerson[idField];
-
-      await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
-        [idField]: personId,
-        firstName: updatedPerson.firstName,
-        lastName: updatedPerson.lastName,
-        personalNumber: updatedPerson.personalNumber,
-      });
-
-      setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
-      setShowSuccessMessage(true);
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-        setSuccessMessage('');
-      }, 2000);
-
-      setSelectedPerson(null);
-      if (isStaff) {
-        fetchData();
-      } else {
-        fetchPatientData();
-      }
-    } catch (error) {
-      setSuccessMessage(`Error updating ${activeTab}.`);
-      setShowSuccessMessage(true);
+      await axiosInstance.put(`/${endpoint}/UpdateItem/${id}`, updatedPerson);
+      setSuccessMessage(`${endpoint} updated successfully.`);
+      if (isStaff) fetchStaff();
+      else fetchPatients();
+    } catch {
+      setSuccessMessage(`Failed to update ${endpoint}.`);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => setSuccessMessage(''), 3000);
     }
   };
 
-  const currentData = activeTab === 'patients' ? patients : staff;
-
-  const handleSelectChange = (selectedOption) => {
-    const id = selectedOption?.value;
-    let person;
-    if (activeTab === 'staff') {
-      person = staff.find((item) => String(item.staffId) === id);
-    } else {
-      person = patients.find((item) => String(item.patientId) === id);
+  const handleDelete = async (id) => {
+    const endpoint = activeTab === 'staff' ? 'Staff' : 'Patient';
+    try {
+      await axiosInstance.delete(`/${endpoint}/DeleteItem/${id}`);
+      setSuccessMessage(`${endpoint} deleted successfully.`);
+      if (activeTab === 'staff') {
+        setStaff((prev) => prev.filter((item) => item.staffId !== id));
+      } else {
+        setPatients((prev) => prev.filter((item) => item.patientId !== id));
+      }
+    } catch {
+      setSuccessMessage(`Failed to delete ${endpoint}.`);
+    } finally {
+      setTimeout(() => setSuccessMessage(''), 3000);
     }
-    setSelectedPerson(person);
   };
+
+  const options =
+    activeTab === 'staff'
+      ? staff.map((item) => ({
+        value: item.staffId,
+        label: `${item.firstName} ${item.lastName}`,
+      }))
+      : patients.map((item) => ({
+        value: item.patientId,
+        label: `${item.firstName} ${item.lastName}`,
+      }));
 
   return (
     <>
@@ -243,8 +238,9 @@ const AdminDashboard = () => {
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
-      <Container>
-        <h1>{t('admin_dashboard')}</h1>
+      <AdminContainer>
+        <LoggedInInfo>{t('logged in as')} {staffName}</LoggedInInfo>
+        <Title>{t('admin_dashboard')}</Title>
         <Tabs>
           <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
             {t('patients')}
@@ -254,21 +250,15 @@ const AdminDashboard = () => {
           </TabButton>
         </Tabs>
 
-        <Select
-          onChange={handleSelectChange}
-          options={activeTab === 'staff'
-            ? staff.map(item => ({
-                value: item.staffId,
-                label: `${item.firstName} ${item.lastName}`,
-              }))
-            : patients.map(item => ({
-                value: item.patientId,
-                label: `${item.firstName} ${item.lastName}`,
-              }))
-          }
-          value={selectedPerson ? { value: selectedPerson.id, label: `${selectedPerson.firstName} ${selectedPerson.lastName}` } : null}
-          placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
-        />
+        <SelectWrapper>
+          <Select
+            onChange={handleSelectChange}
+            options={options}
+            placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
+          />
+        </SelectWrapper>
+
+        {successMessage && <p>{successMessage}</p>}
 
         <DetailsModal
           staffMember={selectedPerson}
@@ -279,82 +269,23 @@ const AdminDashboard = () => {
           }
         />
 
-        {showSuccessMessage && (
-          <div
-            style={{
-              backgroundColor: successMessage.toLowerCase().includes('successfully')
-                ? '#d4edda'
-                : '#f8d7da',
-              color: successMessage.toLowerCase().includes('successfully')
-                ? '#155724'
-                : '#721c24',
-              padding: '10px 15px',
-              borderRadius: '5px',
-              marginBottom: '20px',
-              border: '1px solid',
-              borderColor: successMessage.toLowerCase().includes('successfully')
-                ? '#c3e6cb'
-                : '#f5c6cb',
-            }}
-          >
-            {successMessage}
-          </div>
-        )}
-
-        <Form onSubmit={handleSubmit}>
-          <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
-
-          <Input
-            placeholder={t('first_name')}
-            value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            required
-          />
-
-          <Input
-            placeholder={t('last_name')}
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            required
-          />
-
-          <Input
-            placeholder={t('personal_number')}
-            value={formData.personalNumber}
-            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
-            required
-          />
+        <form onSubmit={handleSubmit}>
+          <h3>{t('add')} {activeTab === 'patients' ? t('patient') : t('staff')}</h3>
+          <Input placeholder={t('first_name')} value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} required />
+          <Input placeholder={t('last_name')} value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} required />
+          <Input placeholder={t('personal_number')} value={formData.personalNumber} onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })} required />
 
           {activeTab === 'staff' && (
             <>
-              <Input
-                placeholder={t('username')}
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                required
-              />
-
-              <Input
-                placeholder={t('email')}
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-              />
-
-              <Input
-                placeholder={t('password')}
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                required
-              />
+              <Input placeholder={t('username')} value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} required />
+              <Input placeholder={t('email')} value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
+              <Input placeholder={t('password')} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
             </>
           )}
 
-          <Button type="submit" active="true">
-            {isLoading ? t('loading') : t('submit')}
-          </Button>
-        </Form>
-      </Container>
+          <SubmitButton type="submit">{isLoading ? t('loading') : t('submit')}</SubmitButton>
+        </form>
+      </AdminContainer>
     </>
   );
 };

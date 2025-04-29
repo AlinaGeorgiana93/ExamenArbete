@@ -1,36 +1,32 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
-import Alina from '../src/media/Alina.jpg'; 
-import Parisa from '../src/media/Parisa.jpg'; 
-import Mona from '../src/media/Mona.jpg'; 
+import Alina from '../src/media/Alina.jpg';
+import Parisa from '../src/media/Parisa.jpg';
+import Mona from '../src/media/Mona.jpg';
 import Nagi from '../src/media/Nagi.jpg';
 import checklist from '../src/media/checklist.jpg';
 
 import '../src/index.css';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; 
-import videoFile from '../src/media/patient.mp4'; 
+import { useTranslation } from 'react-i18next';
 
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 1.2rem;
   }
+
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-    display: flex;
-    background-attachment: fixed;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #fff;
-    position: relative;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
+    min-height: 100vh;
+    overflow-y: auto;
+    transition: background 0.6s ease-in-out;
   }
 `;
-
 const Section = styled.section`
   margin-bottom: 50px; /* Större mellanrum mellan sektionerna */
 `;
@@ -39,6 +35,8 @@ const SectionTitle = styled.h2`
   color: #125358;
   font-size: 1.8rem; /* Större fontstorlek */
   margin-bottom: 15px; /* Större avstånd mellan rubrik och text */
+  font-size: 30px;
+
   text-align: center;
 `;
 
@@ -47,33 +45,58 @@ const SectionText = styled.p`
   color: #333;
   line-height: 1.6;
   text-align: center;
+  font-size: 30px;
+
   margin-bottom: 30px; /* Mer mellanrum efter texten */
 `;
 
 const PageContainer = styled.div`
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
   padding: 40px;
   border-radius: 8px;
   width: 100%;
-  max-width: 700px;
+  max-width: 1500px;  /* Öka max-bredden */
   height: 90vh;
   overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   color: #000;
+
+  /* Scrollbar */
   scrollbar-width: thin;
   scrollbar-color: #50D9E6 #ffffff;
+
+  /* Webkit scrollbar (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #50D9E6;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 `;
+
 
 const Title = styled.h1`
+  color: #1a5b61;
+  font-size: 3.0rem;
   text-align: center;
-  color: #125358;
   margin-bottom: 30px; /* Större avstånd till rubrikens text */
+
 `;
 
+
 const Text = styled.p`
-  font-size: 18px;
+  font-size: 30px;
   color: #333;
   line-height: 1.6;
+  font-size: 30px;
+
   margin-bottom: 20px; /* Större mellanrum */
   text-align: center;
 `;
@@ -83,6 +106,8 @@ const TeamGrid = styled.div`
   justify-content: space-around;
   flex-wrap: wrap;
   margin-top: 30px;
+  font-size: 30px;
+
 `;
 
 const TeamMember = styled.div`
@@ -90,11 +115,15 @@ const TeamMember = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 15px;
+  font-size: 30px;
+
 `;
 
 const Name = styled.span`
   font-weight: bold;
   color: #125358;
+   font-size: 30px;
+
 `;
 
 const TeamHeading = styled.h2`
@@ -102,7 +131,7 @@ const TeamHeading = styled.h2`
   color: #125358;
   margin-top: 40px;
   margin-bottom: 25px; /* Mer mellanrum före och efter */
-  font-size: 1.8rem;
+  font-size: 30px;
 `;
 
 const ProfileImage = styled.img`
@@ -125,17 +154,7 @@ const Role = styled.span`
   margin-top: 5px;
 `;
 
-const VideoContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1; /* För att hålla videon i bakgrunden */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+
 
 const AboutUsPage = () => {
   const { t } = useTranslation();
@@ -151,8 +170,7 @@ const AboutUsPage = () => {
       </Link>
       <PageContainer>
         {/* Lägg till bilden här */}
-        <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} />
-        
+
         <Title>About Us</Title>
         <Text>
           Vi är fyra engagerade tjejer som studerar systemutveckling och har tillsammans utvecklat den här webbplatsen som en del av vårt utbildningsprojekt. Vårt mål är att skapa en smidig och användarvänlig plattform som underlättar för vårdpersonal att spåra och rapportera patienters mående dagligen.
@@ -188,12 +206,12 @@ const AboutUsPage = () => {
         <Section>
           <SectionTitle>Vår historia</SectionTitle>
           <SectionText>
-            <ul>
-              <li>Grundades 2025</li>
-              <li>Självfinansierat: Projektet startades utan externa investeringar.</li>
-              <li>Mål: Att skapa en plattform som underlättar för personer att kontinuerligt dokumentera sitt mående på ett enkelt och tryggt sätt.</li>
-              <li>Utvecklingsfokus: Vi fokuserade på användarvänlighet, tillgänglighet och att göra det möjligt för både patienter och vårdpersonal att följa utvecklingen över tid.</li>
-            </ul>
+
+            Grundades 2025
+            Självfinansierat: Projektet startades utan externa investeringar.
+            Mål: Att skapa en plattform som underlättar för personer att kontinuerligt dokumentera sitt mående på ett enkelt och tryggt sätt.
+            Utvecklingsfokus: Vi fokuserade på användarvänlighet, tillgänglighet och att göra det möjligt för både patienter och vårdpersonal att följa utvecklingen över tid.
+
           </SectionText>
           <Text>
             Tack för att du använder vår tjänst! 💙
@@ -224,26 +242,6 @@ const AboutUsPage = () => {
           </TeamMember>
         </TeamGrid>
       </PageContainer>
-
-      {/* Video container with the updated video settings */}
-      <VideoContainer>
-        <video
-          src={videoFile} 
-          autoPlay={true}  
-          loop={true}      
-          muted={true}     
-          controls={false} 
-          style={{
-            objectFit: 'cover', 
-            width: '100%',      
-            height: '100%',     
-            position: 'absolute', 
-            top: 0,
-            left: 0,
-            zIndex: -1, 
-          }}
-        />
-      </VideoContainer>
     </div>
   );
 };
