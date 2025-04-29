@@ -12,7 +12,6 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -47,6 +46,12 @@ const GraphContainer = styled.div`
   width: 100%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   margin: 20px auto;
+
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
 
   /* Tablet (481px – 1024px) */
   @media (min-width: 481px) and (max-width: 1024px) {
@@ -144,6 +149,8 @@ const TimeRangeButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
+  text-align: center;
+  white-space: nowrap;
 
   &:hover {
     background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
@@ -160,9 +167,61 @@ const TimeRangeButton = styled.button`
     padding: 6px 12px;
     font-size: 12px;
     border-radius: 15px;
+    width: auto;
   }
 `;
 
+
+// First, update the ChartWrapper styled component to include space for the buttons
+const ChartWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: 500px;
+  transition: all 0.3s ease;
+  
+  /* Desktop */
+  @media (min-width: 1025px) {
+    height: 550px;
+  }
+  
+  /* Tablet */
+  @media (max-width: 1024px) {
+    height: 450px;
+  }
+  
+  /* Mobile */
+  @media (max-width: 480px) {
+    height: 350px;
+    flex-direction: column;
+  }
+  
+  .recharts-wrapper {
+    transition: all 0.5s ease;
+    flex: 1;
+  }
+  
+  &:hover .recharts-wrapper {
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  }
+`;
+
+// Add a new styled component for the time period buttons container
+const TimePeriodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 15px;
+  gap: 10px;
+  width: 120px;
+  
+  @media (max-width: 480px) {
+    flex-direction: row;
+    width: 100%;
+    padding: 15px 0 0 0;
+    justify-content: center;
+  }
+`;
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
@@ -274,7 +333,7 @@ function getWeekNumber(date) {
 }
 
 function GraphPage() {
-  const { patientId } = useParams(); // Changed from id to patientId
+  const { patientId } = useParams();
   const location = useLocation();
   const [rawData, setRawData] = useState([]);
   const [processedData, setProcessedData] = useState([]);
@@ -295,14 +354,11 @@ function GraphPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // First get patient info
         const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`);
         setPatientInfo(patientResponse.data.item);
 
-        // Initialize data array
         let allData = [];
 
-        // 1. Get data from API
         try {
           const apiResponse = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${patientId}`);
           if (apiResponse.data?.pageItems) {
@@ -312,11 +368,9 @@ function GraphPage() {
           console.error("API fetch error:", apiError);
         }
 
-        // 2. Get data from localStorage
         const localData = JSON.parse(localStorage.getItem(`patientData_${patientId}`) || '[]');
         allData = [...allData, ...localData];
 
-        // 3. Add new data from location.state if available
         if (location.state) {
           const newDataPoint = {
             date: location.state.date,
@@ -327,12 +381,9 @@ function GraphPage() {
             patientId: patientId
           };
           allData.push(newDataPoint);
-          
-          // Update localStorage with the new data
           localStorage.setItem(`patientData_${patientId}`, JSON.stringify([...localData, newDataPoint]));
         }
 
-        // Process and filter data
         const validData = allData.filter(item => 
           item.date && 
           (item.moodRating !== undefined || 
@@ -426,76 +477,105 @@ function GraphPage() {
       case 'bar':
         return (
           <BarChart data={processedData}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <defs>
+              {metrics.map(metric => (
+                <linearGradient id={`color${metric.key}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={metric.color} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={metric.color} stopOpacity={0.2}/>
+                </linearGradient>
+              ))}
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
             <XAxis 
-              dataKey="date" 
-              tickFormatter={(value) => {
-                if (timeRange === 'week') {
-                  // Format as "YYYY Week WW"
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `${match[1]} Week ${match[2]}`;
-                  }
-                }
-                return value;
-              }}
-            />
-            <YAxis domain={[0, 10]} />
+               dataKey="date" 
+               tick={{ fill: '#555' }}
+               tickFormatter={(value) => {
+                 const str = String(value); // 🔒 ensures no crash
+                 if (timeRange === 'week') {
+                   const match = str.match(/(\d{4})-W(\d{2})/);
+                   if (match) return `${match[1]} W${match[2]}`;
+                 }
+                 return str;
+               }}
+             />
+            <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
             <Tooltip 
-              labelFormatter={(value) => {
-                if (timeRange === 'week') {
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `Week ${match[2]}, ${match[1]}`;
-                  }
-                }
-                return value;
+              contentStyle={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '8px',
+                border: 'none',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
               }}
+              labelFormatter={(value) => {
+                const str = String(value); // 🔒 safely convert to string
+                if (timeRange === 'week') {
+                  const match = str.match(/(\d{4})-W(\d{2})/);
+                  if (match) return `Week ${match[2]}, ${match[1]}`;
+                }
+                return str;
+              }}
+              
             />
-            <Legend />
-            {metrics.map(
-              (metric) =>
-                activeMetrics[metric.key] && (
-                  <Bar
-                    key={metric.key}
-                    dataKey={metric.key}
-                    name={metric.name}
-                    fill={metric.color}
-                  />
-                )
+            <Legend 
+              wrapperStyle={{ paddingTop: '20px' }}
+            />
+            {metrics.map(metric => 
+              activeMetrics[metric.key] && (
+                <Bar
+                  key={metric.key}
+                  dataKey={metric.key}
+                  name={metric.name}
+                  fill={`url(#color${metric.key})`}
+                  radius={[4, 4, 0, 0]}
+                  animationDuration={1500}
+                />
+              )
             )}
           </BarChart>
         );
       case 'line':
         return (
           <LineChart data={processedData}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <defs>
+              {metrics.map(metric => (
+                <linearGradient id={`lineColor${metric.key}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={metric.color} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={metric.color} stopOpacity={0}/>
+                </linearGradient>
+              ))}
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
             <XAxis 
               dataKey="date" 
+              tick={{ fill: '#555' }}
               tickFormatter={(value) => {
+                const str = String(value); // 🔒 ensures no crash
                 if (timeRange === 'week') {
-                  // Format as "YYYY Week WW"
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `${match[1]} Week ${match[2]}`;
-                  }
+                  const match = str.match(/(\d{4})-W(\d{2})/);
+                  if (match) return `${match[1]} W${match[2]}`;
                 }
-                return value;
+                return str;
               }}
             />
-            <YAxis domain={[0, 10]} />
+            <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
             <Tooltip 
-              labelFormatter={(value) => {
-                if (timeRange === 'week') {
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `Week ${match[2]}, ${match[1]}`;
-                  }
-                }
-                return value;
+              contentStyle={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '8px',
+                border: 'none',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
               }}
+              labelFormatter={(value) => {
+                const str = String(value); // 🔒 safely convert to string
+                if (timeRange === 'week') {
+                  const match = str.match(/(\d{4})-W(\d{2})/);
+                  if (match) return `Week ${match[2]}, ${match[1]}`;
+                }
+                return str;
+              }}
+              
             />
-            <Legend />
+            <Legend wrapperStyle={{ paddingTop: '20px' }} />
             {metrics.map(metric => (
               activeMetrics[metric.key] && (
                 <Line
@@ -504,7 +584,20 @@ function GraphPage() {
                   dataKey={metric.key}
                   name={metric.name}
                   stroke={metric.color}
-                  activeDot={{ r: 8 }}
+                  strokeWidth={3}
+                  activeDot={{ 
+                    r: 8,
+                    strokeWidth: 2,
+                    stroke: '#fff',
+                    fill: metric.color
+                  }}
+                  dot={{ 
+                    r: 4,
+                    strokeWidth: 2,
+                    stroke: '#fff',
+                    fill: metric.color
+                  }}
+                  animationDuration={1500}
                 />
               )
             ))}
@@ -521,28 +614,44 @@ function GraphPage() {
             color: metric.color
           };
         });
-  
+      
         return (
           <PieChart>
+            <defs>
+              {pieData.map((entry, index) => (
+                <linearGradient id={`pieColor${index}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={entry.color} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={entry.color} stopOpacity={0.4}/>
+                </linearGradient>
+              ))}
+            </defs>
             <Pie
               data={pieData}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              outerRadius={150}
-              fill="#8884d8"
+              innerRadius="60%"
+              outerRadius="80%"
+              paddingAngle={5}
               dataKey="value"
-              nameKey="name"
-              label={({ name, percent }) =>
-                `${name}: ${(percent * 100).toFixed(0)}%`
-              }
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              labelLine={false}
             >
               {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell key={`cell-${index}`} fill={`url(#pieColor${index})`} />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => [`Average: ${value}`, '']} />
-            <Legend />
+            <Tooltip 
+              formatter={(value) => [`Average: ${value}`, '']}
+              contentStyle={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '8px',
+                border: 'none',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }}
+            />
+            <Legend 
+              wrapperStyle={{ paddingTop: '20px' }}
+            />
           </PieChart>
         );
       default:
@@ -597,7 +706,7 @@ function GraphPage() {
         )}
   
         <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#125358' }}>
-       
+     
         </h2>
         
         <div style={{ 
@@ -656,7 +765,7 @@ function GraphPage() {
             />
           </div>
           
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          {/* <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {timeRanges.map(range => (
               <TimeRangeButton
                 key={range.key}
@@ -666,7 +775,7 @@ function GraphPage() {
                 {range.name}
               </TimeRangeButton>
             ))}
-          </div>
+          </div> */}
         </div>
         
         <ChartControls>
@@ -683,11 +792,24 @@ function GraphPage() {
           </div>
         </ChartControls>
   
-        <div style={{ width: '100%', height: '500px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            {renderChart()}
-          </ResponsiveContainer>
-        </div>
+              <ChartWrapper>
+        <ResponsiveContainer width="100%" height="100%">
+          {renderChart()}
+        </ResponsiveContainer>
+        
+        <TimePeriodContainer>
+          {timeRanges.map(range => (
+            <TimeRangeButton
+              key={range.key}
+              active={timeRange === range.key}
+              onClick={() => setTimeRange(range.key)}
+              style={{ width: '100%' }}
+            >
+              {range.name}
+            </TimeRangeButton>
+          ))}
+        </TimePeriodContainer>
+      </ChartWrapper>
       </GraphContainer>
     </>
   );
