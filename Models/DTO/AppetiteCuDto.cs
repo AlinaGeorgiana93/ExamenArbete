@@ -26,6 +26,6 @@ public class AppetiteCuDto
         Notes = org.Notes;
 
         PatientId = org.Patient.PatientId;
-         AppetiteLevelId = org?.AppetiteLevel?.AppetiteLevelId;
+        AppetiteLevelId = org?.AppetiteLevel?.AppetiteLevelId;
     }
 }

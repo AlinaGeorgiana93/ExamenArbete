@@ -14,8 +14,7 @@ public class MoodKindCuDto
   public virtual string Label { get; set; }
   public virtual int Rating { get; set; }       // Rating from 1 to 10
 
-  // public virtual List<Guid> MoodsId { get; set; } = null;
-  // public virtual Guid? MoodId { get; set; }
+
 
   public MoodKindCuDto() { }
   public MoodKindCuDto(IMoodKind org)
@@ -23,9 +22,6 @@ public class MoodKindCuDto
     MoodKindId = org.MoodKindId;
     Name = org.Name;
     Rating = org.Rating;
-
-
-    // MoodsId = org.Moods?.Select(i => i.MoodId).ToList(); 
 
 
 

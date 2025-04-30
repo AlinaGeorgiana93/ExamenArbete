@@ -12,13 +12,8 @@ public class PatientDbM : Patient
     [Key]
     public override Guid PatientId { get; set; }
 
-
-    // public override string FirstName {get;set; }
-    // public override string LastName { get; set; }
-    // public override string PersonalNumber { get; set; }
-
     [JsonIgnore]
-    public virtual Guid? GraphId { get; set; }
+    public override Guid? GraphId { get; set; }
 
     [NotMapped]
     public override IGraph Graph { get => GraphDbM; set => throw new NotImplementedException(); }

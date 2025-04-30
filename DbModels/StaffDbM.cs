@@ -24,26 +24,22 @@ namespace DbModels
         }
 
         [JsonIgnore]
+        public override Guid? PasswordResetTokenId { get; set; }
+
+        [JsonIgnore]
         [Required]
         public List<PatientDbM> PatientsDbM { get; set; }
 
-        // Static method to retrieve seed data
-//        public static new List<StaffDbM> GetSeedStaffData(Encryptions encryptions)
-// {
-//     // Get the staff data and encrypt the passwords
-//     return [.. Staff.GetSeedStaffData(encryptions)
-//         .Select(p => new StaffDbM
-//         {
-//             StaffId = p.StaffId,
-//             FirstName = p.FirstName,
-//             LastName = p.LastName,
-//             PersonalNumber = p.PersonalNumber,
-//             Email = p.Email,
-//             Role = p.Role,
-//             UserName = p.UserName,
-//             Password = p.Password,  // The password will already be encrypted here
-//         })];  // Ensure the result is a list
-// }
+        [NotMapped]
+       
+        public override IPasswordResetToken PasswordResetToken { get => PasswordResetTokenDbM; set => throw new NotImplementedException(); }
+        [JsonIgnore]
+        public PasswordResetTokenDbM PasswordResetTokenDbM { get; set; }
+       
+    
+        
+         
+
         // Method to update StaffDbM from StaffCuDto
         public StaffDbM UpdateFromDTO(StaffCuDto org)
         {

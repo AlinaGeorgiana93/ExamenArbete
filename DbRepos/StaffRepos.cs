@@ -136,11 +136,11 @@ public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
     _logger.LogInformation("Starting CreateItemAsync");
 
     // Check if StaffId is null
-    if (itemDto.StaffId != null)
-    {
-        _logger.LogWarning("StaffId should be null on creation");
-        throw new ArgumentException($"{nameof(itemDto.StaffId)} must be null when creating a new object");
-    }
+    // if (itemDto.StaffId != null)
+    // {
+    //     _logger.LogWarning("StaffId should be null on creation");
+    //     throw new ArgumentException($"{nameof(itemDto.StaffId)} must be null when creating a new object");
+    // }
 
     // Check if the email or username already exists
     if (await IsEmailOrUserNameExistAsync(itemDto.Email, itemDto.UserName))

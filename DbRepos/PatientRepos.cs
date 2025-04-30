@@ -26,7 +26,6 @@ public class PatientDbRepos
         if (!flat)
         {
             query = _dbContext.Patients.AsNoTracking()
-                //.Include(i => i.AttractionDbM) // Commented out Attraction
                 .Where(i => i.PatientId == id);
         }
         else
@@ -54,7 +53,7 @@ public class PatientDbRepos
         else
         {
             query = _dbContext.Patients.AsNoTracking();
-                //.Include(i => i.MoodDbM); // Commented out Attraction
+               
         }
 
         var ret = new ResponsePageDto<IPatient>()
@@ -128,10 +127,6 @@ public class PatientDbRepos
         //Update individual properties 
         item.UpdateFromDTO(itemDto);
 
-        //Update navigation properties
-        //await navProp_ItemCUdto_to_ItemDbM(itemDto, item); // Commented out navProp_ItemCUdto_to_ItemDbM
-
-        //write to database model
         _dbContext.Patients.Update(item);
 
         //write to database in a UoW
@@ -150,10 +145,6 @@ public class PatientDbRepos
         //Update individual properties
         var item = new PatientDbM(itemDto);
 
-        //Update navigation properties
-        //await navProp_ItemCUdto_to_ItemDbM(itemDto, item); // Commented out navProp_ItemCUdto_to_ItemDbM
-
-        //write to database model
         _dbContext.Patients.Add(item);
 
         //write to database in a UoW

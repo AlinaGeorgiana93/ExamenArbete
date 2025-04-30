@@ -63,6 +63,8 @@ const LoginForm = styled.div`
 const Label = styled.label`
   font-size: 1.1rem;
   margin-bottom: 8px;
+  color: #333; /* Adjust color to match your design */
+  font-weight: 600; /* Make the label text a bit bolder */
 `;
 
 const Input = styled.input`
@@ -74,7 +76,7 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #3b878c;
+    border-color: #3b878c; /* Match border color with the theme */
   }
 `;
 
@@ -129,37 +131,35 @@ const Footer = styled.footer`
   }
 `;
 
-const LanguageButtons = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 5px;
+const LanguageButtonContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  right: 15px;
 `;
 
 const LanguageButton = styled.button`
-  padding: 10px;
-  font-size: 1rem;
-  background-color: #125358;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 0 10px;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.8rem;
+padding: 5px 10px;
+font-size: 1rem;
+background: none;
+color: #125358; /* Matches container color */
+border: none;
+cursor: pointer;
+transition: color 0.3s ease;
+font-weight: bold;
 
-  &:hover {
-    background-color: #00d4ff;
-  }
+&:hover {
+  color: #00d4ff; /* Change text color on hover */
+}
+
+&:focus {
+  outline: none; /* Remove outline when clicked */
+}
 `;
+
 
 const StartPage = () => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -175,18 +175,13 @@ const StartPage = () => {
 
       console.log('Login Data:', loginData);
 
-      // Try to login as a user
       let response = await axiosInstance.post('/Guest/LoginUser', loginData);
-      console.log('User Login Response:', response); // Log the response to check the structure
+      console.log('User Login Response:', response);
 
-      localStorage.setItem(
-        'jwtToken',
-        response.data.item.jwtToken.encryptedToken
-      );
-      console.log('jwtToken:', response.data.item.jwtToken.encryptedToken);
+      localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
 
       const role = response.data.item.userRole;
-      console.log('User Role:', role); // Log role to verify it
+      console.log('User Role:', role);
 
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
@@ -205,27 +200,17 @@ const StartPage = () => {
       console.log('User login failed, trying staff login...');
       console.error('Error details:', error.response?.data || error.message);
 
-      // If user login failed, try staff login
       const loginDataStaff = {
         userNameOrEmail: username,
         password: password,
       };
 
       try {
-        const response = await axiosInstance.post(
-          '/Guest/LoginStaff',
-          loginDataStaff
-        );
+        const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
         console.log('Staff Login Response:', response);
 
-        localStorage.setItem(
-          'jwtToken',
-          response.data.item.jwtToken.encryptedToken
-        );
-        console.log(
-          'jwtToken (Staff):',
-          response.data.item.jwtToken.encryptedToken
-        );
+        localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+        console.log('jwtToken (Staff):', response.data.item.jwtToken.encryptedToken);
 
         const role = response.data.item.userRole;
 
@@ -239,10 +224,7 @@ const StartPage = () => {
         }
       } catch (staffError) {
         setLoginError(t('login_failed'));
-        console.error(
-          'Staff login error:',
-          staffError.response?.data || staffError.message
-        );
+        console.error('Staff login error:', staffError.response?.data || staffError.message);
       }
     }
   };
@@ -253,20 +235,22 @@ const StartPage = () => {
 
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));
-    const i18n = getI18n();
-    i18n.changeLanguage(lang);
+    const i18nInstance = getI18n();
+    i18nInstance.changeLanguage(lang);
   };
 
   return (
     <>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <StartPageContainer>
+        <LanguageButtonContainer>
+          <LanguageButton onClick={() => changeLanguage(i18n.language === 'en' ? 'sv' : 'en')}>
+            {i18n.language === 'en' ? 'SV' : 'EN'}
+          </LanguageButton>
+        </LanguageButtonContainer>
         <Header>
           <Title>{t('app_title')}</Title>
           <SubTitle>{t('welcome')}</SubTitle>
@@ -276,41 +260,32 @@ const StartPage = () => {
           <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>
         )}
 
-        <LoginForm>
-          <Label>{t('username')}</Label>
-          <Input
-            type="text"
-            placeholder={t('enter_username')}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+<LoginForm>
+  <Label>{t('username')}</Label>
+  <Input
+    type="text"
+    placeholder={t('enter_username')}
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+  />
 
-          <Label>{t('password')}</Label>
-          <Input
-            type="password"
-            placeholder={t('enter_password')}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
+  <Label>{t('password')}</Label>
+  <Input
+    type="password"
+    placeholder={t('enter_password')}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    onKeyDown={handleKeyDown}
+  />
 
-          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+  {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
-          <ButtonContainer>
-            <Button onClick={handleLogin} disabled={!username || !password}>
-              {t('login')}
-            </Button>
-          </ButtonContainer>
-        </LoginForm>
-
-        <LanguageButtons>
-          <LanguageButton onClick={() => changeLanguage('en')}>
-            En
-          </LanguageButton>
-          <LanguageButton onClick={() => changeLanguage('sv')}>
-            Sv
-          </LanguageButton>
-        </LanguageButtons>
+  <ButtonContainer>
+    <Button onClick={handleLogin} disabled={!username || !password}>
+      {t('login')}
+    </Button>
+  </ButtonContainer>
+</LoginForm>
 
         <Footer>
           <p>

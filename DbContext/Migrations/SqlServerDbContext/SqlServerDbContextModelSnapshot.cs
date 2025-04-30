@@ -88,42 +88,42 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            ActivityLevelId = new Guid("778fcaf3-339e-4975-8f89-4803a6abddd3"),
+                            ActivityLevelId = new Guid("b4d4a1a5-1c93-4055-94e2-72e7e842f9fd"),
                             Label = "Resting 🛌",
                             Name = "Resting",
                             Rating = 1
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("b29d2395-34d8-49f2-ab0b-85b29d0802b7"),
+                            ActivityLevelId = new Guid("edc2c389-69a1-430a-a944-476be7fa8f7e"),
                             Label = "Reading 📖",
                             Name = "Reading",
                             Rating = 3
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("36220f30-3231-460e-bbc1-7f2493f64100"),
+                            ActivityLevelId = new Guid("06f20c0d-b16d-4453-a7d2-c4e3f17dc546"),
                             Label = "Take a Walk 🚶‍♂️",
                             Name = "Take a Walk",
                             Rating = 5
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("6820142e-6a50-4b9a-91ed-d83a28af19a8"),
+                            ActivityLevelId = new Guid("27044a70-43f9-4624-8336-7d2f583279fa"),
                             Label = "Jogging 🏃‍♂️",
                             Name = "Jogging",
                             Rating = 10
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("0c157ee5-69ae-4f45-8e5a-600871ceb923"),
+                            ActivityLevelId = new Guid("6808e06f-055e-4acb-acac-58206fda7eb7"),
                             Label = "Swimming 🏊‍♂️",
                             Name = "Swimming",
                             Rating = 7
                         },
                         new
                         {
-                            ActivityLevelId = new Guid("a2233a17-7a58-4cf2-80bc-d9e1c83d014c"),
+                            ActivityLevelId = new Guid("f3c3b076-dd67-4cb4-97e0-5394b0f5e946"),
                             Label = "Training 🏋️‍♂️",
                             Name = "Training",
                             Rating = 9
@@ -196,35 +196,35 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            AppetiteLevelId = new Guid("9af178cc-0e80-4a1d-bbc0-1aebae81c088"),
+                            AppetiteLevelId = new Guid("77f6a5f4-1db4-4d99-8209-9b476add35d3"),
                             Label = "Didn't Eat At All 🤢",
                             Name = "Didn't Eat At All",
                             Rating = 1
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("affef264-f3ba-42e4-b2cc-51efe029c1e6"),
+                            AppetiteLevelId = new Guid("007b1cbd-80d2-4f63-9a32-cee0f5064ab1"),
                             Label = "Little 🍽️",
                             Name = "Little",
                             Rating = 3
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("7e99d025-916d-4c73-8d2f-254121161708"),
+                            AppetiteLevelId = new Guid("fcac7012-a360-4ca4-845e-518c13b43ec4"),
                             Label = "Normal Appetite 🙂",
                             Name = "Normal",
                             Rating = 5
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("3700c4e4-aa46-4a4e-b530-d5d56ec0d1fe"),
+                            AppetiteLevelId = new Guid("3be9b9f4-07ac-48f7-8199-7a84a202d4af"),
                             Label = "Medium 😋",
                             Name = "Medium",
                             Rating = 7
                         },
                         new
                         {
-                            AppetiteLevelId = new Guid("1b9b603d-6c89-4835-a796-8bab4290a655"),
+                            AppetiteLevelId = new Guid("607d445c-5aba-4483-856b-c2bb22a3af97"),
                             Label = "Very Much 🍴",
                             Name = "Very Much",
                             Rating = 10
@@ -314,53 +314,89 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            MoodKindId = new Guid("5aa224ee-968c-4483-a548-8e163496f379"),
+                            MoodKindId = new Guid("d2d4c010-f2da-4b39-ae63-ff3adfcca673"),
                             Label = "Happy 😃",
                             Name = "Happy",
                             Rating = 10
                         },
                         new
                         {
-                            MoodKindId = new Guid("e6d4ffa4-5e2d-4840-8c3f-478ffe96e85c"),
+                            MoodKindId = new Guid("b0dbff31-8fb4-4e80-925f-2dd7ce61da81"),
                             Label = "Sad 🙁",
                             Name = "Sad",
                             Rating = 2
                         },
                         new
                         {
-                            MoodKindId = new Guid("53eff924-bd93-4b35-aaa4-246fb0259f2d"),
+                            MoodKindId = new Guid("577587eb-7782-4381-b2bf-9303c57accf7"),
                             Label = "Angry 😡",
                             Name = "Angry",
                             Rating = 3
                         },
                         new
                         {
-                            MoodKindId = new Guid("7c79f59e-0eac-4954-b974-da962b719e79"),
+                            MoodKindId = new Guid("cda119cb-4412-4577-90ae-43aa9d12fe30"),
                             Label = "Lovely 😍",
                             Name = "Lovely",
                             Rating = 7
                         },
                         new
                         {
-                            MoodKindId = new Guid("040a6fce-737a-4bec-9b8d-732c54ca8986"),
+                            MoodKindId = new Guid("78811963-d643-45e8-818a-f7310c1e9356"),
                             Label = "Depressed 😢",
                             Name = "Depressed",
                             Rating = 1
                         },
                         new
                         {
-                            MoodKindId = new Guid("a64ce2e5-d5ae-44b0-ba69-27223449a155"),
+                            MoodKindId = new Guid("88f2e565-948b-4f2d-a35b-889b4534855d"),
                             Label = "Excited 🤩",
                             Name = "Excited",
                             Rating = 9
                         },
                         new
                         {
-                            MoodKindId = new Guid("e064d0fd-2221-4e0b-8c4d-bb3c5a05b80e"),
+                            MoodKindId = new Guid("e33fcce0-7b34-41ab-b190-cf73951b9e8e"),
                             Label = "Bored 😒",
                             Name = "Bored",
                             Rating = 4
                         });
+                });
+
+            modelBuilder.Entity("DbModels.PasswordResetTokenDbM", b =>
+                {
+                    b.Property<Guid>("PasswordResetTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedAtStr")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExpiryDateStr")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid?>("StaffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("PasswordResetTokenId");
+
+                    b.HasIndex("StaffId")
+                        .IsUnique()
+                        .HasFilter("[StaffId] IS NOT NULL");
+
+                    b.ToTable("PasswordResetToken", "supusr");
                 });
 
             modelBuilder.Entity("DbModels.PatientDbM", b =>
@@ -397,42 +433,42 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            PatientId = new Guid("5f35f5d9-5c87-4b05-826c-69f92bdba1dc"),
+                            PatientId = new Guid("f7f10bde-1363-4251-b059-a7a7d35e9a56"),
                             FirstName = "Madi",
                             LastName = "Alabama",
                             PersonalNumber = "19560831-1111"
                         },
                         new
                         {
-                            PatientId = new Guid("917f22d1-cf9b-44c3-8bc3-bcbb35e60a8f"),
+                            PatientId = new Guid("a7abd99e-ed38-4434-9b5b-38693cfe8456"),
                             FirstName = "John",
                             LastName = "Doe",
                             PersonalNumber = "19480516-2222"
                         },
                         new
                         {
-                            PatientId = new Guid("2a3e8d76-a6c1-4119-b97c-badcadb585e9"),
+                            PatientId = new Guid("4a8a13f8-df3e-41e1-b845-5a6082fc570e"),
                             FirstName = "Jane",
                             LastName = "Smith",
                             PersonalNumber = "19610228-1212"
                         },
                         new
                         {
-                            PatientId = new Guid("8b4a6c2a-faa6-4723-81bc-63d7e613c28d"),
+                            PatientId = new Guid("c984ccf9-28b0-41ee-bf1c-3a593bba2bb6"),
                             FirstName = "Alice",
                             LastName = "Johnson",
                             PersonalNumber = "19450801-4444"
                         },
                         new
                         {
-                            PatientId = new Guid("babdbfda-3e38-4d14-81fc-4018ede4fced"),
+                            PatientId = new Guid("234b9d07-4155-42c1-92be-84389c41ab5c"),
                             FirstName = "Bob",
                             LastName = "Brown",
                             PersonalNumber = "19501110-1331"
                         },
                         new
                         {
-                            PatientId = new Guid("44021835-4a01-4c52-a4ad-9071ca29cb2e"),
+                            PatientId = new Guid("7c403768-a733-4e9b-9f68-e9eafbbacdc8"),
                             FirstName = "Charlie",
                             LastName = "Davis",
                             PersonalNumber = "19511231-16181"
@@ -505,28 +541,28 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasData(
                         new
                         {
-                            SleepLevelId = new Guid("78cbc879-3d5a-4160-bbf4-17005a9a4f77"),
+                            SleepLevelId = new Guid("6b9722dc-1f85-4658-86cd-796689a61303"),
                             Label = "Low Sleep Level 🙁",
                             Name = "Low",
                             Rating = 5
                         },
                         new
                         {
-                            SleepLevelId = new Guid("b6e512ce-24c7-4ef4-b955-5e0a29cf7743"),
+                            SleepLevelId = new Guid("c8accd00-2745-4385-921a-1ee09a5350d2"),
                             Label = "Medium Sleep Level 😐",
                             Name = "Medium",
                             Rating = 6
                         },
                         new
                         {
-                            SleepLevelId = new Guid("088507ac-1e81-482c-ad17-2eeb3ca0ac3b"),
+                            SleepLevelId = new Guid("4c574234-fe37-45ce-bf03-6330e660639f"),
                             Label = "OK Sleep Level 🙂",
                             Name = "OK",
                             Rating = 8
                         },
                         new
                         {
-                            SleepLevelId = new Guid("71d61d88-afbf-4f3b-8b30-b644c300f27a"),
+                            SleepLevelId = new Guid("670c44e3-4f25-46dd-80b2-90ed8040ce71"),
                             Label = "Too much Sleep Level 😃",
                             Name = "Too much",
                             Rating = 10
@@ -550,6 +586,9 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid?>("PasswordResetTokenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PersonalNumber")
                         .HasColumnType("nvarchar(200)");
@@ -710,6 +749,15 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasForeignKey("PatientDbMPatientId");
                 });
 
+            modelBuilder.Entity("DbModels.PasswordResetTokenDbM", b =>
+                {
+                    b.HasOne("DbModels.StaffDbM", "StaffDbM")
+                        .WithOne("PasswordResetTokenDbM")
+                        .HasForeignKey("DbModels.PasswordResetTokenDbM", "StaffId");
+
+                    b.Navigation("StaffDbM");
+                });
+
             modelBuilder.Entity("DbModels.PatientDbM", b =>
                 {
                     b.HasOne("DbModels.GraphDbM", "GraphDbM")
@@ -786,6 +834,8 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("DbModels.StaffDbM", b =>
                 {
+                    b.Navigation("PasswordResetTokenDbM");
+
                     b.Navigation("PatientsDbM");
                 });
 #pragma warning restore 612, 618

@@ -20,7 +20,8 @@ namespace Models.DTO
 
          // FK for Patients (One-to-Many Relationship)
         public virtual List<Guid> PatientsId { get; set; }
-        // Default constructor
+        
+       
         public StaffCuDto() { }
 
         // Constructor to map from a staff entity to a DTO (used in services or controllers)
@@ -36,8 +37,8 @@ namespace Models.DTO
         Role = org.Role;
 
         
-        
          PatientsId = org.Patients?.Select(i => i.PatientId).ToList();
+        
         }
     }
 }

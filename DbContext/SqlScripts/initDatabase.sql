@@ -52,6 +52,8 @@ END
 GO  -- Make sure this is on a new line
 
 
+
+
 IF SUSER_ID (N'gstusr') IS NOT NULL
 DROP LOGIN gstusr;
 
@@ -82,6 +84,7 @@ CREATE USER gstusrUser FROM LOGIN gstusr;
 CREATE USER usrUser FROM LOGIN usr;
 CREATE USER supusrUser FROM LOGIN supusr;
 
+
 --05-create-roles-credentials.sql
 --create roles
 CREATE ROLE graphefcGstUsr;
@@ -92,6 +95,10 @@ CREATE ROLE graphefcSupUsr;
 GRANT SELECT, EXECUTE ON SCHEMA::gstusr to graphefcGstUsr;
 GRANT SELECT ON SCHEMA::supusr to graphefcUsr;
 GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to graphefcSupUsr;
+GRANT INSERT ON supusr.PasswordResetToken TO graphefcSupUsr;
+GRANT INSERT ON supusr.PasswordResetToken TO usrUser;
+GRANT SELECT ON supusr.PasswordResetToken TO gstusrUser;
+
 
 --finally, add the users to the roles
 ALTER ROLE graphefcGstUsr ADD MEMBER gstusrUser;
@@ -100,6 +107,8 @@ ALTER ROLE graphefcUsr ADD MEMBER usrUser;
 ALTER ROLE graphefcGstUsr ADD MEMBER supusrUser;
 ALTER ROLE graphefcUsr ADD MEMBER supusrUser;
 ALTER ROLE graphefcSupUsr ADD MEMBER supusrUser;
+ALTER ROLE graphefcSupUsr ADD MEMBER usrUser;
+
 GO
 
 --07-create-gstusr-login.sql
