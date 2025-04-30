@@ -16,8 +16,15 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
+    font-family: 'Poppins', sans-serif; /* Change the font */
+    background: linear-gradient(
+        135deg,
+        #BE5985 0%,
+        #1679AB 30%,
+        #8EACCD 60%,
+        #2A629A 90%,
+        #BE5985 110%
+    );
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,12 +35,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const StartPageContainer = styled.div`
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8); /* Slight opacity for a soft feel */
   padding: 40px;
-  border-radius: 8px;
+  border-radius: 12px; /* Rounded corners for soft look */
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1;
 `;
@@ -44,9 +51,10 @@ const Header = styled.header`
 `;
 
 const Title = styled.h1`
-  color: #333;
+  color: #3a3a3a;
   font-size: 2rem;
   margin-bottom: 10px;
+  font-weight: 600;
 `;
 
 const SubTitle = styled.p`
@@ -63,7 +71,16 @@ const LoginForm = styled.div`
 const Label = styled.label`
   font-size: 1.1rem;
   margin-bottom: 8px;
+  color: #333; /* Adjust color to match your design */
+  font-weight: 600; /* Make the label text a bit bolder */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  min-width: 100%;  /* Ensure the label takes the full width without resizing */
+  white-space: nowrap;  /* Prevent text wrapping */
 `;
+
 
 const Input = styled.input`
   padding: 12px;
@@ -71,10 +88,17 @@ const Input = styled.input`
   margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  background-color: #f3f3f3; /* Soft background for input */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: #3b878c;
+    border-color: #00d4ff; /* Soft blue for focus */
+    background-color: #ffffff; /* Lighten background on focus */
+  }
+
+  &::placeholder {
+    color: #aaa;
   }
 `;
 
@@ -129,37 +153,34 @@ const Footer = styled.footer`
   }
 `;
 
-const LanguageButtons = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 5px;
+const LanguageButtonContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  right: 15px;
 `;
 
 const LanguageButton = styled.button`
-  padding: 10px;
+  padding: 5px 10px;
   font-size: 1rem;
-  background-color: #125358;
-  color: white;
+  background: none;
+  color: #125358;
   border: none;
-  border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 0 10px;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.8rem;
+  transition: color 0.3s ease;
+  font-weight: bold;
 
   &:hover {
-    background-color: #00d4ff;
+    color: #00d4ff;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
 const StartPage = () => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -168,70 +189,32 @@ const StartPage = () => {
 
   const handleLogin = async () => {
     try {
-      const loginData = {
-        userNameOrEmail: username,
-        password: password,
-      };
-
-      console.log('Login Data:', loginData);
-
-      // Try to login as a user
+      const loginData = { userNameOrEmail: username, password };
       let response = await axiosInstance.post('/Guest/LoginUser', loginData);
-      console.log('User Login Response:', response); // Log the response to check the structure
 
-      localStorage.setItem(
-        'jwtToken',
-        response.data.item.jwtToken.encryptedToken
-      );
-      console.log('jwtToken:', response.data.item.jwtToken.encryptedToken);
-
+      localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
       const role = response.data.item.userRole;
-      console.log('User Role:', role); // Log role to verify it
 
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
-        console.log('Sysadmin logged in');
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'usr') {
         localStorage.setItem('role', 'usr');
-        console.log('User logged in');
         setLoginMessage(t('login_success'));
         navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
     } catch (error) {
-      console.log('User login failed, trying staff login...');
-      console.error('Error details:', error.response?.data || error.message);
-
-      // If user login failed, try staff login
-      const loginDataStaff = {
-        userNameOrEmail: username,
-        password: password,
-      };
-
+      const loginDataStaff = { userNameOrEmail: username, password };
       try {
-        const response = await axiosInstance.post(
-          '/Guest/LoginStaff',
-          loginDataStaff
-        );
-        console.log('Staff Login Response:', response);
-
-        localStorage.setItem(
-          'jwtToken',
-          response.data.item.jwtToken.encryptedToken
-        );
-        console.log(
-          'jwtToken (Staff):',
-          response.data.item.jwtToken.encryptedToken
-        );
-
+        const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
+        localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
         const role = response.data.item.userRole;
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          console.log('Staff logged in');
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {
@@ -239,10 +222,6 @@ const StartPage = () => {
         }
       } catch (staffError) {
         setLoginError(t('login_failed'));
-        console.error(
-          'Staff login error:',
-          staffError.response?.data || staffError.message
-        );
       }
     }
   };
@@ -253,20 +232,22 @@ const StartPage = () => {
 
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));
-    const i18n = getI18n();
-    i18n.changeLanguage(lang);
+    const i18nInstance = getI18n();
+    i18nInstance.changeLanguage(lang);
   };
 
   return (
     <>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <StartPageContainer>
+        <LanguageButtonContainer>
+          <LanguageButton onClick={() => changeLanguage(i18n.language === 'en' ? 'sv' : 'en')}>
+            {i18n.language === 'en' ? 'SV' : 'EN'}
+          </LanguageButton>
+        </LanguageButtonContainer>
         <Header>
           <Title>{t('app_title')}</Title>
           <SubTitle>{t('welcome')}</SubTitle>
@@ -303,20 +284,10 @@ const StartPage = () => {
           </ButtonContainer>
         </LoginForm>
 
-        <LanguageButtons>
-          <LanguageButton onClick={() => changeLanguage('en')}>
-            En
-          </LanguageButton>
-          <LanguageButton onClick={() => changeLanguage('sv')}>
-            Sv
-          </LanguageButton>
-        </LanguageButtons>
-
         <Footer>
-          <p>
-            <a href="/forgotpassword">{t('forgot_password_link')}</a>
-          </p>
-        </Footer>
+  <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
+</Footer>
+
       </StartPageContainer>
     </>
   );
