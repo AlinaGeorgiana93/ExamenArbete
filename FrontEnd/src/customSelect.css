@@ -1,0 +1,72 @@
+.custom-select {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    border-radius: 12px;
+    width: 100%;
+}
+
+.custom-select:hover {
+    border-color: #00d4ff; 
+    /* Light blue color */
+}
+
+.custom-select--is-focused {
+    border-color: #125358;
+}
+
+.custom-select-placeholder {
+    background-color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    margin-left: 8px;
+    /* Align with padding */
+}
+
+.custom-select-input {
+    font-size: 1rem;
+    color: #333;
+}
+
+.custom-select-dropdown-indicator {
+    color: #125358;
+    padding: 8px;
+
+}
+
+.custom-select-indicator-separator {
+    display: none;
+}
+
+/* For the dropdown menu */
+.custom-select-menu {
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.custom-select-option {
+    padding: 8px 12px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.custom-select-option:hover {
+    background-color: #00d4ff;
+    color: #fff;
+}
+.css-p130qn-control {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+

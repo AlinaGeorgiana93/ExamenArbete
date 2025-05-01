@@ -6,6 +6,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
+import customSelect from '../src/customSelect.css'; // Importing custom styles for react-select
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -13,21 +15,68 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
- body {
-  font-family: 'Times New Roman', cursive, sans-serif;
-  background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-  min-height: 100vh;
-  color:  black;
-  overflow-y: auto;
-}
+  body {
+    font-family: 'Poppins', sans-serif; /* Change the font */
+    background: linear-gradient(
+        135deg,
+        #BE5985 0%,
+        #1679AB 30%,
+        #8EACCD 60%,
+        #2A629A 90%,
+        #BE5985 110%
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: black;
+    position: relative;
+  }
+`;
+
+const Title = styled.h1`
+  color: #fff;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+  text-align: center;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+  }
+`;
+
+const Subtitle = styled.span`
+  color:rgb(58, 53, 53);
+  font-size: 22px;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-bottom: 0;  // remove unnecessary bottom space
+  display: block;
+  text-align: center;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 const Container = styled.div`
-  padding: 40px;
+  padding: 10px;
+  justify-content: center;  
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   h1 {
     color: white;
     margin-bottom: 30px;
   }
+  
+`;
+
+const SelectContainer = styled.div`
+  margin-bottom: 20px; /* Add margin below the Select component */
 `;
 
 const Tabs = styled.div`
@@ -35,6 +84,17 @@ const Tabs = styled.div`
   gap: 20px;
   margin-bottom: 20px;
 `;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  
+`;
+
 
 const TabButton = styled.button`
   padding: 10px 20px;
@@ -49,37 +109,70 @@ const TabButton = styled.button`
   }
 `;
 
+const MainWrapper = styled.div`
+  width: 350px; /* Or any fixed width you prefer */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+  align-items: stretch;
+
+`;
+
+
 const Form = styled.form`
+  font-size: 1rem;
+  font-weight: 500;
   margin-top: 30px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 30px;
+  border-radius: 12px;
   width: ${(props) =>
     props.activeTab === 'staff' ? '60%' : '100%'};
-  max-width: 600px;
   margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional for matching login form */
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    color: #3a3a3a;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.5rem;
+    
 `;
 
 const Input = styled.input`
-  margin-bottom: 10px;
-  padding: 10px;
+  margin-bottom: 16px;
+  padding: 12px;
   width: 100%;
   border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  color: white;
+  padding: 12px 24px;
   border: none;
   margin-right: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
   cursor: pointer;
   background: ${(props) =>
-    props.active === 'true' ? 'rgb(133, 200, 205)' : '#eee'};
+    props.active === 'true' ? 'rgb(29, 102, 116)' : '#eee'};
   color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
+   align-self: center; 
+   width: 35%;
+  
+
   &:hover {
-    background: #00d4ff;
+    background:rgb(29, 102, 116);
   }
 `;
+
+
+
+
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -243,32 +336,53 @@ const AdminDashboard = () => {
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
+
+      
       <Container>
-        <h1>{t('admin_dashboard')}</h1>
+      <Title>{t('app_title')}</Title>
+      <Subtitle>{t('admin_dashboard')}</Subtitle>
         <Tabs>
+        <ButtonWrapper>
           <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
             {t('patients')}
           </TabButton>
           <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
             {t('staff')}
           </TabButton>
+        </ButtonWrapper>
         </Tabs>
-
-        <Select
-          onChange={handleSelectChange}
-          options={activeTab === 'staff'
-            ? staff.map(item => ({
-                value: item.staffId,
-                label: `${item.firstName} ${item.lastName}`,
-              }))
-            : patients.map(item => ({
-                value: item.patientId,
-                label: `${item.firstName} ${item.lastName}`,
-              }))
+        <MainWrapper>
+        <SelectContainer>
+  <Select
+    onChange={handleSelectChange}
+    options={activeTab === 'staff'
+      ? staff.map(item => ({
+          value: item.staffId,
+          label: `${item.firstName} ${item.lastName}`,
+        }))
+      : patients.map(item => ({
+          value: item.patientId,
+          label: `${item.firstName} ${item.lastName}`,
+        }))
+    }
+    value={
+      selectedPerson
+        ? {
+            value: activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId,
+            label: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
           }
-          value={selectedPerson ? { value: selectedPerson.id, label: `${selectedPerson.firstName} ${selectedPerson.lastName}` } : null}
-          placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
-        />
+        : null
+    }    
+    placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
+    isSearchable={true}  // Make sure the search functionality is enabled
+    styles={{
+      control: (provided) => ({
+        ...provided,
+        padding: '5px',  // Add padding to the control itself if needed
+      }),
+    }}
+  />
+</SelectContainer>
 
         <DetailsModal
           staffMember={selectedPerson}
@@ -351,9 +465,10 @@ const AdminDashboard = () => {
           )}
 
           <Button type="submit" active="true">
-            {isLoading ? t('loading') : t('submit')}
+            {isLoading ? t('loading') : t('Add')}
           </Button>
         </Form>
+        </MainWrapper>
       </Container>
     </>
   );
