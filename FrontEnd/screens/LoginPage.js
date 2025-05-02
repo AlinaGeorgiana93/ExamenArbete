@@ -35,7 +35,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const StartPageContainer = styled.div`
-  background-color: rgba(255, 255, 255, 0.8); /* Slight opacity for a soft feel */
+  background-color: #FAF1E6;
+; /* Slight opacity for a soft feel */
   padding: 40px;
   border-radius: 12px; /* Rounded corners for soft look */
   width: 100%;
@@ -59,8 +60,11 @@ const Title = styled.h1`
 
 const SubTitle = styled.p`
   font-size: 1.2rem;
-  color: #888;
   margin-bottom: 20px;
+  color:rgb(58, 53, 53);
+  font-size: 22px;
+  font-weight: 600;
+  opacity: 0.9;
 `;
 
 const LoginForm = styled.div`
@@ -93,7 +97,7 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #00d4ff; /* Soft blue for focus */
+    border-color: #8ACCD5 /* Soft blue for focus */
     background-color: #ffffff; /* Lighten background on focus */
   }
 
@@ -112,7 +116,7 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   padding: 10px 20px;
-  background-color: #125358;
+  background-color: rgb(40, 136, 155);
   color: white;
   font-size: 0.9rem;
   border: none;
@@ -126,7 +130,7 @@ const Button = styled.button`
   width: 48%;
 
   &:hover {
-    background-color: #00d4ff;
+    background-color: #8ACCD5;
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
@@ -173,7 +177,7 @@ const LanguageButton = styled.button`
   font-weight: bold;
 
   &:hover {
-    color: #00d4ff;
+    color:  #8ACCD5;
   }
 
   &:focus {

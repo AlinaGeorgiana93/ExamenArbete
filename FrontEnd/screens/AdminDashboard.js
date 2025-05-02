@@ -8,7 +8,6 @@ import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
 import customSelect from '../src/customSelect.css'; // Importing custom styles for react-select
 
-
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -56,6 +55,7 @@ const Subtitle = styled.span`
   margin-bottom: 0;  // remove unnecessary bottom space
   display: block;
   text-align: center;
+  font-weight: 600;
 
   @media (max-width: 480px) {
     font-size: 20px;
@@ -68,6 +68,7 @@ const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+  
   h1 {
     color: white;
     margin-bottom: 30px;
@@ -78,6 +79,8 @@ const Container = styled.div`
 const SelectContainer = styled.div`
   margin-bottom: 20px; /* Add margin below the Select component */
 `;
+
+
 
 const Tabs = styled.div`
   display: flex;
@@ -93,19 +96,21 @@ const ButtonWrapper = styled.div`
   margin-top: 20px;
   margin-bottom: 10px;
   
+  
 `;
 
 
 const TabButton = styled.button`
   padding: 10px 20px;
-  background: ${(props) => (props.active ? '#125358' : '#eee')};
+  background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : '#eee')};
   color: ${(props) => (props.active ? '#fff' : '#000')};
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+
   &:hover {
-    background: ${(props) => (props.active ? '#125358' : '#00d4ff')};
+    background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : ' #8ACCD5')};
   }
 `;
 
@@ -116,6 +121,7 @@ const MainWrapper = styled.div`
   justify-content: center;
   gap: 15px;
   align-items: stretch;
+  
 
 `;
 
@@ -124,7 +130,7 @@ const Form = styled.form`
   font-size: 1rem;
   font-weight: 500;
   margin-top: 30px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #FAF1E6;
   padding: 30px;
   border-radius: 12px;
   width: ${(props) =>
@@ -135,10 +141,14 @@ const Form = styled.form`
   flex-direction: column;
 
   h2 {
-    color: #3a3a3a;
+    color:rgb(58, 53, 53);
+    font-size: 22px;
+    font-weight: 400;
+    opacity: 0.9;
     text-align: center;
     padding: 10px;
-    font-size: 1.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
     
 `;
 
@@ -159,14 +169,14 @@ const Button = styled.button`
   font-size: 0.9rem;
   cursor: pointer;
   background: ${(props) =>
-    props.active === 'true' ? 'rgb(29, 102, 116)' : '#eee'};
+    props.active === 'true' ? 'rgb(40, 136, 155)' : '#eee'};
   color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
    align-self: center; 
    width: 35%;
   
 
   &:hover {
-    background:rgb(29, 102, 116);
+    background: #8ACCD5;
   }
 `;
 
@@ -193,6 +203,9 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [formVisible, setFormVisible] = useState(true);  // initially visible
+  const [isDropdownChanged, setIsDropdownChanged] = useState(false);
+
 
   useEffect(() => {
     fetchData();
@@ -224,19 +237,24 @@ const AdminDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    
+    // Ensure activeTab is set correctly when submitting
+    const isStaff = activeTab === 'staff';
+    const endpoint = isStaff ? 'Staff' : 'Patient';
+    
     try {
-      const isStaff = activeTab === 'staff';
-      const endpoint = isStaff ? 'Staff' : 'Patient';
       const response = await axiosInstance.post(`/${endpoint}/CreateItem`, {
         ...formData,
       });
+      
       setSuccessMessage(`${endpoint} created successfully!`);
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-
+  
+      // Reset the form after successful submission
       setFormData({
         firstName: '',
         lastName: '',
@@ -246,6 +264,8 @@ const AdminDashboard = () => {
         password: '',  
         id: null,
       });
+  
+      // Fetch updated data for the correct tab (Staff or Patient)
       if (isStaff) {
         fetchData();
       } else {
@@ -258,29 +278,42 @@ const AdminDashboard = () => {
       setIsLoading(false);
     }
   };
+  
 
   const handleDelete = async (personId) => {
     try {
       const isStaff = activeTab === 'staff';
       const endpoint = isStaff ? 'Staff' : 'Patient';
+      
+      // Perform the delete operation
       await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
+      
+      // Set success message
       setSuccessMessage(`${endpoint} deleted successfully!`);
       setShowSuccessMessage(true);
+      
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
+      
+      // Fetch the updated data
       if (isStaff) {
         await fetchData();
       } else {
         await fetchPatientData();
       }
+  
+      // Reset the selected person and show the form again
       setSelectedPerson(null);
+      setFormVisible(true); // Ensure the form appears after the delete
+      
     } catch (error) {
       console.error(`Error deleting ${activeTab}:`, error.response || error.message);
+      setFormVisible(true); // Show form again if there's an error
     }
   };
-
+  
   const handleEdit = async (updatedPerson) => {
     setIsLoading(true);
     try {
@@ -288,47 +321,72 @@ const AdminDashboard = () => {
       const endpoint = isStaff ? 'Staff' : 'Patient';
       const idField = isStaff ? 'staffId' : 'patientId';
       const personId = updatedPerson[idField];
-
+  
+      // Perform the update operation
       await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
         [idField]: personId,
         firstName: updatedPerson.firstName,
         lastName: updatedPerson.lastName,
         personalNumber: updatedPerson.personalNumber,
       });
-
+  
+      // Set success message
       setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
       setShowSuccessMessage(true);
+      
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-
+  
+      // Reset the selected person and fetch the updated data
       setSelectedPerson(null);
       if (isStaff) {
-        fetchData();
+        await fetchData();
       } else {
-        fetchPatientData();
+        await fetchPatientData();
       }
+      
+      // Show the form after the update
+      setFormVisible(true); // Ensure the form appears after the update
+  
     } catch (error) {
       setSuccessMessage(`Error updating ${activeTab}.`);
       setShowSuccessMessage(true);
+      setFormVisible(true); // Show form in case of failure
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const currentData = activeTab === 'patients' ? patients : staff;
 
   const handleSelectChange = (selectedOption) => {
-    const id = selectedOption?.value;
-    let person;
-    if (activeTab === 'staff') {
-      person = staff.find((item) => String(item.staffId) === id);
-    } else {
-      person = patients.find((item) => String(item.patientId) === id);
+    if (selectedOption) {
+      const personList = activeTab === 'staff' ? staff : patients;
+      const person = personList.find(p =>
+        activeTab === 'staff'
+          ? p.staffId === selectedOption.value
+          : p.patientId === selectedOption.value
+      );
+  
+      setSelectedPerson(person);
+      setIsDropdownChanged(true);  // Mark that a change occurred
+      setFormVisible(false);       // Hide the form after selection
     }
-    setSelectedPerson(person);
   };
+  
+  const handleDropdownOpen = () => {
+    setFormVisible(false);  // Hide the form when the dropdown is opened
+  };
+  
+  const handleDropdownClose = () => {
+    if (!isDropdownChanged) {
+      setFormVisible(true);  // Show the form again only if no change occurred
+    }
+  };
+  
 
   return (
     <>
@@ -353,8 +411,19 @@ const AdminDashboard = () => {
         </Tabs>
         <MainWrapper>
         <SelectContainer>
+      
   <Select
-    onChange={handleSelectChange}
+    onMenuOpen={() => setFormVisible(false)} // Hide form on dropdown open
+    onMenuClose={() => {
+      if (!isDropdownChanged) {
+        setFormVisible(true); // Show form again if no selection was made
+      }
+      setIsDropdownChanged(false); // Reset the flag when the dropdown is closed
+    }}
+    onChange={(selectedOption) => {
+      handleSelectChange(selectedOption);
+      setIsDropdownChanged(true); // Set flag when a selection is made
+    }} 
     options={activeTab === 'staff'
       ? staff.map(item => ({
           value: item.staffId,
@@ -372,26 +441,29 @@ const AdminDashboard = () => {
             label: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
           }
         : null
-    }    
+    }
     placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
-    isSearchable={true}  // Make sure the search functionality is enabled
+    isSearchable={true}
     styles={{
       control: (provided) => ({
         ...provided,
-        padding: '5px',  // Add padding to the control itself if needed
+        padding: '5px',
       }),
     }}
-  />
+  /> 
 </SelectContainer>
 
-        <DetailsModal
-          staffMember={selectedPerson}
-          onClose={() => setSelectedPerson(null)}
-          onEdit={handleEdit}
-          onDelete={() =>
-            handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
-          }
-        />
+<DetailsModal
+  staffMember={selectedPerson}
+  onClose={() => {
+    setSelectedPerson(null);
+    setFormVisible(true);  // show the form again
+  }}
+  onEdit={handleEdit}
+  onDelete={() =>
+    handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
+  }
+/>
 
         {showSuccessMessage && (
           <div
@@ -415,7 +487,8 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <Form onSubmit={handleSubmit}>
+  {formVisible && (
+  <Form onSubmit={handleSubmit}>
           <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
 
           <Input
@@ -467,7 +540,8 @@ const AdminDashboard = () => {
           <Button type="submit" active="true">
             {isLoading ? t('loading') : t('Add')}
           </Button>
-        </Form>
+        </Form>    
+      )}
         </MainWrapper>
       </Container>
     </>
