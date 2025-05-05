@@ -196,32 +196,54 @@ const StartPage = () => {
 
   const handleLogin = async () => {
     try {
-      const loginData = { userNameOrEmail: username, password };
-      let response = await axiosInstance.post('/Guest/LoginUser', loginData);
+      const loginData = {
+        userNameOrEmail: username,
+        password: password,
+      };
 
-      localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+      let response = await axiosInstance.post('/Guest/LoginUser', loginData);
+      localStorage.setItem(
+        'jwtToken',
+        response.data.item.jwtToken.encryptedToken
+      );
+      localStorage.setItem('userName', response.data.item.userName);
+
       const role = response.data.item.userRole;
 
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
+        localStorage.setItem('userName', response.data.item.userName);
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'usr') {
         localStorage.setItem('role', 'usr');
+        localStorage.setItem('userName', response.data.item.userName);
         setLoginMessage(t('login_success'));
         navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
     } catch (error) {
-      const loginDataStaff = { userNameOrEmail: username, password };
+      const loginDataStaff = {
+        userNameOrEmail: username,
+        password: password,
+      };
+
       try {
-        const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
-        localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+        const response = await axiosInstance.post(
+          '/Guest/LoginStaff',
+          loginDataStaff
+        );
+        localStorage.setItem(
+          'jwtToken',
+          response.data.item.jwtToken.encryptedToken
+        );
+
         const role = response.data.item.userRole;
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
+          localStorage.setItem('userName', response.data.item.userName); 
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {
@@ -239,8 +261,8 @@ const StartPage = () => {
 
   const changeLanguage = (lang) => {
     dispatch(setLanguage(lang));
-    const i18nInstance = getI18n();
-    i18nInstance.changeLanguage(lang);
+    const i18n = getI18n();
+    i18n.changeLanguage(lang);
   };
 
   return (
