@@ -80,8 +80,6 @@ const SelectContainer = styled.div`
   margin-bottom: 20px; /* Add margin below the Select component */
 `;
 
-
-
 const Tabs = styled.div`
   display: flex;
   gap: 20px;
@@ -208,11 +206,15 @@ const AdminDashboard = () => {
   const [nameOf, setNameOf] = useState('');
 
   useEffect(() => {
-    fetchData();
-    fetchPatientData();
+    fetchPatients();
+    fetchStaff();
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setNameOf(storedName);
+    }
   }, []);
 
-  const fetchData = async () => {
+  const fetchStaff = async () => {
     try {
       const response = await axiosInstance.get('Staff/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
@@ -223,7 +225,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchPatientData = async () => {
+  const fetchPatients = async () => {
     try {
       const response = await axiosInstance.get('Patient/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
@@ -267,9 +269,9 @@ const AdminDashboard = () => {
   
       // Fetch updated data for the correct tab (Staff or Patient)
       if (isStaff) {
-        fetchData();
+        fetchStaff();
       } else {
-        fetchPatientData();
+        fetchPatients();
       }
     } catch (error) {
       setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
@@ -299,9 +301,9 @@ const AdminDashboard = () => {
       
       // Fetch the updated data
       if (isStaff) {
-        await fetchData();
+        await fetchStaff();
       } else {
-        await fetchPatientData();
+        await fetchPatients();
       }
   
       // Reset the selected person and show the form again
@@ -342,9 +344,9 @@ const AdminDashboard = () => {
       // Reset the selected person and fetch the updated data
       setSelectedPerson(null);
       if (isStaff) {
-        await fetchData();
+        await fetchStaff();
       } else {
-        await fetchPatientData();
+        await fetchPatients();
       }
       
       // Show the form after the update
