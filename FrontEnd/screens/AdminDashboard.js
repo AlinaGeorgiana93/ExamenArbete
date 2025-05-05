@@ -16,20 +16,15 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Poppins', sans-serif; /* Change the font */
-    background: linear-gradient(
-        135deg,
-        #BE5985 0%,
-        #1679AB 30%,
-        #8EACCD 60%,
-        #2A629A 90%,
-        #BE5985 110%
-    );
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
+    min-height: 100vh;
+    overflow-y: auto;
+    color: #1a1a1a;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: black;
-    position: relative;
+    align-items: flex-start;
+    padding: 30px 0;
+    transition: background 0.6s ease-in-out;
   }
 `;
 
@@ -134,7 +129,7 @@ const Form = styled.form`
   font-size: 1rem;
   font-weight: 500;
   margin-top: 30px;
-  background-color: #FAF1E6;
+  background-color: #F5ECD5;
   padding: 30px;
   border-radius: 12px;
   width: ${(props) =>

@@ -17,14 +17,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Poppins', sans-serif; /* Change the font */
-    background: linear-gradient(
-        135deg,
-        #BE5985 0%,
-        #1679AB 30%,
-        #8EACCD 60%,
-        #2A629A 90%,
-        #BE5985 110%
-    );
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,8 +28,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const StartPageContainer = styled.div`
-  background-color: #FAF1E6;
-; /* Slight opacity for a soft feel */
+  background-color: #F5ECD5;
   padding: 40px;
   border-radius: 12px; /* Rounded corners for soft look */
   width: 100%;
