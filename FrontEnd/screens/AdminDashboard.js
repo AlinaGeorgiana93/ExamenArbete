@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
-import customSelect from '../src/customSelect.css'; // Importing custom styles for react-select
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -60,6 +60,12 @@ const Subtitle = styled.span`
   @media (max-width: 480px) {
     font-size: 20px;
   }
+`;
+
+const LoggedInInfo = styled.div`
+  font-size: 1.5rem;
+  color: rgb(12, 53, 57);
+  margin-bottom: 20px;
 `;
 
 const Container = styled.div`
