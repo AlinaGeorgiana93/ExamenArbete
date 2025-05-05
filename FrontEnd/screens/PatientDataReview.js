@@ -16,8 +16,9 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const ReviewContainer = styled.div`
-  background-color: #ffffffee; /* Transparent white background for the content area */
-  padding: 80px; /* Larger padding for more space inside */
+  background-color: #ffffffee;
+  font-family: 'Poppins', sans-serif;
+  padding: 30px;
   border-radius: 16px;
   width: 100%; /* Full width container */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);

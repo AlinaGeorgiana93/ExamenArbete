@@ -21,8 +21,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
     display: flex;
     justify-content: center;
     align-items: flex-start;

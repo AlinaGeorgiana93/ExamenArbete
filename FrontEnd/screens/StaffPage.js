@@ -14,11 +14,14 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.3rem;
   }
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
-    min-height: 100vh;
-    color: rgb(29, 29, 29);
-    overflow-y: auto;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding-bottom: 200px;
+    color: #fff;
   }
 `;
 
@@ -26,8 +29,8 @@ const GlobalStyle = createGlobalStyle`
 
 
 const StaffPageContainer = styled.div`
-  background-color: #ffffff;
-  padding: 100px 100px;
+  background-color: #F5ECD5;
+  padding: 50px 40px;
   border-radius: 16px;
   width: 800px; /* ökad bredd */
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -107,12 +110,13 @@ const StaffPage = () => {
       <GlobalStyle />
 
       <StaffPageContainer>
-        <LoggedInInfo>{t('logged in as')} {staffName}</LoggedInInfo>
-        <Title>{t('choose_patient')}</Title>
+        <Title>{t('staff_name')}</Title>   <WarningText>★{t('choose_patient')}</WarningText>
+        {/* Översatt rubrik */}
+        {/* Label och dropdown för att välja patient */}
 
-        <SelectWrapper>
-          <Select
-            options={options}
+        <DropdownWrapper>
+          <Dropdown
+            id="patient-select"
             value={selectedPatient}
             onChange={handlePatientSelect}
             placeholder={t('choose_patient')}

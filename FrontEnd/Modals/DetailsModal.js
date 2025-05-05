@@ -26,13 +26,15 @@ const ModalContainer = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background-color: #ffffff;
-  padding: 80px 60px;
-  border-radius: 16px;
-  width: 800px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  margin: 20px auto;
+   background-color: #FAF1E6;
+  padding: 30px;
+  border-radius: 10px;
+  width: 450px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: slideUp 0.3s ease-out;
 
   @media (max-width: 760px) {
     padding: 30px 20px;
@@ -78,7 +80,7 @@ const Button = styled.button`
   padding: 12px 24px;
   font-size: 25px;  // Större text i knappar
   border: none;
-  background: rgb(133, 200, 205);
+  background: rgb(40, 136, 155);
   color: white;
   border-radius: 8px;
   cursor: pointer;
@@ -86,7 +88,7 @@ const Button = styled.button`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background: #00d4ff;
+    background: #8ACCD5;
     transform: translateY(-2px);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
   }

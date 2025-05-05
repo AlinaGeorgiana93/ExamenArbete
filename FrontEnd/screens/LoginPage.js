@@ -18,107 +18,133 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
-    min-height: 100vh;
-    overflow-y: auto;
-    transition: background 0.6s ease-in-out;
+    font-family: 'Poppins', sans-serif; /* Change the font */
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    position: relative;
   }
 `;
 
-const LoginContainer = styled.div`
+const StartPageContainer = styled.div`
+  background-color: #F5ECD5;
+  padding: 40px;
+  border-radius: 12px; /* Rounded corners for soft look */
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
-  background-color: #fff;
-  padding: 80px 60px;
-  border-radius: 16px;
-  width: 600px;
-  max-width: 90%;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  margin: 80px auto;
+  z-index: 1;
+`;
+
+const Header = styled.header`
   text-align: center;
   z-index: 2;
 `;
 
 const Title = styled.h1`
-  color: #1a5b61;
-  font-size: 2.5rem;
+  color: #3a3a3a;
+  font-size: 2rem;
   margin-bottom: 10px;
+  font-weight: 600;
 `;
 
 const SubTitle = styled.p`
   font-size: 1.2rem;
-  color: #444;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  color:rgb(58, 53, 53);
+  font-size: 22px;
+  font-weight: 600;
+  opacity: 0.9;
 `;
 
-const FormField = styled.div`
-  margin-bottom: 20px;
-  text-align: left;
+const LoginForm = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Label = styled.label`
   display: block;
   margin-bottom: 8px;
-  font-weight: bold;
-  color: #1a5b61;
+  color: #333; /* Adjust color to match your design */
+  font-weight: 600; /* Make the label text a bit bolder */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  min-width: 100%;  /* Ensure the label takes the full width without resizing */
+  white-space: nowrap;  /* Prevent text wrapping */
 `;
+
 
 const Input = styled.input`
   width: 100%;
   padding: 12px;
   font-size: 1rem;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 4px;
+  background-color: #f3f3f3; /* Soft background for input */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: #00d4ff;
+    border-color: #8ACCD5 /* Soft blue for focus */
+    background-color: #ffffff; /* Lighten background on focus */
+  }
+
+  &::placeholder {
+    color: #aaa;
   }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+`;
+
 const Button = styled.button`
-  padding: 12px 20px;
-  background-color: #125358;
+  padding: 10px 20px;
+  background-color: rgb(40, 136, 155);
   color: white;
   font-size: 1rem;
   border: none;
-  border-radius: 30px;
+  flex-direction: column;
+  border-radius: 6px;
+  display: flex;
+
   cursor: pointer;
   width: 100%;
   margin-top: 20px;
 
   &:hover {
-    background-color: #00d4ff;
+    background-color: #8ACCD5;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
-`;
 
-const LanguageButtons = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
-const LanguageButton = styled.button`
-  background-color: #125358;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  margin: 0 10px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #00d4ff;
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
 
 const Footer = styled.footer`
-  margin-top: 30px;
-  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1rem;
+
+  p {
+    font-size: 0.9rem;
+  }
 
   a {
-    color: #1a5b61;
+    color: #081630;
     text-decoration: none;
 
     &:hover {
@@ -127,9 +153,34 @@ const Footer = styled.footer`
   }
 `;
 
+const LanguageButtonContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+`;
+
+const LanguageButton = styled.button`
+  padding: 5px 10px;
+  font-size: 1rem;
+  background: none;
+  color: #125358;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  font-weight: bold;
+
+  &:hover {
+    color:  #8ACCD5;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
 const StartPage = () => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -185,7 +236,7 @@ const StartPage = () => {
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          localStorage.setItem('userName', response.data.item.userName); 
+          localStorage.setItem('userName', response.data.item.userName);
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {
@@ -210,14 +261,19 @@ const StartPage = () => {
   return (
     <>
       <GlobalStyle />
-
-      <Link to="/" style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 2 }}>
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
-
-      <LoginContainer>
-        <Title>{t('app_title')}</Title>
-        <SubTitle>{t('welcome')}</SubTitle>
+      <StartPageContainer>
+        <LanguageButtonContainer>
+          <LanguageButton onClick={() => changeLanguage(i18n.language === 'en' ? 'sv' : 'en')}>
+            {i18n.language === 'en' ? 'SV' : 'EN'}
+          </LanguageButton>
+        </LanguageButtonContainer>
+        <Header>
+          <Title>{t('app_title')}</Title>
+          <SubTitle>{t('welcome')}</SubTitle>
+        </Header>
 
         {loginMessage && <p style={{ color: 'green' }}>{loginMessage}</p>}
         {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
@@ -243,19 +299,18 @@ const StartPage = () => {
           />
         </FormField>
 
-        <Button onClick={handleLogin} disabled={!username || !password}>
-          {t('login')}
-        </Button>
+        <ButtonContainer>
+          <Button onClick={handleLogin} disabled={!username || !password}>
+            {t('login')}
+          </Button>
+        </ButtonContainer>
+      </LoginForm>
 
-        <LanguageButtons>
-          <LanguageButton onClick={() => changeLanguage('en')}>En</LanguageButton>
-          <LanguageButton onClick={() => changeLanguage('sv')}>Sv</LanguageButton>
-        </LanguageButtons>
+      <Footer>
+        <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
+      </Footer>
 
-        <Footer>
-          <p><a href="/forgotpassword">{t('forgot_password_link')}</a></p>
-        </Footer>
-      </LoginContainer>
+    </StartPageContainer >
     </>
   );
 };
