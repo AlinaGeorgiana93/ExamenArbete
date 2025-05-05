@@ -1,17 +1,17 @@
+// Importerar nödvändiga React hooks och bibliotek
 import React, { useState, useEffect } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import axios from 'axios';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import Select from 'react-select'; // Vi använder react-select
+import styled, { createGlobalStyle } from 'styled-components'; // För styling med styled-components
+import axios from 'axios'; // För att göra HTTP-anrop
+import { useTranslation } from 'react-i18next'; // För översättning
+import { Link, useNavigate } from 'react-router-dom'; // För routing (t.ex. navigera till en ny sida)
+import logo1 from '../src/media/logo1.png'; // Logo-bild
 
-
+// Global styling som gäller hela sidan
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 1.3rem;
   }
   body {
     font-family: 'Poppins', sans-serif;
@@ -25,90 +25,134 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
-
-
+// Den vita rutan på sidan som innehåller allt innehåll
 const StaffPageContainer = styled.div`
   background-color: #F5ECD5;
   padding: 50px 40px;
   border-radius: 16px;
-  width: 800px; /* ökad bredd */
+  width: 100%; /* ändrat från 100% för att minska på små skärmar */
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 1;
   text-align: center;
-  margin-top: 10px; /* flytta upp */
+  margin-top: 70px;
 
-  @media (max-width: 760px) {
+  @media (max-width: 768px) {
     padding: 30px 20px;
-    width: 100%; /* responsiv bredd för mindre skärmar */
-    margin-top: 10px;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+    border-radius: 10px;
   }
 `;
 
+// Titel på sidan (t.ex. "Staff Dashboard")
 const Title = styled.h1`
   color: #1a5b61;
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin-bottom: 20px;
 `;
 
-const LoggedInInfo = styled.p`
-  font-size: 1.9rem;
-  color: rgb(12, 53, 57);
-  margin-bottom: 50px;
+// Wrapper runt dropdownen med en pil ikon
+const DropdownWrapper = styled.div`
+  position: relative;
+  width: 100%;
+
+  &::after {
+    content: '▼'; // Pil-symbolen
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #555;
+    font-size: 0.9rem;
+  }
 `;
 
-const SelectWrapper = styled.div`
+// Dropdown-menyn för att välja patient
+const Dropdown = styled.select`
+  padding: 14px 16px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   margin: 20px 0;
-  text-align: left;
+  width: 100%;
+  appearance: none; // Tar bort standardpilen
+  background-color: #f9f9f9;
+  color: #333;
+
+  &:focus {
+    outline: none;
+    border-color: #3b878c;
+    background-color: #fff;
+  }
 `;
 
-const StaffPage = () => {
-  const [patients, setPatients] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [staffName, setStaffName] = useState('');
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+// Knappen "About Us"
+const AboutButton = styled.a`
+  display: inline-block;
+  padding: 14px 24px;
+  background-color: #125358;
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
 
+  &:hover {
+    background-color: #00d4ff;
+  }
+`;
+const WarningText = styled.p`
+  color: red;
+  margin-top: 10px;
+  font-size: 1rem;
+`;
+// Själva StaffPage-komponenten
+const StaffPage = () => {
+  const [patients, setPatients] = useState([]); // Här sparar vi alla patienter
+  const [selectedPatient, setSelectedPatient] = useState(''); // Här sparar vi den valda patientens ID
+  const { t } = useTranslation(); // För att översätta texter
+  const navigate = useNavigate(); // För att navigera till andra sidor
+
+  // useEffect körs när komponenten laddas första gången
   useEffect(() => {
+    // Hämta patienter från API:t
     axios
       .get('https://localhost:7066/api/Patient/ReadItems')
       .then((response) => {
-        if (response.data?.pageItems) {
-          setPatients(response.data.pageItems);
+        if (response.data && response.data.pageItems) {
+          setPatients(response.data.pageItems); // Spara patientlistan i state
         }
       })
       .catch((error) => {
         console.error('Error fetching patients:', error);
       });
-
-    // Kontrollera att namn finns i localStorage
-    const storedName = localStorage.getItem('userName');
-    if (storedName) {
-      console.log('Hämtat namn från localStorage:', storedName); // ← debug
-      setStaffName(storedName);
-    } else {
-      console.warn('Inget namn hittades i localStorage!');
-    }
   }, []);
 
-
-
-  const handlePatientSelect = (selectedOption) => {
-    setSelectedPatient(selectedOption);
-    if (selectedOption?.value) {
-      navigate(`/patient/${selectedOption.value}`);
+  // När en patient väljs i dropdownen
+  const handlePatientSelect = (e) => {
+    const patientId = e.target.value;
+    setSelectedPatient(patientId); // Sätt den valda patienten i state
+    if (patientId) {
+      navigate(`/patient/${patientId}`); // Navigera till patientsidan med rätt ID
     }
   };
 
-  // Konverterar patientlistan till rätt format för react-select
-  const options = patients.map((patient) => ({
-    value: patient.patientId,
-    label: `${patient.firstName} ${patient.lastName}`,
-  }));
-
   return (
     <>
-      <GlobalStyle />
-
+      <GlobalStyle /> {/* Lägger till globala stilar */}
+      {/* Logotyp som är klickbar och går till startsidan */}
+      <Link
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
+        <img src={logo1} alt="Logo" style={{ width: '140px' }} />
+      </Link>
+      {/* Huvudsektionen med all innehåll */}
       <StaffPageContainer>
         <Title>{t('staff_name')}</Title>   <WarningText>★{t('choose_patient')}</WarningText>
         {/* Översatt rubrik */}
@@ -119,22 +163,22 @@ const StaffPage = () => {
             id="patient-select"
             value={selectedPatient}
             onChange={handlePatientSelect}
-            placeholder={t('choose_patient')}
-            isClearable
-            styles={{
-              control: (base) => ({
-                ...base,
-                fontSize: '1rem',
-                borderRadius: '8px',
-                padding: '2px',
-                backgroundColor: 'white',
-              }),
-            }}
-          />
-        </SelectWrapper>
+          >
+            <option value="">{t('choose_patient')}</option>
+            {patients.length > 0 ? (
+              patients.map((patient) => (
+                <option key={patient.patientId} value={patient.patientId}>
+                  {patient.firstName} {patient.lastName}
+                </option>
+              ))
+            ) : (
+              <option disabled>{t('no_patients_available')}</option>
+            )}
+          </Dropdown>
+        </DropdownWrapper>
       </StaffPageContainer>
     </>
   );
 };
 
-export default StaffPage;
+export default StaffPage; // Exporterar komponenten så den kan användas i appen

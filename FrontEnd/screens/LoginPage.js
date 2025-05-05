@@ -14,9 +14,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 1.2rem;
   }
-
   body {
     font-family: 'Poppins', sans-serif; /* Change the font */
     background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
@@ -42,7 +40,7 @@ const StartPageContainer = styled.div`
 
 const Header = styled.header`
   text-align: center;
-  z-index: 2;
+  margin-bottom: 30px;
 `;
 
 const Title = styled.h1`
@@ -67,7 +65,7 @@ const LoginForm = styled.div`
 `;
 
 const Label = styled.label`
-  display: block;
+  font-size: 1.1rem;
   margin-bottom: 8px;
   color: #333; /* Adjust color to match your design */
   font-weight: 600; /* Make the label text a bit bolder */
@@ -81,9 +79,9 @@ const Label = styled.label`
 
 
 const Input = styled.input`
-  width: 100%;
   padding: 12px;
   font-size: 1rem;
+  margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f3f3f3; /* Soft background for input */
@@ -112,15 +110,16 @@ const Button = styled.button`
   padding: 10px 20px;
   background-color: rgb(40, 136, 155);
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   border: none;
   flex-direction: column;
   border-radius: 6px;
   display: flex;
 
   cursor: pointer;
-  width: 100%;
-  margin-top: 20px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 48%;
 
   &:hover {
     background-color: #8ACCD5;
@@ -236,7 +235,7 @@ const StartPage = () => {
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          localStorage.setItem('userName', response.data.item.userName);
+          localStorage.setItem('userName', response.data.item.userName); 
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {
@@ -275,10 +274,11 @@ const StartPage = () => {
           <SubTitle>{t('welcome')}</SubTitle>
         </Header>
 
-        {loginMessage && <p style={{ color: 'green' }}>{loginMessage}</p>}
-        {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+        {loginMessage && (
+          <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>
+        )}
 
-        <FormField>
+        <LoginForm>
           <Label>{t('username')}</Label>
           <Input
             type="text"
@@ -286,9 +286,7 @@ const StartPage = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-        </FormField>
 
-        <FormField>
           <Label>{t('password')}</Label>
           <Input
             type="password"
@@ -297,20 +295,21 @@ const StartPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-        </FormField>
 
-        <ButtonContainer>
-          <Button onClick={handleLogin} disabled={!username || !password}>
-            {t('login')}
-          </Button>
-        </ButtonContainer>
-      </LoginForm>
+          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
-      <Footer>
-        <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
-      </Footer>
+          <ButtonContainer>
+            <Button onClick={handleLogin} disabled={!username || !password}>
+              {t('login')}
+            </Button>
+          </ButtonContainer>
+        </LoginForm>
 
-    </StartPageContainer >
+        <Footer>
+  <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
+</Footer>
+
+      </StartPageContainer>
     </>
   );
 };

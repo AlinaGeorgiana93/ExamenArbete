@@ -13,7 +13,6 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 1.3rem;
   }
   body {
     font-family: 'Poppins', sans-serif; /* Change the font */
@@ -84,7 +83,6 @@ const SelectContainer = styled.div`
 
 const Tabs = styled.div`
   display: flex;
-  justify-content: center;
   gap: 20px;
   margin-bottom: 20px;
 `;
@@ -190,15 +188,16 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('patients');
   const [patients, setPatients] = useState([]);
   const [staff, setStaff] = useState([]);
-  const [selectedPerson, setSelectedPerson] = useState(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     personalNumber: '',
-    username: '',
-    email: '',
-    password: '',
+    username: '',    
+    email: '',      
+    password: '',     
+    id: null,
   });
+  const [selectedPerson, setSelectedPerson] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -218,65 +217,57 @@ const AdminDashboard = () => {
 
   const fetchStaff = async () => {
     try {
-      const response = await axiosInstance.get('/Patient/ReadItems', {
+      const response = await axiosInstance.get('Staff/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
       });
-      setPatients(response.data.pageItems);
+      setStaff(response.data.pageItems);
     } catch (error) {
-      console.error('Error fetching patients:', error);
+      console.error('Error fetching staff:', error.response || error.message);
     }
   };
 
   const fetchPatients = async () => {
     try {
-      const response = await axiosInstance.get('/Staff/ReadItems', {
+      const response = await axiosInstance.get('Patient/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
       });
-      setStaff(response.data.pageItems);
+      setPatients(response.data.pageItems);
     } catch (error) {
-      console.error('Error fetching staff:', error);
+      console.error('Error fetching patient:', error.response || error.message);
     }
-  };
-
-  const handleSelectChange = (selectedOption) => {
-    const id = selectedOption?.value;
-    const list = activeTab === 'staff' ? staff : patients;
-    const found = list.find((item) =>
-      String(activeTab === 'staff' ? item.staffId : item.patientId) === id
-    );
-    setSelectedPerson(found);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+    
     // Ensure activeTab is set correctly when submitting
     const isStaff = activeTab === 'staff';
     const endpoint = isStaff ? 'Staff' : 'Patient';
-
+    
     try {
       const response = await axiosInstance.post(`/${endpoint}/CreateItem`, {
         ...formData,
       });
-
+      
       setSuccessMessage(`${endpoint} created successfully!`);
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-
+  
       // Reset the form after successful submission
       setFormData({
         firstName: '',
         lastName: '',
         personalNumber: '',
-        username: '',
-        email: '',
-        password: '',
+        username: '',  
+        email: '',     
+        password: '',  
+        id: null,
       });
-
+  
       // Fetch updated data for the correct tab (Staff or Patient)
       if (isStaff) {
         fetchStaff();
@@ -284,47 +275,48 @@ const AdminDashboard = () => {
         fetchPatients();
       }
     } catch (error) {
-      setSuccessMessage(`Failed to create ${endpoint}.`);
+      setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
+      setShowSuccessMessage(true);
     } finally {
       setIsLoading(false);
     }
   };
-
+  
 
   const handleDelete = async (personId) => {
     try {
       const isStaff = activeTab === 'staff';
       const endpoint = isStaff ? 'Staff' : 'Patient';
-
+      
       // Perform the delete operation
       await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
-
+      
       // Set success message
       setSuccessMessage(`${endpoint} deleted successfully!`);
       setShowSuccessMessage(true);
-
+      
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-
+      
       // Fetch the updated data
       if (isStaff) {
         await fetchStaff();
       } else {
         await fetchPatients();
       }
-
+  
       // Reset the selected person and show the form again
       setSelectedPerson(null);
       setFormVisible(true); // Ensure the form appears after the delete
-
+      
     } catch (error) {
       console.error(`Error deleting ${activeTab}:`, error.response || error.message);
       setFormVisible(true); // Show form again if there's an error
     }
   };
-
+  
   const handleEdit = async (updatedPerson) => {
     setIsLoading(true);
     try {
@@ -332,7 +324,7 @@ const AdminDashboard = () => {
       const endpoint = isStaff ? 'Staff' : 'Patient';
       const idField = isStaff ? 'staffId' : 'patientId';
       const personId = updatedPerson[idField];
-
+  
       // Perform the update operation
       await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
         [idField]: personId,
@@ -340,16 +332,16 @@ const AdminDashboard = () => {
         lastName: updatedPerson.lastName,
         personalNumber: updatedPerson.personalNumber,
       });
-
+  
       // Set success message
       setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
       setShowSuccessMessage(true);
-
+      
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-
+  
       // Reset the selected person and fetch the updated data
       setSelectedPerson(null);
       if (isStaff) {
@@ -357,19 +349,19 @@ const AdminDashboard = () => {
       } else {
         await fetchPatients();
       }
-
+      
       // Show the form after the update
       setFormVisible(true); // Ensure the form appears after the update
-
+  
     } catch (error) {
       setSuccessMessage(`Error updating ${activeTab}.`);
       setShowSuccessMessage(true);
       setFormVisible(true); // Show form in case of failure
     } finally {
-      setTimeout(() => setSuccessMessage(''), 3000);
+      setIsLoading(false);
     }
   };
-
+  
 
   const currentData = activeTab === 'patients' ? patients : staff;
 
@@ -381,23 +373,23 @@ const AdminDashboard = () => {
           ? p.staffId === selectedOption.value
           : p.patientId === selectedOption.value
       );
-
+  
       setSelectedPerson(person);
       setIsDropdownChanged(true);  // Mark that a change occurred
       setFormVisible(false);       // Hide the form after selection
     }
   };
-
+  
   const handleDropdownOpen = () => {
     setFormVisible(false);  // Hide the form when the dropdown is opened
   };
-
+  
   const handleDropdownClose = () => {
     if (!isDropdownChanged) {
       setFormVisible(true);  // Show the form again only if no change occurred
     }
   };
-
+  
 
   return (
     <>
@@ -406,139 +398,156 @@ const AdminDashboard = () => {
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
 
-
+      
       <Container>
-
-        <LoggedInInfo>{t('logged in as')} {nameOf}</LoggedInInfo>
-        <Title>{t('app_title')}</Title>
-        <Subtitle>{t('admin_dashboard')}</Subtitle>
+        
+      <LoggedInInfo>{t('logged in as')} {nameOf}</LoggedInInfo>
+      <Title>{t('app_title')}</Title>
+      <Subtitle>{t('admin_dashboard')}</Subtitle>
 
         <Tabs>
-          <ButtonWrapper>
-            <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
-              {t('patients')}
-            </TabButton>
-            <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
-              {t('staff')}
-            </TabButton>
-          </ButtonWrapper>
+        <ButtonWrapper>
+          <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
+            {t('patients')}
+          </TabButton>
+          <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
+            {t('staff')}
+          </TabButton>
+        </ButtonWrapper>
         </Tabs>
         <MainWrapper>
-          <SelectContainer>
+        <SelectContainer>
+      
+  <Select
+    onMenuOpen={() => setFormVisible(false)} // Hide form on dropdown open
+    onMenuClose={() => {
+      if (!isDropdownChanged) {
+        setFormVisible(true); // Show form again if no selection was made
+      }
+      setIsDropdownChanged(false); // Reset the flag when the dropdown is closed
+    }}
+    onChange={(selectedOption) => {
+      handleSelectChange(selectedOption);
+      setIsDropdownChanged(true); // Set flag when a selection is made
+    }} 
+    options={activeTab === 'staff'
+      ? staff.map(item => ({
+          value: item.staffId,
+          label: `${item.firstName} ${item.lastName}`,
+        }))
+      : patients.map(item => ({
+          value: item.patientId,
+          label: `${item.firstName} ${item.lastName}`,
+        }))
+    }
+    value={
+      selectedPerson
+        ? {
+            value: activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId,
+            label: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
+          }
+        : null
+    }
+    placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
+    isSearchable={true}
+    styles={{
+      control: (provided) => ({
+        ...provided,
+        padding: '5px',
+      }),
+    }}
+  /> 
+</SelectContainer>
 
-            <Select
-              onMenuOpen={() => setFormVisible(false)} // Hide form on dropdown open
-              onMenuClose={() => {
-                if (!isDropdownChanged) {
-                  setFormVisible(true); // Show form again if no selection was made
-                }
-                setIsDropdownChanged(false); // Reset the flag when the dropdown is closed
-              }}
-              onChange={(selectedOption) => {
-                handleSelectChange(selectedOption);
-                setIsDropdownChanged(true); // Set flag when a selection is made
-              }}
-              options={activeTab === 'staff'
-                ? staff.map(item => ({
-                  value: item.staffId,
-                  label: `${item.firstName} ${item.lastName}`,
-                }))
-                : patients.map(item => ({
-                  value: item.patientId,
-                  label: `${item.firstName} ${item.lastName}`,
-                }))
-              }
-              value={
-                selectedPerson
-                  ? {
-                    value: activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId,
-                    label: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
-                  }
-                  : null
-              }
-              placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
-              isSearchable={true}
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  padding: '5px',
-                }),
-              }}
-            />
-          </SelectContainer>
+<DetailsModal
+  staffMember={selectedPerson}
+  onClose={() => {
+    setSelectedPerson(null);
+    setFormVisible(true);  // show the form again
+  }}
+  onEdit={handleEdit}
+  onDelete={() =>
+    handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
+  }
+/>
 
-          <DetailsModal
-            staffMember={selectedPerson}
-            onClose={() => {
-              setSelectedPerson(null);
-              setFormVisible(true);  // show the form again
+        {showSuccessMessage && (
+          <div
+            style={{
+              backgroundColor: successMessage.toLowerCase().includes('successfully')
+                ? '#d4edda'
+                : '#f8d7da',
+              color: successMessage.toLowerCase().includes('successfully')
+                ? '#155724'
+                : '#721c24',
+              padding: '10px 15px',
+              borderRadius: '5px',
+              marginBottom: '20px',
+              border: '1px solid',
+              borderColor: successMessage.toLowerCase().includes('successfully')
+                ? '#c3e6cb'
+                : '#f5c6cb',
             }}
-            onEdit={handleEdit}
-            onDelete={() =>
-              handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
-            }
+          >
+            {successMessage}
+          </div>
+        )}
+
+  {formVisible && (
+  <Form onSubmit={handleSubmit}>
+          <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
+
+          <Input
+            placeholder={t('first_name')}
+            value={formData.firstName}
+            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            required
           />
 
-          {showSuccessMessage && (
-            <div
-              style={{
-                backgroundColor: successMessage.toLowerCase().includes('successfully')
-                  ? '#d4edda'
-                  : '#f8d7da',
-                color: successMessage.toLowerCase().includes('successfully')
-                  ? '#155724'
-                  : '#721c24',
-                padding: '10px 15px',
-                borderRadius: '5px',
-                marginBottom: '20px',
-                border: '1px solid',
-                borderColor: successMessage.toLowerCase().includes('successfully')
-                  ? '#c3e6cb'
-                  : '#f5c6cb',
-              }}
-            >
-              {successMessage}
-            </div>
+          <Input
+            placeholder={t('last_name')}
+            value={formData.lastName}
+            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            required
+          />
+
+          <Input
+            placeholder={t('personal_number')}
+            value={formData.personalNumber}
+            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+            required
+          />
+
+          {activeTab === 'staff' && (
+            <>
+              <Input
+                placeholder={t('username')}
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                required
+              />
+
+              <Input
+                placeholder={t('email')}
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+              />
+
+              <Input
+                placeholder={t('password')}
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                required
+              />
+            </>
           )}
 
-          {formVisible && (
-            <Form onSubmit={handleSubmit}>
-              <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
-
-              <Input
-                placeholder={t('first_name')}
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                required
-              />
-
-              <Input
-                placeholder={t('last_name')}
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                required
-              />
-
-              <Input
-                placeholder={t('personal_number')}
-                value={formData.personalNumber}
-                onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
-                required
-              />
-
-              {activeTab === 'staff' && (
-                <>
-                  <Input placeholder={t('username')} value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} required />
-                  <Input placeholder={t('email')} value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
-                  <Input placeholder={t('password')} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
-                </>
-              )}
-
-              <Button type="submit" active="true">
-                {isLoading ? t('loading') : t('Add')}
-              </Button>
-            </Form>
-          )}
+          <Button type="submit" active="true">
+            {isLoading ? t('loading') : t('Add')}
+          </Button>
+        </Form>    
+      )}
         </MainWrapper>
       </Container>
     </>
