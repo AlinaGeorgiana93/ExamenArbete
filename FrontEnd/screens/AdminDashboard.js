@@ -62,7 +62,7 @@ const Subtitle = styled.span`
   }
 `;
 
-const LoggedInInfo = styled.div`
+const LoggedInInfo = styled.p`
   font-size: 1.5rem;
   color: rgb(12, 53, 57);
   margin-bottom: 20px;
@@ -405,6 +405,7 @@ const AdminDashboard = () => {
 
       
       <Container>
+        
       <LoggedInInfo>{t('logged in as')} {nameOf}</LoggedInInfo>
       <Title>{t('app_title')}</Title>
       <Subtitle>{t('admin_dashboard')}</Subtitle>
