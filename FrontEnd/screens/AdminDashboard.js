@@ -399,8 +399,10 @@ const AdminDashboard = () => {
 
       
       <Container>
+      <LoggedInInfo>{t('logged in as')} {nameOf}</LoggedInInfo>
       <Title>{t('app_title')}</Title>
       <Subtitle>{t('admin_dashboard')}</Subtitle>
+
         <Tabs>
         <ButtonWrapper>
           <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
