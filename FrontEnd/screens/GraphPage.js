@@ -252,7 +252,7 @@ const metrics = [
 
 const calculateDailyAverages = (data) => {
   const dateMap = {};
-  
+
   data.forEach(item => {
     const dateKey = new Date(item.date).toLocaleDateString();
     if (!dateMap[dateKey]) {
@@ -284,11 +284,11 @@ const calculateDailyAverages = (data) => {
 
 const groupDataByTimePeriod = (data, period) => {
   const groupedData = {};
-  
+
   data.forEach(item => {
     const date = new Date(item.date);
     let key;
-    
+
     if (period === 'month') {
       key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
     } else if (period === 'year') {
@@ -299,7 +299,7 @@ const groupDataByTimePeriod = (data, period) => {
     } else {
       key = new Date(item.date).toLocaleDateString();
     }
-    
+
     if (!groupedData[key]) {
       groupedData[key] = {
         date: key,
@@ -375,7 +375,7 @@ function GraphPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`);
         setPatientInfo(patientResponse.data.item);
 
@@ -399,19 +399,19 @@ function GraphPage() {
           localStorage.setItem(`patientData_${patientId}`, JSON.stringify([...localData, newDataPoint]));
         }
 
-        const validData = allData.filter(item => 
-          item.date && 
-          (item.moodRating !== undefined || 
-           item.activityRating !== undefined || 
-           item.appetiteRating !== undefined || 
-           item.sleepRating !== undefined)
+        const validData = allData.filter(item =>
+          item.date &&
+          (item.moodRating !== undefined ||
+            item.activityRating !== undefined ||
+            item.appetiteRating !== undefined ||
+            item.sleepRating !== undefined)
         ).map(item => ({
           ...item,
           date: new Date(item.date).toISOString()
         }));
 
         setRawData(validData);
-        
+
       } catch (error) {
         console.error("Error fetching data:", error);
         setErrorMsg("Could not load patient data. Please try again later.");
@@ -433,10 +433,10 @@ function GraphPage() {
   const renderChart = () => {
     if (loading) {
       return (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           height: '100%'
         }}>
           <div className="spinner"></div>
@@ -447,8 +447,8 @@ function GraphPage() {
 
     if (!processedData.length) {
       return (
-        <div style={{ 
-          textAlign: 'center', 
+        <div style={{
+          textAlign: 'center',
           padding: '40px',
           color: '#666',
           display: 'flex',
@@ -459,7 +459,7 @@ function GraphPage() {
         }}>
           <h3>No data available</h3>
           <p>Please check your date range or submit patient data first.</p>
-          <button 
+          <button
             onClick={() => {
               setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
               setEndDate(new Date());
@@ -499,18 +499,18 @@ function GraphPage() {
         return (
           <BarChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-            <XAxis 
-              dataKey="date" 
+            <XAxis
+              dataKey="date"
               tick={{ fill: '#555' }}
               tickFormatter={(value) => formatDateLabel(value, timeRange)}
             />
             <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
-            <Tooltip 
+            <Tooltip
               contentStyle={tooltipStyle}
               labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
             />
             <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            {metrics.map(metric => 
+            {metrics.map(metric =>
               activeMetrics[metric.key] && (
                 <Bar
                   key={metric.key}
@@ -529,13 +529,13 @@ function GraphPage() {
         return (
           <LineChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-            <XAxis 
-              dataKey="date" 
+            <XAxis
+              dataKey="date"
               tick={{ fill: '#555' }}
               tickFormatter={(value) => formatDateLabel(value, timeRange)}
             />
             <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
-            <Tooltip 
+            <Tooltip
               contentStyle={tooltipStyle}
               labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
             />
@@ -558,65 +558,65 @@ function GraphPage() {
           </LineChart>
         );
 
-        case 'pie':
-          // Calculate average values for each metric
-          const pieData = metrics.map(metric => {
-            const validEntries = processedData.filter(item => item[metric.key] !== undefined);
-            const total = validEntries.reduce((sum, item) => sum + item[metric.key], 0);
-            const average = validEntries.length > 0 ? total / validEntries.length : 0;
-            
-            return {
-              name: metric.name,
-              value: parseFloat(average.toFixed(2)),
-              color: metric.color
-            };
-          }).filter(item => !isNaN(item.value));
-        
-          // Calculate total for percentage calculation
-          const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
-        
-          return (
-            <PieChart {...commonProps}>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                labelLine={false}
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip 
-                contentStyle={tooltipStyle}
-                formatter={(value, name, props) => {
-                  const percentage = totalValue > 0 ? (value / totalValue * 100).toFixed(2) : 0;
-                  return [
-                    `${name}: ${value}`,
-                    `Percentage: ${percentage}%`
-                  ];
-                }}
-              />
-              <Legend />
-            </PieChart>
-          );
+      case 'pie':
+        // Calculate average values for each metric
+        const pieData = metrics.map(metric => {
+          const validEntries = processedData.filter(item => item[metric.key] !== undefined);
+          const total = validEntries.reduce((sum, item) => sum + item[metric.key], 0);
+          const average = validEntries.length > 0 ? total / validEntries.length : 0;
+
+          return {
+            name: metric.name,
+            value: parseFloat(average.toFixed(2)),
+            color: metric.color
+          };
+        }).filter(item => !isNaN(item.value));
+
+        // Calculate total for percentage calculation
+        const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
+
+        return (
+          <PieChart {...commonProps}>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              outerRadius={150}
+              fill="#8884d8"
+              dataKey="value"
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              labelLine={false}
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip
+              contentStyle={tooltipStyle}
+              formatter={(value, name, props) => {
+                const percentage = totalValue > 0 ? (value / totalValue * 100).toFixed(2) : 0;
+                return [
+                  `${name}: ${value}`,
+                  `Percentage: ${percentage}%`
+                ];
+              }}
+            />
+            <Legend />
+          </PieChart>
+        );
 
       default:
         return (
           <ComposedChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="date" 
+            <XAxis
+              dataKey="date"
               tick={{ fill: '#555' }}
               tickFormatter={(value) => formatDateLabel(value, timeRange)}
             />
             <YAxis yAxisId="left" orientation="left" domain={[0, 10]} />
             <YAxis yAxisId="right" orientation="right" domain={[0, 10]} />
-            <Tooltip 
+            <Tooltip
               contentStyle={tooltipStyle}
               labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
             />
@@ -634,7 +634,7 @@ function GraphPage() {
 
   const formatDateLabel = (value, range, detailed = false) => {
     if (!value) return '';
-    
+
     try {
       if (range === 'week') {
         const match = String(value).match(/(\d{4})-W(\d{2})/);
@@ -642,7 +642,7 @@ function GraphPage() {
       }
       if (range === 'month') {
         const date = new Date(value);
-        return detailed ? 
+        return detailed ?
           date.toLocaleDateString('default', { month: 'long', year: 'numeric' }) :
           date.toLocaleDateString('default', { month: 'short' });
       }
@@ -650,8 +650,8 @@ function GraphPage() {
         return value;
       }
       const date = new Date(value);
-      return detailed ? 
-        date.toLocaleDateString() : 
+      return detailed ?
+        date.toLocaleDateString() :
         date.toLocaleDateString('default', { day: 'numeric', month: 'short' });
     } catch {
       return value;
@@ -660,8 +660,8 @@ function GraphPage() {
 
   if (errorMsg) {
     return (
-      <div style={{ 
-        padding: "2rem", 
+      <div style={{
+        padding: "2rem",
         textAlign: "center",
         display: 'flex',
         flexDirection: 'column',
@@ -670,7 +670,7 @@ function GraphPage() {
         height: '100vh'
       }}>
         <h2 style={{ color: "#d32f2f", marginBottom: '1rem' }}>{errorMsg}</h2>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           style={{
             padding: '10px 20px',
@@ -690,7 +690,7 @@ function GraphPage() {
   return (
     <>
       <GlobalStyle />
-      
+
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
@@ -727,7 +727,7 @@ function GraphPage() {
           </div>
         )}
 
-        <div style={{ 
+        <div style={{
           marginBottom: '25px',
           padding: '15px',
           backgroundColor: '#f9f9f9',
@@ -735,13 +735,13 @@ function GraphPage() {
           border: '1px solid #eee'
         }}>
           <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
-          <div style={{ 
+          <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
             gap: '10px'
           }}>
             {metrics.map(metric => (
-              <MetricToggle 
+              <MetricToggle
                 key={metric.key}
                 active={activeMetrics[metric.key]}
                 onClick={() => toggleMetric(metric.key)}
@@ -759,41 +759,40 @@ function GraphPage() {
             ))}
           </div>
         </div>
-        
-        // In your JSX, update the date picker container
-<div style={{ 
-  display: 'flex', 
-  gap: '10px', 
-  alignItems: 'center', 
-  marginBottom: '20px',
-  flexWrap: 'wrap',
-  justifyContent: 'center'
-}}>
-  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-    <span style={{ fontWeight: '500' }}>From:</span>
-    <DatePicker
-      selected={startDate}
-      onChange={date => setStartDate(date)}
-      selectsStart
-      startDate={startDate}
-      endDate={endDate}
-      maxDate={endDate}
-    />
-  </div>
-  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-    <span style={{ fontWeight: '500' }}>To:</span>
-    <DatePicker
-      selected={endDate}
-      onChange={date => setEndDate(date)}
-      selectsEnd
-      startDate={startDate}
-      endDate={endDate}
-      minDate={startDate}
-      maxDate={new Date()}
-    />
-  </div>
-</div>
-        
+
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <span style={{ fontWeight: '500' }}>From:</span>
+            <DatePicker
+              selected={startDate}
+              onChange={date => setStartDate(date)}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              maxDate={endDate}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <span style={{ fontWeight: '500' }}>To:</span>
+            <DatePicker
+              selected={endDate}
+              onChange={date => setEndDate(date)}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+              maxDate={new Date()}
+            />
+          </div>
+        </div>
+
         <ChartControls>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {chartTypes.map(type => (
@@ -812,7 +811,7 @@ function GraphPage() {
           <ResponsiveContainer width="100%" height="100%">
             {renderChart()}
           </ResponsiveContainer>
-          
+
           <TimePeriodContainer>
             {timeRanges.map(range => (
               <TimeRangeButton
