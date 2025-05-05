@@ -44,6 +44,7 @@ public class LoginDbRepos
             int _usrIdIdx = cmd1.Parameters.Add(new SqlParameter("UserId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output });
             int _usrIdx = cmd1.Parameters.Add(new SqlParameter("UserName", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
             int _roleIdx = cmd1.Parameters.Add(new SqlParameter("Role", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
+            int _emailIdx = cmd1.Parameters.Add(new SqlParameter("Email", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
 
 
             _dbContext.Database.OpenConnection();
@@ -54,7 +55,8 @@ public class LoginDbRepos
                 //Notice the soft cast conversion 'as' it will be null if cast cannot be made
                 UserId = cmd1.Parameters[_usrIdIdx].Value as Guid?,
                 UserName = cmd1.Parameters[_usrIdx].Value as string,
-                UserRole = cmd1.Parameters[_roleIdx].Value as string
+                UserRole = cmd1.Parameters[_roleIdx].Value as string,
+                Email = cmd1.Parameters[_emailIdx].Value as string
             };
 
             return new ResponseItemDto<LoginUserSessionDto>()
@@ -82,6 +84,7 @@ public class LoginDbRepos
             int _staffIdIdx = cmd1.Parameters.Add(new SqlParameter("StaffId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output });
             int _staffIdx = cmd1.Parameters.Add(new SqlParameter("UserName", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
             int _roleIdx = cmd1.Parameters.Add(new SqlParameter("Role", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
+            int _emailIdx = cmd1.Parameters.Add(new SqlParameter("Email", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
 
             _logger.LogInformation("Opening DB connection...");
             _dbContext.Database.OpenConnection();
@@ -94,10 +97,11 @@ public class LoginDbRepos
             {
                 StaffId = cmd1.Parameters[_staffIdIdx].Value as Guid?,
                 UserName = cmd1.Parameters[_staffIdx].Value as string,
-                UserRole = cmd1.Parameters[_roleIdx].Value as string
+                UserRole = cmd1.Parameters[_roleIdx].Value as string,
+                Email = cmd1.Parameters[_emailIdx].Value as string
             };
 
-            _logger.LogInformation($"Output: StaffId = {info.StaffId}, UserName = {info.UserName}, Role = {info.UserRole}");
+            _logger.LogInformation($"Output: StaffId = {info.StaffId}, UserName = {info.UserName}, Role = {info.UserRole}, Email = {info.Email}");
             var encryptedPassword = _encryptions.EncryptPasswordToBase64(usrCreds.Password);
           _logger.LogInformation($"Encrypted Password: {encryptedPassword}");
 

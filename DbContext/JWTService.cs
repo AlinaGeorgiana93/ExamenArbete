@@ -18,23 +18,24 @@ public class JWTService
     }
 
     //Create a list of claims to encrypt into the JWT token
-    private IEnumerable<Claim> CreateClaims(LoginUserSessionDto usrSession, out Guid TokenId)
-    {
-        TokenId = Guid.NewGuid();
+ private IEnumerable<Claim> CreateClaims(LoginUserSessionDto usrSession, out Guid TokenId)
+{
+    TokenId = Guid.NewGuid();
 
-        IEnumerable<Claim> claims = new Claim[] {
-            //used to carry the loginUserSessionDto in the token
-            new("UserId", usrSession.UserId.ToString()),
-            new("UserRole", usrSession.UserRole),
-            new("UserName", usrSession.UserName),
+    IEnumerable<Claim> claims = new Claim[] {
+        new("UserId", usrSession.UserId.ToString()),
+        new("UserRole", usrSession.UserRole),
+        new("UserName", usrSession.UserName),
+        new("Email", usrSession.Email), // Add Email here
 
-            //used by Microsoft.AspNetCore.Authentication and used in the HTTP request pipeline
-            new(ClaimTypes.Role, usrSession.UserRole),
-            new(ClaimTypes.NameIdentifier, TokenId.ToString()),
-            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
-        };
-        return claims;
-    }
+        new(ClaimTypes.Role, usrSession.UserRole),
+        new(ClaimTypes.NameIdentifier, TokenId.ToString()),
+        new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+    };
+    return claims;
+}
+
+
 
     public JwtUserToken CreateJwtUserToken(LoginUserSessionDto _usrSession)
     {   
@@ -62,6 +63,7 @@ public class JWTService
         _userToken.UserRole = _usrSession.UserRole;
         _userToken.UserName = _usrSession.UserName;
         _userToken.UserId = _usrSession.UserId.Value;
+        _userToken.Email = _usrSession.Email;
 
         Console.WriteLine($"CreateJwtUserToken was called with UserId: {_usrSession.UserId}");
         return _userToken;
@@ -87,27 +89,31 @@ public class JWTService
                 case "UserRole":
                     _usr.UserRole = claim.Value;
                     break;
+                case "Email":
+                    _usr.Email = claim.Value;
+                    break;
             }
         }
         return _usr;
     }
-      private IEnumerable<Claim> CreateClaims(LoginStaffSessionDto usrSession, out Guid TokenId)
-    {
-        TokenId = Guid.NewGuid();
+ private IEnumerable<Claim> CreateClaims(LoginStaffSessionDto usrSession, out Guid TokenId)
+{
+    TokenId = Guid.NewGuid();
 
-        IEnumerable<Claim> claims = new Claim[] {
-            //used to carry the loginUserSessionDto in the token
-            new("StaffId", usrSession.StaffId.ToString()),
-            new("UserRole", usrSession.UserRole),
-            new("UserName", usrSession.UserName),
+    IEnumerable<Claim> claims = new Claim[] {
+        new("StaffId", usrSession.StaffId.ToString()),
+        new("UserRole", usrSession.UserRole),
+        new("UserName", usrSession.UserName),
+        new("Email", usrSession.Email), // Add Email here
 
-            //used by Microsoft.AspNetCore.Authentication and used in the HTTP request pipeline
-            new(ClaimTypes.Role, usrSession.UserRole),
-            new(ClaimTypes.NameIdentifier, TokenId.ToString()),
-            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
-        };
-        return claims;
-    }
+        new(ClaimTypes.Role, usrSession.UserRole),
+        new(ClaimTypes.NameIdentifier, TokenId.ToString()),
+        new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+    };
+    return claims;
+}
+
+
 
     public JwtUserToken CreateJwtStaffToken(LoginStaffSessionDto _usrSession)
     {   
@@ -135,34 +141,41 @@ public class JWTService
         _userToken.UserRole = _usrSession.UserRole;
         _userToken.UserName = _usrSession.UserName;
         _userToken.UserId = _usrSession.StaffId.Value;
+        _userToken.Email = _usrSession.Email;
 
         Console.WriteLine($"CreateJwtUserToken was called with UserId: {_usrSession.StaffId}");
         return _userToken;
     }
 
     public LoginStaffSessionDto DecodeTokenStaff(string _encryptedtoken)
+{
+    if (_encryptedtoken == null) return null;
+
+    var _decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(_encryptedtoken);
+
+    var _usr = new LoginStaffSessionDto();
+    foreach (var claim in _decodedToken.Claims)
     {
-        if (_encryptedtoken == null) return null;
-
-        var _decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(_encryptedtoken);
-
-        var _usr = new LoginStaffSessionDto();
-        foreach (var claim in _decodedToken.Claims)
+        switch (claim.Type)
         {
-            switch (claim.Type)
-            {
-                case "StaffId":
-                    _usr.StaffId = Guid.Parse(claim.Value);
-                    break;
-                case "UserName":
-                    _usr.UserName = claim.Value;
-                    break;
-                case "UserRole":
-                    _usr.UserRole = claim.Value;
-                    break;
-            }
+            case "StaffId":
+                _usr.StaffId = Guid.Parse(claim.Value);
+                break;
+            case "UserName":
+                _usr.UserName = claim.Value;
+                break;
+            case "UserRole":
+                _usr.UserRole = claim.Value;
+                break;
+            case "Email":
+                _usr.Email = claim.Value;
+                break;
         }
-        return _usr;
     }
+
+    Console.WriteLine($"Decoded Staff Token => ID: {_usr.StaffId}, Name: {_usr.UserName}, Role: {_usr.UserRole}, Email: {_usr.Email}");
+    return _usr;
+}
+
     
 }

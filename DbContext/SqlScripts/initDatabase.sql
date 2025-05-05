@@ -118,7 +118,8 @@ CREATE OR ALTER PROC gstusr.spLogin
 
     @UserId UNIQUEIDENTIFIER OUTPUT,
     @UserName NVARCHAR(100) OUTPUT,
-    @Role NVARCHAR(100) OUTPUT
+    @Role NVARCHAR(100) OUTPUT,
+    @Email NVARCHAR(100) OUTPUT
     
     AS
 
@@ -127,8 +128,10 @@ CREATE OR ALTER PROC gstusr.spLogin
     SET @UserId = NULL;
     SET @UserName = NULL;
     SET @Role = NULL;
+    SET @Email= NULL;
+
     
-    SELECT Top 1 @UserId = UserId, @UserName = UserName, @Role = [Role] FROM dbo.Users 
+    SELECT Top 1 @UserId = UserId, @UserName = UserName, @Role = [Role], @Email = Email FROM dbo.Users 
     WHERE ((UserName = @UserNameOrEmail) OR
            (Email IS NOT NULL AND (Email = @UserNameOrEmail))) AND ([Password] = @Password);
     
@@ -144,7 +147,8 @@ CREATE OR ALTER PROC gstusr.spLoginStaff
 
     @StaffId UNIQUEIDENTIFIER OUTPUT,
     @UserName NVARCHAR(100) OUTPUT,
-    @Role NVARCHAR(100) OUTPUT
+    @Role NVARCHAR(100) OUTPUT,
+    @Email NVARCHAR(100) OUTPUT
     
     AS
 
@@ -153,8 +157,9 @@ CREATE OR ALTER PROC gstusr.spLoginStaff
     SET @StaffId = NULL;
     SET @UserName = NULL;
     SET @Role = NULL;
+    SET @Email = NULL;
     
-    SELECT Top 1 @StaffId = StaffId, @UserName = UserName, @Role = [Role] FROM  [graphefc].[supusr].[Staffs]
+    SELECT Top 1 @StaffId = StaffId, @UserName = UserName, @Role = [Role], @Email = Email FROM  [graphefc].[supusr].[Staffs]
     WHERE ((UserName = @UserNameOrEmail) OR
            (Email IS NOT NULL AND (Email = @UserNameOrEmail))) AND ([Password] = @Password);
     
