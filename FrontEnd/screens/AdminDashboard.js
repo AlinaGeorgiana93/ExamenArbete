@@ -242,26 +242,35 @@ const userData = {
   }, []);
 
   const fetchStaff = async () => {
+    const token = localStorage.getItem('jwtToken'); // or 'user_token', depending on where you store it
     try {
       const response = await axiosInstance.get('Staff/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       setStaff(response.data.pageItems);
     } catch (error) {
       console.error('Error fetching staff:', error.response || error.message);
     }
   };
-
+  
   const fetchPatients = async () => {
+    const token = localStorage.getItem('jwtToken');
     try {
       const response = await axiosInstance.get('Patient/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       setPatients(response.data.pageItems);
     } catch (error) {
       console.error('Error fetching patient:', error.response || error.message);
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -211,32 +211,35 @@ const StartPage = () => {
       } else if (role === 'usr') {
         localStorage.setItem('role', 'usr');
         localStorage.setItem('userName', response.data.item.userName);
+        console.log('Staff login response:', response.data.item);
+
         setLoginMessage(t('login_success'));
         navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
     } catch (error) {
-      const loginDataStaff = {
+
+       const loginDataStaff = {
         userNameOrEmail: username,
         password: password,
       };
 
       try {
-        const response = await axiosInstance.post(
-          '/Guest/LoginStaff',
-          loginDataStaff
-        );
-        localStorage.setItem(
-          'jwtToken',
-          response.data.item.jwtToken.encryptedToken
-        );
+        const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
+        console.log('Staff Login Response:', response);
+
+        localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+        console.log('jwtToken (Staff):', response.data.item.jwtToken.encryptedToken);
 
         const role = response.data.item.userRole;
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          localStorage.setItem('userName', response.data.item.userName);
+          localStorage.setItem('userName', response.data.item.userName);         // After successful login
+          localStorage.setItem("token", response.data.token); // is this line being run?
+
+
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {

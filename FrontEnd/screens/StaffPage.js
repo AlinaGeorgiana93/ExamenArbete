@@ -130,6 +130,12 @@ const StaffPage = () => {
   const navigate = useNavigate(); // För att navigera till andra sidor
   const [showDetails, setShowDetails] = useState(false);
   const [nameOf, setNameOf] = useState(''); // State for storing user name
+  const [loginDataStaff, setLoginDataStaff] = useState({
+    name: '',
+    email: '',
+    role: '',
+  });
+
 
   // useEffect to check and set nameOf from localStorage
   useEffect(() => {
@@ -141,6 +147,17 @@ const StaffPage = () => {
       console.warn('Inget namn hittades i localStorage!');
     }
   }, []); // Empty dependency array ensures this runs once on mount
+
+  
+  useEffect(() => {
+    const name = localStorage.getItem('userName');
+    const email = localStorage.getItem('email');
+    const role = localStorage.getItem('role');
+  
+    setLoginDataStaff({ name, email, role });
+    console.log('Set loginDataStaff:', { name, email, role });
+
+  }, []);
 
   // useEffect to fetch patients from the API
   useEffect(() => {
@@ -165,12 +182,6 @@ const StaffPage = () => {
     }
   };
 
-  const userData = {
-    name: nameOf, // Using nameOf state here
-    email: localStorage.getItem('email'),
-    role: localStorage.getItem('role'),
-  };
-
   return (
     <>
       <GlobalStyle /> {/* Lägger till globala stilar */}
@@ -188,13 +199,13 @@ const StaffPage = () => {
               alt="User Avatar"
               style={{ width: '40px', height: '40px', borderRadius: '50%' }}
             />
-            <span>{userData.name}</span>
+            <span>{loginDataStaff.name}</span>
           </ProfileHeader>
 
           {showDetails && (
             <ProfileDetails>
-              <div><strong>Email:</strong> {userData.email}</div>
-              <div><strong>Role:</strong> {userData.role}</div>
+              <div><strong>Email:</strong> {loginDataStaff.email}</div>
+              <div><strong>Role:</strong> {loginDataStaff.role}</div>
             </ProfileDetails>
           )}
         </FloatingProfile>
