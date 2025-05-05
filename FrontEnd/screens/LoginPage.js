@@ -194,6 +194,7 @@ const StartPage = () => {
       };
 
       let response = await axiosInstance.post('/Guest/LoginUser', loginData);
+
       localStorage.setItem(
         'jwtToken',
         response.data.item.jwtToken.encryptedToken
@@ -235,7 +236,7 @@ const StartPage = () => {
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          localStorage.setItem('userName', response.data.item.userName); 
+          localStorage.setItem('userName', response.data.item.userName);
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {
@@ -306,8 +307,8 @@ const StartPage = () => {
         </LoginForm>
 
         <Footer>
-  <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
-</Footer>
+          <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
+        </Footer>
 
       </StartPageContainer>
     </>

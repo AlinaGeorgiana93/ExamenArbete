@@ -112,6 +112,7 @@ const PatientName = styled.h2`
   text-align: center;
 `;
 
+
 function PatientPage() {
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);

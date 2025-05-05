@@ -5,6 +5,7 @@ import axios from 'axios'; // För att göra HTTP-anrop
 import { useTranslation } from 'react-i18next'; // För översättning
 import { Link, useNavigate } from 'react-router-dom'; // För routing (t.ex. navigera till en ny sida)
 import logo1 from '../src/media/logo1.png'; // Logo-bild
+import patient1 from '../src/media/patient1.jpg';
 
 // Global styling som gäller hela sidan
 const GlobalStyle = createGlobalStyle`
@@ -90,73 +91,116 @@ const Dropdown = styled.select`
   }
 `;
 
-// Knappen "About Us"
-const AboutButton = styled.a`
-  display: inline-block;
-  padding: 14px 24px;
-  background-color: #125358;
-  color: white;
-  font-size: 1rem;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-
-  &:hover {
-    background-color: #00d4ff;
-  }
-`;
 const WarningText = styled.p`
   color: red;
   margin-top: 10px;
   font-size: 1rem;
 `;
+
+const FloatingProfile = styled.div`
+  position: fixed;
+  bottom: 32px;
+  right: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1000;
+`;
+
+const ProfileHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const ProfileDetails = styled.div`
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #333;
+`;
+
+
 // Själva StaffPage-komponenten
 const StaffPage = () => {
   const [patients, setPatients] = useState([]); // Här sparar vi alla patienter
   const [selectedPatient, setSelectedPatient] = useState(''); // Här sparar vi den valda patientens ID
   const { t } = useTranslation(); // För att översätta texter
   const navigate = useNavigate(); // För att navigera till andra sidor
+  const [showDetails, setShowDetails] = useState(false);
+  const [nameOf, setNameOf] = useState(''); // State for storing user name
 
-  // useEffect körs när komponenten laddas första gången
+  // useEffect to check and set nameOf from localStorage
   useEffect(() => {
-    // Hämta patienter från API:t
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      console.log('Hämtat namn från localStorage:', storedName); // ← debug
+      setNameOf(storedName); // Set the name if it's found in localStorage
+    } else {
+      console.warn('Inget namn hittades i localStorage!');
+    }
+  }, []); // Empty dependency array ensures this runs once on mount
+
+  // useEffect to fetch patients from the API
+  useEffect(() => {
     axios
       .get('https://localhost:7066/api/Patient/ReadItems')
       .then((response) => {
         if (response.data && response.data.pageItems) {
-          setPatients(response.data.pageItems); // Spara patientlistan i state
+          setPatients(response.data.pageItems); // Save patient list in state
         }
       })
       .catch((error) => {
         console.error('Error fetching patients:', error);
       });
-  }, []);
+  }, []); // Empty dependency array ensures this runs once on mount
 
-  // När en patient väljs i dropdownen
+  // When a patient is selected from the dropdown
   const handlePatientSelect = (e) => {
     const patientId = e.target.value;
-    setSelectedPatient(patientId); // Sätt den valda patienten i state
+    setSelectedPatient(patientId); // Set the selected patient in state
     if (patientId) {
-      navigate(`/patient/${patientId}`); // Navigera till patientsidan med rätt ID
+      navigate(`/patient/${patientId}`); // Navigate to patient page with the right ID
     }
+  };
+
+  const userData = {
+    name: nameOf, // Using nameOf state here
+    email: localStorage.getItem('email'),
+    role: localStorage.getItem('role'),
   };
 
   return (
     <>
       <GlobalStyle /> {/* Lägger till globala stilar */}
-      {/* Logotyp som är klickbar och går till startsidan */}
       <Link
         to="/"
         style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
       >
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
       </Link>
-      {/* Huvudsektionen med all innehåll */}
       <StaffPageContainer>
-        <Title>{t('staff_name')}</Title>   <WarningText>★{t('choose_patient')}</WarningText>
-        {/* Översatt rubrik */}
-        {/* Label och dropdown för att välja patient */}
+        <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
+          <ProfileHeader>
+            <img
+              src={patient1}
+              alt="User Avatar"
+              style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+            />
+            <span>{userData.name}</span>
+          </ProfileHeader>
+
+          {showDetails && (
+            <ProfileDetails>
+              <div><strong>Email:</strong> {userData.email}</div>
+              <div><strong>Role:</strong> {userData.role}</div>
+            </ProfileDetails>
+          )}
+        </FloatingProfile>
+
+        <Title>{t('staff_name')}</Title>
+        <WarningText>★{t('choose_patient')}</WarningText>
 
         <DropdownWrapper>
           <Dropdown

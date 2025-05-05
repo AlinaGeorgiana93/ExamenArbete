@@ -58,12 +58,6 @@ const Subtitle = styled.span`
   }
 `;
 
-const LoggedInInfo = styled.p`
-  font-size: 1.5rem;
-  color: rgb(12, 53, 57);
-  margin-bottom: 20px;
-`;
-
 const Container = styled.div`
   padding: 10px;
   justify-content: center;  
@@ -227,6 +221,8 @@ const AdminDashboard = () => {
   const [isDropdownChanged, setIsDropdownChanged] = useState(false);
   const [nameOf, setNameOf] = useState('');
   const [showDetails, setShowDetails] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
 
 // Dummy data for now
 const userData = {
