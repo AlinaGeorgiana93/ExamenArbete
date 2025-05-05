@@ -14,8 +14,8 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
 
 // Den vita rutan på sidan som innehåller allt innehåll
 const StaffPageContainer = styled.div`
-  background-color: #ffffff;
+  background-color: #F5ECD5;
   padding: 50px 40px;
   border-radius: 16px;
   width: 100%; /* ändrat från 100% för att minska på små skärmar */
@@ -154,10 +154,10 @@ const StaffPage = () => {
       </Link>
       {/* Huvudsektionen med all innehåll */}
       <StaffPageContainer>
-        <Title>{t('staff_name')}</Title>   <WarningText>★ Välj en patient</WarningText>
+        <Title>{t('staff_name')}</Title>   <WarningText>★{t('choose_patient')}</WarningText>
         {/* Översatt rubrik */}
         {/* Label och dropdown för att välja patient */}
-        <label htmlFor="patient-select">{t('select_patient')}</label>
+
         <DropdownWrapper>
           <Dropdown
             id="patient-select"

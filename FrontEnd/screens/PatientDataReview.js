@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 const ReviewContainer = styled.div`
   background-color: #ffffffee;
+  font-family: 'Poppins', sans-serif;
   padding: 30px;
   border-radius: 16px;
   max-width: 500px;
