@@ -233,7 +233,9 @@ const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 const chartTypes = [
   { key: 'bar', name: 'Bar Chart' },
   { key: 'line', name: 'Line Chart' },
-  { key: 'pie', name: 'Pie Chart' }
+  { key: 'pie', name: 'Pie Chart' },
+  { key: 'comment', name: 'Comments' },
+
 ];
 
 const timeRanges = [

@@ -34,6 +34,9 @@ const DataItem = styled.div`
   background-color: #f5f5f5;
   border-radius: 8px;
   font-size: 1.8rem; /* Larger text for DataItem */
+  ${({ isComment }) => isComment && `
+    border-top: 2px solid #125358; /* Blue line between mood data and comments */
+  `}
 `;
 
 const Label = styled.span`
@@ -108,7 +111,7 @@ function PatientDataReview() {
   if (!state) {
     return (
       <>
-        <GlobalStyle /> {/* GlobalStyle applied to the page */}
+        <GlobalStyle />
         <ReviewContainer>
           <h2>{t('no_data_to_review')}</h2>
           <p>{t('no_patient_data')}</p>
@@ -122,7 +125,7 @@ function PatientDataReview() {
 
   return (
     <>
-      <GlobalStyle /> {/* GlobalStyle applied to the page */}
+      <GlobalStyle />
       <ReviewContainer>
         <h2>{t('review_patient_data')}</h2>
 
@@ -157,6 +160,27 @@ function PatientDataReview() {
           <Value>
             {state.sleepLevel?.label} (Rating: {state.sleepLevel?.rating || 'N/A'}, ID: {state.sleepLevel?.sleepLevelId || 'N/A'})
           </Value>
+        </DataItem>
+
+        {/* New sections for comments */}
+        <DataItem>
+          <Label>{t('Mood comment')}</Label>
+          <Value>{state.moodComment || 'No comment'}</Value>
+        </DataItem>
+
+        <DataItem>
+          <Label>{t('Activity comment')}</Label>
+          <Value>{state.activityComment || 'No comment'}</Value>
+        </DataItem>
+
+        <DataItem>
+          <Label>{t('Appetite comment')}</Label>
+          <Value>{state.appetiteComment || 'No comment'}</Value>
+        </DataItem>
+
+        <DataItem>
+          <Label>{t('Sleep comment')}</Label>
+          <Value>{state.sleepComment || 'No comment'}</Value>
         </DataItem>
 
         <DataItem>
