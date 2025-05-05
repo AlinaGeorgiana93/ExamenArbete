@@ -6,6 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
+import patient1 from '../src/media/patient1.jpg';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -178,9 +179,29 @@ const Button = styled.button`
     background: #8ACCD5;
   }
 `;
+const FloatingProfile = styled.div`
+  position: fixed;
+  bottom: 32px;
+  right: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1000;
+`;
 
+const ProfileHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
 
-
+const ProfileDetails = styled.div`
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #333;
+`;
 
 
 const AdminDashboard = () => {
@@ -205,6 +226,15 @@ const AdminDashboard = () => {
   const [formVisible, setFormVisible] = useState(true);  // initially visible
   const [isDropdownChanged, setIsDropdownChanged] = useState(false);
   const [nameOf, setNameOf] = useState('');
+  const [showDetails, setShowDetails] = useState(false);
+
+// Dummy data for now
+const userData = {
+  name: localStorage.getItem('userName'),
+  email: localStorage.getItem('email'),
+  role: localStorage.getItem('role'),
+};
+
 
   useEffect(() => {
     fetchPatients();
@@ -401,7 +431,25 @@ const AdminDashboard = () => {
       
       <Container>
         
-      <LoggedInInfo>{t('logged in as')} {nameOf}</LoggedInInfo>
+      <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
+  <ProfileHeader>
+  <img
+  src={patient1}
+  alt="User Avatar"
+  style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+/>
+    <span>{userData.name}</span>
+  </ProfileHeader>
+
+  {showDetails && (
+    <ProfileDetails>
+      <div><strong>Email:</strong> {userData.email}</div>
+      <div><strong>Role:</strong> {userData.role}</div>
+    </ProfileDetails>
+  )}
+</FloatingProfile>
+
+
       <Title>{t('app_title')}</Title>
       <Subtitle>{t('admin_dashboard')}</Subtitle>
 
