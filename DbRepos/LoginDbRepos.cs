@@ -53,7 +53,7 @@ public class LoginDbRepos
                 UserId = cmd1.Parameters[_usrIdIdx].Value as Guid?,
                 UserName = cmd1.Parameters[_usrIdx].Value as string,
                 UserRole = cmd1.Parameters[_roleIdx].Value as string,
-                Email = cmd1.Parameters[_emailIdx].Value as string
+               // Email = cmd1.Parameters[_emailIdx].Value as string
             };
 
             // Log or return user role
