@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
-  LineChart, BarChart, PieChart,
+  LineChart, BarChart, PieChart, ComposedChart,
   Line, Bar, Pie, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
@@ -12,7 +12,7 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-
+// Update the body styles in GlobalStyle
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -21,8 +21,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -30,6 +30,8 @@ const GlobalStyle = createGlobalStyle`
     color: #fff;
     position: relative;
     padding: 20px 0;
+    width: 100vw;  // Added to ensure full viewport width
+    overflow-x: hidden;  // Prevent horizontal scrolling
 
     /* Mobile (320px – 480px) */
     @media (max-width: 480px) {
@@ -39,31 +41,38 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+// Update the GraphContainer styled component
 const GraphContainer = styled.div`
   background-color: #ffffffee;
   padding: 30px;
   border-radius: 16px;
-  max-width: 1000px;
-  width: 100%;
+  max-width: 1200px;  // Increased from 1000px
+  width: 95%;  // Changed from 100%
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   margin: 20px auto;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
 
   /* Tablet (481px – 1024px) */
   @media (min-width: 481px) and (max-width: 1024px) {
-    width: 95%;
+    width: 98%;
     padding: 25px;
   }
 
   /* Desktop (1025px and up) */
   @media (min-width: 1025px) {
-    width: 80%;
+    width: 90%;
     padding: 40px;
-    max-width: 1100px;
+    max-width: 1300px;  // Increased from 1100px
   }
 
   /* Mobile (320px – 480px) */
   @media (max-width: 480px) {
-    width: 95%;
+    width: 98%;
     padding: 15px;
     margin: 10px auto;
     border-radius: 12px;
@@ -77,6 +86,7 @@ const ChartControls = styled.div`
   margin-bottom: 20px;
   justify-content: center;
   align-items: center;
+  width: 100%;
 
   /* Tablet (481px – 1024px) */
   @media (min-width: 481px) and (max-width: 1024px) {
@@ -87,6 +97,7 @@ const ChartControls = styled.div`
   @media (max-width: 480px) {
     gap: 8px;
     margin-bottom: 15px;
+    flex-direction: column;
   }
 `;
 
@@ -144,6 +155,8 @@ const TimeRangeButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
+  text-align: center;
+  white-space: nowrap;
 
   &:hover {
     background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
@@ -160,9 +173,60 @@ const TimeRangeButton = styled.button`
     padding: 6px 12px;
     font-size: 12px;
     border-radius: 15px;
+    width: auto;
   }
 `;
 
+// Update the ChartWrapper styled component
+const ChartWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: 500px;
+  transition: all 0.3s ease;
+  
+  /* Desktop */
+  @media (min-width: 1025px) {
+    height: 600px;  // Increased from 550px
+  }
+  
+  /* Tablet */
+  @media (max-width: 1024px) {
+    height: 500px;  // Increased from 450px
+  }
+  
+  /* Mobile */
+  @media (max-width: 480px) {
+    height: 400px;  // Increased from 350px
+    flex-direction: column;
+  }
+  
+  .recharts-wrapper {
+    transition: all 0.5s ease;
+    flex: 1;
+  }
+  
+  &:hover .recharts-wrapper {
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  }
+`;
+
+
+const TimePeriodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 15px;
+  gap: 10px;
+  width: 120px;
+  
+  @media (max-width: 480px) {
+    flex-direction: row;
+    width: 100%;
+    padding: 15px 0 0 0;
+    justify-content: center;
+  }
+`;
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
@@ -188,7 +252,7 @@ const metrics = [
 
 const calculateDailyAverages = (data) => {
   const dateMap = {};
-  
+
   data.forEach(item => {
     const dateKey = new Date(item.date).toLocaleDateString();
     if (!dateMap[dateKey]) {
@@ -220,23 +284,22 @@ const calculateDailyAverages = (data) => {
 
 const groupDataByTimePeriod = (data, period) => {
   const groupedData = {};
-  
+
   data.forEach(item => {
     const date = new Date(item.date);
     let key;
-    
+
     if (period === 'month') {
       key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
     } else if (period === 'year') {
       key = date.getFullYear();
     } else if (period === 'week') {
-      // Get week number and year for weekly grouping
       const weekNumber = getWeekNumber(date);
       key = `${date.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`;
     } else {
       key = new Date(item.date).toLocaleDateString();
     }
-    
+
     if (!groupedData[key]) {
       groupedData[key] = {
         date: key,
@@ -264,7 +327,6 @@ const groupDataByTimePeriod = (data, period) => {
   }));
 };
 
-// Helper function to get week number
 function getWeekNumber(date) {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
@@ -274,10 +336,9 @@ function getWeekNumber(date) {
 }
 
 function GraphPage() {
-  const { patientId } = useParams(); // Changed from id to patientId
+  const { patientId } = useParams();
   const location = useLocation();
   const [rawData, setRawData] = useState([]);
-  const [processedData, setProcessedData] = useState([]);
   const [patientInfo, setPatientInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
@@ -292,34 +353,42 @@ function GraphPage() {
     sleepRating: true,
   });
 
+  const processedData = useMemo(() => {
+    if (!rawData.length) return [];
+
+    const filteredData = rawData.filter(item => {
+      try {
+        const itemDate = new Date(item.date);
+        return itemDate >= startDate && itemDate <= endDate;
+      } catch (e) {
+        return false;
+      }
+    });
+
+    if (!filteredData.length) return [];
+
+    const dailyAverages = calculateDailyAverages(filteredData);
+    return groupDataByTimePeriod(dailyAverages, timeRange);
+  }, [rawData, timeRange, startDate, endDate]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // First get patient info
+        setLoading(true);
+
         const patientResponse = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`);
         setPatientInfo(patientResponse.data.item);
 
-        // Initialize data array
-        let allData = [];
+        const apiResponse = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${patientId}`);
+        let apiData = apiResponse.data?.pageItems || [];
 
-        // 1. Get data from API
-        try {
-          const apiResponse = await axios.get(`https://localhost:7066/api/Graph/ReadItems?patientId=${patientId}`);
-          if (apiResponse.data?.pageItems) {
-            allData = [...apiResponse.data.pageItems];
-          }
-        } catch (apiError) {
-          console.error("API fetch error:", apiError);
-        }
-
-        // 2. Get data from localStorage
         const localData = JSON.parse(localStorage.getItem(`patientData_${patientId}`) || '[]');
-        allData = [...allData, ...localData];
 
-        // 3. Add new data from location.state if available
-        if (location.state) {
+        let allData = [...apiData, ...localData];
+
+        if (location.state?.date) {
           const newDataPoint = {
-            date: location.state.date,
+            date: new Date(location.state.date).toISOString(),
             moodRating: location.state.moodRating,
             activityRating: location.state.activityRating,
             appetiteRating: location.state.appetiteRating,
@@ -327,25 +396,25 @@ function GraphPage() {
             patientId: patientId
           };
           allData.push(newDataPoint);
-          
-          // Update localStorage with the new data
           localStorage.setItem(`patientData_${patientId}`, JSON.stringify([...localData, newDataPoint]));
         }
 
-        // Process and filter data
-        const validData = allData.filter(item => 
-          item.date && 
-          (item.moodRating !== undefined || 
-           item.activityRating !== undefined || 
-           item.appetiteRating !== undefined || 
-           item.sleepRating !== undefined)
-        );
+        const validData = allData.filter(item =>
+          item.date &&
+          (item.moodRating !== undefined ||
+            item.activityRating !== undefined ||
+            item.appetiteRating !== undefined ||
+            item.sleepRating !== undefined)
+        ).map(item => ({
+          ...item,
+          date: new Date(item.date).toISOString()
+        }));
 
         setRawData(validData);
-        
+
       } catch (error) {
-        console.error("Error in fetchData:", error);
-        setErrorMsg("Could not load patient data");
+        console.error("Error fetching data:", error);
+        setErrorMsg("Could not load patient data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -354,43 +423,32 @@ function GraphPage() {
     fetchData();
   }, [patientId, location.state]);
 
-  useEffect(() => {
-    if (rawData.length === 0) {
-      setProcessedData([]);
-      return;
-    }
-
-    const filteredData = rawData.filter(item => {
-      try {
-        const itemDate = new Date(item.date);
-        return !isNaN(itemDate) && itemDate >= startDate && itemDate <= endDate;
-      } catch (e) {
-        return false;
-      }
-    });
-
-    if (filteredData.length === 0) {
-      setProcessedData([]);
-      return;
-    }
-
-    const dailyAverages = calculateDailyAverages(filteredData);
-    const groupedData = groupDataByTimePeriod(dailyAverages, timeRange);
-    setProcessedData(groupedData);
-  }, [rawData, timeRange, startDate, endDate]);
-
   const toggleMetric = (metric) => {
-    setActiveMetrics((prev) => ({
+    setActiveMetrics(prev => ({
       ...prev,
-      [metric]: !prev[metric],
+      [metric]: !prev[metric]
     }));
   };
 
   const renderChart = () => {
-    if (processedData.length === 0) {
+    if (loading) {
       return (
-        <div style={{ 
-          textAlign: 'center', 
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%'
+        }}>
+          <div className="spinner"></div>
+          <p>Loading chart data...</p>
+        </div>
+      );
+    }
+
+    if (!processedData.length) {
+      return (
+        <div style={{
+          textAlign: 'center',
           padding: '40px',
           color: '#666',
           display: 'flex',
@@ -401,9 +459,9 @@ function GraphPage() {
         }}>
           <h3>No data available</h3>
           <p>Please check your date range or submit patient data first.</p>
-          <button 
+          <button
             onClick={() => {
-              setStartDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
+              setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
               setEndDate(new Date());
             }}
             style={{
@@ -416,86 +474,72 @@ function GraphPage() {
               cursor: 'pointer'
             }}
           >
-            Reset Date Range
+            Show Full History
           </button>
         </div>
       );
     }
-  
+
+    const commonProps = {
+      data: processedData,
+      margin: { top: 20, right: 30, left: 20, bottom: 60 }
+    };
+
+    const tooltipStyle = {
+      background: 'rgba(255, 255, 255, 0.96)',
+      borderRadius: '8px',
+      border: 'none',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      padding: '12px',
+      color: '#333'
+    };
+
     switch (chartType) {
       case 'bar':
         return (
-          <BarChart data={processedData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="date" 
-              tickFormatter={(value) => {
-                if (timeRange === 'week') {
-                  // Format as "YYYY Week WW"
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `${match[1]} Week ${match[2]}`;
-                  }
-                }
-                return value;
-              }}
+          <BarChart {...commonProps}>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
+            <XAxis
+              dataKey="date"
+              tick={{ fill: '#555' }}
+              tickFormatter={(value) => formatDateLabel(value, timeRange)}
             />
-            <YAxis domain={[0, 10]} />
-            <Tooltip 
-              labelFormatter={(value) => {
-                if (timeRange === 'week') {
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `Week ${match[2]}, ${match[1]}`;
-                  }
-                }
-                return value;
-              }}
+            <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
+            <Tooltip
+              contentStyle={tooltipStyle}
+              labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
             />
-            <Legend />
-            {metrics.map(
-              (metric) =>
-                activeMetrics[metric.key] && (
-                  <Bar
-                    key={metric.key}
-                    dataKey={metric.key}
-                    name={metric.name}
-                    fill={metric.color}
-                  />
-                )
+            <Legend wrapperStyle={{ paddingTop: '20px' }} />
+            {metrics.map(metric =>
+              activeMetrics[metric.key] && (
+                <Bar
+                  key={metric.key}
+                  dataKey={metric.key}
+                  name={metric.name}
+                  fill={metric.color}
+                  radius={[4, 4, 0, 0]}
+                  animationDuration={1500}
+                />
+              )
             )}
           </BarChart>
         );
+
       case 'line':
         return (
-          <LineChart data={processedData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="date" 
-              tickFormatter={(value) => {
-                if (timeRange === 'week') {
-                  // Format as "YYYY Week WW"
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `${match[1]} Week ${match[2]}`;
-                  }
-                }
-                return value;
-              }}
+          <LineChart {...commonProps}>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+            <XAxis
+              dataKey="date"
+              tick={{ fill: '#555' }}
+              tickFormatter={(value) => formatDateLabel(value, timeRange)}
             />
-            <YAxis domain={[0, 10]} />
-            <Tooltip 
-              labelFormatter={(value) => {
-                if (timeRange === 'week') {
-                  const match = value.match(/(\d{4})-W(\d{2})/);
-                  if (match) {
-                    return `Week ${match[2]}, ${match[1]}`;
-                  }
-                }
-                return value;
-              }}
+            <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
+            <Tooltip
+              contentStyle={tooltipStyle}
+              labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
             />
-            <Legend />
+            <Legend wrapperStyle={{ paddingTop: '20px' }} />
             {metrics.map(metric => (
               activeMetrics[metric.key] && (
                 <Line
@@ -504,76 +548,163 @@ function GraphPage() {
                   dataKey={metric.key}
                   name={metric.name}
                   stroke={metric.color}
+                  strokeWidth={3}
                   activeDot={{ r: 8 }}
+                  dot={{ r: 4 }}
+                  animationDuration={1500}
                 />
               )
             ))}
           </LineChart>
         );
+
       case 'pie':
+        // Calculate average values for each metric
         const pieData = metrics.map(metric => {
-          const values = processedData.map(d => d[metric.key]).filter(v => v !== undefined);
-          const average = values.length > 0 ? 
-            values.reduce((a, b) => a + b, 0) / values.length : 0;
+          const validEntries = processedData.filter(item => item[metric.key] !== undefined);
+          const total = validEntries.reduce((sum, item) => sum + item[metric.key], 0);
+          const average = validEntries.length > 0 ? total / validEntries.length : 0;
+
           return {
             name: metric.name,
-            value: Math.round(average * 10) / 10,
+            value: parseFloat(average.toFixed(2)),
             color: metric.color
           };
-        });
-  
+        }).filter(item => !isNaN(item.value));
+
+        // Calculate total for percentage calculation
+        const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
+
         return (
-          <PieChart>
+          <PieChart {...commonProps}>
             <Pie
               data={pieData}
               cx="50%"
               cy="50%"
-              labelLine={false}
               outerRadius={150}
               fill="#8884d8"
               dataKey="value"
-              nameKey="name"
-              label={({ name, percent }) =>
-                `${name}: ${(percent * 100).toFixed(0)}%`
-              }
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              labelLine={false}
             >
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => [`Average: ${value}`, '']} />
+            <Tooltip
+              contentStyle={tooltipStyle}
+              formatter={(value, name, props) => {
+                const percentage = totalValue > 0 ? (value / totalValue * 100).toFixed(2) : 0;
+                return [
+                  `${name}: ${value}`,
+                  `Percentage: ${percentage}%`
+                ];
+              }}
+            />
             <Legend />
           </PieChart>
         );
+
       default:
-        return null;
+        return (
+          <ComposedChart {...commonProps}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="date"
+              tick={{ fill: '#555' }}
+              tickFormatter={(value) => formatDateLabel(value, timeRange)}
+            />
+            <YAxis yAxisId="left" orientation="left" domain={[0, 10]} />
+            <YAxis yAxisId="right" orientation="right" domain={[0, 10]} />
+            <Tooltip
+              contentStyle={tooltipStyle}
+              labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
+            />
+            <Legend />
+            {activeMetrics.moodRating && (
+              <Bar yAxisId="left" dataKey="moodRating" name="Mood" fill="#8884d8" />
+            )}
+            {activeMetrics.activityRating && (
+              <Line yAxisId="right" type="monotone" dataKey="activityRating" name="Activity" stroke="#82ca9d" />
+            )}
+          </ComposedChart>
+        );
     }
   };
 
-  if (loading) return <div style={{ padding: "2rem", textAlign: "center" }}>Loading patient data...</div>;
-  if (errorMsg) return <div style={{ padding: "2rem", color: "red", textAlign: "center" }}>{errorMsg}</div>;
+  const formatDateLabel = (value, range, detailed = false) => {
+    if (!value) return '';
+
+    try {
+      if (range === 'week') {
+        const match = String(value).match(/(\d{4})-W(\d{2})/);
+        if (match) return detailed ? `Week ${match[2]}, ${match[1]}` : `W${match[2]}`;
+      }
+      if (range === 'month') {
+        const date = new Date(value);
+        return detailed ?
+          date.toLocaleDateString('default', { month: 'long', year: 'numeric' }) :
+          date.toLocaleDateString('default', { month: 'short' });
+      }
+      if (range === 'year') {
+        return value;
+      }
+      const date = new Date(value);
+      return detailed ?
+        date.toLocaleDateString() :
+        date.toLocaleDateString('default', { day: 'numeric', month: 'short' });
+    } catch {
+      return value;
+    }
+  };
+
+  if (errorMsg) {
+    return (
+      <div style={{
+        padding: "2rem",
+        textAlign: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh'
+      }}>
+        <h2 style={{ color: "#d32f2f", marginBottom: '1rem' }}>{errorMsg}</h2>
+        <button
+          onClick={() => window.location.reload()}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#125358',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
+      <GlobalStyle />
+
+      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
-  
+
       <GraphContainer>
         {patientInfo && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '20px',
-              padding: '15px',
-              backgroundColor: '#f5f5f5',
-              borderRadius: '8px',
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '20px',
+            padding: '15px',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '8px',
+          }}>
             <img
               src={patient1}
               alt="Patient"
@@ -595,12 +726,8 @@ function GraphPage() {
             </div>
           </div>
         )}
-  
-        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#125358' }}>
-       
-        </h2>
-        
-        <div style={{ 
+
+        <div style={{
           marginBottom: '25px',
           padding: '15px',
           backgroundColor: '#f9f9f9',
@@ -608,13 +735,13 @@ function GraphPage() {
           border: '1px solid #eee'
         }}>
           <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
-          <div style={{ 
+          <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
             gap: '10px'
           }}>
             {metrics.map(metric => (
-              <MetricToggle 
+              <MetricToggle
                 key={metric.key}
                 active={activeMetrics[metric.key]}
                 onClick={() => toggleMetric(metric.key)}
@@ -622,7 +749,7 @@ function GraphPage() {
                 <input
                   type="checkbox"
                   checked={activeMetrics[metric.key]}
-                  onChange={() => {}}
+                  readOnly
                   style={{ accentColor: metric.color }}
                 />
                 <span style={{ color: metric.color, fontWeight: '500' }}>
@@ -632,9 +759,16 @@ function GraphPage() {
             ))}
           </div>
         </div>
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
+
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <span style={{ fontWeight: '500' }}>From:</span>
             <DatePicker
               selected={startDate}
@@ -644,6 +778,8 @@ function GraphPage() {
               endDate={endDate}
               maxDate={endDate}
             />
+          </div>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <span style={{ fontWeight: '500' }}>To:</span>
             <DatePicker
               selected={endDate}
@@ -655,20 +791,8 @@ function GraphPage() {
               maxDate={new Date()}
             />
           </div>
-          
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {timeRanges.map(range => (
-              <TimeRangeButton
-                key={range.key}
-                active={timeRange === range.key}
-                onClick={() => setTimeRange(range.key)}
-              >
-                {range.name}
-              </TimeRangeButton>
-            ))}
-          </div>
         </div>
-        
+
         <ChartControls>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {chartTypes.map(type => (
@@ -682,12 +806,25 @@ function GraphPage() {
             ))}
           </div>
         </ChartControls>
-  
-        <div style={{ width: '100%', height: '500px' }}>
+
+        <ChartWrapper>
           <ResponsiveContainer width="100%" height="100%">
             {renderChart()}
           </ResponsiveContainer>
-        </div>
+
+          <TimePeriodContainer>
+            {timeRanges.map(range => (
+              <TimeRangeButton
+                key={range.key}
+                active={timeRange === range.key}
+                onClick={() => setTimeRange(range.key)}
+                style={{ width: '100%' }}
+              >
+                {range.name}
+              </TimeRangeButton>
+            ))}
+          </TimePeriodContainer>
+        </ChartWrapper>
       </GraphContainer>
     </>
   );

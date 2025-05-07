@@ -16,8 +16,8 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
+    font-family: 'Poppins', sans-serif; /* Change the font */
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,12 +28,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const StartPageContainer = styled.div`
-  background-color: #fff;
+  background-color: #F5ECD5;
   padding: 40px;
-  border-radius: 8px;
+  border-radius: 12px; /* Rounded corners for soft look */
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1;
 `;
@@ -44,15 +44,19 @@ const Header = styled.header`
 `;
 
 const Title = styled.h1`
-  color: #333;
+  color: #3a3a3a;
   font-size: 2rem;
   margin-bottom: 10px;
+  font-weight: 600;
 `;
 
 const SubTitle = styled.p`
   font-size: 1.2rem;
-  color: #888;
   margin-bottom: 20px;
+  color:rgb(58, 53, 53);
+  font-size: 22px;
+  font-weight: 600;
+  opacity: 0.9;
 `;
 
 const LoginForm = styled.div`
@@ -65,7 +69,14 @@ const Label = styled.label`
   margin-bottom: 8px;
   color: #333; /* Adjust color to match your design */
   font-weight: 600; /* Make the label text a bit bolder */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  min-width: 100%;  /* Ensure the label takes the full width without resizing */
+  white-space: nowrap;  /* Prevent text wrapping */
 `;
+
 
 const Input = styled.input`
   padding: 12px;
@@ -73,10 +84,17 @@ const Input = styled.input`
   margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  background-color: #f3f3f3; /* Soft background for input */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: #3b878c; /* Match border color with the theme */
+    border-color: #8ACCD5 /* Soft blue for focus */
+    background-color: #ffffff; /* Lighten background on focus */
+  }
+
+  &::placeholder {
+    color: #aaa;
   }
 `;
 
@@ -90,18 +108,21 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   padding: 10px 20px;
-  background-color: #125358;
+  background-color: rgb(40, 136, 155);
   color: white;
   font-size: 0.9rem;
   border: none;
-  border-radius: 30px;
+  flex-direction: column;
+  border-radius: 6px;
+  display: flex;
+
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 48%;
 
   &:hover {
-    background-color: #00d4ff;
+    background-color: #8ACCD5;
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
@@ -138,22 +159,22 @@ const LanguageButtonContainer = styled.div`
 `;
 
 const LanguageButton = styled.button`
-padding: 5px 10px;
-font-size: 1rem;
-background: none;
-color: #125358; /* Matches container color */
-border: none;
-cursor: pointer;
-transition: color 0.3s ease;
-font-weight: bold;
+  padding: 5px 10px;
+  font-size: 1rem;
+  background: none;
+  color: #125358;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  font-weight: bold;
 
-&:hover {
-  color: #00d4ff; /* Change text color on hover */
-}
+  &:hover {
+    color:  #8ACCD5;
+  }
 
-&:focus {
-  outline: none; /* Remove outline when clicked */
-}
+  &:focus {
+    outline: none;
+  }
 `;
 
 
@@ -165,6 +186,7 @@ const StartPage = () => {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loginMessage, setLoginMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -173,36 +195,38 @@ const StartPage = () => {
         password: password,
       };
 
-      console.log('Login Data:', loginData);
-
       let response = await axiosInstance.post('/Guest/LoginUser', loginData);
-      console.log('User Login Response:', response);
 
-      localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+      localStorage.setItem(
+        'jwtToken',
+        response.data.item.jwtToken.encryptedToken
+      );
+      console.log('jwtToken for user after login:', response.data.item.jwtToken.encryptedToken);
+      localStorage.setItem('userName', response.data.item.userName);
 
       const role = response.data.item.userRole;
-      console.log('User Role:', role);
 
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
-        console.log('Sysadmin logged in');
+        localStorage.setItem('userName', response.data.item.userName);
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'usr') {
         localStorage.setItem('role', 'usr');
-        console.log('User logged in');
+        localStorage.setItem('userName', response.data.item.userName);
+        console.log('Staff login response:', response.data.item);
+
         setLoginMessage(t('login_success'));
         navigate('/staff');
       } else {
         alert('Access Denied: Invalid role.');
       }
     } catch (error) {
-      console.log('User login failed, trying staff login...');
-      console.error('Error details:', error.response?.data || error.message);
 
-      const loginDataStaff = {
+       const loginDataStaff = {
         userNameOrEmail: username,
         password: password,
+        
       };
 
       try {
@@ -210,13 +234,22 @@ const StartPage = () => {
         console.log('Staff Login Response:', response);
 
         localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
-        console.log('jwtToken (Staff):', response.data.item.jwtToken.encryptedToken);
+        console.log('jwtToken for Staff after login:', response.data.item.jwtToken.encryptedToken);
+        console.log ("Staff is logged in");
+
 
         const role = response.data.item.userRole;
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          console.log('Staff logged in');
+          localStorage.setItem('userName', response.data.item.userName);  
+                 // After successful login
+          if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+          }
+          
+
+
           setLoginMessage(t('login_success'));
           navigate('/staff');
         } else {
@@ -224,9 +257,10 @@ const StartPage = () => {
         }
       } catch (staffError) {
         setLoginError(t('login_failed'));
-        console.error('Staff login error:', staffError.response?.data || staffError.message);
       }
+      
     }
+    
   };
 
   const handleKeyDown = (e) => {
@@ -280,18 +314,17 @@ const StartPage = () => {
 
   {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
-  <ButtonContainer>
-    <Button onClick={handleLogin} disabled={!username || !password}>
-      {t('login')}
-    </Button>
-  </ButtonContainer>
-</LoginForm>
+          <ButtonContainer>
+            <Button onClick={handleLogin} disabled={!username || !password}>
+              {t('login')}
+            </Button>
+          </ButtonContainer>
+        </LoginForm>
 
         <Footer>
-          <p>
-            <a href="/forgotpassword">{t('forgot_password_link')}</a>
-          </p>
+          <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
         </Footer>
+
       </StartPageContainer>
     </>
   );

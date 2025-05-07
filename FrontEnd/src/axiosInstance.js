@@ -7,11 +7,13 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwtToken'); // ✅ match the login key name
-    console.log('Retrieved token from localStorage:', token);
+    const token = localStorage.getItem('jwtToken');
 
     if (token) {
+      console.log('✅ Token found and added to headers:', token);
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.log('🔒 No token in localStorage (user/staff probably not logged in)');
     }
 
     return config;
@@ -20,5 +22,6 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 
 export default axiosInstance;

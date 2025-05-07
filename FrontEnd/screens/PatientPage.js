@@ -6,15 +6,16 @@ import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 
-// Global Style
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 1.3rem;
   }
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
+    font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
     display: flex;
     justify-content: center;
@@ -24,6 +25,8 @@ const GlobalStyle = createGlobalStyle`
     position: relative;
   }
 `;
+
+
 
 const PatientPageContainer = styled.div`
   background-color: #ffffffee;
@@ -108,6 +111,7 @@ const PatientName = styled.h2`
   font-weight: bold;
   text-align: center;
 `;
+
 
 function PatientPage() {
   const { patientId } = useParams();

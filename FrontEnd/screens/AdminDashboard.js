@@ -6,6 +6,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
+import patient1 from '../src/media/patient1.jpg';
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -13,21 +15,65 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
- body {
-  font-family: 'Times New Roman', cursive, sans-serif;
-  background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-  min-height: 100vh;
-  color:  black;
-  overflow-y: auto;
-}
+  body {
+    font-family: 'Poppins', sans-serif; /* Change the font */
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
+    min-height: 100vh;
+    overflow-y: auto;
+    color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 0;
+    transition: background 0.6s ease-in-out;
+  }
+`;
+
+const Title = styled.h1`
+  color: #fff;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+  text-align: center;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+  }
+`;
+
+const Subtitle = styled.span`
+  color:rgb(58, 53, 53);
+  font-size: 22px;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-bottom: 0;  // remove unnecessary bottom space
+  display: block;
+  text-align: center;
+  font-weight: 600;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 const Container = styled.div`
-  padding: 40px;
+  padding: 10px;
+  justify-content: center;  
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  
   h1 {
     color: white;
     margin-bottom: 30px;
   }
+  
+`;
+
+const SelectContainer = styled.div`
+  margin-bottom: 20px; /* Add margin below the Select component */
 `;
 
 const Tabs = styled.div`
@@ -36,50 +82,121 @@ const Tabs = styled.div`
   margin-bottom: 20px;
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  
+  
+`;
+
+
 const TabButton = styled.button`
   padding: 10px 20px;
-  background: ${(props) => (props.active ? '#125358' : '#eee')};
+  background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : '#eee')};
   color: ${(props) => (props.active ? '#fff' : '#000')};
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+
   &:hover {
-    background: ${(props) => (props.active ? '#125358' : '#00d4ff')};
+    background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : ' #8ACCD5')};
   }
 `;
 
+const MainWrapper = styled.div`
+  width: 350px; /* Or any fixed width you prefer */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+  align-items: stretch;
+  
+
+`;
+
+
 const Form = styled.form`
+  font-size: 1rem;
+  font-weight: 500;
   margin-top: 30px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
+  background-color: #F5ECD5;
+  padding: 30px;
+  border-radius: 12px;
   width: ${(props) =>
     props.activeTab === 'staff' ? '60%' : '100%'};
-  max-width: 600px;
   margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional for matching login form */
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    color:rgb(58, 53, 53);
+    font-size: 22px;
+    font-weight: 400;
+    opacity: 0.9;
+    text-align: center;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    
 `;
 
 const Input = styled.input`
-  margin-bottom: 10px;
-  padding: 10px;
+  margin-bottom: 16px;
+  padding: 12px;
   width: 100%;
   border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  color: white;
+  padding: 12px 24px;
   border: none;
   margin-right: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
   cursor: pointer;
   background: ${(props) =>
-    props.active === 'true' ? 'rgb(133, 200, 205)' : '#eee'};
+    props.active === 'true' ? 'rgb(40, 136, 155)' : '#eee'};
   color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
+   align-self: center; 
+   width: 35%;
+  
+
   &:hover {
-    background: #00d4ff;
+    background: #8ACCD5;
   }
 `;
+const FloatingProfile = styled.div`
+  position: fixed;
+  bottom: 32px;
+  right: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1000;
+`;
+
+const ProfileHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const ProfileDetails = styled.div`
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #333;
+`;
+
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -100,50 +217,82 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [formVisible, setFormVisible] = useState(true);  // initially visible
+  const [isDropdownChanged, setIsDropdownChanged] = useState(false);
+  const [nameOf, setNameOf] = useState('');
+  const [showDetails, setShowDetails] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
+
+// Dummy data for now
+const userData = {
+  name: localStorage.getItem('userName'),
+  email: localStorage.getItem('email'),
+  role: localStorage.getItem('role'),
+};
+
 
   useEffect(() => {
-    fetchData();
-    fetchPatientData();
+    fetchPatients();
+    fetchStaff();
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setNameOf(storedName);
+    }
   }, []);
 
-  const fetchData = async () => {
+  const fetchStaff = async () => {
+    const token = localStorage.getItem('jwtToken'); // or 'user_token', depending on where you store it
     try {
       const response = await axiosInstance.get('Staff/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       setStaff(response.data.pageItems);
     } catch (error) {
       console.error('Error fetching staff:', error.response || error.message);
     }
   };
-
-  const fetchPatientData = async () => {
+  
+  const fetchPatients = async () => {
+    const token = localStorage.getItem('jwtToken');
     try {
       const response = await axiosInstance.get('Patient/ReadItems', {
         params: { flat: true, pageNr: 0, pageSize: 10 },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       setPatients(response.data.pageItems);
     } catch (error) {
       console.error('Error fetching patient:', error.response || error.message);
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    
+    // Ensure activeTab is set correctly when submitting
+    const isStaff = activeTab === 'staff';
+    const endpoint = isStaff ? 'Staff' : 'Patient';
+    
     try {
-      const isStaff = activeTab === 'staff';
-      const endpoint = isStaff ? 'Staff' : 'Patient';
       const response = await axiosInstance.post(`/${endpoint}/CreateItem`, {
         ...formData,
       });
+      
       setSuccessMessage(`${endpoint} created successfully!`);
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-
+  
+      // Reset the form after successful submission
       setFormData({
         firstName: '',
         lastName: '',
@@ -153,10 +302,12 @@ const AdminDashboard = () => {
         password: '',  
         id: null,
       });
+  
+      // Fetch updated data for the correct tab (Staff or Patient)
       if (isStaff) {
-        fetchData();
+        fetchStaff();
       } else {
-        fetchPatientData();
+        fetchPatients();
       }
     } catch (error) {
       setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
@@ -165,29 +316,42 @@ const AdminDashboard = () => {
       setIsLoading(false);
     }
   };
+  
 
   const handleDelete = async (personId) => {
     try {
       const isStaff = activeTab === 'staff';
       const endpoint = isStaff ? 'Staff' : 'Patient';
+      
+      // Perform the delete operation
       await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
+      
+      // Set success message
       setSuccessMessage(`${endpoint} deleted successfully!`);
       setShowSuccessMessage(true);
+      
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
+      
+      // Fetch the updated data
       if (isStaff) {
-        await fetchData();
+        await fetchStaff();
       } else {
-        await fetchPatientData();
+        await fetchPatients();
       }
+  
+      // Reset the selected person and show the form again
       setSelectedPerson(null);
+      setFormVisible(true); // Ensure the form appears after the delete
+      
     } catch (error) {
       console.error(`Error deleting ${activeTab}:`, error.response || error.message);
+      setFormVisible(true); // Show form again if there's an error
     }
   };
-
+  
   const handleEdit = async (updatedPerson) => {
     setIsLoading(true);
     try {
@@ -195,47 +359,72 @@ const AdminDashboard = () => {
       const endpoint = isStaff ? 'Staff' : 'Patient';
       const idField = isStaff ? 'staffId' : 'patientId';
       const personId = updatedPerson[idField];
-
+  
+      // Perform the update operation
       await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
         [idField]: personId,
         firstName: updatedPerson.firstName,
         lastName: updatedPerson.lastName,
         personalNumber: updatedPerson.personalNumber,
       });
-
+  
+      // Set success message
       setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
       setShowSuccessMessage(true);
+      
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-
+  
+      // Reset the selected person and fetch the updated data
       setSelectedPerson(null);
       if (isStaff) {
-        fetchData();
+        await fetchStaff();
       } else {
-        fetchPatientData();
+        await fetchPatients();
       }
+      
+      // Show the form after the update
+      setFormVisible(true); // Ensure the form appears after the update
+  
     } catch (error) {
       setSuccessMessage(`Error updating ${activeTab}.`);
       setShowSuccessMessage(true);
+      setFormVisible(true); // Show form in case of failure
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const currentData = activeTab === 'patients' ? patients : staff;
 
   const handleSelectChange = (selectedOption) => {
-    const id = selectedOption?.value;
-    let person;
-    if (activeTab === 'staff') {
-      person = staff.find((item) => String(item.staffId) === id);
-    } else {
-      person = patients.find((item) => String(item.patientId) === id);
+    if (selectedOption) {
+      const personList = activeTab === 'staff' ? staff : patients;
+      const person = personList.find(p =>
+        activeTab === 'staff'
+          ? p.staffId === selectedOption.value
+          : p.patientId === selectedOption.value
+      );
+  
+      setSelectedPerson(person);
+      setIsDropdownChanged(true);  // Mark that a change occurred
+      setFormVisible(false);       // Hide the form after selection
     }
-    setSelectedPerson(person);
   };
+  
+  const handleDropdownOpen = () => {
+    setFormVisible(false);  // Hide the form when the dropdown is opened
+  };
+  
+  const handleDropdownClose = () => {
+    if (!isDropdownChanged) {
+      setFormVisible(true);  // Show the form again only if no change occurred
+    }
+  };
+  
 
   return (
     <>
@@ -243,41 +432,97 @@ const AdminDashboard = () => {
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
+
+      
       <Container>
-        <h1>{t('admin_dashboard')}</h1>
+        
+      <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
+  <ProfileHeader>
+  <img
+  src={patient1}
+  alt="User Avatar"
+  style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+/>
+    <span>{userData.name}</span>
+  </ProfileHeader>
+
+  {showDetails && (
+    <ProfileDetails>
+      <div><strong>Email:</strong> {userData.email}</div>
+      <div><strong>Role:</strong> {userData.role}</div>
+    </ProfileDetails>
+  )}
+</FloatingProfile>
+
+
+      <Title>{t('app_title')}</Title>
+      <Subtitle>{t('admin_dashboard')}</Subtitle>
+
         <Tabs>
+        <ButtonWrapper>
           <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
             {t('patients')}
           </TabButton>
           <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
             {t('staff')}
           </TabButton>
+        </ButtonWrapper>
         </Tabs>
-
-        <Select
-          onChange={handleSelectChange}
-          options={activeTab === 'staff'
-            ? staff.map(item => ({
-                value: item.staffId,
-                label: `${item.firstName} ${item.lastName}`,
-              }))
-            : patients.map(item => ({
-                value: item.patientId,
-                label: `${item.firstName} ${item.lastName}`,
-              }))
+        <MainWrapper>
+        <SelectContainer>
+      
+  <Select
+    onMenuOpen={() => setFormVisible(false)} // Hide form on dropdown open
+    onMenuClose={() => {
+      if (!isDropdownChanged) {
+        setFormVisible(true); // Show form again if no selection was made
+      }
+      setIsDropdownChanged(false); // Reset the flag when the dropdown is closed
+    }}
+    onChange={(selectedOption) => {
+      handleSelectChange(selectedOption);
+      setIsDropdownChanged(true); // Set flag when a selection is made
+    }} 
+    options={activeTab === 'staff'
+      ? staff.map(item => ({
+          value: item.staffId,
+          label: `${item.firstName} ${item.lastName}`,
+        }))
+      : patients.map(item => ({
+          value: item.patientId,
+          label: `${item.firstName} ${item.lastName}`,
+        }))
+    }
+    value={
+      selectedPerson
+        ? {
+            value: activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId,
+            label: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
           }
-          value={selectedPerson ? { value: selectedPerson.id, label: `${selectedPerson.firstName} ${selectedPerson.lastName}` } : null}
-          placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
-        />
+        : null
+    }
+    placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
+    isSearchable={true}
+    styles={{
+      control: (provided) => ({
+        ...provided,
+        padding: '5px',
+      }),
+    }}
+  /> 
+</SelectContainer>
 
-        <DetailsModal
-          staffMember={selectedPerson}
-          onClose={() => setSelectedPerson(null)}
-          onEdit={handleEdit}
-          onDelete={() =>
-            handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
-          }
-        />
+<DetailsModal
+  staffMember={selectedPerson}
+  onClose={() => {
+    setSelectedPerson(null);
+    setFormVisible(true);  // show the form again
+  }}
+  onEdit={handleEdit}
+  onDelete={() =>
+    handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
+  }
+/>
 
         {showSuccessMessage && (
           <div
@@ -301,7 +546,8 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <Form onSubmit={handleSubmit}>
+  {formVisible && (
+  <Form onSubmit={handleSubmit}>
           <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
 
           <Input
@@ -351,9 +597,11 @@ const AdminDashboard = () => {
           )}
 
           <Button type="submit" active="true">
-            {isLoading ? t('loading') : t('submit')}
+            {isLoading ? t('loading') : t('Add')}
           </Button>
-        </Form>
+        </Form>    
+      )}
+        </MainWrapper>
       </Container>
     </>
   );

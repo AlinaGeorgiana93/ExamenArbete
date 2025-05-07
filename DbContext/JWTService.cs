@@ -22,20 +22,19 @@ public class JWTService
 {
     TokenId = Guid.NewGuid();
 
-    IEnumerable<Claim> claims = new Claim[] {
-        new("UserId", usrSession.UserId.ToString()),
-        new("UserRole", usrSession.UserRole),
-        new("UserName", usrSession.UserName),
-        new("Email", usrSession.Email), // Add Email here
+        IEnumerable<Claim> claims = [
+            //used to carry the loginUserSessionDto in the token
+            new("UserId", usrSession.UserId.ToString()),
+            new("UserRole", usrSession.UserRole),
+            new("UserName", usrSession.UserName),
 
-        new(ClaimTypes.Role, usrSession.UserRole),
-        new(ClaimTypes.NameIdentifier, TokenId.ToString()),
-        new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
-    };
-    return claims;
-}
-
-
+            //used by Microsoft.AspNetCore.Authentication and used in the HTTP request pipeline
+            new(ClaimTypes.Role, usrSession.UserRole),
+            new(ClaimTypes.NameIdentifier, TokenId.ToString()),
+            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+        ];
+        return claims;
+    }
 
     public JwtUserToken CreateJwtUserToken(LoginUserSessionDto _usrSession)
     {   
@@ -100,20 +99,19 @@ public class JWTService
 {
     TokenId = Guid.NewGuid();
 
-    IEnumerable<Claim> claims = new Claim[] {
-        new("StaffId", usrSession.StaffId.ToString()),
-        new("UserRole", usrSession.UserRole),
-        new("UserName", usrSession.UserName),
-        new("Email", usrSession.Email), // Add Email here
+        IEnumerable<Claim> claims = [
+            //used to carry the loginUserSessionDto in the token
+            new("StaffId", usrSession.StaffId.ToString()),
+            new("UserRole", usrSession.UserRole),
+            new("UserName", usrSession.UserName),
 
-        new(ClaimTypes.Role, usrSession.UserRole),
-        new(ClaimTypes.NameIdentifier, TokenId.ToString()),
-        new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
-    };
-    return claims;
-}
-
-
+            //used by Microsoft.AspNetCore.Authentication and used in the HTTP request pipeline
+            new(ClaimTypes.Role, usrSession.UserRole),
+            new(ClaimTypes.NameIdentifier, TokenId.ToString()),
+            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+        ];
+        return claims;
+    }
 
     public JwtUserToken CreateJwtStaffToken(LoginStaffSessionDto _usrSession)
     {   

@@ -32,39 +32,46 @@ public class LoginDbRepos
 
     public async Task<ResponseItemDto<LoginUserSessionDto>> LoginUserAsync(LoginCredentialsDto usrCreds)
     {
-        using (var cmd1 = _dbContext.Database.GetDbConnection().CreateCommand())
-        {
-            //Notice how I use the efc Command to call sp as I do not return any dataset, only output parameters
-            //Notice also how I encrypt the password, no coms to database with open password
-            cmd1.CommandType = CommandType.StoredProcedure;
-            cmd1.CommandText = "gstusr.spLogin";
-            cmd1.Parameters.Add(new SqlParameter("UserNameOrEmail", usrCreds.UserNameOrEmail));
-            cmd1.Parameters.Add(new SqlParameter("Password", _encryptions.EncryptPasswordToBase64(usrCreds.Password)));
+        using var cmd1 = _dbContext.Database.GetDbConnection().CreateCommand();
+        //Notice how I use the efc Command to call sp as I do not return any dataset, only output parameters
+        //Notice also how I encrypt the password, no coms to database with open password
+        cmd1.CommandType = CommandType.StoredProcedure;
+        cmd1.CommandText = "gstusr.spLogin";
+        cmd1.Parameters.Add(new SqlParameter("UserNameOrEmail", usrCreds.UserNameOrEmail));
+        cmd1.Parameters.Add(new SqlParameter("Password", _encryptions.EncryptPasswordToBase64(usrCreds.Password)));
 
-            int _usrIdIdx = cmd1.Parameters.Add(new SqlParameter("UserId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output });
-            int _usrIdx = cmd1.Parameters.Add(new SqlParameter("UserName", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
-            int _roleIdx = cmd1.Parameters.Add(new SqlParameter("Role", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
-            int _emailIdx = cmd1.Parameters.Add(new SqlParameter("Email", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
+        int _usrIdIdx = cmd1.Parameters.Add(new SqlParameter("UserId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output });
+        int _usrIdx = cmd1.Parameters.Add(new SqlParameter("UserName", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
+        int _roleIdx = cmd1.Parameters.Add(new SqlParameter("Role", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
 
 
-            _dbContext.Database.OpenConnection();
-            await cmd1.ExecuteScalarAsync();
+        _dbContext.Database.OpenConnection();
+        await cmd1.ExecuteScalarAsync();
 
-            var info = new LoginUserSessionDto
+                    var info = new LoginUserSessionDto
             {
-                //Notice the soft cast conversion 'as' it will be null if cast cannot be made
                 UserId = cmd1.Parameters[_usrIdIdx].Value as Guid?,
                 UserName = cmd1.Parameters[_usrIdx].Value as string,
                 UserRole = cmd1.Parameters[_roleIdx].Value as string,
                 Email = cmd1.Parameters[_emailIdx].Value as string
             };
 
-            return new ResponseItemDto<LoginUserSessionDto>()
+            // Log or return user role
+            if (info.UserRole == "sysadmin")
             {
-                DbConnectionKeyUsed = _dbContext.dbConnection,
-                Item = info
-            };
-        }
+                _logger.LogInformation($"Logged in as sysadmin: {info.UserName}");
+            }
+            else
+            {
+                _logger.LogInformation($"Logged in as user: {info.UserName}, Role: {info.UserRole}");
+            }
+
+
+        return new ResponseItemDto<LoginUserSessionDto>()
+        {
+            DbConnectionKeyUsed = _dbContext.dbConnection,
+            Item = info
+        };
     }
  public async Task<ResponseItemDto<LoginStaffSessionDto>> LoginStaffAsync(LoginCredentialsDto usrCreds)
 {
@@ -73,8 +80,7 @@ public class LoginDbRepos
         _logger.LogInformation("LoginStaffAsync started.");
         _logger.LogInformation($"INPUT: UsernameOrEmail = {usrCreds.UserNameOrEmail}");
 
-        using (var cmd1 = _dbContext.Database.GetDbConnection().CreateCommand())
-        {
+            using var cmd1 = _dbContext.Database.GetDbConnection().CreateCommand();
             cmd1.CommandType = CommandType.StoredProcedure;
             cmd1.CommandText = "gstusr.spLoginStaff";
 
@@ -93,7 +99,7 @@ public class LoginDbRepos
             await cmd1.ExecuteScalarAsync();
             _logger.LogInformation("Stored procedure execution completed.");
 
-            var info = new LoginStaffSessionDto
+                        var info = new LoginStaffSessionDto
             {
                 StaffId = cmd1.Parameters[_staffIdIdx].Value as Guid?,
                 UserName = cmd1.Parameters[_staffIdx].Value as string,
@@ -101,9 +107,10 @@ public class LoginDbRepos
                 Email = cmd1.Parameters[_emailIdx].Value as string
             };
 
-            _logger.LogInformation($"Output: StaffId = {info.StaffId}, UserName = {info.UserName}, Role = {info.UserRole}, Email = {info.Email}");
+            _logger.LogInformation($"Login result: UserName = {info.UserName}, UserRole = {info.UserRole}");
+
             var encryptedPassword = _encryptions.EncryptPasswordToBase64(usrCreds.Password);
-          _logger.LogInformation($"Encrypted Password: {encryptedPassword}");
+            _logger.LogInformation($"Encrypted Password: {encryptedPassword}");
 
             return new ResponseItemDto<LoginStaffSessionDto>
             {
@@ -111,7 +118,6 @@ public class LoginDbRepos
                 Item = info
             };
         }
-    }
     catch (Exception ex)
     {
         _logger.LogError($"LoginStaffAsync error: {ex.Message}. StackTrace: {ex.StackTrace}");
