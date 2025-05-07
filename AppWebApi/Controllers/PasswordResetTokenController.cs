@@ -1,3 +1,4 @@
+using Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -12,15 +13,18 @@ namespace AppWebApi.Controllers
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Policy = null, Roles = "usr, sysadmin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
+   
     public class PasswordResetTokenController : Controller
     {
         private readonly IPasswordResetTokenService _service;
         private readonly ILogger<PasswordResetTokenController> _logger;
+        private readonly Encryptions _encryptionService;
 
-        public PasswordResetTokenController(IPasswordResetTokenService service, ILogger<PasswordResetTokenController> logger)
+        public PasswordResetTokenController(IPasswordResetTokenService service, ILogger<PasswordResetTokenController> logger, Encryptions encryptions)
         {
             _service = service;
             _logger = logger;
+            _encryptionService = encryptions;
         }
 
         #region Create Token
@@ -198,13 +202,13 @@ namespace AppWebApi.Controllers
             }
         }
 
-
 [HttpPost("ChangePassword")]
-[Authorize]
+[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "usr,sysadmin")]
 public async Task<IActionResult> ChangePassword([FromBody] PasswordResetTokenDto item)
 {
     try
     {
+        // Check if required fields are provided
         if (string.IsNullOrWhiteSpace(item.CurrentPassword) ||
             string.IsNullOrWhiteSpace(item.NewPassword) ||
             string.IsNullOrWhiteSpace(item.ConfirmPassword))
@@ -216,7 +220,8 @@ public async Task<IActionResult> ChangePassword([FromBody] PasswordResetTokenDto
         {
             return BadRequest("Passwords do not match.");
         }
-       // Extract user information from JWT claims
+
+        // Extract user information from JWT claims
         var email = User.FindFirst(ClaimTypes.Email)?.Value;
         var userName = User.Identity?.Name;
         var role = User.FindFirst(ClaimTypes.Role)?.Value;
@@ -229,12 +234,12 @@ public async Task<IActionResult> ChangePassword([FromBody] PasswordResetTokenDto
 
         _logger.LogInformation($"Authenticated user: {email}, role: {role}");
 
+        // Call service to change the password
+        var result = await _service.ChangePasswordAsync(email, item.CurrentPassword, item.NewPassword);
 
-        var success = await _service.ChangePasswordAsync(email, item.CurrentPassword, item.NewPassword);
-
-        if (success?.Item == null)
+        if (string.IsNullOrWhiteSpace(result?.Message))
         {
-            return BadRequest("Invalid current password or unable to change password.");
+            return BadRequest("Unable to change password.");
         }
 
         return Ok("Password changed successfully.");
@@ -245,8 +250,7 @@ public async Task<IActionResult> ChangePassword([FromBody] PasswordResetTokenDto
         return StatusCode(500, "Internal server error.");
     }
 }
-
-
-        #endregion
     }
+
+    #endregion
 }

@@ -213,9 +213,9 @@ public async Task<ResponseItemDto<IPasswordResetToken>> RequestPasswordResetAsyn
         Item = token
     };
 }
-
 public async Task<ResponseItemDto<IPasswordResetToken>> ChangePasswordAsync(string email, string currentPassword, string newPassword)
 {
+    // Encrypt the current and new password (same method)
     var hashedCurrentPassword = _encryption.EncryptPasswordToBase64(currentPassword);
     var hashedNewPassword = _encryption.EncryptPasswordToBase64(newPassword);
 
@@ -247,6 +247,5 @@ public async Task<ResponseItemDto<IPasswordResetToken>> ChangePasswordAsync(stri
 
     throw new Exception("No user or staff found with that email.");
 }
-
 }
 #endregion
