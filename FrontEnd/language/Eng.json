@@ -57,8 +57,10 @@
   "first_name": "First Name",
   "last_name": "Last Name",
   "actions": "Actions",
+  "Yes, delete": "Yes, delete",
   "edit": "Edit",
   "add": "Add",
+  "email": "Email",
   "update": "Update",
   "add_entry": "Add Entry",
   "edit_entry": "Edit Entry",
@@ -124,7 +126,9 @@
   "team3": "Mona",
   "team4": "Nagihan",
   "Träffa AutiGraph-teamet": "Meet the AutiGraph Team",
-  "logged in as": "Logged in as"
+  "logged in as": "Logged in as",
+   "update_success": "Updated successfully!",
+  "update_error": "Update failed. Please try again."
   
 
 }

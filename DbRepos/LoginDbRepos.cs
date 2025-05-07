@@ -43,6 +43,7 @@ public class LoginDbRepos
         int _usrIdIdx = cmd1.Parameters.Add(new SqlParameter("UserId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output });
         int _usrIdx = cmd1.Parameters.Add(new SqlParameter("UserName", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
         int _roleIdx = cmd1.Parameters.Add(new SqlParameter("Role", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
+        int _emailIdx = cmd1.Parameters.Add(new SqlParameter("Email", SqlDbType.NVarChar, 100) { Direction = ParameterDirection.Output });
 
 
         _dbContext.Database.OpenConnection();
@@ -53,7 +54,7 @@ public class LoginDbRepos
                 UserId = cmd1.Parameters[_usrIdIdx].Value as Guid?,
                 UserName = cmd1.Parameters[_usrIdx].Value as string,
                 UserRole = cmd1.Parameters[_roleIdx].Value as string,
-               // Email = cmd1.Parameters[_emailIdx].Value as string
+                Email = cmd1.Parameters[_emailIdx].Value as string
             };
 
             // Log or return user role
@@ -63,7 +64,7 @@ public class LoginDbRepos
             }
             else
             {
-                _logger.LogInformation($"Logged in as user: {info.UserName}, Role: {info.UserRole}");
+                _logger.LogInformation($"Logged in as user: {info.UserName}, Role: {info.UserRole}, Email: {info.Email}");
             }
 
 
@@ -107,7 +108,7 @@ public class LoginDbRepos
                 Email = cmd1.Parameters[_emailIdx].Value as string
             };
 
-            _logger.LogInformation($"Login result: UserName = {info.UserName}, UserRole = {info.UserRole}");
+            _logger.LogInformation($"Login result: UserName = {info.UserName}, UserRole = {info.UserRole}, Email = {info.Email}");
 
             var encryptedPassword = _encryptions.EncryptPasswordToBase64(usrCreds.Password);
             _logger.LogInformation($"Encrypted Password: {encryptedPassword}");

@@ -138,11 +138,11 @@ const StaffPage = () => {
       });
 
     const storedName = localStorage.getItem('userName');
-    const email = localStorage.getItem('email');
+    const storedEmail = localStorage.getItem('email');
     const role = localStorage.getItem('role');
 
     if (storedName) setStaffName(storedName);
-    if (email) setStaffEmail(email);
+    if (storedEmail) setStaffEmail(storedEmail);
     if (role) setStaffRole(role);
   }, []);
 

@@ -209,11 +209,16 @@ const StartPage = () => {
       if (role === 'sysadmin') {
         localStorage.setItem('role', 'sysadmin');
         localStorage.setItem('userName', response.data.item.userName);
+        localStorage.setItem('email', response.data.item.email);
+        console.log('Admin login response:', response.data.item); 
+
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'usr') {
-        localStorage.setItem('role', 'usr');
+        localStorage.setItem('role',response.data.item.userRole); 
         localStorage.setItem('userName', response.data.item.userName);
+        localStorage.setItem('email', response.data.item.email);
+
         console.log('Staff login response:', response.data.item);
 
         setLoginMessage(t('login_success'));
@@ -234,15 +239,20 @@ const StartPage = () => {
         console.log('Staff Login Response:', response);
 
         localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+        localStorage.setItem('userName', response.data.item.userName);
+        localStorage.setItem('email', response.data.item.email);
+        localStorage.setItem('role', response.data.item.userRole);
+
         console.log('jwtToken for Staff after login:', response.data.item.jwtToken.encryptedToken);
-        console.log ("Staff is logged in");
+        console.log('Staff login response:', response.data.item);
 
 
         const role = response.data.item.userRole;
 
         if (role === 'usr') {
-          localStorage.setItem('role', 'usr');
+          localStorage.setItem('role', response.data.item.userRole);
           localStorage.setItem('userName', response.data.item.userName);  
+          localStorage.setItem('email', response.data.item.email);  
                  // After successful login
           if (response.data.token) {
             localStorage.setItem("token", response.data.token);

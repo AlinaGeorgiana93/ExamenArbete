@@ -12,5 +12,6 @@ public interface IPasswordResetTokenService
     public Task<ResponseItemDto<IPasswordResetToken>> UpdatePasswordResetTokenAsync(PasswordResetTokenDto item);
     public Task<ResponseItemDto<IPasswordResetToken>> CreatePasswordResetTokenAsync(PasswordResetTokenDto item);
     public Task<ResponseItemDto<IStaff>> ResetPasswordAsync(PasswordResetTokenDto item);
-    Task<bool> ChangePasswordAsync(string email, string newPassword, string currentPassword);
+    public Task<ResponseItemDto<IPasswordResetToken>> ChangePasswordAsync(string email, string currentPassword, string newPassword);
+
 }

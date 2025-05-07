@@ -31,7 +31,8 @@ public class JWTService
             //used by Microsoft.AspNetCore.Authentication and used in the HTTP request pipeline
             new(ClaimTypes.Role, usrSession.UserRole),
             new(ClaimTypes.NameIdentifier, TokenId.ToString()),
-            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt")),
+            new(ClaimTypes.Email, usrSession.Email),
         ];
         return claims;
     }
@@ -108,7 +109,8 @@ public class JWTService
             //used by Microsoft.AspNetCore.Authentication and used in the HTTP request pipeline
             new(ClaimTypes.Role, usrSession.UserRole),
             new(ClaimTypes.NameIdentifier, TokenId.ToString()),
-            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+            new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt")),
+            new(ClaimTypes.Email, usrSession.Email),
         ];
         return claims;
     }

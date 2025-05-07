@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
+
 
 const ModalContainer = styled.div`
   position: fixed;
@@ -133,6 +135,7 @@ const ConfirmActions = styled.div`
 const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
   if (!staffMember) return null;
 
+  const { t } = useTranslation();
   const [firstName, setFirstName] = useState(staffMember.firstName);
   const [lastName, setLastName] = useState(staffMember.lastName);
   const [personalNumber, setPersonalNumber] = useState(
@@ -151,10 +154,11 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
   return (
     <ModalContainer>
       <ModalContent>
-        <ModalHeader>{`Edit ${staffMember.firstName} ${staffMember.lastName}`}</ModalHeader>
+      <ModalHeader>{`${t('Edit')} ${staffMember.firstName} ${staffMember.lastName}`}</ModalHeader>
+
 
         <InputGroup>
-          <label>First Name</label>
+          <label>{t('first_name')}</label>
           <input
             type="text"
             value={firstName}
@@ -163,7 +167,7 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
         </InputGroup>
 
         <InputGroup>
-          <label>Last Name</label>
+          <label>{t('last_name')}</label>
           <input
             type="text"
             value={lastName}
@@ -172,7 +176,7 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
         </InputGroup>
 
         <InputGroup>
-          <label>Personal Number</label>
+          <label>{t('personal_number')}</label>
           <input
             type="text"
             value={personalNumber}
@@ -183,18 +187,18 @@ const DetailsModal = ({ staffMember, onClose, onEdit, onDelete }) => {
         <ConfirmActions>
           {!confirmDelete ? (
             <>
-              <Button onClick={handleUpdate}>Update</Button>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={handleUpdate}>{t('Update')}</Button>
+              <Button onClick={onClose}>{t('Cancel')}</Button>
               <ButtonDelete onClick={() => setConfirmDelete(true)}>
-                Delete
+              {t('Delete')}
               </ButtonDelete>
             </>
           ) : (
             <>
               <ButtonDelete onClick={handleConfirmDelete}>
-                Yes, delete
+              {t('Yes, delete')}
               </ButtonDelete>
-              <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
+              <Button onClick={() => setConfirmDelete(false)}>{t('Cancel')}</Button>
             </>
           )}
         </ConfirmActions>

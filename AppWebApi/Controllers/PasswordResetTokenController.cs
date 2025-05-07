@@ -216,8 +216,7 @@ public async Task<IActionResult> ChangePassword([FromBody] PasswordResetTokenDto
         {
             return BadRequest("Passwords do not match.");
         }
-
-        // Extract user information from JWT claims
+       // Extract user information from JWT claims
         var email = User.FindFirst(ClaimTypes.Email)?.Value;
         var userName = User.Identity?.Name;
         var role = User.FindFirst(ClaimTypes.Role)?.Value;
@@ -230,9 +229,10 @@ public async Task<IActionResult> ChangePassword([FromBody] PasswordResetTokenDto
 
         _logger.LogInformation($"Authenticated user: {email}, role: {role}");
 
+
         var success = await _service.ChangePasswordAsync(email, item.CurrentPassword, item.NewPassword);
 
-        if (!success)
+        if (success?.Item == null)
         {
             return BadRequest("Invalid current password or unable to change password.");
         }

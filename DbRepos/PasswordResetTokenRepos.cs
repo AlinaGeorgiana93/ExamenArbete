@@ -7,17 +7,21 @@ using DbContext;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Configuration;
 
 public class PasswordResetTokenRepos
 {
     private readonly ILogger<PasswordResetTokenRepos> _logger;
     private readonly MainDbContext _dbContext;
+     private readonly Encryptions _encryption;
+    
 
     #region Constructors
-    public PasswordResetTokenRepos(ILogger<PasswordResetTokenRepos> logger, MainDbContext context)
+    public PasswordResetTokenRepos(ILogger<PasswordResetTokenRepos> logger, MainDbContext context,Encryptions encryptions )
     {
         _logger = logger;
         _dbContext = context;
+        _encryption = encryptions;
     }
     #endregion
 
@@ -209,28 +213,40 @@ public async Task<ResponseItemDto<IPasswordResetToken>> RequestPasswordResetAsyn
         Item = token
     };
 }
-public async Task<bool> ChangePasswordAsync(string email, string currentPassword, string newPassword)
+
+public async Task<ResponseItemDto<IPasswordResetToken>> ChangePasswordAsync(string email, string currentPassword, string newPassword)
 {
-    // Find the staff user by email
+    var hashedCurrentPassword = _encryption.EncryptPasswordToBase64(currentPassword);
+    var hashedNewPassword = _encryption.EncryptPasswordToBase64(newPassword);
+
+    // Try to find a User
+    var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+    if (user != null)
+    {
+        if (user.Password != hashedCurrentPassword)
+            throw new Exception("Current password is incorrect.");
+
+        user.Password = hashedNewPassword;
+        await _dbContext.SaveChangesAsync();
+
+        return new ResponseItemDto<IPasswordResetToken> { Message = "User password updated." };
+    }
+
+    // Try to find a Staff
     var staff = await _dbContext.Staffs.FirstOrDefaultAsync(s => s.Email == email);
-    if (staff == null)
-        return false; // User not found
+    if (staff != null)
+    {
+        if (staff.Password != hashedCurrentPassword)
+            throw new Exception("Current password is incorrect.");
 
-    // Verify current password using BCrypt
-    bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(currentPassword, staff.Password);
-    if (!isPasswordCorrect)
-        return false; // Current password is wrong
+        staff.Password = hashedNewPassword;
+        await _dbContext.SaveChangesAsync();
 
-    // Hash the new password
-    var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        return new ResponseItemDto<IPasswordResetToken> { Message = "Staff password updated." };
+    }
 
-    // Update the staff's password
-    staff.Password = hashedPassword;
-
-    // Save changes
-    await _dbContext.SaveChangesAsync();
-
-    return true;
+    throw new Exception("No user or staff found with that email.");
 }
+
 }
 #endregion

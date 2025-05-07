@@ -1,3 +1,4 @@
+using Configuration;
 using DbRepos;
 using Microsoft.Extensions.Logging;
 using Models;
@@ -9,15 +10,19 @@ namespace Services;
 public class PasswordResetTokenServiceDb : IPasswordResetTokenService
 {
     private readonly PasswordResetTokenRepos _passresetRepo;
+    private readonly Encryptions _encryption;
+    
 
     private readonly ILogger<PasswordResetTokenServiceDb> _logger;
 
 
 
-    public PasswordResetTokenServiceDb(PasswordResetTokenRepos passresetRepo, ILogger<PasswordResetTokenServiceDb> logger)
+    public PasswordResetTokenServiceDb(PasswordResetTokenRepos passresetRepo, ILogger<PasswordResetTokenServiceDb> logger,Encryptions encryption )
     {
         _passresetRepo = passresetRepo;
         _logger = logger;
+        _encryption = encryption;
+
     }
 
     public Task<ResponsePageDto<IPasswordResetToken>> ReadPasswordResetTokensAsync(bool flat, string filter, int pageNumber, int pageSize) => _passresetRepo.ReadItemsAsync(flat, filter, pageNumber, pageSize);
@@ -26,8 +31,6 @@ public class PasswordResetTokenServiceDb : IPasswordResetTokenService
     public Task<ResponseItemDto<IPasswordResetToken>> UpdatePasswordResetTokenAsync(PasswordResetTokenDto item) => _passresetRepo.UpdateItemAsync(item);
     public Task<ResponseItemDto<IPasswordResetToken>> CreatePasswordResetTokenAsync(PasswordResetTokenDto item) => _passresetRepo.CreateItemAsync(item);
     public Task<ResponseItemDto<IStaff>> ResetPasswordAsync(PasswordResetTokenDto item) => _passresetRepo.ResetPasswordAsync(item);
-    public Task<bool> ChangePasswordAsync(string email, string newPassword, string currentPassword)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<ResponseItemDto<IPasswordResetToken>> ChangePasswordAsync(string email, string currentPassword, string newPassword) => _passresetRepo.ChangePasswordAsync(email, currentPassword, newPassword);
 }
+
