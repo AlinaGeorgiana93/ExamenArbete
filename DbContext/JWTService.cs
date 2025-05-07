@@ -22,7 +22,7 @@ public class JWTService
     {
         TokenId = Guid.NewGuid();
 
-        IEnumerable<Claim> claims = new Claim[] {
+        IEnumerable<Claim> claims = [
             //used to carry the loginUserSessionDto in the token
             new("UserId", usrSession.UserId.ToString()),
             new("UserRole", usrSession.UserRole),
@@ -32,7 +32,7 @@ public class JWTService
             new(ClaimTypes.Role, usrSession.UserRole),
             new(ClaimTypes.NameIdentifier, TokenId.ToString()),
             new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
-        };
+        ];
         return claims;
     }
 
@@ -95,7 +95,7 @@ public class JWTService
     {
         TokenId = Guid.NewGuid();
 
-        IEnumerable<Claim> claims = new Claim[] {
+        IEnumerable<Claim> claims = [
             //used to carry the loginUserSessionDto in the token
             new("StaffId", usrSession.StaffId.ToString()),
             new("UserRole", usrSession.UserRole),
@@ -105,7 +105,7 @@ public class JWTService
             new(ClaimTypes.Role, usrSession.UserRole),
             new(ClaimTypes.NameIdentifier, TokenId.ToString()),
             new(ClaimTypes.Expiration, DateTime.UtcNow.AddMinutes(_jwtOptions.LifeTimeMinutes).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
-        };
+        ];
         return claims;
     }
 

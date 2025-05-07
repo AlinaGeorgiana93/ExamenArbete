@@ -1,13 +1,11 @@
-// Importerar nödvändiga React hooks och bibliotek
 import React, { useState, useEffect } from 'react';
-import styled, { createGlobalStyle } from 'styled-components'; // För styling med styled-components
-import axios from 'axios'; // För att göra HTTP-anrop
-import { useTranslation } from 'react-i18next'; // För översättning
-import { Link, useNavigate } from 'react-router-dom'; // För routing (t.ex. navigera till en ny sida)
-import logo1 from '../src/media/logo1.png'; // Logo-bild
+import styled, { createGlobalStyle } from 'styled-components';
+import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
+import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 
-// Global styling som gäller hela sidan
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -26,12 +24,11 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-// Den vita rutan på sidan som innehåller allt innehåll
 const StaffPageContainer = styled.div`
   background-color: #F5ECD5;
   padding: 50px 40px;
   border-radius: 16px;
-  width: 100%; /* ändrat från 100% för att minska på små skärmar */
+  width: 100%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   z-index: 1;
   text-align: center;
@@ -48,20 +45,18 @@ const StaffPageContainer = styled.div`
   }
 `;
 
-// Titel på sidan (t.ex. "Staff Dashboard")
 const Title = styled.h1`
   color: #1a5b61;
   font-size: 2.5rem;
   margin-bottom: 20px;
 `;
 
-// Wrapper runt dropdownen med en pil ikon
 const DropdownWrapper = styled.div`
   position: relative;
   width: 100%;
-
+  
   &::after {
-    content: '▼'; // Pil-symbolen
+    content: '▼';
     position: absolute;
     right: 16px;
     top: 50%;
@@ -72,7 +67,6 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-// Dropdown-menyn för att välja patient
 const Dropdown = styled.select`
   padding: 14px 16px;
   font-size: 1rem;
@@ -80,7 +74,7 @@ const Dropdown = styled.select`
   border-radius: 8px;
   margin: 20px 0;
   width: 100%;
-  appearance: none; // Tar bort standardpilen
+  appearance: none;
   background-color: #f9f9f9;
   color: #333;
 
@@ -121,70 +115,50 @@ const ProfileDetails = styled.div`
   color: #333;
 `;
 
-
-// Själva StaffPage-komponenten
 const StaffPage = () => {
-  const [patients, setPatients] = useState([]); // Här sparar vi alla patienter
-  const [selectedPatient, setSelectedPatient] = useState(''); // Här sparar vi den valda patientens ID
-  const { t } = useTranslation(); // För att översätta texter
-  const navigate = useNavigate(); // För att navigera till andra sidor
+  const [patients, setPatients] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState('');
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
-  const [nameOf, setNameOf] = useState(''); // State for storing user name
-  const [loginDataStaff, setLoginDataStaff] = useState({
-    name: '',
-    email: '',
-    role: '',
-  });
+  const [staffName, setStaffName] = useState('');
+  const [email, setStaffEmail] = useState('');
+  const [role, setStaffRole] = useState('');
 
-
-  // useEffect to check and set nameOf from localStorage
-  useEffect(() => {
-    const storedName = localStorage.getItem('userName');
-    if (storedName) {
-      console.log('Hämtat namn från localStorage:', storedName); // ← debug
-      setNameOf(storedName); // Set the name if it's found in localStorage
-    } else {
-      console.warn('Inget namn hittades i localStorage!');
-    }
-  }, []); // Empty dependency array ensures this runs once on mount
-
-  
-  useEffect(() => {
-    const name = localStorage.getItem('userName');
-    const email = localStorage.getItem('email');
-    const role = localStorage.getItem('role');
-  
-    setLoginDataStaff({ name, email, role });
-    console.log('Set loginDataStaff:', { name, email, role });
-
-  }, []);
-
-  // useEffect to fetch patients from the API
   useEffect(() => {
     axios
       .get('https://localhost:7066/api/Patient/ReadItems')
       .then((response) => {
         if (response.data && response.data.pageItems) {
-          setPatients(response.data.pageItems); // Save patient list in state
+          setPatients(response.data.pageItems);
         }
       })
       .catch((error) => {
         console.error('Error fetching patients:', error);
       });
-  }, []); // Empty dependency array ensures this runs once on mount
 
-  // When a patient is selected from the dropdown
+    const storedName = localStorage.getItem('userName');
+    const email = localStorage.getItem('email');
+    const role = localStorage.getItem('role');
+
+    if (storedName) setStaffName(storedName);
+    if (email) setStaffEmail(email);
+    if (role) setStaffRole(role);
+  }, []);
+
+
+
   const handlePatientSelect = (e) => {
     const patientId = e.target.value;
-    setSelectedPatient(patientId); // Set the selected patient in state
+    setSelectedPatient(patientId);
     if (patientId) {
-      navigate(`/patient/${patientId}`); // Navigate to patient page with the right ID
+      navigate(`/patient/${patientId}`);
     }
   };
 
   return (
     <>
-      <GlobalStyle /> {/* Lägger till globala stilar */}
+      <GlobalStyle />
       <Link
         to="/"
         style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
@@ -192,20 +166,22 @@ const StaffPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
       </Link>
       <StaffPageContainer>
-        <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
+        <FloatingProfile onClick={() => setShowDetails(!showDetails)}>
           <ProfileHeader>
             <img
               src={patient1}
               alt="User Avatar"
               style={{ width: '40px', height: '40px', borderRadius: '50%' }}
             />
-            <span>{loginDataStaff.name}</span>
+            <div>
+              <span style={{ fontWeight: 'bold', color: '#000' }}>{staffName}</span>
+            </div>
           </ProfileHeader>
 
           {showDetails && (
             <ProfileDetails>
-              <div><strong>Email:</strong> {loginDataStaff.email}</div>
-              <div><strong>Role:</strong> {loginDataStaff.role}</div>
+              <p><strong>Email:</strong> {email}</p>
+              <p><strong>Role:</strong> {role}</p>
             </ProfileDetails>
           )}
         </FloatingProfile>
@@ -236,4 +212,4 @@ const StaffPage = () => {
   );
 };
 
-export default StaffPage; // Exporterar komponenten så den kan användas i appen
+export default StaffPage;

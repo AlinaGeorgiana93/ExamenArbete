@@ -185,6 +185,7 @@ const StartPage = () => {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loginMessage, setLoginMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -199,6 +200,7 @@ const StartPage = () => {
         'jwtToken',
         response.data.item.jwtToken.encryptedToken
       );
+      console.log('jwtToken for user after login:', response.data.item.jwtToken.encryptedToken);
       localStorage.setItem('userName', response.data.item.userName);
 
       const role = response.data.item.userRole;
@@ -223,6 +225,7 @@ const StartPage = () => {
        const loginDataStaff = {
         userNameOrEmail: username,
         password: password,
+        
       };
 
       try {
@@ -230,14 +233,20 @@ const StartPage = () => {
         console.log('Staff Login Response:', response);
 
         localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
-        console.log('jwtToken (Staff):', response.data.item.jwtToken.encryptedToken);
+        console.log('jwtToken for Staff after login:', response.data.item.jwtToken.encryptedToken);
+        console.log ("Staff is logged in");
+
 
         const role = response.data.item.userRole;
 
         if (role === 'usr') {
           localStorage.setItem('role', 'usr');
-          localStorage.setItem('userName', response.data.item.userName);         // After successful login
-          localStorage.setItem("token", response.data.token); // is this line being run?
+          localStorage.setItem('userName', response.data.item.userName);  
+                 // After successful login
+          if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+          }
+          
 
 
           setLoginMessage(t('login_success'));
@@ -248,7 +257,9 @@ const StartPage = () => {
       } catch (staffError) {
         setLoginError(t('login_failed'));
       }
+      
     }
+    
   };
 
   const handleKeyDown = (e) => {

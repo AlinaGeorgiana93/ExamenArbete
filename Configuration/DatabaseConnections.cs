@@ -45,16 +45,8 @@ public class DatabaseConnections
         throw new ArgumentNullException(nameof(user));
 
     // Use FirstOrDefault instead of First
-    var conn = dataSet.DbConnections.FirstOrDefault(m => m.DbUserLogin.Trim().ToLower() == user.Trim().ToLower());
-
-    if (conn == null)
-    {
-        // Handle the case where no matching user was found.
-        // You can log, return null, or throw a more specific exception.
-        throw new InvalidOperationException($"No database connection found for user: {user}");
-    }
-
-    Console.WriteLine($"Available users: {string.Join(", ", _activeDataSet.DbConnections.Select(c => c.DbUserLogin))}");
+    var conn = dataSet.DbConnections.FirstOrDefault(m => m.DbUserLogin.Trim().ToLower() == user.Trim().ToLower()) ?? throw new InvalidOperationException($"No database connection found for user: {user}");
+        Console.WriteLine($"Available users: {string.Join(", ", _activeDataSet.DbConnections.Select(c => c.DbUserLogin))}");
 
     return new DbConnectionDetail
     {
