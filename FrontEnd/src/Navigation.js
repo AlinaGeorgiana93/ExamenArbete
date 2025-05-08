@@ -59,6 +59,8 @@ const Navigation = () => {
   const navigate = useNavigate();
   const [logoutMessage, setLogoutMessage] = useState('');
 
+  const role = localStorage.getItem('role'); // Get the role from localStorage
+
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('role');
@@ -66,7 +68,7 @@ const Navigation = () => {
 
     setTimeout(() => {
       setLogoutMessage('');
-      window.location.replace('/'); // Force reload and reset history
+      window.location.replace('/');
     }, 1500);
   };
 
@@ -77,22 +79,30 @@ const Navigation = () => {
           <FaSignOutAlt size={18} /> {t('Log out')}
         </StyledLink>
         <NavLinks>
-          {/* <StyledLink as={Link} to="/admin"><FaUserShield size={18} /> {t('admin')}</StyledLink> */}
           <StyledLink as={Link} to="/staff">
             <FaUserNurse size={18} /> {t('staff')}
           </StyledLink>
-          <StyledLink as={Link} to="/patient/">
-            <FaUserInjured size={18} /> {t('patient')}
-          </StyledLink>
+
+          {role === 'sysadmin' && (
+            <>
+              <StyledLink as={Link} to="/admin">
+                <FaUserShield size={18} /> {t('admin')}
+              </StyledLink>
+              {/* <StyledLink as={Link} to="/patient/">
+                <FaUserInjured size={18} /> {t('patient')}
+              </StyledLink>
+              <StyledLink as={Link} to="/graph">
+                <FaChartLine size={18} /> {t('Graph')}
+              </StyledLink> */}
+            </>
+          )}
+
           <StyledLink as={Link} to="/about">
             <FaInfoCircle size={18} /> {t('about Us')}
           </StyledLink>
-          <StyledLink as={Link} to="/graph">
-            <FaChartLine size={18} /> {t('Graph')}
-          </StyledLink>{' '}
-          {/* Added Graph page link */}
         </NavLinks>
       </Nav>
+
       {logoutMessage && (
         <div
           style={{
@@ -113,5 +123,6 @@ const Navigation = () => {
     </>
   );
 };
+
 
 export default Navigation;
