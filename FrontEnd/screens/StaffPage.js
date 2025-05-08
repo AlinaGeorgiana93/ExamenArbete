@@ -198,7 +198,7 @@ const StaffPage = () => {
       <p><strong>Role:</strong> {role}</p>
       {/* Change button to open UpdateProfileModal */}
       <button onClick={() => setShowUpdateProfileModal(true)} style={{ marginTop: '10px' }}>
-        Change Info
+        {t('change_info')}
       </button>
     </ProfileDetails>
   )}

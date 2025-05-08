@@ -133,5 +133,13 @@
   "team4": "Nagihan",
   "logged in as": "Inloggad som",
   "update_success": "Uppdatering lyckades!",
-  "update_error": "Uppdatering misslyckades"
+  "update_error": "Uppdatering misslyckades",
+  "update_profile": "Uppdatera profil",
+  "cancel_password_change": "Avbryt lösenordsändring",
+  "change_password": "Ändra lösenord",
+  "current_Password": "Nuvarande lösenord",
+  "new_Password": "Nytt lösenord",
+  "confirm_Password": "Bekräfta lösenord",
+  "password_changed": "Lösenordet har ändrats",
+  "change_info": "Ändra info"
 }

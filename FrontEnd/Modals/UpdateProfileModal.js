@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axiosInstance from '../src/axiosInstance.js'; // Adjust path if necessary
+import { useTranslation } from 'react-i18next';
 
 // Styled Components for Modal
 const ModalBackground = styled.div`
@@ -102,6 +103,7 @@ const UpdateProfileModal = ({
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [profile, setProfile] = useState({ username: '', email: '' });
   const [passwordStrength, setPasswordStrength] = useState('');
+  const { t } = useTranslation();
 
 
   const handleProfileUpdate = async (updatedPerson) => {
@@ -257,11 +259,11 @@ const UpdateProfileModal = ({
     showModal && (
       <ModalBackground>
         <ModalContainer>
-          <ModalHeader>Update Profile</ModalHeader>
+          <ModalHeader>{t('update_profile')}</ModalHeader>
 
           <form onSubmit={handleSubmit}>
             <div>
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">{t('username')}</Label>
               <InputField
                 id="username"
                 type="text"
@@ -272,7 +274,7 @@ const UpdateProfileModal = ({
             </div>
 
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <InputField
                 id="email"
                 type="email"
@@ -283,47 +285,48 @@ const UpdateProfileModal = ({
             </div>
 
             {isPasswordChange && (
-              <>
-                <div>
-                  <Label htmlFor="currentPassword">Current Password</Label>
-                  <InputField
-                    id="currentPassword"
-                    type="password"
-                    placeholder="Current Password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                  />
-                </div>
+  <>
+    <div>
+      <Label htmlFor={t('current_Password')}>{t('current_Password')}</Label>
+      <InputField
+        id={t('current_Password')}
+        type="password"
+        placeholder={t('current_Password')}
+        value={currentPassword}
+        onChange={(e) => setCurrentPassword(e.target.value)}
+      />
+    </div>
 
-                <div>
-                  <Label htmlFor="newPassword">New Password</Label>
-                  <InputField
-                    id="newPassword"
-                    type="password"
-                    placeholder="New Password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                </div>
+    <div>
+      <Label htmlFor={t('new_Password')}>{t('new_Password')}</Label>
+      <InputField
+        id={t('new_Password')}
+        type="password"
+        placeholder={t('new_Password')}
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
+    </div>
 
-                <div>
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <InputField
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  />
-                </div>
-              </>
-            )}
+    <div>
+      <Label htmlFor={t('confirm_Password')}>{t('confirm_Password')}</Label>
+      <InputField
+        id={t('confirm_Password')}
+        type="password"
+        placeholder={t('confirm_Password')}
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+    </div>
+  </>
+)}
+
 
             <ButtonGroup>
               <Button type="button" $variant="cancel" onClick={() => setShowModal(false)}>
-                Cancel
+              {t('cancel')}
               </Button>
-              <Button $variant="primary">Save</Button>
+              <Button $variant="primary">{t('save')}</Button>
             </ButtonGroup>
           </form>
 
@@ -335,7 +338,8 @@ const UpdateProfileModal = ({
 
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
             <button type="button" onClick={handlePasswordToggle} style={{ fontSize: '0.9rem' }}>
-              {isPasswordChange ? 'Cancel Password Change' : 'Change Password'}
+            {isPasswordChange ? t('cancel_password_change') : t('change_password')}
+
             </button>
           </div>
         </ModalContainer>

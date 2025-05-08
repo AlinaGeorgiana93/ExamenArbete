@@ -128,7 +128,15 @@
   "Träffa AutiGraph-teamet": "Meet the AutiGraph Team",
   "logged in as": "Logged in as",
    "update_success": "Updated successfully!",
-  "update_error": "Update failed. Please try again."
+  "update_error": "Update failed. Please try again.",
+  "update_profile": "Update Profile",
+  "cancel_password_change": "Cancel Password Change",
+  "update_Password": "Update Password",
+  "current_Password": "Current Password",
+  "new_Password": "New Password",
+  "confirm_new_password": "Confirm New Password",
+  "change_password": "Change Password",
+  "change_info": "Change Info"
   
 
 }
