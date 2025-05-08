@@ -93,11 +93,14 @@ CREATE ROLE graphefcSupUsr;
 
 --assign securables credentials to the roles
 GRANT SELECT, EXECUTE ON SCHEMA::gstusr to graphefcGstUsr;
-GRANT SELECT ON SCHEMA::supusr to graphefcUsr;
+GRANT SELECT, UPDATE ON SCHEMA::supusr TO graphefcUsr;
 GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to graphefcSupUsr;
 GRANT INSERT ON supusr.PasswordResetToken TO graphefcSupUsr;
 GRANT INSERT ON supusr.PasswordResetToken TO usrUser;
 GRANT SELECT ON supusr.PasswordResetToken TO gstusrUser;
+GRANT SELECT, UPDATE, INSERT ON dbo.Users TO graphefcUsr;
+
+
 
 
 --finally, add the users to the roles

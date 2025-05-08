@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
+import UpdateProfileModal from '../Modals/UpdateProfileModal'; // Adjust the path as needed
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -124,6 +126,17 @@ const StaffPage = () => {
   const [staffName, setStaffName] = useState('');
   const [email, setStaffEmail] = useState('');
   const [role, setStaffRole] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordMessage, setPasswordMessage] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
+
+
+
+
 
   useEffect(() => {
     axios
@@ -156,6 +169,7 @@ const StaffPage = () => {
     }
   };
 
+  
   return (
     <>
       <GlobalStyle />
@@ -166,25 +180,29 @@ const StaffPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
       </Link>
       <StaffPageContainer>
-        <FloatingProfile onClick={() => setShowDetails(!showDetails)}>
-          <ProfileHeader>
-            <img
-              src={patient1}
-              alt="User Avatar"
-              style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-            />
-            <div>
-              <span style={{ fontWeight: 'bold', color: '#000' }}>{staffName}</span>
-            </div>
-          </ProfileHeader>
+      <FloatingProfile onClick={() => setShowDetails(!showDetails)}>
+  <ProfileHeader>
+    <img
+      src={patient1}
+      alt="User Avatar"
+      style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+    />
+    <div>
+      <span style={{ fontWeight: 'bold', color: '#000' }}>{staffName}</span>
+    </div>
+  </ProfileHeader>
 
-          {showDetails && (
-            <ProfileDetails>
-              <p><strong>Email:</strong> {email}</p>
-              <p><strong>Role:</strong> {role}</p>
-            </ProfileDetails>
-          )}
-        </FloatingProfile>
+  {showDetails && (
+    <ProfileDetails>
+      <p><strong>Email:</strong> {email}</p>
+      <p><strong>Role:</strong> {role}</p>
+      {/* Change button to open UpdateProfileModal */}
+      <button onClick={() => setShowUpdateProfileModal(true)} style={{ marginTop: '10px' }}>
+        Change Info
+      </button>
+    </ProfileDetails>
+  )}
+</FloatingProfile>
 
         <Title>{t('staff_name')}</Title>
         <WarningText>★{t('choose_patient')}</WarningText>
@@ -208,6 +226,23 @@ const StaffPage = () => {
           </Dropdown>
         </DropdownWrapper>
       </StaffPageContainer>
+      
+      
+      {/*Modal for info staff/ user/ */}
+
+      {showUpdateProfileModal && (
+  <UpdateProfileModal
+    showModal={showUpdateProfileModal}
+    setShowModal={setShowUpdateProfileModal}
+    staffName={staffName}
+    email={email}
+    setStaffName={setStaffName}
+    setStaffEmail={setStaffEmail}
+    setPasswordMessage={setPasswordMessage}  // Pass required handlers to the modal
+  />
+)}
+
+
     </>
   );
 };

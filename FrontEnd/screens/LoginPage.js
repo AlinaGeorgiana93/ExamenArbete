@@ -233,43 +233,42 @@ const StartPage = () => {
         password: password,
         
       };
-
       try {
         const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
         console.log('Staff Login Response:', response);
-
-        localStorage.setItem('jwtToken', response.data.item.jwtToken.encryptedToken);
+    
+        const token = response.data.item.jwtToken.encryptedToken;
+        const role = response.data.item.userRole;
+    
+        localStorage.setItem('jwtToken', token);
         localStorage.setItem('userName', response.data.item.userName);
         localStorage.setItem('email', response.data.item.email);
-        localStorage.setItem('role', response.data.item.userRole);
-
-        console.log('jwtToken for Staff after login:', response.data.item.jwtToken.encryptedToken);
+        localStorage.setItem('role', role);
+        localStorage.setItem('staffId', response.data.item.staffId);
+    
+        console.log('jwtToken for Staff after login:', token);
         console.log('Staff login response:', response.data.item);
-
-
-        const role = response.data.item.userRole;
-
-        if (role === 'usr') {
-          localStorage.setItem('role', response.data.item.userRole);
-          localStorage.setItem('userName', response.data.item.userName);  
-          localStorage.setItem('email', response.data.item.email);  
-                 // After successful login
-          if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
-          }
-          
-
-
-          setLoginMessage(t('login_success'));
-          navigate('/staff');
-        } else {
-          alert('Access Denied: Invalid role.');
+        console.log('Staff ID:', response.data.item.staffId);
+    
+        // Set login message
+        setLoginMessage(t('login_success'));
+    
+        // Role-based navigation
+        if (role === 'sysadmin') {
+            console.log("Sysadmin logged in. You have admin privileges.");
+            navigate('/admin'); // <-- Change this to your actual admin route
+        } else if (role === 'usr') {
+            console.log("Regular user logged in.");
+            navigate('/staff'); // <-- Staff dashboard
         }
-      } catch (staffError) {
-        setLoginError(t('login_failed'));
-      }
+    
+      } catch (error) {
+        console.error("Login failed:", error);
+        setLoginMessage(t('login_failed'));
+    } // ✅ Add this missing closing brace here
       
-    }
+      }
+    
     
   };
 

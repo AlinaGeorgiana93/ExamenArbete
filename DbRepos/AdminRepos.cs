@@ -101,8 +101,20 @@ public class AdminDbRepos
         UserName = "Bob1",
         Password = _encryptions.EncryptPasswordToBase64("1234") // encrypt it same as login
     };
+    var testStaff4 = new StaffDbM
+    {
+        StaffId = Guid.NewGuid(),
+        FirstName = "Mike",
+        LastName = "Smith",
+        PersonalNumber = "199003033456",
+        Email = "mike@mail.com",
+        Role = "sysadmin",
+        UserName = "Mike1",
+        Password = _encryptions.EncryptPasswordToBase64("1234") // encrypt it same as login
+    };
+    
 
-    _dbContext.Staffs.AddRange(testStaff1, testStaff2, testStaff3);
+    _dbContext.Staffs.AddRange(testStaff1, testStaff2, testStaff3, testStaff4);
     await _dbContext.SaveChangesAsync();
 }
 

@@ -101,27 +101,29 @@ namespace DbRepos
         }
 
         // Update staff item
-       public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
+public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
 {
-    var query1 = _dbContext.Staffs
-        .Where(i => i.StaffId == itemDto.StaffId);
-    var item = await query1
-            .FirstOrDefaultAsync<StaffDbM>() ?? throw new ArgumentException($"Item {itemDto.StaffId} is not existing");
+    var item = await _dbContext.Staffs
+        .FirstOrDefaultAsync(i => i.StaffId == itemDto.StaffId)
+        ?? throw new ArgumentException($"Item {itemDto.StaffId} does not exist");
 
-    // If password is provided, encrypt it
-    if (!string.IsNullOrEmpty(itemDto.Password))
+    // Preserve existing values if not provided in DTO
+    item.FirstName = string.IsNullOrWhiteSpace(itemDto.FirstName) ? item.FirstName : itemDto.FirstName;
+    item.LastName = string.IsNullOrWhiteSpace(itemDto.LastName) ? item.LastName : itemDto.LastName;
+    item.PersonalNumber = string.IsNullOrWhiteSpace(itemDto.PersonalNumber) ? item.PersonalNumber : itemDto.PersonalNumber;
+    item.Email = string.IsNullOrWhiteSpace(itemDto.Email) ? item.Email : itemDto.Email;
+    item.UserName = string.IsNullOrWhiteSpace(itemDto.UserName) ? item.UserName : itemDto.UserName;
+    item.Role = string.IsNullOrWhiteSpace(itemDto.Role) ? item.Role : itemDto.Role;
+
+    // Only update password if a new one is provided
+    if (!string.IsNullOrWhiteSpace(itemDto.Password))
     {
-        item.Password = _encryptions.EncryptPasswordToBase64(itemDto.Password);  // Encrypt new password
+        item.Password = _encryptions.EncryptPasswordToBase64(itemDto.Password);
     }
 
-    // Update individual properties from DTO
-    item.UpdateFromDTO(itemDto);
-
-    // Save changes
     _dbContext.Staffs.Update(item);
     await _dbContext.SaveChangesAsync();
 
-    // Return the updated item
     return await ReadItemAsync(item.StaffId, false);
 }
 
