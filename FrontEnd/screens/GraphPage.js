@@ -11,6 +11,8 @@ import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Link as RouterLink } from 'react-router-dom';
+
 
 // Update the body styles in GlobalStyle
 const GlobalStyle = createGlobalStyle`
@@ -794,6 +796,7 @@ function GraphPage() {
             />
           </div>
         </div>
+        
 
         <ChartControls>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -828,6 +831,7 @@ function GraphPage() {
           </TimePeriodContainer>
         </ChartWrapper>
       </GraphContainer>
+      
     </>
   );
 }

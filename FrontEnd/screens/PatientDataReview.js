@@ -1,9 +1,9 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-// GlobalStyle will be applied to the whole page to adjust the background
+// Same global style
 const GlobalStyle = createGlobalStyle`
   body {
     background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb); /* Same gradient as StaffPage */

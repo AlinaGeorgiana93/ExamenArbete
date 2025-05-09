@@ -1,12 +1,10 @@
-import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
 import Alina from '../src/media/Alina.jpg';
 import Parisa from '../src/media/Parisa.jpg';
 import Mona from '../src/media/Mona.jpg';
 import Nagi from '../src/media/Nagi.jpg';
-import checklist from '../src/media/checklist.jpg';
-
+import React, { useRef } from 'react';
 import '../src/index.css';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -20,25 +18,24 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-    display: flex;
+    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb); /* ← uppdaterad gradient */
     background-attachment: fixed;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #fff;
+    min-height: 100vh;
+    color: #000;
     position: relative;
+    overflow-x: hidden;
   }
 `;
 
+
 const Section = styled.section`
-  margin-bottom: 50px; /* Större mellanrum mellan sektionerna */
+  margin-bottom: 50px; 
 `;
 
 const SectionTitle = styled.h2`
   color: #125358;
-  font-size: 1.8rem; /* Större fontstorlek */
-  margin-bottom: 15px; /* Större avstånd mellan rubrik och text */
+  font-size: 1.8rem; 
+  margin-bottom: 15px; 
   text-align: center;
 `;
 
@@ -47,11 +44,11 @@ const SectionText = styled.p`
   color: #333;
   line-height: 1.6;
   text-align: center;
-  margin-bottom: 30px; /* Mer mellanrum efter texten */
+  margin-bottom: 30px;
 `;
 
 const PageContainer = styled.div`
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 40px;
   border-radius: 8px;
   width: 100%;
@@ -62,19 +59,20 @@ const PageContainer = styled.div`
   color: #000;
   scrollbar-width: thin;
   scrollbar-color: #50D9E6 #ffffff;
+  
 `;
 
 const Title = styled.h1`
   text-align: center;
   color: #125358;
-  margin-bottom: 30px; /* Större avstånd till rubrikens text */
+  margin-bottom: 30px; 
 `;
 
 const Text = styled.p`
   font-size: 18px;
   color: #333;
   line-height: 1.6;
-  margin-bottom: 20px; /* Större mellanrum */
+  margin-bottom: 20px; 
   text-align: center;
 `;
 
@@ -101,7 +99,7 @@ const TeamHeading = styled.h2`
   text-align: center;
   color: #125358;
   margin-top: 40px;
-  margin-bottom: 25px; /* Mer mellanrum före och efter */
+  margin-bottom: 25px;
   font-size: 1.8rem;
 `;
 
@@ -131,14 +129,52 @@ const VideoContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1; /* För att hålla videon i bakgrunden */
+  z-index: -1; 
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3); 
+  z-index: -1;
+`;
+
+const ScrollTopButton = styled.button`
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #125358;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 10; 
+`;
+const CopyrightText = styled.div`
+  text-align: center;
+  color: #333;
+  font-size: 14px;
+  margin-top: 50px; 
+  padding: 10px 0; 
+`;
+
+
+const scrollToTop = () => {
+  const container = document.getElementById('page-container');
+  container.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 const AboutUsPage = () => {
   const { t } = useTranslation();
+  const containerRef = useRef(null);
+  const currentYear = new Date().getFullYear(); // Hämtar det aktuella året
 
   return (
     <div>
@@ -149,10 +185,7 @@ const AboutUsPage = () => {
       >
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
-      <PageContainer>
-        {/* Lägg till bilden här */}
-        <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} />
-
+      <PageContainer id="page-container" ref={containerRef}>
         <Title>Om AutiGraph</Title>
         <Text>
           Vi är fyra engagerade tjejer som studerar systemutveckling och har tillsammans utvecklat den här webbplatsen som en del av vårt utbildningsprojekt. Vårt mål är att skapa en smidig och användarvänlig plattform som underlättar för vårdpersonal att spåra och rapportera patienters mående dagligen.
@@ -223,10 +256,14 @@ const AboutUsPage = () => {
             <Role>Fullstack Developer</Role>
           </TeamMember>
         </TeamGrid>
+        <CopyrightText>
+  Copyright {currentYear} AutiGraph. All rights reserved. Proudly made in Sweden.
+</CopyrightText>
       </PageContainer>
+      
+      <ScrollTopButton onClick={scrollToTop}>↑ Till toppen</ScrollTopButton>
 
-      {/* Video container with the updated video settings */}
-      <VideoContainer>
+      {/* <VideoContainer>
         <video
           src={videoFile}
           autoPlay={true}
@@ -240,13 +277,14 @@ const AboutUsPage = () => {
             position: 'absolute',
             top: 0,
             left: 0,
-            zIndex: -1,
+            zIndex: -2, 
           }}
         />
-      </VideoContainer>
+        <Overlay /> 
+      </VideoContainer> */}
+     
     </div>
   );
 };
 
 export default AboutUsPage;
-
