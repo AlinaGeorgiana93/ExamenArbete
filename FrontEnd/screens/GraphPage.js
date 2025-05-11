@@ -131,6 +131,21 @@ const ChartTypeButton = styled.button`
   }
 `;
 
+const buttonStyle = {
+  backgroundColor: '#3b82f6', // Tailwind "blue-500"
+  color: 'white',
+  padding: '8px 16px',
+  borderRadius: '0.75rem', // Mjukare hörn (12px)
+  border: 'none',
+  fontSize: '14px',
+  fontWeight: '500',
+  cursor: 'pointer',
+  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+  transition: 'background-color 0.2s ease',
+};
+
+
+
 const MetricToggle = styled.label`
   display: flex;
   align-items: center;
@@ -236,7 +251,6 @@ const chartTypes = [
   { key: 'bar', name: 'Bar Chart' },
   { key: 'line', name: 'Line Chart' },
   { key: 'pie', name: 'Pie Chart' },
-  { key: 'comment', name: 'Comments' },
 
 ];
 
@@ -799,18 +813,18 @@ function GraphPage() {
         
 
         <ChartControls>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {chartTypes.map(type => (
-              <ChartTypeButton
-                key={type.key}
-                active={chartType === type.key}
-                onClick={() => setChartType(type.key)}
-              >
-                {type.name}
-              </ChartTypeButton>
-            ))}
-          </div>
-        </ChartControls>
+  {chartTypes.map(({ key, name }) => (
+    <ChartTypeButton
+      key={key}
+      active={chartType === key}
+      onClick={() => setChartType(key)}
+    >
+      {name}
+    </ChartTypeButton>
+  ))}
+ 
+</ChartControls>
+
 
         <ChartWrapper>
           <ResponsiveContainer width="100%" height="100%">
@@ -831,7 +845,9 @@ function GraphPage() {
           </TimePeriodContainer>
         </ChartWrapper>
       </GraphContainer>
-      
+      <Link to={`/comments/${patientId}`}>
+  <button style={buttonStyle}>Go to Comments</button>
+</Link>
     </>
   );
 }

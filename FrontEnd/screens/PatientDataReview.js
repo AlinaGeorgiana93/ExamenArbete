@@ -104,9 +104,22 @@ function PatientDataReview() {
       sleepLevel: state.sleepLevel,
       patientId: patientId
     };
-
+  
+    // Spara kommentarer i localStorage
+    const newComments = [
+      { id: Date.now() + 1, text: `Mood: ${state.moodComment || 'No comment'}` },
+      { id: Date.now() + 2, text: `Activity: ${state.activityComment || 'No comment'}` },
+      { id: Date.now() + 3, text: `Appetite: ${state.appetiteComment || 'No comment'}` },
+      { id: Date.now() + 4, text: `Sleep: ${state.sleepComment || 'No comment'}` },
+    ];
+  
+    const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+    const updatedComments = [...savedComments, ...newComments];
+    localStorage.setItem('comments', JSON.stringify(updatedComments));
+  
     navigate(`/graph/${patientId}`, { state: graphData });
   };
+  
 
   if (!state) {
     return (

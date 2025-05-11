@@ -36,7 +36,7 @@ function App() {
             <Route path="/graph/:patientId" element={<GraphPage />} />
 
             <Route path="/about" element={<AboutUs />} />
-            <Route path="/comments" element={<CommentsPage />} />
+            <Route path="/comments/:patientId" element={<CommentsPage />} />
 
           </Route>
         </Routes>
