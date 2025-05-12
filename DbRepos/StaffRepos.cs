@@ -6,6 +6,9 @@ using Models.DTO;
 using DbModels;
 using DbContext;
 using Configuration;
+using Utils;
+
+
 
 namespace DbRepos
 {
@@ -25,62 +28,80 @@ namespace DbRepos
         
         #endregion
 
-        // Read single staff item (including optional patient information)
-        public async Task<ResponseItemDto<IStaff>> ReadItemAsync(Guid id, bool flat)
+        // Read single staff item (including optional patient information)    // Read single staff item (including optional patient information)
+    public async Task<ResponseItemDto<IStaff>> ReadItemAsync(Guid id, bool flat)
+    {
+        IQueryable<StaffDbM> query;
+        if (!flat)
         {
-            IQueryable<StaffDbM> query;
-            if (!flat)
-            {
-                query = _dbContext.Staffs.AsNoTracking()
-                   .Include(i => i.PatientsDbM)
-                    .Where(i => i.StaffId == id);
-            }
-            else
-            {
-                query = _dbContext.Staffs.AsNoTracking()
-                    .Where(i => i.StaffId == id);
-            }
-
-            var resp = await query.FirstOrDefaultAsync<IStaff>();
-            return new ResponseItemDto<IStaff>()
-            {
-                DbConnectionKeyUsed = _dbContext.dbConnection,
-                Item = resp
-            };
+            query = _dbContext.Staffs.AsNoTracking()
+               .Include(i => i.PatientsDbM)
+                .Where(i => i.StaffId == id);
+        }
+        else
+        {
+            query = _dbContext.Staffs.AsNoTracking()
+                .Where(i => i.StaffId == id);
         }
 
-        // Read list of staff with filtering and pagination
-        public async Task<ResponsePageDto<IStaff>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
+        var resp = await query.FirstOrDefaultAsync<IStaff>();
+
+        // Decrypt PersonalNumber here
+        if (resp != null)
         {
-            filter ??= "";
-
-            IQueryable<StaffDbM> query = _dbContext.Staffs.AsNoTracking();
-
-            if (!flat)
-            {
-                query = _dbContext.Staffs.AsNoTracking()
-                   .Include(i => i.PatientsDbM);
-            }
-
-            query = query.Where(i =>
-               (
-                  i.FirstName.ToLower().Contains(filter) ||
-                  i.LastName.ToLower().Contains(filter) ||
-                  i.PersonalNumber.ToLower().Contains(filter)
-               ));
-
-            return new ResponsePageDto<IStaff>
-            {
-                DbConnectionKeyUsed = _dbContext.dbConnection,
-                DbItemsCount = await query.CountAsync(),
-                PageItems = await query
-                    .Skip(pageNumber * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync<IStaff>(),
-                PageNr = pageNumber,
-                PageSize = pageSize
-            };
+            resp.PersonalNumber = _encryptions.DecryptLast4Digits(resp.PersonalNumber);  // Decrypt personal number
         }
+
+        return new ResponseItemDto<IStaff>()
+        {
+            DbConnectionKeyUsed = _dbContext.dbConnection,
+            Item = resp
+        };
+    }
+
+    // Read list of staff with filtering and pagination
+   public async Task<ResponsePageDto<IStaff>> ReadItemsAsync(bool flat, string filter, int pageNumber, int pageSize)
+{
+    filter ??= "";
+
+    IQueryable<StaffDbM> query = _dbContext.Staffs.AsNoTracking();
+
+    if (!flat)
+    {
+        query = _dbContext.Staffs.AsNoTracking()
+           .Include(i => i.PatientsDbM);
+    }
+
+    query = query.Where(i =>
+       (
+          i.FirstName.ToLower().Contains(filter) ||
+          i.LastName.ToLower().Contains(filter) ||
+          i.PersonalNumber.ToLower().Contains(filter)
+       ));
+
+    var staffQuery = query.Skip(pageNumber * pageSize).Take(pageSize);
+
+    // Get the list of StaffDbM
+    var staffListDbM = await staffQuery.ToListAsync();
+
+    // Convert the list of StaffDbM to a list of IStaff
+    var staffList = staffListDbM.Select(staff => 
+    {
+        // Decrypt PersonalNumber for each staff item
+        staff.PersonalNumber = _encryptions.DecryptLast4Digits(staff.PersonalNumber); 
+        return (IStaff)staff; // Cast the StaffDbM object to IStaff
+    }).ToList();
+
+    return new ResponsePageDto<IStaff>
+    {
+        DbConnectionKeyUsed = _dbContext.dbConnection,
+        DbItemsCount = await query.CountAsync(),
+        PageItems = staffList,  // The decrypted and converted list
+        PageNr = pageNumber,
+        PageSize = pageSize
+    };
+}
+
 
         // Delete a staff item
         public async Task<ResponseItemDto<IStaff>> DeleteItemAsync(Guid id)
@@ -110,10 +131,15 @@ public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
     // Preserve existing values if not provided in DTO
     item.FirstName = string.IsNullOrWhiteSpace(itemDto.FirstName) ? item.FirstName : itemDto.FirstName;
     item.LastName = string.IsNullOrWhiteSpace(itemDto.LastName) ? item.LastName : itemDto.LastName;
-    item.PersonalNumber = string.IsNullOrWhiteSpace(itemDto.PersonalNumber) ? item.PersonalNumber : itemDto.PersonalNumber;
     item.Email = string.IsNullOrWhiteSpace(itemDto.Email) ? item.Email : itemDto.Email;
     item.UserName = string.IsNullOrWhiteSpace(itemDto.UserName) ? item.UserName : itemDto.UserName;
     item.Role = string.IsNullOrWhiteSpace(itemDto.Role) ? item.Role : itemDto.Role;
+
+    if (!string.IsNullOrWhiteSpace(itemDto.PersonalNumber))
+    {
+        var normalizedPn = PersonalNumberUtils.Normalize(itemDto.PersonalNumber);
+        item.PersonalNumber = _encryptions.EncryptLast4Digits(normalizedPn);
+    }
 
     // Only update password if a new one is provided
     if (!string.IsNullOrWhiteSpace(itemDto.Password))
@@ -161,19 +187,24 @@ public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
     _logger.LogInformation("Encrypting password");
 
     // Encrypt the password
+    
     var encryptedPassword = _encryptions.EncryptPasswordToBase64(itemDto.Password);
 
     // Assign role: use default role if none is provided
     var role = string.IsNullOrEmpty(itemDto.Role) ? "usr" : itemDto.Role;
 
     // Create new staff item with encrypted password and role
-    var item = new StaffDbM(itemDto)
-    {
-        UserName = itemDto.UserName,
-        Email = itemDto.Email,
-        Password = encryptedPassword,
-        Role = role  // Correct assignment here
-    };
+    var normalizedPn = PersonalNumberUtils.Normalize(itemDto.PersonalNumber);
+    var encryptedPersonalNumber = _encryptions.EncryptLast4Digits(normalizedPn);
+
+        var item = new StaffDbM(itemDto)
+        {
+            UserName = itemDto.UserName,
+            Email = itemDto.Email,
+            Password = encryptedPassword,
+            Role = role,
+            PersonalNumber = encryptedPersonalNumber
+        };
 
     // Add item to the database and save changes
     _dbContext.Staffs.Add(item);

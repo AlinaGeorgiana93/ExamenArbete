@@ -103,18 +103,18 @@ public string AesDecryptStringFromBase64(string encryptedBase64)
 
     
         // Encrypt the last 4 digits of a personal number
-        public string EncryptLast4Digits(string personalNumber)
+            public string EncryptLast4Digits(string personalNumber)
         {
             if (string.IsNullOrWhiteSpace(personalNumber) || personalNumber.Length < 4)
                 throw new ArgumentException("PersonalNumber must be at least 4 characters");
 
-            string prefix = personalNumber[..^4];  // Everything except last 4 digits
-            string last4 = personalNumber[^4..];   // Last 4 digits
+            string prefix = personalNumber[..^4];
+            string last4 = personalNumber[^4..];
+            string encryptedLast4 = AesEncryptStringToBase64(last4);
 
-            string encryptedLast4 = AesEncryptStringToBase64(last4); // Encrypt only last 4 digits
-
-            return $"{prefix}:{encryptedLast4}"; // Store as prefix + encrypted last 4 digits
+            return $"{prefix}:{encryptedLast4}";
         }
+
 
         // Decrypt the last 4 digits of a personal number
         public string DecryptLast4Digits(string encryptedPersonalNumber)

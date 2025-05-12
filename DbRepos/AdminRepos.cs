@@ -54,14 +54,7 @@ public class AdminDbRepos
                 Email = "sysadmin1@gmail.com",
                 Password = _encryptions.EncryptPasswordToBase64("sysadmin1"),
                 Role = "sysadmin"
-            },
-            new() {
-                UserId = Guid.NewGuid(),
-                UserName = "user1",
-                Email = "user1@gmail.com",
-                Password = _encryptions.EncryptPasswordToBase64("user1"),
-                Role = "usr"
-            }
+            }   
         });
 
     if (!_dbContext.Staffs.Any())
@@ -71,7 +64,7 @@ public class AdminDbRepos
         StaffId = Guid.NewGuid(),
         FirstName = "Charlie",
         LastName = "Doddie",
-        PersonalNumber = "199001011234",
+        PersonalNumber = _encryptions.EncryptLast4Digits("199001011234"),
         Email = "charlie@mail.com",
         Role = "usr",
         UserName = "Charlie1",
@@ -83,7 +76,7 @@ public class AdminDbRepos
         StaffId = Guid.NewGuid(),
         FirstName = "Alice",
         LastName = "Maor",
-        PersonalNumber = "199002022345",
+        PersonalNumber = _encryptions.EncryptLast4Digits("19900104567"),
         Email = "alice@mail.com",
         Role = "usr",
         UserName = "Alice1",
@@ -95,7 +88,7 @@ public class AdminDbRepos
         StaffId = Guid.NewGuid(),
         FirstName = "Bob",
         LastName = "Tom",
-        PersonalNumber = "199003033456",
+        PersonalNumber = _encryptions.EncryptLast4Digits("199001014567"),
         Email = "bob@mail.com",
         Role = "usr",
         UserName = "Bob1",
@@ -106,15 +99,26 @@ public class AdminDbRepos
         StaffId = Guid.NewGuid(),
         FirstName = "Mike",
         LastName = "Smith",
-        PersonalNumber = "199003033456",
+        PersonalNumber = _encryptions.EncryptLast4Digits("199001012345"),
         Email = "mike@mail.com",
         Role = "sysadmin",
         UserName = "Mike1",
         Password = _encryptions.EncryptPasswordToBase64("1234") // encrypt it same as login
     };
+    var testStaff5 = new StaffDbM
+    {
+        StaffId = Guid.NewGuid(),
+        FirstName = "John",
+        LastName = "Doe",
+        PersonalNumber  = _encryptions.EncryptLast4Digits("19560937474"),
+        Email = "john-doe@yahoo.com",
+        Role = "usr",
+        UserName = "user1",     
+        Password = _encryptions.EncryptPasswordToBase64("user1") // encrypt it same as login
+    };
     
 
-    _dbContext.Staffs.AddRange(testStaff1, testStaff2, testStaff3, testStaff4);
+    _dbContext.Staffs.AddRange(testStaff1, testStaff2, testStaff3, testStaff4, testStaff5);
     await _dbContext.SaveChangesAsync();
 }
 
