@@ -19,9 +19,9 @@ public class AdminServiceDb : IAdminService
     }
 
     public Task<ResponseItemDto<GstUsrInfoAllDto>> InfoAsync() => _adminRepo.InfoAsync();
-    public async Task<UsrInfoDto> SeedDefaultUsersAsync()
+    public async Task<UsrInfoDto> SeedDefaultUsersStaffsPatientsAsync()
     {
-        await _adminRepo.SeedDefaultUsersAsync();
+        await _adminRepo.SeedDefaultUsersStaffsPatientsAsync();
         return new UsrInfoDto(); // Replace with actual logic to create UsrInfoDto if needed
     }
 }

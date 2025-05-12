@@ -50,14 +50,14 @@ namespace AppWebApi.Controllers
       
         //You need to run this with sysadmin connection string
        [HttpPost()]
-public async Task<IActionResult> SeedDefaultUsersAsync()
+public async Task<IActionResult> SeedDefaultUsersStaffsPatientsAsync()
 {
     try
     {
-        _logger.LogInformation("Seeding default users (sysadmin1, users) if not already present.");
+        _logger.LogInformation("Seeding default users  (sysadmin1, users) if not already present.");
 
-        await _adminService.SeedDefaultUsersAsync(); // assumes this checks if users already exist
-        return Ok("Default users  and staffs created or already exist.");
+        await _adminService.SeedDefaultUsersStaffsPatientsAsync(); // assumes this checks if users already exist
+        return Ok("Default users , staffs, patients created or already exist.");
     }
     catch (Exception ex)
     {

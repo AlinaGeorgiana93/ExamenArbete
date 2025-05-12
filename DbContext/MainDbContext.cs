@@ -79,7 +79,7 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Ignore<IActivityLevel>();
         modelBuilder.Ignore<IGraph>();
         modelBuilder.Entity<MoodKindDbM>().HasData(MoodKindDbM.GetSeedMoodKindsData());
-        modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
+        // modelBuilder.Entity<PatientDbM>().HasData(PatientDbM.GetSeedPatientsData());
         modelBuilder.Entity<AppetiteLevelDbM>().HasData(AppetiteLevelDbM.GetSeedAppetiteLevelsData());
         modelBuilder.Entity<SleepLevelDbM>().HasData(SleepLevelDbM.GetSeedSleepLevelsData());
         modelBuilder.Entity<ActivityLevelDbM>().HasData(ActivityLevelDbM.GetSeedActivityLevelsData());

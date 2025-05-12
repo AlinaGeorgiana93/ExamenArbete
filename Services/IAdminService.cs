@@ -7,5 +7,5 @@ public interface IAdminService
 {
 
     public Task<ResponseItemDto<GstUsrInfoAllDto>> InfoAsync();
-    public Task<UsrInfoDto> SeedDefaultUsersAsync();
+    public Task<UsrInfoDto> SeedDefaultUsersStaffsPatientsAsync();
 }

@@ -28,7 +28,7 @@ namespace DbRepos
         
         #endregion
 
-        // Read single staff item (including optional patient information)    // Read single staff item (including optional patient information)
+     
     public async Task<ResponseItemDto<IStaff>> ReadItemAsync(Guid id, bool flat)
     {
         IQueryable<StaffDbM> query;
