@@ -139,6 +139,8 @@ const CommentsPage = () => {
   const [error, setError] = useState(null);
   const COMMENTS_PER_PAGE = 16;
   const [currentPage, setCurrentPage] = useState(1);
+  const [editMode, setEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     // Hämta kommentarer från localStorage och sätt timestamp om de saknas
@@ -196,6 +198,32 @@ const CommentsPage = () => {
     localStorage.setItem('comments', JSON.stringify(updatedComments));
   };
 
+  const handleEdit = (id) => {
+    const commentToEdit = commentList.find(comment => comment.id === id);
+    setComments(commentToEdit.text);
+    setEditMode(true);
+    setEditId(id);
+  };
+
+  const handleSaveEdit = () => {
+    if (comments.trim() !== '') {
+      const updatedComments = commentList.map(comment =>
+        comment.id === editId ? { ...comment, text: comments.trim(), timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }) } : comment
+      );
+      setCommentList(updatedComments);
+      localStorage.setItem('comments', JSON.stringify(updatedComments));
+      setComments('');
+      setEditMode(false);
+      setEditId(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setComments('');
+    setEditMode(false);
+    setEditId(null);
+  };
+
   const totalPages = Math.ceil(commentList.length / COMMENTS_PER_PAGE);
   const startIdx = (currentPage - 1) * COMMENTS_PER_PAGE;
   const currentComments = commentList.slice(startIdx, startIdx + COMMENTS_PER_PAGE);
@@ -248,7 +276,14 @@ const CommentsPage = () => {
           onChange={(e) => setComments(e.target.value)}
           placeholder="Skriv en kommentar..."
         />
-        <CommentButton onClick={handleCommentSubmit}>Lägg till kommentar</CommentButton>
+        {editMode ? (
+          <>
+            <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
+            <CommentButton onClick={handleCancelEdit} style={{ backgroundColor: '#ff4d4d', marginTop: '8px' }}>Avbryt</CommentButton>
+          </>
+        ) : (
+          <CommentButton onClick={handleCommentSubmit}>Lägg till kommentar</CommentButton>
+        )}
 
         <h2 style={{ marginTop: '30px', color: '#125358' }}>Alla kommentarer</h2>
         <CommentList>
@@ -275,6 +310,28 @@ const CommentsPage = () => {
                   >
                     X
                   </DeleteButton>
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEdit(comment.id)}
+                    style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '40px',
+                      background: '#3b82f6',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '24px',
+                      height: '24px',
+                      textAlign: 'center',
+                      lineHeight: '22px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '14px',
+                    }}
+                  >
+                    ✎
+                  </button>
                 </CommentItem>
 
                 {(index + 1) % 4 === 0 && index !== currentComments.length - 1 && (
