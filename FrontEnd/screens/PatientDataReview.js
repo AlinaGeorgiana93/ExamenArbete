@@ -1,9 +1,9 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-// Same global style
+// GlobalStyle will be applied to the whole page to adjust the background
 const GlobalStyle = createGlobalStyle`
   body {
     background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb); /* Same gradient as StaffPage */
@@ -16,8 +16,9 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const ReviewContainer = styled.div`
-  background-color: #ffffffee; /* Transparent white background for the content area */
-  padding: 80px; /* Larger padding for more space inside */
+  background-color: #ffffffee;
+  font-family: 'Poppins', sans-serif;
+  padding: 30px;
   border-radius: 16px;
   width: 100%; /* Full width container */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
@@ -34,9 +35,6 @@ const DataItem = styled.div`
   background-color: #f5f5f5;
   border-radius: 8px;
   font-size: 1.8rem; /* Larger text for DataItem */
-  ${({ isComment }) => isComment && `
-    border-top: 2px solid #125358; /* Blue line between mood data and comments */
-  `}
 `;
 
 const Label = styled.span`
@@ -104,27 +102,14 @@ function PatientDataReview() {
       sleepLevel: state.sleepLevel,
       patientId: patientId
     };
-  
-    // Spara kommentarer i localStorage
-    const newComments = [
-      { id: Date.now() + 1, text: `Mood: ${state.moodComment || 'No comment'}` },
-      { id: Date.now() + 2, text: `Activity: ${state.activityComment || 'No comment'}` },
-      { id: Date.now() + 3, text: `Appetite: ${state.appetiteComment || 'No comment'}` },
-      { id: Date.now() + 4, text: `Sleep: ${state.sleepComment || 'No comment'}` },
-    ];
-  
-    const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-    const updatedComments = [...savedComments, ...newComments];
-    localStorage.setItem('comments', JSON.stringify(updatedComments));
-  
+
     navigate(`/graph/${patientId}`, { state: graphData });
   };
-  
 
   if (!state) {
     return (
       <>
-        <GlobalStyle />
+        <GlobalStyle /> {/* GlobalStyle applied to the page */}
         <ReviewContainer>
           <h2>{t('no_data_to_review')}</h2>
           <p>{t('no_patient_data')}</p>
@@ -138,7 +123,7 @@ function PatientDataReview() {
 
   return (
     <>
-      <GlobalStyle />
+      <GlobalStyle /> {/* GlobalStyle applied to the page */}
       <ReviewContainer>
         <h2>{t('review_patient_data')}</h2>
 
@@ -173,27 +158,6 @@ function PatientDataReview() {
           <Value>
             {state.sleepLevel?.label} (Rating: {state.sleepLevel?.rating || 'N/A'}, ID: {state.sleepLevel?.sleepLevelId || 'N/A'})
           </Value>
-        </DataItem>
-
-        {/* New sections for comments */}
-        <DataItem>
-          <Label>{t('Mood comment')}</Label>
-          <Value>{state.moodComment || 'No comment'}</Value>
-        </DataItem>
-
-        <DataItem>
-          <Label>{t('Activity comment')}</Label>
-          <Value>{state.activityComment || 'No comment'}</Value>
-        </DataItem>
-
-        <DataItem>
-          <Label>{t('Appetite comment')}</Label>
-          <Value>{state.appetiteComment || 'No comment'}</Value>
-        </DataItem>
-
-        <DataItem>
-          <Label>{t('Sleep comment')}</Label>
-          <Value>{state.sleepComment || 'No comment'}</Value>
         </DataItem>
 
         <DataItem>

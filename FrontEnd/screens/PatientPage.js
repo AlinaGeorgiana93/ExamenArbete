@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 
-// Global Style
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -15,13 +15,18 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.3rem;
   }
   body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
-    min-height: 100vh;
-    color: rgb(29, 29, 29);
-    overflow-y: auto;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    position: relative;
   }
 `;
+
+
 
 const PatientPageContainer = styled.div`
   background-color: #ffffffee;
@@ -60,17 +65,6 @@ const Dropdown = styled.select`
     border-color: #3b878c;
     background-color: #fff;
   }
-`;
-
-const Textarea = styled.textarea`
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-top: 10px;
-  resize: vertical;
-  min-height: 50px;
 `;
 
 const Button = styled.button`
@@ -118,6 +112,7 @@ const PatientName = styled.h2`
   text-align: center;
 `;
 
+
 function PatientPage() {
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);
@@ -132,11 +127,6 @@ function PatientPage() {
   const [selectedActivityLevel, setSelectedActivityLevel] = useState('');
   const [selectedAppetiteLevel, setSelectedAppetiteLevel] = useState('');
   const [selectedSleepLevel, setSelectedSleepLevel] = useState('');
-
-  const [moodComment, setMoodComment] = useState('');
-  const [activityComment, setActivityComment] = useState('');
-  const [appetiteComment, setAppetiteComment] = useState('');
-  const [sleepComment, setSleepComment] = useState('');
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -205,13 +195,7 @@ function PatientPage() {
     fetchData();
   }, [token]);
 
-  // Handle select change for all dropdowns
   const handleSelectChange = (setter) => (e) => {
-    setter(e.target.value);
-  };
-
-  // Handle comment change for all comment inputs
-  const handleCommentChange = (setter) => (e) => {
     setter(e.target.value);
   };
 
@@ -243,10 +227,6 @@ function PatientPage() {
         activityRating: activityData?.rating,
         appetiteRating: appetiteData?.rating,
         sleepRating: sleepData?.rating,
-        moodComment,
-        activityComment,
-        appetiteComment,
-        sleepComment,
       };
 
       await axios.post('https://localhost:7066/api/Graph/CreateItem', {
@@ -309,11 +289,6 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
-            <Textarea
-              placeholder={t('Optional comment')}
-              value={moodComment}
-              onChange={handleCommentChange(setMoodComment)}
-            />
           </FormGroup>
 
           <FormGroup>
@@ -335,11 +310,6 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
-            <Textarea
-              placeholder={t('Optional comment')}
-              value={activityComment}
-              onChange={handleCommentChange(setActivityComment)}
-            />
           </FormGroup>
 
           <FormGroup>
@@ -361,11 +331,6 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
-            <Textarea
-              placeholder={t('Optional comment')}
-              value={appetiteComment}
-              onChange={handleCommentChange(setAppetiteComment)}
-            />
           </FormGroup>
 
           <FormGroup>
@@ -382,11 +347,6 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
-            <Textarea
-              placeholder={t('Optional comment')}
-              value={sleepComment}
-              onChange={handleCommentChange(setSleepComment)}
-            />
           </FormGroup>
 
           <Button onClick={handleSave}>{t('save_button')}</Button>

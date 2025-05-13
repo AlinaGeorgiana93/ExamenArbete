@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import patient1 from '../src/media/patient1.jpg';
+import patient1 from '../src/media/patient1.jpg'; // Återställd bild
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -63,22 +65,35 @@ const CommentList = styled.div`
   background: #f9f9f9;
   padding: 16px;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 `;
 
 const CommentItem = styled.div`
   background: #fff;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 16px;
   border-left: 4px solid #125358;
-  border-radius: 4px;
+  border-radius: 6px;
   position: relative;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease;
 
   &:hover {
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
 
-  &:hover .delete-btn {
+  &::after {
+    content: '';
     display: block;
+    height: 1px;
+    background: #ddd;
+    margin-top: 20px;
+  }
+
+  &:last-child::after {
+    display: none;
   }
 `;
 
@@ -112,6 +127,12 @@ const DeleteButton = styled.button`
   }
 `;
 
+const PageButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
+
 const PageButton = styled.button`
   background-color: #125358;
   color: white;
@@ -130,6 +151,13 @@ const PageButton = styled.button`
   }
 `;
 
+const PageInfo = styled.p`
+  text-align: center;
+  color: #125358;
+  margin-top: 10px;
+  font-size: 14px;
+`;
+
 const CommentsPage = () => {
   const { patientId } = useParams();
   const [comments, setComments] = useState('');
@@ -137,27 +165,15 @@ const CommentsPage = () => {
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const COMMENTS_PER_PAGE = 16;
   const [currentPage, setCurrentPage] = useState(1);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
-    // Hämta kommentarer från localStorage och sätt timestamp om de saknas
     const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-    const commentsWithTimestamp = savedComments.map(comment => {
-      if (!comment.timestamp) {
-        return {
-          ...comment,
-          timestamp: new Date().toLocaleString('sv-SE', {
-            dateStyle: 'short',
-            timeStyle: 'short'
-          }),
-        };
-      }
-      return comment;
-    });
-    setCommentList(commentsWithTimestamp);
+    setCommentList(savedComments);
   }, []);
 
   useEffect(() => {
@@ -179,18 +195,16 @@ const CommentsPage = () => {
       const newComment = {
         id: Date.now(),
         text: comments.trim(),
-        timestamp: new Date().toLocaleString('sv-SE', {
-          dateStyle: 'short',
-          timeStyle: 'short'
-        }),
+        timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }),
       };
-
-      const updatedComments = [...commentList, newComment];
+  
+      const updatedComments = [newComment, ...commentList];  // Lägg till ny kommentar först
       setCommentList(updatedComments);
       localStorage.setItem('comments', JSON.stringify(updatedComments));
       setComments('');
     }
   };
+  
 
   const handleDelete = (id) => {
     const updatedComments = commentList.filter(comment => comment.id !== id);
@@ -226,142 +240,84 @@ const CommentsPage = () => {
 
   const totalPages = Math.ceil(commentList.length / COMMENTS_PER_PAGE);
   const startIdx = (currentPage - 1) * COMMENTS_PER_PAGE;
-  const currentComments = commentList.slice(startIdx, startIdx + COMMENTS_PER_PAGE);
+  const filteredComments = commentList.filter(comment => {
+    const commentDate = new Date(comment.timestamp).toLocaleDateString('sv-SE');
+    const selectedDateString = selectedDate.toLocaleDateString('sv-SE');
+    return commentDate === selectedDateString;
+  });
 
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
+  const paginatedComments = filteredComments.slice(startIdx, startIdx + COMMENTS_PER_PAGE);
 
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  const handleDateChange = date => {
+    setSelectedDate(date);
+    setCurrentPage(1);  // Reset to the first page when a new date is selected
   };
 
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: 2 }}>
-        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
-      </Link>
       <PageContainer>
-        {/* Patientbild */}
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <img
-            src={patient1}
-            alt="Patient"
-            style={{
-              width: '150px',
-              height: '150px',
-              borderRadius: '50%',
-              objectFit: 'cover',
-            }}
-          />
-        </div>
-
-        {/* Titel */}
-        <Title>Kommentarer för patient {patientId}</Title>
-
-        {loading && <p>Laddar patientinformation...</p>}
-        {error && <p>{error}</p>}
-
-        {patientData && (
-          <div>
-            <p><strong>Namn:</strong> {patientData.name}</p>
-            <p><strong>Ålder:</strong> {patientData.age}</p>
-          </div>
-        )}
-
+        {/* Flyttad bild här */}
+        <img 
+          src={patient1} 
+          alt="Patient Bild" 
+          style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }} 
+        />
+        
+        <Title>Kommentarer för patienten {patientData?.name || 'Laddar...'}</Title>
+        
+        <DatePicker
+          selected={selectedDate}
+          onChange={handleDateChange}
+          dateFormat="yyyy-MM-dd"
+          showPopperArrow={false}
+        />
+  
         <CommentBox
-          rows={3}
           value={comments}
           onChange={(e) => setComments(e.target.value)}
-          placeholder="Skriv en kommentar..."
+          placeholder="Skriv din kommentar här..."
         />
         {editMode ? (
           <>
             <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
-            <CommentButton onClick={handleCancelEdit} style={{ backgroundColor: '#ff4d4d', marginTop: '8px' }}>Avbryt</CommentButton>
+            <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
           </>
         ) : (
-          <CommentButton onClick={handleCommentSubmit}>Lägg till kommentar</CommentButton>
+          <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
         )}
 
-        <h2 style={{ marginTop: '30px', color: '#125358' }}>Alla kommentarer</h2>
         <CommentList>
-          {currentComments.length > 0 ? (
-            currentComments.map((comment, index) => (
-              <React.Fragment key={comment.id}>
-                <CommentItem>
-                  <div>{comment.text}</div>
-                  <small
-                    style={{
-                      color: '#3b82f6',
-                      fontSize: '12px',
-                      display: 'block',
-                      marginTop: '5px',
-                      position: 'relative',
-                      zIndex: 10,
-                    }}
-                  >
-                    {comment.timestamp}
-                  </small>
-                  <DeleteButton
-                    className="delete-btn"
-                    onClick={() => handleDelete(comment.id)}
-                  >
-                    X
-                  </DeleteButton>
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEdit(comment.id)}
-                    style={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '40px',
-                      background: '#3b82f6',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '24px',
-                      height: '24px',
-                      textAlign: 'center',
-                      lineHeight: '22px',
-                      cursor: 'pointer',
-                      fontWeight: 'bold',
-                      fontSize: '14px',
-                    }}
-                  >
-                    ✎
-                  </button>
-                </CommentItem>
-
-                {(index + 1) % 4 === 0 && index !== currentComments.length - 1 && (
-                  <div
-                    style={{
-                      borderTop: '1px solid #3b82f6',
-                      margin: '16px 0',
-                      opacity: 0.4,
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            ))
-          ) : (
-            <p>Inga kommentarer ännu.</p>
-          )}
+          {paginatedComments.map((comment) => (
+            <CommentItem key={comment.id}>
+              <p>{comment.text}</p>
+              <p>{comment.timestamp}</p>
+              <DeleteButton onClick={() => handleDelete(comment.id)}>X</DeleteButton>
+              <button onClick={() => handleEdit(comment.id)}>Redigera</button>
+            </CommentItem>
+          ))}
         </CommentList>
 
-        {/* Sidnavigering */}
-        {totalPages > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
-            <PageButton onClick={handlePrev} disabled={currentPage === 1}>
-              <FaArrowLeft /> Föregående
-            </PageButton>
-            <span>Sida {currentPage} av {totalPages}</span>
-            <PageButton onClick={handleNext} disabled={currentPage === totalPages}>
-              Nästa <FaArrowRight />
-            </PageButton>
-          </div>
-        )}
+        <PageButtonContainer>
+          <PageButton
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            disabled={currentPage === 1}
+          >
+            <FaArrowLeft />
+            Föregående
+          </PageButton>
+          <PageButton
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Nästa
+            <FaArrowRight />
+          </PageButton>
+        </PageButtonContainer>
+
+        <PageInfo>
+          Sida {currentPage} av {totalPages}
+        </PageInfo>
       </PageContainer>
     </>
   );
