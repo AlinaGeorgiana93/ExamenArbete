@@ -44,6 +44,16 @@ const CommentBox = styled.textarea`
   resize: none;
 `;
 
+const SignatureInput = styled.input`
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid ${({ isValid }) => (isValid ? '#ccc' : 'red')}; /* Röd kant om signaturen är tom */
+  width: 100px;
+  margin-top: 10px;
+  background-color: ${({ isValid }) => (isValid ? 'white' : '#ffefef')}; /* Ljus röd bakgrund om signaturen saknas */
+`;
+
 const CommentButton = styled.button`
   background-color: #125358;
   color: white;
@@ -158,6 +168,17 @@ const PageInfo = styled.p`
   font-size: 14px;
 `;
 
+const NameTitle = styled.h1`
+  background-color: #e0f7f9; /* Ljus bakgrundsfärg som matchar temat */
+  padding: 5px 12px; /* Justera padding för att skapa bra utrymme */
+  border-radius: 5px; /* Rundade hörn på bakgrunden */
+  font-size: 35px; /* Större fontstorlek än den ursprungliga */
+  font-weight: 700; /* Fet stil för att framhäva namnet */
+  text-align: center; /* Centrera texten */
+  display: inline-block; /* Gör så att bakgrundsfärgen bara täcker texten */
+  margin: 10px 0; /* Ger lite mellanrum ovanför och under rubriken */
+`;
+
 const CommentsPage = () => {
   const { patientId } = useParams();
   const [comments, setComments] = useState('');
@@ -166,6 +187,8 @@ const CommentsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [signature, setSignature] = useState(''); // Signaturfältet
+  const [isSignatureValid, setIsSignatureValid] = useState(true); // Validering för signaturen
   const COMMENTS_PER_PAGE = 16;
   const [currentPage, setCurrentPage] = useState(1);
   const [editMode, setEditMode] = useState(false);
@@ -187,8 +210,8 @@ const CommentsPage = () => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        const response = await axios.get(`/api/patient/${patientId}`);
-        setPatientData(response.data);
+        const response = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`);
+        setPatientData(response.data.item);
         setLoading(false);
       } catch (err) {
         setError("Kunde inte hämta patientdata.");
@@ -199,20 +222,31 @@ const CommentsPage = () => {
   }, [patientId]);
 
   const handleCommentSubmit = () => {
-    if (comments.trim() !== '') {
-      const newComment = {
-        id: Date.now(),
-        text: comments.trim(),
-        timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }),
-      };
-  
-      const updatedComments = [newComment, ...commentList];  // Lägg till ny kommentar först
-      setCommentList(updatedComments);
-      localStorage.setItem('comments', JSON.stringify(updatedComments));
-      setComments('');
+    if (comments.trim() === '') {
+      alert("Kommentar kan inte vara tom.");
+      return;
     }
+
+    if (signature.trim() === '') {
+      setIsSignatureValid(false);
+      alert("Vänligen fyll i dina initialer.");
+      return;
+    }
+
+    const newComment = {
+      id: Date.now(),
+      text: comments.trim(),
+      signature: signature.trim(),
+      timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }),
+    };
+
+    const updatedComments = [newComment, ...commentList];
+    setCommentList(updatedComments);
+    localStorage.setItem('comments', JSON.stringify(updatedComments));
+    setComments('');
+    setSignature('');
+    setIsSignatureValid(true); // Återställ signaturvalidering
   };
-  
 
   const handleDelete = (id) => {
     const updatedComments = commentList.filter(comment => comment.id !== id);
@@ -258,47 +292,54 @@ const CommentsPage = () => {
 
   const handleDateChange = date => {
     setSelectedDate(date);
-    setCurrentPage(1);  // Reset to the first page when a new date is selected
+    setCurrentPage(1);
   };
 
   return (
     <>
       <GlobalStyle />
       <PageContainer>
-        {/* Flyttad bild här */}
         <img 
           src={patient1} 
           alt="Patient Bild" 
           style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }} 
         />
-        
-        <Title>Kommentarer för patienten {patientData?.name || 'Laddar...'}</Title>
-        
+        <Title>
+          Kommentarer för {patientData ? 
+            <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> : 
+            (error || 'Ingen patient hittades')}
+        </Title>
+
         <DatePicker
           selected={selectedDate}
           onChange={handleDateChange}
           dateFormat="yyyy-MM-dd"
           showPopperArrow={false}
         />
-  
-  {isToday(selectedDate) && (
-  <>
-    <CommentBox
-      value={comments}
-      onChange={(e) => setComments(e.target.value)}
-      placeholder="Skriv din kommentar här..."
-    />
-    {editMode ? (
-      <>
-        <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
-        <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
-      </>
-    ) : (
-      <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
-    )}
-  </>
-)}
 
+        {isToday(selectedDate) && (
+          <>
+            <CommentBox
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              placeholder="Skriv din kommentar här..."
+            />
+            <SignatureInput
+              value={signature}
+              onChange={(e) => setSignature(e.target.value)}
+              placeholder="Skriv initialer"
+              isValid={isSignatureValid}
+            />
+            {editMode ? (
+              <>
+                <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
+                <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
+              </>
+            ) : (
+              <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
+            )}
+          </>
+        )}
 
         <CommentList>
           {paginatedComments.map((comment) => (
