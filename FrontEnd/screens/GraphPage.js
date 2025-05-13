@@ -245,6 +245,8 @@ const TimePeriodContainer = styled.div`
   }
 `;
 
+
+
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
 const chartTypes = [
@@ -844,10 +846,27 @@ function GraphPage() {
             ))}
           </TimePeriodContainer>
         </ChartWrapper>
-      </GraphContainer>
-      <Link to={`/comments/${patientId}`}>
-  <button style={buttonStyle}>Go to Comments</button>
+        <Link to={`/comments/${patientId}`}>
+  <button style={{
+    padding: '10px 15px',
+    background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)', 
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginTop: '20px',
+    marginBottom: '20px',
+  }}>
+    Go to comments
+  </button>
 </Link>
+
+
+
+
+      </GraphContainer>
+     
+
     </>
   );
 }
