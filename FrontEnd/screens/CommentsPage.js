@@ -36,13 +36,18 @@ const Title = styled.h1`
 
 const CommentBox = styled.textarea`
   width: 100%;
-  padding: 12px;
+  height: 140px; /* ⬅️ Lägg till eller ändra höjden här */
+  padding: 14px;
   font-size: 16px;
+  margin-top: 12px;
   margin-bottom: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  resize: none;
+  resize: vertical; /* ⬅️ Tillåt att dra rutan manuellt om du vill */
 `;
+
+
+
 
 const CommentButton = styled.button`
   background-color: #125358;
