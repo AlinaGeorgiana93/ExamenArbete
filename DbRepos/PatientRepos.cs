@@ -135,54 +135,69 @@ public async Task<ResponseItemDto<IPatient>> ReadItemAsync(Guid id, bool flat)
         .FirstOrDefaultAsync(i => i.PatientId == itemDto.PatientId)
         ?? throw new ArgumentException($"Item {itemDto.PatientId} does not exist");
 
-    // Preserve existing values if not provided in DTO
-    item.FirstName = string.IsNullOrWhiteSpace(itemDto.FirstName) ? item.FirstName : itemDto.FirstName;
-    item.LastName = string.IsNullOrWhiteSpace(itemDto.LastName) ? item.LastName : itemDto.LastName;
+    // Normalize and validate first name
+    if (!string.IsNullOrWhiteSpace(itemDto.FirstName))
+    {
+        var normalizedFirst = InputValidationUtils.NormalizeName(itemDto.FirstName);
+        if (!InputValidationUtils.IsValidName(normalizedFirst))
+            throw new ArgumentException("Invalid first name.");
+        item.FirstName = normalizedFirst;
+    }
 
+    // Normalize and validate last name
+    if (!string.IsNullOrWhiteSpace(itemDto.LastName))
+    {
+        var normalizedLast = InputValidationUtils.NormalizeName(itemDto.LastName);
+        if (!InputValidationUtils.IsValidName(normalizedLast))
+            throw new ArgumentException("Invalid last name.");
+        item.LastName = normalizedLast;
+    }
+
+    // Normalize and validate personal number if provided
     if (!string.IsNullOrWhiteSpace(itemDto.PersonalNumber))
     {
         var normalizedPn = PersonalNumberUtils.Normalize(itemDto.PersonalNumber);
-        
-        // Encrypt only the last 4 digits after normalization
+
+        if (string.IsNullOrEmpty(normalizedPn) || !PersonalNumberUtils.IsValid(normalizedPn))
+            throw new ArgumentException("Invalid personal number.");
+
         item.PersonalNumber = _encryptions.EncryptLast4Digits(normalizedPn);
     }
 
-    // Update other fields as necessary
-    // You can add similar checks for other properties in the itemDto
-
-    // Save changes to the database
     await _dbContext.SaveChangesAsync();
 
-    // Return the updated item in non-flat mode
     return await ReadItemAsync(item.PatientId, false);
 }
 
- public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDto)
+
+public async Task<ResponseItemDto<IPatient>> CreateItemAsync(PatientCuDto itemDto)
 {
     if (itemDto.PatientId != null)
         throw new ArgumentException($"{nameof(itemDto.PatientId)} must be null when creating a new object");
 
-    // Normalize the personal number
+    // Normalize and validate first and last name
+    itemDto.FirstName = InputValidationUtils.NormalizeName(itemDto.FirstName);
+    itemDto.LastName = InputValidationUtils.NormalizeName(itemDto.LastName);
+
+    if (!InputValidationUtils.IsValidName(itemDto.FirstName))
+        throw new ArgumentException("Invalid first name.");
+
+    if (!InputValidationUtils.IsValidName(itemDto.LastName))
+        throw new ArgumentException("Invalid last name.");
+
+    // Normalize and validate the personal number
     var normalizedPn = PersonalNumberUtils.Normalize(itemDto.PersonalNumber);
-
-    // Validate the normalized personal number
     if (string.IsNullOrEmpty(normalizedPn) || !PersonalNumberUtils.IsValid(normalizedPn))
-    {
         throw new ArgumentException("Invalid personal number after normalization.");
-    }
 
-    // Encrypt the last 4 digits of the normalized personal number
     var encryptedPersonalNumber = _encryptions.EncryptLast4Digits(normalizedPn);
 
-    // ❗️Check if a patient with this encrypted personal number already exists
     var existingPatient = await _dbContext.Patients
         .AsNoTracking()
         .FirstOrDefaultAsync(p => p.PersonalNumber == encryptedPersonalNumber);
 
     if (existingPatient != null)
-    {
         throw new InvalidOperationException("A patient with this personal number already exists.");
-    }
 
     var item = new PatientDbM(itemDto)
     {

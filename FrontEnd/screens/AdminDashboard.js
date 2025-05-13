@@ -8,6 +8,7 @@ import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
 import patient1 from '../src/media/patient1.jpg';
 import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
+import InputValidationUtils from '../src/InputValidationUtils.js';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -224,6 +225,17 @@ const AdminDashboard = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [personalNumber, setPersonalNumber] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    firstName: '',
+    lastName: '',
+    personalNumber: '',
+    username: '',
+    email: '',
+    password: '',
+  });
+  
+  
 
 
 // Dummy data for now
@@ -233,20 +245,55 @@ const userData = {
   role: localStorage.getItem('role'),
 };
 
+
+const validateAllFields = ({ firstName, lastName, username, email, password, personalNumber }) => {
+  const errors = {};
+
+  if (!InputValidationUtils.isValidName(firstName)) {
+    errors.firstName = 'First name is invalid.';
+  }
+
+  if (!InputValidationUtils.isValidName(lastName)) {
+    errors.lastName = 'Last name is invalid.';
+
+  }
+
+   if (!PersonalNumberUtils.isValid(personalNumber)) {
+    errors.personalNumber = 'Personal number is invalid.';
+  }
+  
+   if (activeTab === 'staff') {
+   
+  if (!InputValidationUtils.isValidUsername(username)) {
+    errors.username = 'Username should be at least 4 characters long and contain only alphanumeric characters.';
+  }
+
+  if (!InputValidationUtils.isValidEmail(email)) {
+    errors.email = 'Please provide a valid email address.';
+  }
+
+  if (!InputValidationUtils.isStrongPassword(password)) {
+    errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
+  }
+}
+
+  return errors;
+};
+
+
+
 const handlePersonalNumberChange = (e) => {
-    const newPersonalNumber = e.target.value;
-    setPersonalNumber(newPersonalNumber);
+  const newPersonalNumber = e.target.value;
+  setPersonalNumber(newPersonalNumber);
+  setFormData((prev) => ({ ...prev, personalNumber: newPersonalNumber }));
 
-    // Check validity
-    if (PersonalNumberUtils.isValid(newPersonalNumber)) {
-      setIsValid(true);
-      toast.success('Personal number is valid!');
-    } else {
-      setIsValid(false);
-    }
-  };
-
-  const maskedPersonalNumber = PersonalNumberUtils.format(personalNumber, true); // Mask last 4 digits
+  if (PersonalNumberUtils.isValid(newPersonalNumber)) {
+    setIsValid(true);
+  } else {
+    setIsValid(false);
+  }
+};
+  
 
   useEffect(() => {
     fetchPatients();
@@ -287,38 +334,48 @@ const handlePersonalNumberChange = (e) => {
     }
   };
   
-
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Ensure activeTab is set correctly when submitting
+    console.log('Form submitted with data:', formData); // Add this line for debugging
+
+    // Validate fields
+    const errors = validateAllFields(formData);
+    setFieldErrors(errors);
+
+    // Log the validation errors
+    console.log('Validation errors:', errors);
+
+    if (Object.keys(errors).length > 0) {
+      setIsLoading(false);  // stop loading
+      return; // stop form submission
+    }
+
     const isStaff = activeTab === 'staff';
     const endpoint = isStaff ? 'Staff' : 'Patient';
-    
+
     try {
-      const response = await axiosInstance.post(`/${endpoint}/CreateItem`, {
-        ...formData,
-      });
-      
+      const response = await axiosInstance.post(`/${endpoint}/CreateItem`, formData);
+      console.log('API Response:', response);  // Check if the API call is successful
+
       setSuccessMessage(`${endpoint} created successfully!`);
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-  
+
       // Reset the form after successful submission
       setFormData({
         firstName: '',
         lastName: '',
         personalNumber: '',
-        username: '',  
-        email: '',     
-        password: '',  
+        username: '',
+        email: '',
+        password: '',
         id: null,
       });
-  
+
       // Fetch updated data for the correct tab (Staff or Patient)
       if (isStaff) {
         fetchStaff();
@@ -326,13 +383,14 @@ const handlePersonalNumberChange = (e) => {
         fetchPatients();
       }
     } catch (error) {
+      console.error('Error during submission:', error.response || error.message); // Log the error for debugging
       setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
       setShowSuccessMessage(true);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false);  // stop loading after submission
     }
-  };
-  
+};
+
 
   const handleDelete = async (personId) => {
     try {
@@ -565,53 +623,89 @@ const handlePersonalNumberChange = (e) => {
   {formVisible && (
   <Form onSubmit={handleSubmit}>
           <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
-
+          
+          <label htmlFor="first_name">{t('first_name')}</label>
           <Input
+            type="text"
+            id="first_name"
             placeholder={t('first_name')}
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             required
           />
+                {fieldErrors.firstName && (
+        <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.firstName}</div>
+      )}
 
+          <label htmlFor="last_name">{t('last_name')}</label>
           <Input
+            type="text"
+            id="last_name"
             placeholder={t('last_name')}
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             required
           />
+          {fieldErrors.lastName && (
+      <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.lastName}</div>
+    )}
 
+
+          <label htmlFor="personal_number">{t('personal_number')}</label>
           <Input
-            placeholder={t('personal_number')}
+            type="text"
+            id="personal_number"
+            placeholder="YYYYMMDDXXX"
             value={formData.personalNumber}
-            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+            onChange={handlePersonalNumberChange}
             required
           />
+          {fieldErrors.personalNumber && (
+         <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.personalNumber}</div>
+          )}
 
           {activeTab === 'staff' && (
             <>
+              <label htmlFor="username">{t('username')}</label>
               <Input
+                type="text"
+                id="username"
                 placeholder={t('username')}
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 required
               />
+              {fieldErrors.username && (
+         <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.username}</div>
+          )}
 
+              <label htmlFor="email">{t('email')}</label>
               <Input
+                type="email"
+                id="email"
                 placeholder={t('email')}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
               />
+              {fieldErrors.email && (
+         <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.email}</div>
+          )}
 
+              <label htmlFor="password">{t('password')}</label>
               <Input
+                type="password"
+                id="password"
                 placeholder={t('password')}
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
               />
+               {fieldErrors.password && (
+         <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.password}</div>
+          )}
             </>
           )}
-
           <Button type="submit" active="true">
             {isLoading ? t('loading') : t('Add')}
           </Button>
