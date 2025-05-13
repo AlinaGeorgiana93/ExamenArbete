@@ -170,7 +170,15 @@ const CommentsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
-
+  const isToday = (date) => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+  
   useEffect(() => {
     const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
     setCommentList(savedComments);
@@ -273,19 +281,24 @@ const CommentsPage = () => {
           showPopperArrow={false}
         />
   
-        <CommentBox
-          value={comments}
-          onChange={(e) => setComments(e.target.value)}
-          placeholder="Skriv din kommentar här..."
-        />
-        {editMode ? (
-          <>
-            <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
-            <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
-          </>
-        ) : (
-          <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
-        )}
+  {isToday(selectedDate) && (
+  <>
+    <CommentBox
+      value={comments}
+      onChange={(e) => setComments(e.target.value)}
+      placeholder="Skriv din kommentar här..."
+    />
+    {editMode ? (
+      <>
+        <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
+        <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
+      </>
+    ) : (
+      <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
+    )}
+  </>
+)}
+
 
         <CommentList>
           {paginatedComments.map((comment) => (
