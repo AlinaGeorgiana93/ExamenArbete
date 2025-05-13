@@ -150,8 +150,7 @@ const AboutUsPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
       <PageContainer>
-        {/* Lägg till bilden här */}
-        <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} />
+        {/* <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} /> */}
 
         <Title>Om AutiGraph</Title>
         <Text>
