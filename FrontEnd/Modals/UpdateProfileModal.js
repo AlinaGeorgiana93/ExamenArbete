@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axiosInstance from '../src/axiosInstance.js'; // Adjust path if necessary
 import { useTranslation } from 'react-i18next';
+import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
+import InputValidationUtils from '../src/InputValidationUtils.js';
+
 
 // Styled Components for Modal
 const ModalBackground = styled.div`
