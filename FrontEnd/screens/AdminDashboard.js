@@ -7,6 +7,7 @@ import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
 import patient1 from '../src/media/patient1.jpg';
+import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -222,6 +223,7 @@ const AdminDashboard = () => {
   const [nameOf, setNameOf] = useState('');
   const [showDetails, setShowDetails] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [personalNumber, setPersonalNumber] = useState('');
 
 
 // Dummy data for now
@@ -231,6 +233,20 @@ const userData = {
   role: localStorage.getItem('role'),
 };
 
+const handlePersonalNumberChange = (e) => {
+    const newPersonalNumber = e.target.value;
+    setPersonalNumber(newPersonalNumber);
+
+    // Check validity
+    if (PersonalNumberUtils.isValid(newPersonalNumber)) {
+      setIsValid(true);
+      toast.success('Personal number is valid!');
+    } else {
+      setIsValid(false);
+    }
+  };
+
+  const maskedPersonalNumber = PersonalNumberUtils.format(personalNumber, true); // Mask last 4 digits
 
   useEffect(() => {
     fetchPatients();

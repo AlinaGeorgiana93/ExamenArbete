@@ -128,7 +128,6 @@ public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
         .FirstOrDefaultAsync(i => i.StaffId == itemDto.StaffId)
         ?? throw new ArgumentException($"Item {itemDto.StaffId} does not exist");
 
-    // Preserve existing values if not provided in DTO
     item.FirstName = string.IsNullOrWhiteSpace(itemDto.FirstName) ? item.FirstName : itemDto.FirstName;
     item.LastName = string.IsNullOrWhiteSpace(itemDto.LastName) ? item.LastName : itemDto.LastName;
     item.Email = string.IsNullOrWhiteSpace(itemDto.Email) ? item.Email : itemDto.Email;
@@ -138,10 +137,27 @@ public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
     if (!string.IsNullOrWhiteSpace(itemDto.PersonalNumber))
     {
         var normalizedPn = PersonalNumberUtils.Normalize(itemDto.PersonalNumber);
-        item.PersonalNumber = _encryptions.EncryptLast4Digits(normalizedPn);
+
+        if (string.IsNullOrEmpty(normalizedPn) || !PersonalNumberUtils.IsValid(normalizedPn))
+        {
+            throw new ArgumentException("Invalid personal number.");
+        }
+
+        var encryptedPn = _encryptions.EncryptLast4Digits(normalizedPn);
+
+        // ❗ Check for duplicates, excluding the current staff
+        var duplicate = await _dbContext.Staffs
+            .AsNoTracking()
+            .AnyAsync(s => s.PersonalNumber == encryptedPn && s.StaffId != item.StaffId);
+
+        if (duplicate)
+        {
+            throw new InvalidOperationException("Another staff member with this personal number already exists.");
+        }
+
+        item.PersonalNumber = encryptedPn;
     }
 
-    // Only update password if a new one is provided
     if (!string.IsNullOrWhiteSpace(itemDto.Password))
     {
         item.Password = _encryptions.EncryptPasswordToBase64(itemDto.Password);
@@ -154,6 +170,7 @@ public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
 }
 
 
+
         public async Task<bool> IsEmailOrUserNameExistAsync(string email, string userName)
     {
         return await _dbContext.Staffs.AnyAsync(s => s.Email == email || s.UserName == userName);
@@ -163,13 +180,6 @@ public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
 {
     _logger.LogInformation("Starting CreateItemAsync");
 
-    // Check if StaffId is null
-    // if (itemDto.StaffId != null)
-    // {
-    //     _logger.LogWarning("StaffId should be null on creation");
-    //     throw new ArgumentException($"{nameof(itemDto.StaffId)} must be null when creating a new object");
-    // }
-
     // Check if the email or username already exists
     if (await IsEmailOrUserNameExistAsync(itemDto.Email, itemDto.UserName))
     {
@@ -177,36 +187,43 @@ public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
         throw new ArgumentException("Email or Username already exists.");
     }
 
-    // Check if the password is provided
     if (string.IsNullOrWhiteSpace(itemDto.Password))
     {
         _logger.LogError("Password is missing");
         throw new ArgumentException("Password is required.");
     }
 
-    _logger.LogInformation("Encrypting password");
-
-    // Encrypt the password
-    
-    var encryptedPassword = _encryptions.EncryptPasswordToBase64(itemDto.Password);
-
-    // Assign role: use default role if none is provided
-    var role = string.IsNullOrEmpty(itemDto.Role) ? "usr" : itemDto.Role;
-
-    // Create new staff item with encrypted password and role
     var normalizedPn = PersonalNumberUtils.Normalize(itemDto.PersonalNumber);
+
+    if (string.IsNullOrEmpty(normalizedPn) || !PersonalNumberUtils.IsValid(normalizedPn))
+    {
+        throw new ArgumentException("Invalid personal number.");
+    }
+
     var encryptedPersonalNumber = _encryptions.EncryptLast4Digits(normalizedPn);
 
-        var item = new StaffDbM(itemDto)
-        {
-            UserName = itemDto.UserName,
-            Email = itemDto.Email,
-            Password = encryptedPassword,
-            Role = role,
-            PersonalNumber = encryptedPersonalNumber
-        };
+    // ❗ Check if a staff member with the same encrypted personal number already exists
+    var duplicatePn = await _dbContext.Staffs
+        .AsNoTracking()
+        .AnyAsync(s => s.PersonalNumber == encryptedPersonalNumber);
 
-    // Add item to the database and save changes
+    if (duplicatePn)
+    {
+        throw new InvalidOperationException("A staff member with this personal number already exists.");
+    }
+
+    var encryptedPassword = _encryptions.EncryptPasswordToBase64(itemDto.Password);
+    var role = string.IsNullOrEmpty(itemDto.Role) ? "usr" : itemDto.Role;
+
+    var item = new StaffDbM(itemDto)
+    {
+        UserName = itemDto.UserName,
+        Email = itemDto.Email,
+        Password = encryptedPassword,
+        Role = role,
+        PersonalNumber = encryptedPersonalNumber
+    };
+
     _dbContext.Staffs.Add(item);
     await _dbContext.SaveChangesAsync();
 

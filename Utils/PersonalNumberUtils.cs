@@ -20,7 +20,7 @@
         }
 
         // Validate Swedish personal number (basic check)
-        public static bool IsValid(string personalNumber)
+            public static bool IsValid(string personalNumber)
         {
             var norm = Normalize(personalNumber);
             if (norm.Length != 12 || !long.TryParse(norm, out _))
@@ -31,11 +31,14 @@
             var month = int.Parse(norm.Substring(4, 2));
             var day = int.Parse(norm.Substring(6, 2));
 
-            // Check if year is not before 1910
-            if (year < 1910) return false;
+            // Check if year is not before 1910 or after the current year
+            var currentYear = DateTime.Now.Year;
+            if (year < 1910 || year > currentYear)
+                return false;
 
             // Check if month is between 1 and 12
-            if (month < 1 || month > 12) return false;
+            if (month < 1 || month > 12)
+                return false;
 
             // Validate day based on the month and leap year check
             if (day < 1 || day > GetMaxDaysInMonth(year, month))
@@ -43,6 +46,7 @@
 
             return true;
         }
+
 
         // Extract birth date
         public static DateTime? ExtractBirthDate(string personalNumber)
