@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import patient1 from '../src/media/patient1.jpg'; // Återställd bild
+import patient1 from '../src/media/patient1.jpg'; 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -42,16 +42,6 @@ const CommentBox = styled.textarea`
   border-radius: 8px;
   border: 1px solid #ccc;
   resize: none;
-`;
-
-const SignatureInput = styled.input`
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid ${({ isValid }) => (isValid ? '#ccc' : 'red')}; /* Röd kant om signaturen är tom */
-  width: 100px;
-  margin-top: 10px;
-  background-color: ${({ isValid }) => (isValid ? 'white' : '#ffefef')}; /* Ljus röd bakgrund om signaturen saknas */
 `;
 
 const CommentButton = styled.button`
@@ -169,15 +159,25 @@ const PageInfo = styled.p`
 `;
 
 const NameTitle = styled.h1`
-  background-color: #e0f7f9; /* Ljus bakgrundsfärg som matchar temat */
-  padding: 5px 12px; /* Justera padding för att skapa bra utrymme */
-  border-radius: 5px; /* Rundade hörn på bakgrunden */
-  font-size: 35px; /* Större fontstorlek än den ursprungliga */
-  font-weight: 700; /* Fet stil för att framhäva namnet */
-  text-align: center; /* Centrera texten */
-  display: inline-block; /* Gör så att bakgrundsfärgen bara täcker texten */
-  margin: 10px 0; /* Ger lite mellanrum ovanför och under rubriken */
+  background-color: #e0f7f9;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 35px;
+  font-weight: 700;
+  text-align: center;
+  display: inline-block;
+  margin: 10px 0;
 `;
+
+const Signature = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #125358;
+`;
+
 
 const CommentsPage = () => {
   const { patientId } = useParams();
@@ -187,12 +187,12 @@ const CommentsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [signature, setSignature] = useState(''); // Signaturfältet
-  const [isSignatureValid, setIsSignatureValid] = useState(true); // Validering för signaturen
   const COMMENTS_PER_PAGE = 16;
   const [currentPage, setCurrentPage] = useState(1);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [signature, setSignature] = useState(''); 
+  
   const isToday = (date) => {
     const today = new Date();
     return (
@@ -201,7 +201,7 @@ const CommentsPage = () => {
       date.getFullYear() === today.getFullYear()
     );
   };
-  
+
   useEffect(() => {
     const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
     setCommentList(savedComments);
@@ -226,9 +226,8 @@ const CommentsPage = () => {
       alert("Kommentar kan inte vara tom.");
       return;
     }
-
+  
     if (signature.trim() === '') {
-      setIsSignatureValid(false);
       alert("Vänligen fyll i dina initialer.");
       return;
     }
@@ -236,7 +235,7 @@ const CommentsPage = () => {
     const newComment = {
       id: Date.now(),
       text: comments.trim(),
-      signature: signature.trim(),
+      signature: signature.trim(), 
       timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }),
     };
 
@@ -244,8 +243,7 @@ const CommentsPage = () => {
     setCommentList(updatedComments);
     localStorage.setItem('comments', JSON.stringify(updatedComments));
     setComments('');
-    setSignature('');
-    setIsSignatureValid(true); // Återställ signaturvalidering
+    setSignature(''); 
   };
 
   const handleDelete = (id) => {
@@ -292,7 +290,7 @@ const CommentsPage = () => {
 
   const handleDateChange = date => {
     setSelectedDate(date);
-    setCurrentPage(1);
+    setCurrentPage(1); 
   };
 
   return (
@@ -309,38 +307,52 @@ const CommentsPage = () => {
             <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> : 
             (error || 'Ingen patient hittades')}
         </Title>
-
+        
         <DatePicker
           selected={selectedDate}
           onChange={handleDateChange}
           dateFormat="yyyy-MM-dd"
           showPopperArrow={false}
         />
+  
+  {isToday(selectedDate) && (
+  <>
+    <CommentBox
+      value={comments}
+      onChange={(e) => setComments(e.target.value)}
+      placeholder="Skriv din kommentar här..."
+    />
 
-        {isToday(selectedDate) && (
-          <>
-            <CommentBox
-              value={comments}
-              onChange={(e) => setComments(e.target.value)}
-              placeholder="Skriv din kommentar här..."
-            />
-            <SignatureInput
-              value={signature}
-              onChange={(e) => setSignature(e.target.value)}
-              placeholder="Skriv initialer"
-              isValid={isSignatureValid}
-            />
-            {editMode ? (
-              <>
-                <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
-                <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
-              </>
-            ) : (
-              <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
-            )}
-          </>
-        )}
+    <input 
+      type="text" 
+      placeholder="Signatur" 
+      value={signature}
+      onChange={(e) => setSignature(e.target.value)}
+      style={{
+        width: '200px',
+        padding: '6px 10px',
+        fontSize: '14px',
+        borderRadius: '6px',
+        border: '1px solid #ccc',
+        marginTop: '10px',
+        marginBottom: '10px'
+      }}
+    />
 
+    {editMode ? (
+      <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+        <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
+        <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
+      </div>
+    ) : (
+      <div style={{ marginTop: '6px' }}>
+        <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
+      </div>
+    )}
+  </>
+)}
+
+  
         <CommentList>
           {paginatedComments.map((comment) => (
             <CommentItem key={comment.id}>
@@ -348,6 +360,7 @@ const CommentsPage = () => {
               <p>{comment.timestamp}</p>
               <DeleteButton onClick={() => handleDelete(comment.id)}>X</DeleteButton>
               <button onClick={() => handleEdit(comment.id)}>Redigera</button>
+              <Signature>{comment.signature}</Signature> 
             </CommentItem>
           ))}
         </CommentList>
