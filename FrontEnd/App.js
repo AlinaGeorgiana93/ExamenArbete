@@ -8,6 +8,7 @@ import AdminDashboard from './screens/AdminDashboard';
 import PatientPage from './screens/PatientPage';
 import StaffPage from './screens/StaffPage';
 import GraphPage from './screens/GraphPage';
+import CommentsPage from './screens/CommentsPage.js';
 import PatientDataReview from './screens/PatientDataReview';
 import { store } from './language/store/store';
 import './language/i18n.js';
@@ -35,6 +36,8 @@ function App() {
             <Route path="/graph/:patientId" element={<GraphPage />} />
 
             <Route path="/about" element={<AboutUs />} />
+            <Route path="/comments/:patientId" element={<CommentsPage />} />
+
           </Route>
         </Routes>
       </Router>

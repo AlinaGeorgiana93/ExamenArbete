@@ -11,6 +11,8 @@ import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Link as RouterLink } from 'react-router-dom';
+
 
 // Update the body styles in GlobalStyle
 const GlobalStyle = createGlobalStyle`
@@ -21,8 +23,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
+    font-family: 'Times New Roman', cursive, sans-serif;
+    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -129,6 +131,21 @@ const ChartTypeButton = styled.button`
   }
 `;
 
+const buttonStyle = {
+  backgroundColor: '#3b82f6', // Tailwind "blue-500"
+  color: 'white',
+  padding: '8px 16px',
+  borderRadius: '0.75rem', // Mjukare hörn (12px)
+  border: 'none',
+  fontSize: '14px',
+  fontWeight: '500',
+  cursor: 'pointer',
+  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+  transition: 'background-color 0.2s ease',
+};
+
+
+
 const MetricToggle = styled.label`
   display: flex;
   align-items: center;
@@ -233,7 +250,8 @@ const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 const chartTypes = [
   { key: 'bar', name: 'Bar Chart' },
   { key: 'line', name: 'Line Chart' },
-  { key: 'pie', name: 'Pie Chart' }
+  { key: 'pie', name: 'Pie Chart' },
+
 ];
 
 const timeRanges = [
@@ -792,20 +810,21 @@ function GraphPage() {
             />
           </div>
         </div>
+        
 
         <ChartControls>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {chartTypes.map(type => (
-              <ChartTypeButton
-                key={type.key}
-                active={chartType === type.key}
-                onClick={() => setChartType(type.key)}
-              >
-                {type.name}
-              </ChartTypeButton>
-            ))}
-          </div>
-        </ChartControls>
+  {chartTypes.map(({ key, name }) => (
+    <ChartTypeButton
+      key={key}
+      active={chartType === key}
+      onClick={() => setChartType(key)}
+    >
+      {name}
+    </ChartTypeButton>
+  ))}
+ 
+</ChartControls>
+
 
         <ChartWrapper>
           <ResponsiveContainer width="100%" height="100%">
@@ -826,6 +845,9 @@ function GraphPage() {
           </TimePeriodContainer>
         </ChartWrapper>
       </GraphContainer>
+      <Link to={`/comments/${patientId}`}>
+  <button style={buttonStyle}>Go to Comments</button>
+</Link>
     </>
   );
 }
