@@ -44,23 +44,7 @@ public class AdminDbRepos
 
   public async Task SeedDefaultUsersStaffsPatientsAsync()
 {
-    if (!_dbContext.Users.Any())
-    {
-        _dbContext.Users.AddRange(new List<UserDbM>
-        {
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                UserName = "sysadmin1",
-                Email = "sysadmin1@gmail.com",
-                Password = _encryptions.EncryptPasswordToBase64("sysadmin1"),
-                Role = "sysadmin"
-            }   
-        });
-
-        await _dbContext.SaveChangesAsync(); // Save the users
-    }
-
+    
     if (!_dbContext.Staffs.Any())
     {
         var testStaff1 = new StaffDbM
@@ -72,7 +56,7 @@ public class AdminDbRepos
             Email = "charlie@mail.com",
             Role = "usr",
             UserName = "Charlie1",
-            Password = _encryptions.EncryptPasswordToBase64("1234")
+            Password = _encryptions.EncryptPasswordToBase64("Charlie1!")
         };
 
         var testStaff2 = new StaffDbM
@@ -84,7 +68,7 @@ public class AdminDbRepos
             Email = "alice@mail.com",
             Role = "usr",
             UserName = "Alice1",
-            Password = _encryptions.EncryptPasswordToBase64("1234")
+            Password = _encryptions.EncryptPasswordToBase64("Alice1!")
         };
 
         var testStaff3 = new StaffDbM
@@ -96,7 +80,7 @@ public class AdminDbRepos
             Email = "bob@mail.com",
             Role = "usr",
             UserName = "Bob1",
-            Password = _encryptions.EncryptPasswordToBase64("1234")
+            Password = _encryptions.EncryptPasswordToBase64("Bobby1!")
         };
 
         var testStaff4 = new StaffDbM
@@ -108,7 +92,7 @@ public class AdminDbRepos
             Email = "mike@mail.com",
             Role = "sysadmin",
             UserName = "Mike1",
-            Password = _encryptions.EncryptPasswordToBase64("1234")
+            Password = _encryptions.EncryptPasswordToBase64("Mike1!")
         };
 
         var testStaff5 = new StaffDbM
@@ -120,10 +104,21 @@ public class AdminDbRepos
             Email = "john-doe@yahoo.com",
             Role = "usr",
             UserName = "user1",     
-            Password = _encryptions.EncryptPasswordToBase64("user1")
+            Password = _encryptions.EncryptPasswordToBase64("User1!")
+        };
+        var testStaff6 = new StaffDbM
+        {
+            StaffId = Guid.NewGuid(),
+            FirstName = "Sysamin",
+            LastName = "Sysadmin",
+            PersonalNumber = _encryptions.EncryptLast4Digits("196102281212"),
+            Email = "sysadmin1@gmail.com",
+            Role = "sysadmin",
+            UserName = "sysadmin1",
+            Password = _encryptions.EncryptPasswordToBase64("Sysadmin1!")
         };
 
-        _dbContext.Staffs.AddRange(testStaff1, testStaff2, testStaff3, testStaff4, testStaff5);
+        _dbContext.Staffs.AddRange(testStaff1, testStaff2, testStaff3, testStaff4, testStaff5, testStaff6);
         await _dbContext.SaveChangesAsync(); // Save staff data
     }
 
