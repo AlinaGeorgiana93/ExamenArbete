@@ -112,22 +112,26 @@ namespace AppWebApi.Controllers
                     return BadRequest("Username or Password cannot be null or empty.");
                 }
 
-                            // Regex checks for username/email and password format
-                var pSimple = @"^([a-z]|[A-Z]|[0-9]){4,12}$";
-                var pEmail = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-                var pUNoE = @$"({pSimple})|({pEmail})";
+              // Regex checks for username/email and password format
+             // Proper regex definitions
+        var pUsername = @"^[a-zA-Z0-9._-]{4,20}$"; // usernames: allow letters, numbers, dots, underscores, dashes
+        var pEmail = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+        var pPassword = @"^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{6,}$"; // 6+ chars, 1 uppercase, 1 digit, 1 special
 
-                Regex r = new Regex(pUNoE, RegexOptions.IgnoreCase);
-                if (!r.Match(userCreds.UserNameOrEmail).Success) throw new ArgumentException("Wrong username format");
+        // Check if username or email is valid
+        bool isUsernameValid = Regex.IsMatch(userCreds.UserNameOrEmail, pUsername, RegexOptions.IgnoreCase);
+        bool isEmailValid = Regex.IsMatch(userCreds.UserNameOrEmail, pEmail, RegexOptions.IgnoreCase);
 
-                r = new Regex(pSimple, RegexOptions.IgnoreCase);
-                if (!r.Match(userCreds.Password).Success) throw new ArgumentException("Wrong password format");
+        if (!isUsernameValid && !isEmailValid)
+            throw new ArgumentException("Wrong username/email format");
 
-                // With validated credentials, proceed to login
-                var resp = await _loginService.LoginStaffAsync(userCreds);
+        // Check password format
+        if (!Regex.IsMatch(userCreds.Password, pPassword))
+            throw new ArgumentException("Wrong password format");
 
-                // Log successful login (password is not typically logged in production)
-                _logger.LogInformation($"{resp.Item.UserName} logged in");
+        // With validated credentials, proceed to login
+        var resp = await _loginService.LoginStaffAsync(userCreds);
+        _logger.LogInformation($"{resp.Item.UserName} logged in");
 
                 return Ok(resp);
             }
