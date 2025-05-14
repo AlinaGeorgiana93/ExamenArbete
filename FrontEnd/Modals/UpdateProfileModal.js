@@ -86,13 +86,12 @@ const ProfileMessage = styled.p`
 const UpdateProfileModal = ({
   showModal,
   setShowModal,
-  staffName,
+  userName, 
+  setUserName,
   email,
-  setStaffName,
   setStaffEmail,
-  userId
 }) => {
-  const [newUsername, setNewUsername] = useState(staffName);
+  const [newUsername, setNewUsername] = useState(userName);
   const [newEmail, setNewEmail] = useState(email);
   const [isPasswordChange, setIsPasswordChange] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -104,88 +103,130 @@ const UpdateProfileModal = ({
   const [successMessage, setSuccessMessage] = useState('');
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [profile, setProfile] = useState({ username: '', email: '' });
+  const [profile, setProfile] = useState({ userName: '', email: '' });
   const [passwordStrength, setPasswordStrength] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation();
 
 
+  useEffect(() => {
+  if (showModal) {
+    fetchProfile(); // Fetch profile when modal is opened
+  }
+}, [showModal]); // Trigger fetch only when the modal is shown
+
+
   const handleProfileUpdate = async (updatedPerson) => {
-    setIsLoading(true);
-    try {
-      const staffId = localStorage.getItem('staffId');
-      const token = localStorage.getItem('jwtToken');
-  
-      if (!staffId || !token) {
-        throw new Error('Staff ID or Token not found. User must be logged in.');
-      }
-  
-      const { username, email } = updatedPerson;
-  
-      const updateData = { staffId };
-  
-      if (username) updateData.username = username;
-      if (email) updateData.email = email;
-  
-      if (!username && !email) {
-        setErrorMessage('Please provide either a username or email to update.');
-        setShowErrorMessage(true);
-        return;
-      }
-  
-      await axiosInstance.put(`/Staff/UpdateItem/${staffId}`, updateData);
-  
-      setSuccessMessage('Profile updated successfully.');
-      setShowSuccessMessage(true);
-  
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-        setSuccessMessage('');
-        setShowModal(false); // Close modal after success
-      }, 2000);
-  
-      // After successful profile update, refetch the profile data
-      fetchProfile();
-  
-    } catch (error) {
-      console.error('Error updating staff profile:', error);
-      setErrorMessage('Failed to update profile. Please try again.');
-      setShowErrorMessage(true);
-  
-      setTimeout(() => {
-        setShowErrorMessage(false);
-        setErrorMessage('');
-      }, 2000);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const fetchProfile = async () => {
+  setIsLoading(true);
+   if (isSubmitting) return;
+  setIsSubmitting(true);
+  try {
     const staffId = localStorage.getItem('staffId');
-    const token = localStorage.getItem('jwtToken'); 
-  
+    const token = localStorage.getItem('jwtToken');
+
     if (!staffId || !token) {
-      console.error('Missing staffId or token');
+      throw new Error('Staff ID or Token not found. User must be logged in.');
+    }
+
+    const currentProfile = await fetchProfile();
+    if (!currentProfile) {
+      setErrorMessage('Failed to retrieve current profile.');
+      setShowErrorMessage(true);
       return;
     }
-  
-    try {
-      const response = await axiosInstance.get(`/Staff/ReadItem`, {
-        params: {
-          id: staffId,
-          flat: false,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-  
-      setProfile(response.data);
-      console.log('Profile fetched successfully:', response.data);
-    } catch (error) {
-      console.error('Failed to fetch profile:', error);
+
+    const { userName, email } = updatedPerson;
+   
+
+    const updatedData = {
+      staffId,
+      userName: newUsername || currentProfile.userName,  // Use userName here for backend
+      email: newEmail || currentProfile.email
+    };
+
+     console.log('UserName prop:', userName);
+    console.log('Email prop:', email);
+
+
+    if (!userName && !email) {
+      setErrorMessage('Please provide either a username or email to update.');
+      setShowErrorMessage(true);
+      return;
     }
-  };
+
+    // Send the update request to the backend
+    const response = await axiosInstance.put(`/Staff/UpdateItem/${staffId}`, updatedData);
+
+    console.log('Response after update:', response);
+
+    setSuccessMessage('Profile updated successfully.');
+    setShowSuccessMessage(true);
+
+    // After receiving updated data
+console.log("Updated Profile:", response.data);
+
+      // ✅ ADD THIS:
+      setUserName(newUsername);
+      setStaffEmail(newEmail);
+      localStorage.setItem('userName', newUsername);
+      localStorage.setItem('email', newEmail);
+
+
+
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      setSuccessMessage('');
+      setShowModal(false);  // Close modal after success
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    setErrorMessage('Failed to update profile. Please try again.');
+    setShowErrorMessage(true);
+    setTimeout(() => {
+      setShowErrorMessage(false);
+      setErrorMessage('');
+    }, 2000);
+  } finally {
+    setIsLoading(false);
+    setIsSubmitting(false);
+  
+  }
+};
+
+
+const fetchProfile = async () => {
+  const staffId = localStorage.getItem('staffId');
+  const token = localStorage.getItem('jwtToken');
+
+  if (!staffId || !token) {
+    console.error('Missing staffId or token');
+    return null;
+  }
+
+  try {
+    const response = await axiosInstance.get(`/Staff/ReadItem`, {
+      params: { id: staffId, flat: false },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const { item } = response.data;
+
+    if (item) {
+      setProfile(item);
+      setNewUsername(item.userName);
+      setNewEmail(item.email);
+    }
+
+    return item; // <-- ADD THIS
+  } catch (error) {
+    console.error('Failed to fetch profile:', error);
+    return null;
+  }
+};
+
+
+
 
   const evaluatePasswordStrength = (password) => {
     if (password.length < 6) return 'Weak';
@@ -200,9 +241,26 @@ const UpdateProfileModal = ({
     return 'Weak';
   };
 
+
+useEffect(() => {
+  console.log('newUsername:', newUsername);
+  console.log('newEmail:', newEmail);
+}, [newUsername, newEmail]);
+
+useEffect(() => {
+  console.log('Updated Profile:', profile);
+}, [profile]);
+
   useEffect(() => {
     setPasswordStrength(evaluatePasswordStrength(newPassword));
   }, [newPassword]);
+
+  useEffect(() => {
+  if (showModal) {
+    fetchProfile(); // Fetch profile when modal is opened
+  }
+}, [showModal]); // Trigger fetch only when the modal is shown
+
 
  const handleChangePassword = async () => {
   setPasswordMessage('');
@@ -234,7 +292,13 @@ const UpdateProfileModal = ({
 
     if (response.status === 200 || response.status === 204) {
       setPasswordMessage('Your password was successfully changed!');
-      setTimeout(() => window.location.reload(), 2000);
+     setPasswordMessage('Your password was successfully changed!');
+      fetchProfile();
+      setTimeout(() => {
+        setShowModal(false);
+        setPasswordMessage('');
+      }, 2000);
+
     } else {
       setPasswordMessage('Failed to change password. Try again.');
     }
@@ -246,13 +310,14 @@ const UpdateProfileModal = ({
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isPasswordChange) {
-      handleChangePassword();
-    } else {
-      handleProfileUpdate({ username: newUsername, email: newEmail });
-    }
-  };
+  e.preventDefault();
+  if (isPasswordChange) {
+    handleChangePassword();
+  } else {
+    handleProfileUpdate({ userName: newUsername, email: newEmail }); // ✅ correct key
+  }
+};
+
 
   const handlePasswordToggle = () => {
     setIsPasswordChange(!isPasswordChange);
