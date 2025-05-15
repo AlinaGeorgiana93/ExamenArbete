@@ -9,6 +9,8 @@ import Select from 'react-select'; // Importing react-select
 import patient1 from '../src/media/patient1.jpg';
 import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
 import InputValidationUtils from '../src/InputValidationUtils.js';
+import { FaInfoCircle } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -713,13 +715,32 @@ const handleSubmit = async (e) => {
     {fieldErrors.email && <div style={{ color: 'red' }}>{fieldErrors.email}</div>}
 
     {/* Password Field */}
+  <>
+  {/* Password Field */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
     <Input
       type="password"
       placeholder={t('password')}
       value={formData.password}
       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
     />
-    {fieldErrors.password && <div style={{ color: 'red' }}>{fieldErrors.password}</div>}
+    <FaInfoCircle
+      data-tooltip-id="passwordTooltip"
+      data-tooltip-html={t('password_strength_tooltip').replace(/\n/g, '<br />')}
+      style={{ cursor: 'pointer' }}
+      size={18}
+      color="#888"
+    />
+    <Tooltip id="passwordTooltip" place="right" />
+  </div>
+
+  {fieldErrors.password && (
+    <div style={{ color: 'red', marginTop: '4px' }}>
+      {fieldErrors.password}
+    </div>
+  )}
+</>
+
   </>
           )}
           <Button type="submit" active="true">

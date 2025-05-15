@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axiosInstance from '../src/axiosInstance.js'; // Adjust path if necessary
 import { useTranslation } from 'react-i18next';
-import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
 import InputValidationUtils from '../src/InputValidationUtils.js';
+import { FaInfoCircle } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip';
+
+
 
 
 // Styled Components for Modal
@@ -106,6 +109,8 @@ const UpdateProfileModal = ({
   const [profile, setProfile] = useState({ userName: '', email: '' });
   const [passwordStrength, setPasswordStrength] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+
   const { t } = useTranslation();
 
 
@@ -115,6 +120,64 @@ const UpdateProfileModal = ({
     }
   }, [showModal]); // Trigger fetch only when the modal is shown
 
+// Add new state to track validation errors per field
+const [errors, setErrors] = useState({
+  username: '',
+  email: '',
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+});
+
+// Validation function to run on each input change (or on submit)
+const validateInputs = () => {
+  const newErrors = { username: '', email: '', currentPassword: '', newPassword: '', confirmPassword: '' };
+
+  // Username validation
+  if (newUsername && !InputValidationUtils.isValidUsername(newUsername)) {
+    newErrors.username = t('invalid_username'); // e.g. "Username must be at least 4 chars and only letters, digits or _"
+  }
+
+  // Email validation
+  if (newEmail && !InputValidationUtils.isValidEmail(newEmail)) {
+    newErrors.email = t('invalid_email'); // e.g. "Please enter a valid email address"
+  }
+
+  if (isPasswordChange) {
+    // Current password required for password change
+    if (!currentPassword) {
+      newErrors.currentPassword = t('current_password_required');
+    }
+
+    // New password validations
+    if (!newPassword) {
+      newErrors.newPassword = t('new_password_required');
+    } else if (!InputValidationUtils.isStrongPassword(newPassword)) {
+      newErrors.newPassword = t('password_strength_error'); // e.g. "Password must have uppercase, lowercase, digit & special char"
+    }
+
+    // Confirm password matches
+    if (newPassword !== confirmPassword) {
+      newErrors.confirmPassword = t('passwords_do_not_match');
+    }
+  }
+
+  setErrors(newErrors);
+const isValid = Object.values(newErrors).every((error) => error === '');
+
+  return { newErrors, isValid };
+}
+
+// Call validateInputs on every input change (debounce if you want) or on submit:
+useEffect(() => {
+  if (showModal) {
+    const { newErrors, isValid } = validateInputs();
+    setErrors(newErrors);
+    setIsFormValid(isValid);
+  }
+}, [newUsername, newEmail, currentPassword, newPassword, confirmPassword, isPasswordChange, showModal]);
+
+const isSaveDisabled = !isFormValid;
 
   const handleProfileUpdate = async (updatedPerson) => {
     setIsLoading(true);
@@ -343,6 +406,7 @@ const UpdateProfileModal = ({
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
               />
+                {errors.username && <ProfileMessage success={false}>{errors.username}</ProfileMessage>}
             </div>
 
             <div>
@@ -354,6 +418,7 @@ const UpdateProfileModal = ({
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
               />
+                {errors.email && <ProfileMessage success={false}>{errors.email}</ProfileMessage>}
             </div>
 
             {isPasswordChange && (
@@ -368,18 +433,27 @@ const UpdateProfileModal = ({
                     onChange={(e) => setCurrentPassword(e.target.value)}
                   />
                 </div>
+                 <div>
+  <Label htmlFor={t('new_Password')}>{t('new_Password')}</Label>
+  <div style={{ display: 'flex', alignItems: 'center' }}>
+    <InputField
+      id={t('new_Password')}
+      type="password"
+      placeholder={t('new_Password')}
+      value={newPassword}
+      onChange={(e) => setNewPassword(e.target.value)}
+    />
+    <FaInfoCircle
+      data-tooltip-id="passwordTooltip"
+      data-tooltip-html={t('password_strength_tooltip').replace(/\n/g, '<br />')}
+      style={{ marginLeft: '8px', cursor: 'pointer' }}
+      size={18}
+      color="#888"
+    />
+  </div>
 
-                <div>
-                  <Label htmlFor={t('new_Password')}>{t('new_Password')}</Label>
-                  <InputField
-                    id={t('new_Password')}
-                    type="password"
-                    placeholder={t('new_Password')}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                </div>
-
+      <Tooltip id="passwordTooltip" place="right" />
+    </div>
                 <div>
                   <Label htmlFor={t('confirm_Password')}>{t('confirm_Password')}</Label>
                   <InputField
@@ -389,6 +463,7 @@ const UpdateProfileModal = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
+                    {errors.confirmPassword && <ProfileMessage success={false}>{errors.confirmPassword}</ProfileMessage>}
                 </div>
               </>
             )}
