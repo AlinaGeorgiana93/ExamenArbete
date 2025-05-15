@@ -86,7 +86,7 @@ const ProfileMessage = styled.p`
 const UpdateProfileModal = ({
   showModal,
   setShowModal,
-  userName, 
+  userName,
   setUserName,
   email,
   setStaffEmail,
@@ -110,120 +110,123 @@ const UpdateProfileModal = ({
 
 
   useEffect(() => {
-  if (showModal) {
-    fetchProfile(); // Fetch profile when modal is opened
-  }
-}, [showModal]); // Trigger fetch only when the modal is shown
+    if (showModal) {
+      fetchProfile(); // Fetch profile when modal is opened
+    }
+  }, [showModal]); // Trigger fetch only when the modal is shown
 
 
   const handleProfileUpdate = async (updatedPerson) => {
-  setIsLoading(true);
-   if (isSubmitting) return;
-  setIsSubmitting(true);
-  try {
+    setIsLoading(true);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const staffId = localStorage.getItem('staffId');
+      const token = localStorage.getItem('jwtToken');
+
+
+      if (!staffId || !token) {
+        throw new Error('Staff ID or Token not found. User must be logged in.');
+      }
+
+      const currentProfile = await fetchProfile();
+      if (!currentProfile) {
+        setErrorMessage('Failed to retrieve current profile.');
+        setShowErrorMessage(true);
+        return;
+      }
+
+      const updatedData = {
+        StaffId: staffId,
+        userName: newUsername || currentProfile.userName,
+        email: newEmail || currentProfile.email,
+      };
+
+      if (!updatedData.userName && !updatedData.email) {
+        setErrorMessage('Please provide either a username or email to update.');
+        setShowErrorMessage(true);
+        return;
+      }
+
+      const response = await axiosInstance.put(
+        `/Staff/UpdateItem/${staffId}`,
+        updatedData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log('Response after update:', response);
+
+      // <-- HERE: check if a new token is returned
+      const newToken = response?.data?.Item?.Token;
+      if (newToken) {
+        localStorage.setItem('jwtToken', newToken);
+        // If you have any auth context or state, update it here too
+        // e.g., authContext.setToken(newToken);
+        console.log('JWT token refreshed after profile update');
+      }
+
+      setSuccessMessage('Profile updated successfully.');
+      setShowSuccessMessage(true);
+
+      // Refresh profile with latest data from backend
+      const refreshedProfile = await fetchProfile();
+
+      if (refreshedProfile) {
+        setUserName(refreshedProfile.userName);
+        setStaffEmail(refreshedProfile.email);
+        localStorage.setItem('userName', refreshedProfile.userName);
+        localStorage.setItem('email', refreshedProfile.email);
+      }
+
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setSuccessMessage('');
+        setShowModal(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setErrorMessage('Failed to update profile. Please try again.');
+      setShowErrorMessage(true);
+      setTimeout(() => {
+        setShowErrorMessage(false);
+        setErrorMessage('');
+      }, 2000);
+    } finally {
+      setIsLoading(false);
+      setIsSubmitting(false);
+    }
+  };
+
+
+  const fetchProfile = async () => {
     const staffId = localStorage.getItem('staffId');
     const token = localStorage.getItem('jwtToken');
 
     if (!staffId || !token) {
-      throw new Error('Staff ID or Token not found. User must be logged in.');
+      console.error('Missing staffId or token');
+      return null;
     }
 
-    const currentProfile = await fetchProfile();
-    if (!currentProfile) {
-      setErrorMessage('Failed to retrieve current profile.');
-      setShowErrorMessage(true);
-      return;
+    try {
+      const response = await axiosInstance.get(`/Staff/ReadItem`, {
+        params: { id: staffId, flat: false },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const { item } = response.data;
+
+      if (item) {
+        setProfile(item);
+        setNewUsername(item.userName);
+        setNewEmail(item.email);
+      }
+
+      return item; // <-- ADD THIS
+    } catch (error) {
+      console.error('Failed to fetch profile:', error);
+      return null;
     }
-
-    const { userName, email } = updatedPerson;
-   
-
-    const updatedData = {
-      staffId,
-      userName: newUsername || currentProfile.userName,  // Use userName here for backend
-      email: newEmail || currentProfile.email
-    };
-
-     console.log('UserName prop:', userName);
-    console.log('Email prop:', email);
-
-
-    if (!userName && !email) {
-      setErrorMessage('Please provide either a username or email to update.');
-      setShowErrorMessage(true);
-      return;
-    }
-
-    // Send the update request to the backend
-    const response = await axiosInstance.put(`/Staff/UpdateItem/${staffId}`, updatedData);
-
-    console.log('Response after update:', response);
-
-    setSuccessMessage('Profile updated successfully.');
-    setShowSuccessMessage(true);
-
-    // After receiving updated data
-console.log("Updated Profile:", response.data);
-
-      // ✅ ADD THIS:
-      setUserName(newUsername);
-      setStaffEmail(newEmail);
-      localStorage.setItem('userName', newUsername);
-      localStorage.setItem('email', newEmail);
-
-
-
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-      setSuccessMessage('');
-      setShowModal(false);  // Close modal after success
-    }, 2000);
-
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    setErrorMessage('Failed to update profile. Please try again.');
-    setShowErrorMessage(true);
-    setTimeout(() => {
-      setShowErrorMessage(false);
-      setErrorMessage('');
-    }, 2000);
-  } finally {
-    setIsLoading(false);
-    setIsSubmitting(false);
-  
-  }
-};
-
-
-const fetchProfile = async () => {
-  const staffId = localStorage.getItem('staffId');
-  const token = localStorage.getItem('jwtToken');
-
-  if (!staffId || !token) {
-    console.error('Missing staffId or token');
-    return null;
-  }
-
-  try {
-    const response = await axiosInstance.get(`/Staff/ReadItem`, {
-      params: { id: staffId, flat: false },
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    const { item } = response.data;
-
-    if (item) {
-      setProfile(item);
-      setNewUsername(item.userName);
-      setNewEmail(item.email);
-    }
-
-    return item; // <-- ADD THIS
-  } catch (error) {
-    console.error('Failed to fetch profile:', error);
-    return null;
-  }
-};
+  };
 
 
 
@@ -242,81 +245,82 @@ const fetchProfile = async () => {
   };
 
 
-useEffect(() => {
-  console.log('newUsername:', newUsername);
-  console.log('newEmail:', newEmail);
-}, [newUsername, newEmail]);
+  useEffect(() => {
+    console.log('newUsername:', newUsername);
+    console.log('newEmail:', newEmail);
+  }, [newUsername, newEmail]);
 
-useEffect(() => {
-  console.log('Updated Profile:', profile);
-}, [profile]);
+  useEffect(() => {
+    console.log('Updated Profile:', profile);
+  }, [profile]);
 
   useEffect(() => {
     setPasswordStrength(evaluatePasswordStrength(newPassword));
   }, [newPassword]);
 
   useEffect(() => {
-  if (showModal) {
-    fetchProfile(); // Fetch profile when modal is opened
-  }
-}, [showModal]); // Trigger fetch only when the modal is shown
-
-
- const handleChangePassword = async () => {
-  setPasswordMessage('');
-
-  if (!currentPassword || !newPassword || !confirmPassword) {
-    setPasswordMessage('Please fill in all fields.');
-    return;
-  }
-
-  if (newPassword !== confirmPassword) {
-    setPasswordMessage('New passwords do not match.');
-    return;
-  }
-
-  try {
-    const token = localStorage.getItem('jwtToken');
-
-    const response = await axiosInstance.post(
-      '/PasswordResetToken/ChangePassword/ChangePassword',
-      {
-        currentPassword,
-        newPassword,
-        confirmPassword
-      },
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    );
-
-    if (response.status === 200 || response.status === 204) {
-      setPasswordMessage('Your password was successfully changed!');
-     setPasswordMessage('Your password was successfully changed!');
-      fetchProfile();
-      setTimeout(() => {
-        setShowModal(false);
-        setPasswordMessage('');
-      }, 2000);
-
-    } else {
-      setPasswordMessage('Failed to change password. Try again.');
+    if (showModal) {
+      fetchProfile(); // Fetch profile when modal is opened
     }
-  } catch (error) {
-    console.error('Password change error:', error);
-    setPasswordMessage('Server error while changing password.');
-  }
-};
+  }, [showModal]); // Trigger fetch only when the modal is shown
+
+
+  const handleChangePassword = async () => {
+    setPasswordMessage('');
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordMessage('Please fill in all fields.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage('New passwords do not match.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const staffId = localStorage.getItem('staffId');
+      const response = await axiosInstance.put(
+       `/Staff/UpdateProfile/${staffId}`,
+        { 
+          staffId,     
+          currentPassword,
+          newPassword,
+          confirmPassword
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+        if (response.status === 200 || response.status === 204) {
+      setPasswordMessage('Your password was successfully changed!');
+
+      await fetchProfile(); // refresh profile data
+        setTimeout(() => {
+          setShowModal(false);
+          setPasswordMessage('');
+        }, 2000);
+
+      } else {
+        setPasswordMessage('Failed to change password. Try again.');
+      }
+    } catch (error) {
+      console.error('Password change error:', error);
+      setPasswordMessage('Server error while changing password.');
+    }
+  };
 
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (isPasswordChange) {
-    handleChangePassword();
-  } else {
-    handleProfileUpdate({ userName: newUsername, email: newEmail }); // ✅ correct key
-  }
-};
+    e.preventDefault();
+    if (isPasswordChange) {
+      handleChangePassword();
+    } else {
+      handleProfileUpdate({ userName: newUsername, email: newEmail }); // ✅ correct key
+    }
+  };
 
 
   const handlePasswordToggle = () => {
@@ -353,46 +357,46 @@ useEffect(() => {
             </div>
 
             {isPasswordChange && (
-  <>
-    <div>
-      <Label htmlFor={t('current_Password')}>{t('current_Password')}</Label>
-      <InputField
-        id={t('current_Password')}
-        type="password"
-        placeholder={t('current_Password')}
-        value={currentPassword}
-        onChange={(e) => setCurrentPassword(e.target.value)}
-      />
-    </div>
+              <>
+                <div>
+                  <Label htmlFor={t('current_Password')}>{t('current_Password')}</Label>
+                  <InputField
+                    id={t('current_Password')}
+                    type="password"
+                    placeholder={t('current_Password')}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                </div>
 
-    <div>
-      <Label htmlFor={t('new_Password')}>{t('new_Password')}</Label>
-      <InputField
-        id={t('new_Password')}
-        type="password"
-        placeholder={t('new_Password')}
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-      />
-    </div>
+                <div>
+                  <Label htmlFor={t('new_Password')}>{t('new_Password')}</Label>
+                  <InputField
+                    id={t('new_Password')}
+                    type="password"
+                    placeholder={t('new_Password')}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                </div>
 
-    <div>
-      <Label htmlFor={t('confirm_Password')}>{t('confirm_Password')}</Label>
-      <InputField
-        id={t('confirm_Password')}
-        type="password"
-        placeholder={t('confirm_Password')}
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-    </div>
-  </>
-)}
+                <div>
+                  <Label htmlFor={t('confirm_Password')}>{t('confirm_Password')}</Label>
+                  <InputField
+                    id={t('confirm_Password')}
+                    type="password"
+                    placeholder={t('confirm_Password')}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
 
 
             <ButtonGroup>
               <Button type="button" $variant="cancel" onClick={() => setShowModal(false)}>
-              {t('cancel')}
+                {t('cancel')}
               </Button>
               <Button $variant="primary">{t('save')}</Button>
             </ButtonGroup>
@@ -406,7 +410,7 @@ useEffect(() => {
 
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
             <button type="button" onClick={handlePasswordToggle} style={{ fontSize: '0.9rem' }}>
-            {isPasswordChange ? t('cancel_password_change') : t('change_password')}
+              {isPasswordChange ? t('cancel_password_change') : t('change_password')}
 
             </button>
           </div>

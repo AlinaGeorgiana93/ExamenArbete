@@ -16,8 +16,8 @@ public class Staff : IStaff
 
 
      public virtual List<IPatient> Patients{ get; set; } 
-     public virtual IPasswordResetToken PasswordResetToken { get; set; }
-     public virtual Guid? PasswordResetTokenId { get ; set ; }  //FK
+    // public virtual IPasswordResetToken PasswordResetToken { get; set; }
+    //  public virtual Guid? PasswordResetTokenId { get ; set ; }  //FK
   
     
      

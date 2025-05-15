@@ -17,7 +17,7 @@ public interface IStaff
     //Navigation properties
   
          public List <IPatient> Patients { get; set; }
-         public IPasswordResetToken PasswordResetToken { get; set; }
+     //    public IPasswordResetToken PasswordResetToken { get; set; }
          
 
 

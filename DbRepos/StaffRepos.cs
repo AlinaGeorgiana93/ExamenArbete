@@ -145,7 +145,7 @@ public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
             throw new ArgumentException("Invalid last name.");
         item.LastName = normalizedLast;
     }
-
+    
     // Email
     if (!string.IsNullOrWhiteSpace(itemDto.Email))
     {
@@ -197,7 +197,81 @@ public async Task<ResponseItemDto<IStaff>> UpdateItemAsync(StaffCuDto itemDto)
 
     return await ReadItemAsync(item.StaffId, false);
 }
+ public async Task<ResponseItemDto<IStaff>> UpdateProfileAsync(ProfileUpdateCuDto profileDto)
+{
+    _logger.LogInformation($"UpdateProfileAsync started for StaffId: {profileDto.StaffId}");
 
+    var staff = await _dbContext.Staffs
+        .FirstOrDefaultAsync(i => i.StaffId == profileDto.StaffId)
+        ?? throw new ArgumentException($"Staff with ID {profileDto.StaffId} does not exist.");
+
+    // Update Email
+    if (!string.IsNullOrWhiteSpace(profileDto.Email))
+    {
+        _logger.LogInformation("Attempting to update email...");
+        if (!InputValidationUtils.IsValidEmail(profileDto.Email))
+        {
+            _logger.LogWarning("Invalid email format detected.");
+            throw new ArgumentException("Invalid email format.");
+        }
+        staff.Email = profileDto.Email;
+        _logger.LogInformation("Email updated.");
+    }
+
+    // Update Username
+    if (!string.IsNullOrWhiteSpace(profileDto.UserName))
+    {
+        _logger.LogInformation("Attempting to update username...");
+        if (!InputValidationUtils.IsValidUsername(profileDto.UserName))
+        {
+            _logger.LogWarning("Invalid username detected.");
+            throw new ArgumentException("Invalid username.");
+        }
+        staff.UserName = profileDto.UserName;
+        _logger.LogInformation("Username updated.");
+    }
+
+    // Update Password if new password provided
+    if (!string.IsNullOrWhiteSpace(profileDto.NewPassword))
+    {
+        _logger.LogInformation("Attempting to update password...");
+        if (string.IsNullOrWhiteSpace(profileDto.CurrentPassword))
+        {
+            _logger.LogWarning("Current password is missing.");
+            throw new ArgumentException("Current password is required to change password.");
+        }
+
+        var hashedCurrentPassword = _encryptions.EncryptPasswordToBase64(profileDto.CurrentPassword);
+        if (staff.Password != hashedCurrentPassword)
+        {
+            _logger.LogWarning("Current password does not match.");
+            throw new Exception("Current password is incorrect.");
+        }
+
+        if (!InputValidationUtils.IsStrongPassword(profileDto.NewPassword))
+        {
+            _logger.LogWarning("New password does not meet strength requirements.");
+            throw new ArgumentException("Password must contain at least 6 characters, one uppercase, one digit, and one special character.");
+        }
+
+        staff.Password = _encryptions.EncryptPasswordToBase64(profileDto.NewPassword);
+        _logger.LogInformation("Password updated.");
+    }
+            if (!InputValidationUtils.IsStrongPassword(profileDto.ConfirmPassword))
+            {
+                    _logger.LogWarning("New password does not meet strength requirements.");
+                    throw new ArgumentException("Password must contain at least 6 characters, one uppercase, one digit, and one special character.");
+                }
+
+                staff.Password = _encryptions.EncryptPasswordToBase64(profileDto.ConfirmPassword);
+                _logger.LogInformation("Password updated.");
+
+            _dbContext.Staffs.Update(staff);
+            await _dbContext.SaveChangesAsync();
+            _logger.LogInformation($"UpdateProfileAsync completed for StaffId: {profileDto.StaffId}");
+
+            return await ReadItemAsync(staff.StaffId, false);
+        }
 
 
         public async Task<bool> IsEmailOrUserNameExistAsync(string email, string userName)
@@ -242,7 +316,12 @@ public async Task<ResponseItemDto<IStaff>> CreateItemAsync(StaffCuDto itemDto)
         throw new InvalidOperationException("A staff member with this personal number already exists.");
 
     var encryptedPassword = _encryptions.EncryptPasswordToBase64(itemDto.Password);
-    var role = string.IsNullOrEmpty(itemDto.Role) ? "usr" : itemDto.Role;
+    var role = itemDto.Role?.Trim().ToLower();
+
+        if (string.IsNullOrEmpty(role) || (role != "usr" && role != "sysadmin"))
+            throw new ArgumentException("Role must be either 'usr' or 'sysadmin'.");
+
+        itemDto.Role = role;
 
     var item = new StaffDbM(itemDto)
     {

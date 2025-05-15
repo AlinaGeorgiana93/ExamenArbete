@@ -334,7 +334,7 @@ const StartPage = () => {
         </LoginForm>
 
         <Footer>
-          <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
+        
         </Footer>
 
       </StartPageContainer>
