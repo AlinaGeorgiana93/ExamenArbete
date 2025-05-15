@@ -166,7 +166,7 @@ function PatientDataReview() {
         </DataItem>
 
         <ButtonGroup>
-          <Button onClick={handleCreateGraph}>Save and Create Graph</Button>
+          <Button onClick={handleCreateGraph}>{t('save_and_create_graph')}</Button>
           <Button onClick={() => navigate(`/patient/${patientId}`)}>{t('go_back')}</Button>
         </ButtonGroup>
       </ReviewContainer>

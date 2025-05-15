@@ -1,15 +1,24 @@
 const InputValidationUtils = {
-  normalizeName: (name) => {
-    if (!name || name.trim().length === 0) return name;
+normalizeName: (name) => {
+  if (!name || name.trim().length === 0) return name;
 
-    name = name.trim().toLowerCase();
-    return name.charAt(0).toUpperCase() + name.slice(1);
-  },
+  return name
+    .trim()
+    .toLowerCase()
+    .split(/(\s|-)/)  // split on spaces or hyphens, but keep them in array
+    .map(part => {
+      if (part === ' ' || part === '-') return part;
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    })
+    .join('');
+},
 
-  isValidName: (name) => {
-    if (!name || name.trim().length < 2) return false;
-    return /^[A-Za-zÀ-ÖØ-öø-ÿ]+$/.test(name.trim());
-  },
+isValidName: (name) => {
+  if (!name || name.trim().length < 2) return false;
+  // This regex allows letters, spaces, apostrophes, hyphens - good for names
+  return /^[A-Za-zÀ-ÖØ-öø-ÿ \s'-]+$/.test(name.trim());
+},
+
 
   isValidUsername: (username) => {
     if (!username || username.trim().length < 4) return false;

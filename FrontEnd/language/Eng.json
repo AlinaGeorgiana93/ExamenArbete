@@ -135,5 +135,6 @@
   "new_password_required": "Entry new password",
   "password_strength_tooltip": "Password must include at least:\n• 1 uppercase letter\n• 1 lowercase letter\n• 1 number\n• 1 special character \n• 6 character ",
   "passwords_do_not_match": " Password don't match!",
-  "confirm_Password": " Confirm Password"
+  "confirm_Password": " Confirm Password",
+  "invalid_email": "Invalid email format"
 }
