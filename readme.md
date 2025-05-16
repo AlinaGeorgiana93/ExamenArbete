@@ -9,6 +9,8 @@ npm install react-datepicker
 npm install --save-dev file-loader
 npm update react-datepicker
 npm install react-collapsible
+npm install react-tooltip
+
 --------------------------
 To merge main in your branch: git pull origin main
 --------------------------
