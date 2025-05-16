@@ -815,20 +815,20 @@ function GraphPage() {
             />
           </div>
         </div>
-        
+
 
         <ChartControls>
-  {chartTypes.map(({ key, name }) => (
-    <ChartTypeButton
-      key={key}
-      active={chartType === key}
-      onClick={() => setChartType(key)}
-    >
-      {name}
-    </ChartTypeButton>
-  ))}
- 
-</ChartControls>
+          {chartTypes.map(({ key, name }) => (
+            <ChartTypeButton
+              key={key}
+              active={chartType === key}
+              onClick={() => setChartType(key)}
+            >
+              {name}
+            </ChartTypeButton>
+          ))}
+
+        </ChartControls>
 
 
         <ChartWrapper>
@@ -850,21 +850,27 @@ function GraphPage() {
           </TimePeriodContainer>
         </ChartWrapper>
         <Link to={`/comments/${patientId}`}>
-  <button style={{
-    padding: '10px 15px',
-    background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)', 
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    marginTop: '20px',
-    marginBottom: '20px',
-  }}>
-    Go to comments
-  </button>
-</Link>
+          <button style={{
+            padding: '10px 15px',
+            background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginTop: '20px',
+            marginBottom: '20px',
+          }}>
+            Go to comments
+          </button>
+        </Link>
       </GraphContainer>
-     
+      <FloatingProfile
+        userName={userName}
+        email={email}
+        role={role}
+        setUserName={setUserName}
+        setEmail={setEmail}
+      />
 
     </>
   );
