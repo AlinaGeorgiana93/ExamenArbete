@@ -8,6 +8,7 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
+import Navigation from '../src/Navigation';
 
 
 
@@ -309,27 +310,10 @@ const CommentsPage = () => {
         style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
       >
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
+        
       </Link>
-      <Link
-        to={`/graph/${patientId}`}
-        style={{
-          display: 'inline-block',
-          backgroundColor: '#125358',
-          color: 'white',
-          padding: '10px 16px',
-          borderRadius: '8px',
-          textDecoration: 'none',
-          marginBottom: '20px',
-          marginTop: '10px',
-          fontWeight: '500',
-          position: 'absolute',
-          top: '25px',
-          left: '15px',
-          zIndex: 2
-        }}
-      >
-        Tillbaka till graf
-      </Link>
+      <Navigation showGraphLink={true} patientId={patientId} />
+
 
       <PageContainer>
         <img

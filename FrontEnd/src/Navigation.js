@@ -54,12 +54,11 @@ const StyledHomeLink = styled(StyledLink)`
     color: #00d4ff; /* Hover effect stays the same */
   }
 `;
-const Navigation = () => {
+const Navigation = ({ showGraphLink = false, patientId = null }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [logoutMessage, setLogoutMessage] = useState('');
-
-  const role = localStorage.getItem('role'); // Get the role from localStorage
+  const role = localStorage.getItem('role');
 
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
@@ -79,6 +78,11 @@ const Navigation = () => {
           <FaSignOutAlt size={18} /> {t('Log out')}
         </StyledLink>
         <NavLinks>
+          {showGraphLink && patientId && (
+            <StyledLink as={Link} to={`/graph/${patientId}`}>
+              <FaChartLine size={18} /> {t('Graph')}
+            </StyledLink>
+          )}
           <StyledLink as={Link} to="/staff">
             <FaUserNurse size={18} /> {t('staff')}
           </StyledLink>
@@ -88,12 +92,6 @@ const Navigation = () => {
               <StyledLink as={Link} to="/admin">
                 <FaUserShield size={18} /> {t('admin')}
               </StyledLink>
-              {/* <StyledLink as={Link} to="/patient/">
-                <FaUserInjured size={18} /> {t('patient')}
-              </StyledLink>
-              <StyledLink as={Link} to="/graph">
-                <FaChartLine size={18} /> {t('Graph')}
-              </StyledLink> */}
             </>
           )}
 
@@ -122,6 +120,11 @@ const Navigation = () => {
       )}
     </>
   );
+};
+
+Navigation.defaultProps = {
+  showGraphLink: false,
+  patientId: null
 };
 
 
