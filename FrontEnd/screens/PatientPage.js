@@ -64,28 +64,61 @@ const Dropdown = styled.select`
   }
 `;
 
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;  // Stack vertically
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;  // Ensure full width
+`;
 const Button = styled.button`
-  background-color: #125358;
+  background-color:rgb(7, 124, 147); /* Purple color */
   color: white;
-  font-size: 1.1rem;
-  padding: 14px 28px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
   border: none;
-  border-radius: 30px;
+  border-radius: 20px;
   cursor: pointer;
-  margin-top: 25px;
   width: 100%;
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
-    background-color: #00d4ff;
-    color: #00363a;
-    transform: scale(1.03);
+    background-color:rgb(245, 97, 11); /* Orange color */
+    transform: scale(1.02); /* Slight scale up */
   }
 `;
+const CommentsButton = styled(Link)`
+  background-color:rgb(7, 124, 147); /* Purple color */
+  color: white;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;  // Already set to 100%
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Remove flex: 1 */
+
+  &:hover {
+    background-color:rgb(245, 97, 11); /* Orange color */
+    transform: scale(1.02);
+  }
+`;
+
 
 const PatientHeader = styled.div`
   display: flex;
@@ -351,7 +384,13 @@ function PatientPage() {
             </Dropdown>
           </FormGroup>
 
+         <ButtonsContainer>
           <Button onClick={handleSave}>{t('save_button')}</Button>
+          <CommentsButton to={`/comments/${patientId}`}>
+            {patient ? `${patient.firstName}'s Comments` : 'Add/View Comments'}
+          </CommentsButton>
+          </ButtonsContainer>
+
         </PatientPageContainer>
             <FloatingProfile
       userName={userName}
