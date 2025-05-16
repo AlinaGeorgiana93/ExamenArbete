@@ -139,11 +139,15 @@
   "change_password": "Ändra lösenord",
   "current_Password": "Nuvarande lösenord",
   "new_Password": "Nytt lösenord",
-  "password_changed": "Lösenordet har ändrats",
   "change_info": "Ändra info",
   "new_password_required": "Ange nytt lösenord",
   "password_strength_tooltip": "Lösenordet måste innehålla minst:\n• 1 versal bokstav\n• 1 gemen bokstav\n• 1 siffra\n• 1 specialtecken\n• 6 tecken totalt",
   "passwords_do_not_match": "Lösenorden matchar inte!",
   "confirm_Password": "Bekräfta lösenord",
-  "invalid_email": "Ogiltigt e-postformat"
+  "invalid_email": "Ogiltigt e-postformat",
+  "profile_info": "Profilinformation",
+  "password_change_failed": "Lösenordsändring misslyckades.",
+  "profile_updated": "Profilen uppdaterades.",
+  "password_changed": "Lösenordet har ändrats."
+
 }

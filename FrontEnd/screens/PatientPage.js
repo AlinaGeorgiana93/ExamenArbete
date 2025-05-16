@@ -5,29 +5,26 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
-
+import useStoredUserInfo from '../src/useStoredUserInfo.js';
+import FloatingProfile from '../src/FloatingProfile.js';
 
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 1.3rem;
   }
   body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61); 
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    padding-bottom: 200px;
     color: #fff;
-    position: relative;
   }
 `;
-
-
-
 const PatientPageContainer = styled.div`
   background-color: #ffffffee;
   padding: 30px;
@@ -129,6 +126,8 @@ function PatientPage() {
   const [selectedAppetiteLevel, setSelectedAppetiteLevel] = useState('');
   const [selectedSleepLevel, setSelectedSleepLevel] = useState('');
 
+  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
+ 
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -354,6 +353,14 @@ function PatientPage() {
 
           <Button onClick={handleSave}>{t('save_button')}</Button>
         </PatientPageContainer>
+            <FloatingProfile
+      userName={userName}
+      email={email}
+      role={role}
+      setUserName={setUserName}
+      setEmail={setEmail}
+    />
+
       </div>
     </>
   );

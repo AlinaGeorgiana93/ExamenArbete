@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
-import UpdateProfileModal from '../Modals/UpdateProfileModal'; // Adjust the path as needed
+import useStoredUserInfo from '../src/useStoredUserInfo.js';
+import FloatingProfile from '../src/FloatingProfile.js';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -93,51 +94,13 @@ const WarningText = styled.p`
   font-size: 1rem;
 `;
 
-const FloatingProfile = styled.div`
-  position: fixed;
-  bottom: 32px;
-  right: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 1000;
-`;
-
-const ProfileHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const ProfileDetails = styled.div`
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #333;
-`;
 
 const StaffPage = () => {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState('');
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [showDetails, setShowDetails] = useState(false);
-  const [staffName, setStaffName] = useState('');
-  const [userName, setUserName] = useState('');
-  const [email, setStaffEmail] = useState('');
-  const [role, setStaffRole] = useState('');
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordMessage, setPasswordMessage] = useState('');
-  const [passwordStrength, setPasswordStrength] = useState('');
-  const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
-
-
-
-
+  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
 
   useEffect(() => {
     axios
@@ -150,16 +113,7 @@ const StaffPage = () => {
       .catch((error) => {
         console.error('Error fetching patients:', error);
       });
-
-    const storedName = localStorage.getItem('userName');
-    const storedEmail = localStorage.getItem('email');
-    const role = localStorage.getItem('role');
-
-    if (storedName) setUserName(storedName);
-    if (storedEmail) setStaffEmail(storedEmail);
-    if (role) setStaffRole(role);
   }, []);
-
 
 
   const handlePatientSelect = (e) => {
@@ -181,29 +135,13 @@ const StaffPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
       </Link>
       <StaffPageContainer>
-      <FloatingProfile onClick={() => setShowDetails(!showDetails)}>
-  <ProfileHeader>
-    <img
-      src={patient1}
-      alt="User Avatar"
-      style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+      <FloatingProfile
+      userName={userName}
+      email={email}
+      role={role}
+      setUserName={setUserName}
+      setEmail={setEmail}
     />
-    <div>
-      <span style={{ fontWeight: 'bold', color: '#000' }}>{userName}</span>
-    </div>
-  </ProfileHeader>
-
-  {showDetails && (
-    <ProfileDetails>
-      <p><strong>Email:</strong> {email}</p>
-      <p><strong>Role:</strong> {role}</p>
-      {/* Change button to open UpdateProfileModal */}
-      <button onClick={() => setShowUpdateProfileModal(true)} style={{ marginTop: '10px' }}>
-        {t('change_info')}
-      </button>
-    </ProfileDetails>
-  )}
-</FloatingProfile>
 
         <Title>{t('staff_name')}</Title>
         <WarningText>★{t('choose_patient')}</WarningText>
@@ -227,23 +165,6 @@ const StaffPage = () => {
           </Dropdown>
         </DropdownWrapper>
       </StaffPageContainer>
-      
-      
-      {/*Modal for info staff/ user/ */}
-
-      {showUpdateProfileModal && (
-  <UpdateProfileModal
-    showModal={showUpdateProfileModal}
-    setShowModal={setShowUpdateProfileModal}
-    userName={userName}
-    email={email}
-    setUserName={setUserName}
-    setStaffEmail={setStaffEmail}
-    setPasswordMessage={setPasswordMessage}  // Pass required handlers to the modal
-    
-  />
-)}
-
 
     </>
   );
