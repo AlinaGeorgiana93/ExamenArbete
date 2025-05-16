@@ -387,7 +387,7 @@ function PatientPage() {
          <ButtonsContainer>
           <Button onClick={handleSave}>{t('save_button')}</Button>
           <CommentsButton to={`/comments/${patientId}`}>
-            {patient ? `${patient.firstName}'s Comments` : 'Add/View Comments'}
+            {patient ? `Add a comment for ${patient.firstName}` : 'Add/View Comments'}
           </CommentsButton>
           </ButtonsContainer>
 
