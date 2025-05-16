@@ -157,6 +157,47 @@ namespace AppWebApi.Controllers
                 return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
             }
         }
+         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = "usr, sysadmin")]
+
+            [HttpPut("{id}")]
+            [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
+            [ProducesResponseType(400, Type = typeof(string))]
+            public async Task<IActionResult> UpdateProfile(string id, [FromBody] ProfileUpdateCuDto staff) 
+            {
+                if (!Guid.TryParse(id?.Trim(), out var idArg))
+                {
+                    _logger.LogError($"{nameof(UpdateProfile)}: Invalid GUID format for id '{id}'");
+                    return BadRequest("Invalid staff ID format.");
+                }
+
+                try
+                {
+                    _logger.LogInformation($"{nameof(UpdateProfile)}: {nameof(idArg)}: {idArg}");
+
+                    if (staff.StaffId != idArg) 
+                        throw new ArgumentException("Id mismatch");
+
+                    // Trim inputs to avoid trailing/leading space issues
+                    staff.Email = staff.Email?.Trim();
+                    staff.UserName = staff.UserName?.Trim();
+                    staff.CurrentPassword = staff.CurrentPassword?.Trim();
+                    staff.NewPassword = staff.NewPassword?.Trim();
+                    staff.ConfirmPassword= staff.ConfirmPassword?.Trim();
+
+                    var _item = await _service.UpdateProfileAsync(staff);
+                    _logger.LogInformation($"item {idArg} updated");
+
+                    return Ok(_item);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"{nameof(UpdateProfile)}: {ex.InnerException?.Message ?? ex.Message}");
+                    return BadRequest($"Could not update. Error {ex.InnerException?.Message ?? ex.Message}");
+                }
+            }
+
+
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = " sysadmin")]
@@ -165,12 +206,9 @@ namespace AppWebApi.Controllers
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> CreateItem([FromBody] StaffCuDto item)
         {
-
-            
+           
             try
-            {
-
-                
+            {                
                 _logger.LogInformation($"{nameof(CreateItem)}:");
 
                 var _item = await _service.CreateStaffAsync(item);

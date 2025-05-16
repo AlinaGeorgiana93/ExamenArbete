@@ -7,6 +7,10 @@ import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
 import patient1 from '../src/media/patient1.jpg';
+import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
+import InputValidationUtils from '../src/InputValidationUtils.js';
+import { FaInfoCircle } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -211,6 +215,7 @@ const AdminDashboard = () => {
     email: '',      
     password: '',     
     id: null,
+    role: 'usr'
   });
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -222,8 +227,19 @@ const AdminDashboard = () => {
   const [nameOf, setNameOf] = useState('');
   const [showDetails, setShowDetails] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-
-
+  const [personalNumber, setPersonalNumber] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    firstName: '',
+    lastName: '',
+    personalNumber: '',
+    username: '',
+    email: '',
+    password: '',
+    id: null,
+    role: 'usr'
+  });
+  
 // Dummy data for now
 const userData = {
   name: localStorage.getItem('userName'),
@@ -231,6 +247,55 @@ const userData = {
   role: localStorage.getItem('role'),
 };
 
+
+const validateAllFields = ({ firstName, lastName, username, email, password, personalNumber, id, role }) => {
+  const errors = {};
+
+  if (!InputValidationUtils.isValidName(firstName)) {
+    errors.firstName = 'First name is invalid.';
+  }
+
+  if (!InputValidationUtils.isValidName(lastName)) {
+    errors.lastName = 'Last name is invalid.';
+
+  }
+
+   if (!PersonalNumberUtils.isValid(personalNumber)) {
+    errors.personalNumber = 'Personal number is invalid.';
+  }
+  
+ if (activeTab === 'staff' && !id && (role === 'usr' || role === 'sysadmin')) {
+   
+  if (!InputValidationUtils.isValidUsername(username)) {
+    errors.username = 'Username should be at least 4 characters long and contain only alphanumeric characters.';
+  }
+
+  if (!InputValidationUtils.isValidEmail(email)) {
+    errors.email = 'Please provide a valid email address.';
+  }
+
+  if (!InputValidationUtils.isStrongPassword(password)) {
+    errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
+  }
+}
+
+  return errors;
+};
+
+
+
+const handlePersonalNumberChange = (e) => {
+  const newPersonalNumber = e.target.value;
+  setPersonalNumber(newPersonalNumber);
+  setFormData((prev) => ({ ...prev, personalNumber: newPersonalNumber }));
+
+  if (PersonalNumberUtils.isValid(newPersonalNumber)) {
+    setIsValid(true);
+  } else {
+    setIsValid(false);
+  }
+};
+  
 
   useEffect(() => {
     fetchPatients();
@@ -271,38 +336,49 @@ const userData = {
     }
   };
   
-
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Ensure activeTab is set correctly when submitting
+    console.log('Form submitted with data:', formData); // Add this line for debugging
+
+    // Validate fields
+    const errors = validateAllFields(formData);
+    setFieldErrors(errors);
+
+    // Log the validation errors
+    console.log('Validation errors:', errors);
+
+    if (Object.keys(errors).length > 0) {
+      setIsLoading(false);  // stop loading
+      return; // stop form submission
+    }
+
     const isStaff = activeTab === 'staff';
     const endpoint = isStaff ? 'Staff' : 'Patient';
-    
+
     try {
-      const response = await axiosInstance.post(`/${endpoint}/CreateItem`, {
-        ...formData,
-      });
-      
+      const response = await axiosInstance.post(`/${endpoint}/CreateItem`, formData);
+      console.log('API Response:', response);  // Check if the API call is successful
+
       setSuccessMessage(`${endpoint} created successfully!`);
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-  
+
       // Reset the form after successful submission
       setFormData({
         firstName: '',
         lastName: '',
         personalNumber: '',
-        username: '',  
-        email: '',     
-        password: '',  
+        username: '',
+        email: '',
+        password: '',
         id: null,
+        role:''
       });
-  
+
       // Fetch updated data for the correct tab (Staff or Patient)
       if (isStaff) {
         fetchStaff();
@@ -310,13 +386,14 @@ const userData = {
         fetchPatients();
       }
     } catch (error) {
+      console.error('Error during submission:', error.response || error.message); // Log the error for debugging
       setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
       setShowSuccessMessage(true);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false);  // stop loading after submission
     }
-  };
-  
+};
+
 
   const handleDelete = async (personId) => {
     try {
@@ -353,50 +430,61 @@ const userData = {
   };
   
   const handleEdit = async (updatedPerson) => {
-    setIsLoading(true);
-    try {
-      const isStaff = activeTab === 'staff';
-      const endpoint = isStaff ? 'Staff' : 'Patient';
-      const idField = isStaff ? 'staffId' : 'patientId';
-      const personId = updatedPerson[idField];
-  
-      // Perform the update operation
-      await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
-        [idField]: personId,
-        firstName: updatedPerson.firstName,
-        lastName: updatedPerson.lastName,
-        personalNumber: updatedPerson.personalNumber,
-      });
-  
-      // Set success message
-      setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
-      setShowSuccessMessage(true);
-      
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-        setSuccessMessage('');
-      }, 2000);
-  
-      // Reset the selected person and fetch the updated data
-      setSelectedPerson(null);
-      if (isStaff) {
-        await fetchStaff();
-      } else {
-        await fetchPatients();
-      }
-      
-      // Show the form after the update
-      setFormVisible(true); // Ensure the form appears after the update
-  
-    } catch (error) {
-      setSuccessMessage(`Error updating ${activeTab}.`);
-      setShowSuccessMessage(true);
-      setFormVisible(true); // Show form in case of failure
-    } finally {
-      setIsLoading(false);
+  setIsLoading(true);
+  try {
+    const isStaff = activeTab === 'staff';
+    const endpoint = isStaff ? 'Staff' : 'Patient';
+    const idField = isStaff ? 'staffId' : 'patientId';
+    const personId = updatedPerson[idField];
+
+    // Perform the update operation and get response
+    const response = await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
+      [idField]: personId,
+      firstName: updatedPerson.firstName,
+      lastName: updatedPerson.lastName,
+      personalNumber: updatedPerson.personalNumber,
+      // You may want to include other fields too, like username/email/password if staff
+      ...(isStaff && {
+        username: updatedPerson.username,
+        email: updatedPerson.email,
+        password: updatedPerson.password,
+        role: updatedPerson.role
+      }),
+    });
+
+    // Check if the backend returned a new token
+    const newToken = response?.data?.Item?.Token;
+    if (newToken) {
+      localStorage.setItem('jwtToken', newToken);
     }
-  };
-  
+
+    setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
+    setShowSuccessMessage(true);
+
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      setSuccessMessage('');
+    }, 2000);
+
+    // Reset selection and refresh list
+    setSelectedPerson(null);
+    if (isStaff) {
+      await fetchStaff();
+    } else {
+      await fetchPatients();
+    }
+
+    setFormVisible(true); // Ensure form appears after update
+
+  } catch (error) {
+    setSuccessMessage(`Error updating ${activeTab}.`);
+    setShowSuccessMessage(true);
+    setFormVisible(true);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const currentData = activeTab === 'patients' ? patients : staff;
 
@@ -549,53 +637,112 @@ const userData = {
   {formVisible && (
   <Form onSubmit={handleSubmit}>
           <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
-
+          
+          <label htmlFor="first_name">{t('first_name')}</label>
           <Input
+            type="text"
+            id="first_name"
             placeholder={t('first_name')}
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             required
           />
+                {fieldErrors.firstName && (
+        <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.firstName}</div>
+      )}
 
+          <label htmlFor="last_name">{t('last_name')}</label>
           <Input
+            type="text"
+            id="last_name"
             placeholder={t('last_name')}
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             required
           />
+          {fieldErrors.lastName && (
+      <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.lastName}</div>
+    )}
 
+
+          <label htmlFor="personal_number">{t('personal_number')}</label>
           <Input
-            placeholder={t('personal_number')}
+            type="text"
+            id="personal_number"
+            placeholder="YYYYMMDDXXX"
             value={formData.personalNumber}
-            onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+            onChange={handlePersonalNumberChange}
             required
           />
-
-          {activeTab === 'staff' && (
-            <>
-              <Input
-                placeholder={t('username')}
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                required
-              />
-
-              <Input
-                placeholder={t('email')}
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-              />
-
-              <Input
-                placeholder={t('password')}
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                required
-              />
-            </>
+          {fieldErrors.personalNumber && (
+         <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.personalNumber}</div>
           )}
 
+          {activeTab === 'staff' && !formData.id && (
+  <>
+    {/* Role Dropdown */}
+    <Select
+      value={{ label: formData.role, value: formData.role }}
+      onChange={(selectedOption) => {
+        setFormData({ ...formData, role: selectedOption.value });
+      }}
+      options={[
+        { label: 'usr', value: 'usr' },
+        { label: 'sysadmin', value: 'sysadmin' },
+      ]}
+      placeholder={t('selectRole')}
+      styles={{
+        container: (provided) => ({ ...provided, marginBottom: '10px' }),
+      }}
+    />
+
+    {/* Username Field */}
+    <Input
+      type="text"
+      placeholder={t('username')}
+      value={formData.username}
+      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+    />
+    {fieldErrors.username && <div style={{ color: 'red' }}>{fieldErrors.username}</div>}
+
+    {/* Email Field */}
+    <Input
+      type="email"
+      placeholder={t('email')}
+      value={formData.email}
+      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+    />
+    {fieldErrors.email && <div style={{ color: 'red' }}>{fieldErrors.email}</div>}
+
+    {/* Password Field */}
+  <>
+  {/* Password Field */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <Input
+      type="password"
+      placeholder={t('password')}
+      value={formData.password}
+      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+    />
+    <FaInfoCircle
+      data-tooltip-id="passwordTooltip"
+      data-tooltip-html={t('password_strength_tooltip').replace(/\n/g, '<br />')}
+      style={{ cursor: 'pointer' }}
+      size={18}
+      color="#888"
+    />
+    <Tooltip id="passwordTooltip" place="right" />
+  </div>
+
+  {fieldErrors.password && (
+    <div style={{ color: 'red', marginTop: '4px' }}>
+      {fieldErrors.password}
+    </div>
+  )}
+</>
+
+  </>
+          )}
           <Button type="submit" active="true">
             {isLoading ? t('loading') : t('Add')}
           </Button>

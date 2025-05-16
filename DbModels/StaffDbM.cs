@@ -24,21 +24,8 @@ namespace DbModels
         }
 
         [JsonIgnore]
-        public override Guid? PasswordResetTokenId { get; set; }
-
-        [JsonIgnore]
         [Required]
         public List<PatientDbM> PatientsDbM { get; set; }
-
-        [NotMapped]
-       
-        public override IPasswordResetToken PasswordResetToken { get => PasswordResetTokenDbM; set => throw new NotImplementedException(); }
-        [JsonIgnore]
-        public PasswordResetTokenDbM PasswordResetTokenDbM { get; set; }
-       
-    
-        
-         
 
         // Method to update StaffDbM from StaffCuDto
         public StaffDbM UpdateFromDTO(StaffCuDto org)

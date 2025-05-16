@@ -25,5 +25,6 @@ public class StaffServiceDb : IStaffService
     public Task<ResponseItemDto<IStaff>> DeleteStaffAsync(Guid id) => _staffRepo.DeleteItemAsync(id);
     public Task<ResponseItemDto<IStaff>> UpdateStaffAsync(StaffCuDto item) => _staffRepo.UpdateItemAsync(item);
     public Task<ResponseItemDto<IStaff>> CreateStaffAsync(StaffCuDto item) => _staffRepo.CreateItemAsync(item);
-
+    public Task<ResponseItemDto<IStaff>> UpdateProfileAsync(ProfileUpdateCuDto staff) => _staffRepo.UpdateProfileAsync(staff);
 }
+  

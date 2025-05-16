@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -124,6 +124,7 @@ const StaffPage = () => {
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
   const [staffName, setStaffName] = useState('');
+  const [userName, setUserName] = useState('');
   const [email, setStaffEmail] = useState('');
   const [role, setStaffRole] = useState('');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -154,7 +155,7 @@ const StaffPage = () => {
     const storedEmail = localStorage.getItem('email');
     const role = localStorage.getItem('role');
 
-    if (storedName) setStaffName(storedName);
+    if (storedName) setUserName(storedName);
     if (storedEmail) setStaffEmail(storedEmail);
     if (role) setStaffRole(role);
   }, []);
@@ -188,7 +189,7 @@ const StaffPage = () => {
       style={{ width: '40px', height: '40px', borderRadius: '50%' }}
     />
     <div>
-      <span style={{ fontWeight: 'bold', color: '#000' }}>{staffName}</span>
+      <span style={{ fontWeight: 'bold', color: '#000' }}>{userName}</span>
     </div>
   </ProfileHeader>
 
@@ -234,11 +235,12 @@ const StaffPage = () => {
   <UpdateProfileModal
     showModal={showUpdateProfileModal}
     setShowModal={setShowUpdateProfileModal}
-    staffName={staffName}
+    userName={userName}
     email={email}
-    setStaffName={setStaffName}
+    setUserName={setUserName}
     setStaffEmail={setStaffEmail}
     setPasswordMessage={setPasswordMessage}  // Pass required handlers to the modal
+    
   />
 )}
 

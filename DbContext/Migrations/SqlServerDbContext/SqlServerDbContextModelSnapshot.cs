@@ -363,42 +363,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         });
                 });
 
-            modelBuilder.Entity("DbModels.PasswordResetTokenDbM", b =>
-                {
-                    b.Property<Guid>("PasswordResetTokenId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedAtStr")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ExpiryDateStr")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("StaffId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("PasswordResetTokenId");
-
-                    b.HasIndex("StaffId")
-                        .IsUnique()
-                        .HasFilter("[StaffId] IS NOT NULL");
-
-                    b.ToTable("PasswordResetToken", "supusr");
-                });
-
             modelBuilder.Entity("DbModels.PatientDbM", b =>
                 {
                     b.Property<Guid>("PatientId")
@@ -587,9 +551,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid?>("PasswordResetTokenId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("PersonalNumber")
                         .HasColumnType("nvarchar(200)");
 
@@ -749,15 +710,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasForeignKey("PatientDbMPatientId");
                 });
 
-            modelBuilder.Entity("DbModels.PasswordResetTokenDbM", b =>
-                {
-                    b.HasOne("DbModels.StaffDbM", "StaffDbM")
-                        .WithOne("PasswordResetTokenDbM")
-                        .HasForeignKey("DbModels.PasswordResetTokenDbM", "StaffId");
-
-                    b.Navigation("StaffDbM");
-                });
-
             modelBuilder.Entity("DbModels.PatientDbM", b =>
                 {
                     b.HasOne("DbModels.GraphDbM", "GraphDbM")
@@ -834,8 +786,6 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("DbModels.StaffDbM", b =>
                 {
-                    b.Navigation("PasswordResetTokenDbM");
-
                     b.Navigation("PatientsDbM");
                 });
 #pragma warning restore 612, 618

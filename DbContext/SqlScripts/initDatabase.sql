@@ -95,9 +95,9 @@ CREATE ROLE graphefcSupUsr;
 GRANT SELECT, EXECUTE ON SCHEMA::gstusr to graphefcGstUsr;
 GRANT SELECT, UPDATE ON SCHEMA::supusr TO graphefcUsr;
 GRANT SELECT, UPDATE, INSERT, DELETE, EXECUTE ON SCHEMA::supusr to graphefcSupUsr;
-GRANT INSERT ON supusr.PasswordResetToken TO graphefcSupUsr;
-GRANT INSERT ON supusr.PasswordResetToken TO usrUser;
-GRANT SELECT ON supusr.PasswordResetToken TO gstusrUser;
+--GRANT INSERT ON supusr.PasswordResetToken TO graphefcSupUsr;
+--GRANT INSERT ON supusr.PasswordResetToken TO usrUser;
+--GRANT SELECT ON supusr.PasswordResetToken TO gstusrUser;
 GRANT SELECT, UPDATE, INSERT ON dbo.Users TO graphefcUsr;
 
 

@@ -210,12 +210,12 @@ const StartPage = () => {
         localStorage.setItem('role', 'sysadmin');
         localStorage.setItem('userName', response.data.item.userName);
         localStorage.setItem('email', response.data.item.email);
-        console.log('Admin login response:', response.data.item); 
+        console.log('Admin login response:', response.data.item);
 
         setLoginMessage(t('login_success'));
         navigate('/admin');
       } else if (role === 'usr') {
-        localStorage.setItem('role',response.data.item.userRole); 
+        localStorage.setItem('role', response.data.item.userRole);
         localStorage.setItem('userName', response.data.item.userName);
         localStorage.setItem('email', response.data.item.email);
 
@@ -228,48 +228,51 @@ const StartPage = () => {
       }
     } catch (error) {
 
-       const loginDataStaff = {
+      const loginDataStaff = {
         userNameOrEmail: username,
         password: password,
-        
+
       };
       try {
         const response = await axiosInstance.post('/Guest/LoginStaff', loginDataStaff);
         console.log('Staff Login Response:', response);
-    
+
         const token = response.data.item.jwtToken.encryptedToken;
         const role = response.data.item.userRole;
-    
+
         localStorage.setItem('jwtToken', token);
         localStorage.setItem('userName', response.data.item.userName);
         localStorage.setItem('email', response.data.item.email);
         localStorage.setItem('role', role);
         localStorage.setItem('staffId', response.data.item.staffId);
-    
+
         console.log('jwtToken for Staff after login:', token);
         console.log('Staff login response:', response.data.item);
         console.log('Staff ID:', response.data.item.staffId);
-    
+
         // Set login message
         setLoginMessage(t('login_success'));
-    
+
         // Role-based navigation
         if (role === 'sysadmin') {
-            console.log("Sysadmin logged in. You have admin privileges.");
-            navigate('/admin'); // <-- Change this to your actual admin route
+          console.log("Sysadmin logged in. You have admin privileges.");
+          navigate('/admin'); // <-- Change this to your actual admin route
         } else if (role === 'usr') {
-            console.log("Regular user logged in.");
-            navigate('/staff'); // <-- Staff dashboard
+          console.log("Regular user logged in.");
+          navigate('/staff'); // <-- Staff dashboard
         }
-    
+
       } catch (error) {
         console.error("Login failed:", error);
         setLoginMessage(t('login_failed'));
-    } // ✅ Add this missing closing brace here
-      
-      }
-    
-    
+      } // ✅ Add this missing closing brace here
+
+    }
+
+    //login admin : sysadmin! ....password: Sysadmin1!(Uppercase, lowercase, number, special character, 6 characters minimum)
+    //login staff : Charlie1 ....password: Charlie1!(Uppercase, lowercase, number, special character, 6 characters minimum)
+    //login admin : Mike1 ....password: Mike1! (Uppercase, lowercase, number, special character. 6 characters minimum)
+    //login staff : Alice1 ....password: Alice1!(Uppercase, lowercase, number, special character, 6 characters minimum)
   };
 
   const handleKeyDown = (e) => {
@@ -303,25 +306,25 @@ const StartPage = () => {
           <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>
         )}
 
-<LoginForm>
-  <Label>{t('username')}</Label>
-  <Input
-    type="text"
-    placeholder={t('enter_username')}
-    value={username}
-    onChange={(e) => setUsername(e.target.value)}
-  />
+        <LoginForm>
+          <Label>{t('username')}</Label>
+          <Input
+            type="text"
+            placeholder={t('enter_username')}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-  <Label>{t('password')}</Label>
-  <Input
-    type="password"
-    placeholder={t('enter_password')}
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    onKeyDown={handleKeyDown}
-  />
+          <Label>{t('password')}</Label>
+          <Input
+            type="password"
+            placeholder={t('enter_password')}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
 
-  {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
           <ButtonContainer>
             <Button onClick={handleLogin} disabled={!username || !password}>
@@ -331,7 +334,7 @@ const StartPage = () => {
         </LoginForm>
 
         <Footer>
-          <p> <Link to="/forgot-password">{t('forgot_password_link')}</Link></p>
+        
         </Footer>
 
       </StartPageContainer>

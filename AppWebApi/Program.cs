@@ -110,8 +110,8 @@ builder.Services.AddScoped<IActivityLevelService, ActivityLevelServiceDb>();
 builder.Services.AddScoped<StaffDbRepos>();
 builder.Services.AddScoped<IStaffService, StaffServiceDb>();
 
-builder.Services.AddScoped<PasswordResetTokenRepos>();
-builder.Services.AddScoped<IPasswordResetTokenService, PasswordResetTokenServiceDb>();
+// builder.Services.AddScoped<PasswordResetTokenRepos>();
+// builder.Services.AddScoped<IPasswordResetTokenService, PasswordResetTokenServiceDb>();
 
 
 var app = builder.Build();
