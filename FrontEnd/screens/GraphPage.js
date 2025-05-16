@@ -16,14 +16,13 @@ import useStoredUserInfo from '../src/useStoredUserInfo.js';
 import FloatingProfile from '../src/FloatingProfile.js';
 
 
-// Update the body styles in GlobalStyle
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 1rem;
   }
-
   body {
     font-family: 'Times New Roman', cursive, sans-serif;
     background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
@@ -34,14 +33,8 @@ const GlobalStyle = createGlobalStyle`
     color: #fff;
     position: relative;
     padding: 20px 0;
-    width: 100vw;  // Added to ensure full viewport width
-    overflow-x: hidden;  // Prevent horizontal scrolling
-
-    /* Mobile (320px – 480px) */
-    @media (max-width: 480px) {
-      padding: 10px 0;
-      align-items: center;
-    }
+    width: 100vw;
+    overflow-x: hidden;
   }
 `;
 
@@ -468,40 +461,36 @@ function GraphPage() {
       );
     }
 
-    if (!processedData.length) {
-      return (
-        <div style={{
-          textAlign: 'center',
-          padding: '40px',
-          color: '#666',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%'
-        }}>
-          <h3>No data available</h3>
-          <p>Please check your date range or submit patient data first.</p>
-          <button
-            onClick={() => {
-              setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
-              setEndDate(new Date());
-            }}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#125358',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              marginTop: '10px',
-              cursor: 'pointer'
-            }}
-          >
-            Show Full History
-          </button>
-        </div>
-      );
-    }
+    {!processedData.length && (
+  <div style={{ 
+    textAlign: 'center', 
+    padding: '40px',
+    color: '#666',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }}>
+    <h3>No data available</h3>
+    <p>Please check your date range or submit patient data first.</p>
+    <button 
+      onClick={() => {
+        setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
+        setEndDate(new Date());
+      }}
+      style={{
+        marginTop: '20px',
+        padding: '10px 20px',
+        borderRadius: '8px',
+        backgroundColor: '#007B8F',
+        color: '#fff',
+        border: 'none',
+        cursor: 'pointer'
+      }}
+    >
+      Reset Date Range
+    </button>
+  </div>
+);}
 
     const commonProps = {
       data: processedData,
@@ -750,71 +739,73 @@ function GraphPage() {
           </div>
         )}
 
-        <div style={{
-          marginBottom: '25px',
-          padding: '15px',
-          backgroundColor: '#f9f9f9',
-          borderRadius: '8px',
-          border: '1px solid #eee'
-        }}>
-          <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-            gap: '10px'
-          }}>
-            {metrics.map(metric => (
-              <MetricToggle
-                key={metric.key}
-                active={activeMetrics[metric.key]}
-                onClick={() => toggleMetric(metric.key)}
-              >
-                <input
-                  type="checkbox"
-                  checked={activeMetrics[metric.key]}
-                  readOnly
-                  style={{ accentColor: metric.color }}
-                />
-                <span style={{ color: metric.color, fontWeight: '500' }}>
-                  {metric.name}
-                </span>
-              </MetricToggle>
-            ))}
-          </div>
-        </div>
+        <div style={{ 
+  border: '1px solid #eee',
+  borderRadius: '10px',
+  padding: '20px',
+  marginBottom: '20px',
+  backgroundColor: '#f8f8f8',
+}}>
+  <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
+  <div style={{ 
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+    gap: '10px'
+  }}>
+    {metrics.map(metric => (
+      <MetricToggle 
+        key={metric.key}
+        active={activeMetrics[metric.key]}
+        onClick={() => toggleMetric(metric.key)}
+      >
+        <input
+          type="checkbox"
+          checked={activeMetrics[metric.key]}
+          readOnly
+          style={{ accentColor: metric.color }}
+        />
+        <span style={{ color: metric.color, fontWeight: '500' }}>
+          {metric.name}
+        </span>
+      </MetricToggle>
+    ))}
+  </div>
+</div>
 
-        <div style={{
-          display: 'flex',
-          gap: '10px',
-          alignItems: 'center',
-          marginBottom: '20px',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
-        }}>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <span style={{ fontWeight: '500' }}>From:</span>
-            <DatePicker
-              selected={startDate}
-              onChange={date => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              maxDate={endDate}
-            />
-          </div>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <span style={{ fontWeight: '500' }}>To:</span>
-            <DatePicker
-              selected={endDate}
-              onChange={date => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-              maxDate={new Date()}
-            />
-          </div>
-        </div>
+
+<div style={{ 
+  display: 'flex', 
+  gap: '10px', 
+  alignItems: 'center', 
+  marginBottom: '20px',
+  flexWrap: 'wrap',
+  justifyContent: 'center'
+}}>
+  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
+    <span style={{ fontWeight: '500' }}>From:</span>
+    <DatePicker
+      selected={startDate}
+      onChange={date => setStartDate(date)}
+      selectsStart
+      startDate={startDate}
+      endDate={endDate}
+      maxDate={endDate}
+    />
+  </div>
+  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
+    <span style={{ fontWeight: '500' }}>To:</span>
+    <DatePicker
+      selected={endDate}
+      onChange={date => setEndDate(date)}
+      selectsEnd
+      startDate={startDate}
+      endDate={endDate}
+      minDate={startDate}
+      maxDate={new Date()}
+    />
+  </div>
+</div>
+
 
 
         <ChartControls>
@@ -837,17 +828,18 @@ function GraphPage() {
           </ResponsiveContainer>
 
           <TimePeriodContainer>
-            {timeRanges.map(range => (
-              <TimeRangeButton
-                key={range.key}
-                active={timeRange === range.key}
-                onClick={() => setTimeRange(range.key)}
-                style={{ width: '100%' }}
-              >
-                {range.name}
-              </TimeRangeButton>
-            ))}
-          </TimePeriodContainer>
+  {timeRanges.map(range => (
+    <TimeRangeButton
+      key={range.key}
+      active={timeRange === range.key}
+      onClick={() => setTimeRange(range.key)}
+      style={{ width: '100%' }}
+    >
+      {range.name}
+    </TimeRangeButton>
+  ))}
+</TimePeriodContainer>
+
         </ChartWrapper>
         
       </GraphContainer>
