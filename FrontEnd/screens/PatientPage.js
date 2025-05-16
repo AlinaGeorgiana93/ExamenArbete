@@ -112,6 +112,7 @@ const PatientName = styled.h2`
   text-align: center;
 `;
 
+// ... (imports och styled-components är oförändrade)
 
 function PatientPage() {
   const { patientId } = useParams();
@@ -137,7 +138,6 @@ function PatientPage() {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
-  // Fetch patient details by patientId
   useEffect(() => {
     axios
       .get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`)
@@ -149,12 +149,9 @@ function PatientPage() {
         console.error('Error fetching patient:', err);
         setLoading(false);
       });
-    console.log('Patient ID from URL:', patientId);
   }, [patientId]);
 
-  // Fetch available MoodKinds, ActivityLevels, AppetiteLevels, SleepLevels
   const token = localStorage.getItem('jwtToken');
-  console.log('Retrieved token from localStorage:', token);
 
   if (!token) {
     console.error('No token found in localStorage.');
@@ -256,6 +253,12 @@ function PatientPage() {
   if (loading) return <div>{t('loading_patient')}</div>;
   if (!patient) return <div>{t('no_patient_found')}</div>;
 
+  // 🔽 Sorterade listor efter rating (stigande)
+  const sortedMoodKinds = [...moodKinds].sort((a, b) => a.rating - b.rating);
+  const sortedActivityLevels = [...activityLevels].sort((a, b) => a.rating - b.rating);
+  const sortedAppetiteLevels = [...appetiteLevels].sort((a, b) => a.rating - b.rating);
+  const sortedSleepLevels = [...sleepLevels].sort((a, b) => a.rating - b.rating);
+
   return (
     <>
       <GlobalStyle />
@@ -283,7 +286,7 @@ function PatientPage() {
               onChange={handleSelectChange(setSelectedMoodKind)}
             >
               <option value="">{t('choose_moodkind')}</option>
-              {moodKinds.map((mood) => (
+              {sortedMoodKinds.map((mood) => (
                 <option key={mood.moodKindId} value={mood.moodKindId}>
                   {mood.label} {mood.rating}
                 </option>
@@ -301,7 +304,7 @@ function PatientPage() {
               onChange={handleSelectChange(setSelectedActivityLevel)}
             >
               <option value="">{t('choose_activitylevel')}</option>
-              {activityLevels.map((activity) => (
+              {sortedActivityLevels.map((activity) => (
                 <option
                   key={activity.activityLevelId}
                   value={activity.activityLevelId}
@@ -322,7 +325,7 @@ function PatientPage() {
               onChange={handleSelectChange(setSelectedAppetiteLevel)}
             >
               <option value="">{t('choose_appetitelevel')}</option>
-              {appetiteLevels.map((appetite) => (
+              {sortedAppetiteLevels.map((appetite) => (
                 <option
                   key={appetite.appetiteLevelId}
                   value={appetite.appetiteLevelId}
@@ -341,7 +344,7 @@ function PatientPage() {
               onChange={handleSelectChange(setSelectedSleepLevel)}
             >
               <option value="">{t('choose_sleeplevel')}</option>
-              {sleepLevels.map((sleep) => (
+              {sortedSleepLevels.map((sleep) => (
                 <option key={sleep.sleepLevelId} value={sleep.sleepLevelId}>
                   {sleep.label} {sleep.rating}
                 </option>

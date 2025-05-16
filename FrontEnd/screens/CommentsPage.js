@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo1 from '../src/media/logo1.png';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import patient1 from '../src/media/patient1.jpg'; 
+import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
@@ -199,8 +199,8 @@ const CommentsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [signature, setSignature] = useState(''); 
-  
+  const [signature, setSignature] = useState('');
+
   const isToday = (date) => {
     const today = new Date();
     return (
@@ -234,7 +234,7 @@ const CommentsPage = () => {
       alert("Kommentar kan inte vara tom.");
       return;
     }
-  
+
     if (signature.trim() === '') {
       alert("Vänligen fyll i dina initialer.");
       return;
@@ -243,7 +243,7 @@ const CommentsPage = () => {
     const newComment = {
       id: Date.now(),
       text: comments.trim(),
-      signature: signature.trim(), 
+      signature: signature.trim(),
       timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }),
     };
 
@@ -251,7 +251,7 @@ const CommentsPage = () => {
     setCommentList(updatedComments);
     localStorage.setItem('comments', JSON.stringify(updatedComments));
     setComments('');
-    setSignature(''); 
+    setSignature('');
   };
 
   const handleDelete = (id) => {
@@ -298,76 +298,96 @@ const CommentsPage = () => {
 
   const handleDateChange = date => {
     setSelectedDate(date);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   return (
     <>
       <GlobalStyle />
       <Link
-  to="/"
-  style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
->
-  <img src={logo1} alt="Logo" style={{ width: '140px' }} />
-</Link>
+        to="/"
+        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
+      >
+        <img src={logo1} alt="Logo" style={{ width: '140px' }} />
+      </Link>
+      <Link
+        to={`/graph/${patientId}`}
+        style={{
+          display: 'inline-block',
+          backgroundColor: '#125358',
+          color: 'white',
+          padding: '10px 16px',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          marginBottom: '20px',
+          marginTop: '10px',
+          fontWeight: '500',
+          position: 'absolute',
+          top: '25px',
+          left: '15px',
+          zIndex: 2
+        }}
+      >
+        Tillbaka till graf
+      </Link>
 
       <PageContainer>
-        <img 
-          src={patient1} 
-          alt="Patient Bild" 
-          style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }} 
+        <img
+          src={patient1}
+          alt="Patient Bild"
+          style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }}
         />
         <Title>
-          Kommentarer för {patientData ? 
-            <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> : 
+          Kommentarer för {patientData ?
+            <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> :
             (error || 'Ingen patient hittades')}
         </Title>
-        
+
         <DatePicker
           selected={selectedDate}
           onChange={handleDateChange}
           dateFormat="yyyy-MM-dd"
           showPopperArrow={false}
         />
-  
-  {isToday(selectedDate) && (
-  <>
-    <CommentBox
-      value={comments}
-      onChange={(e) => setComments(e.target.value)}
-      placeholder="Skriv din kommentar här..."
-    />
 
-    <input 
-      type="text" 
-      placeholder="Signatur" 
-      value={signature}
-      onChange={(e) => setSignature(e.target.value)}
-      style={{
-        width: '200px',
-        padding: '6px 10px',
-        fontSize: '14px',
-        borderRadius: '6px',
-        border: '1px solid #ccc',
-        marginTop: '10px',
-        marginBottom: '10px'
-      }}
-    />
+        {isToday(selectedDate) && (
+          <>
+            <CommentBox
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              placeholder="Skriv din kommentar här..."
+            />
 
-    {editMode ? (
-      <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
-        <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
-        <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
-      </div>
-    ) : (
-      <div style={{ marginTop: '6px' }}>
-        <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
-      </div>
-    )}
-  </>
-)}
+            <input
+              type="text"
+              placeholder="Signatur"
+              value={signature}
+              onChange={(e) => setSignature(e.target.value)}
+              style={{
+                width: '200px',
+                padding: '6px 10px',
+                fontSize: '14px',
+                borderRadius: '6px',
+                border: '1px solid #ccc',
+                marginTop: '10px',
+                marginBottom: '10px'
+              }}
+            />
 
-  
+            {editMode ? (
+              <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
+                <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
+              </div>
+            ) : (
+              <div style={{ marginTop: '6px' }}>
+                <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
+              </div>
+            )}
+          </>
+        )}
+
+
         <CommentList>
           {paginatedComments.map((comment) => (
             <CommentItem key={comment.id}>
@@ -375,7 +395,7 @@ const CommentsPage = () => {
               <p>{comment.timestamp}</p>
               <DeleteButton onClick={() => handleDelete(comment.id)}>X</DeleteButton>
               <button onClick={() => handleEdit(comment.id)}>Redigera</button>
-              <Signature>{comment.signature}</Signature> 
+              <Signature>{comment.signature}</Signature>
             </CommentItem>
           ))}
         </CommentList>
