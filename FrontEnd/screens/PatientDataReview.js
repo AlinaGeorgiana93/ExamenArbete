@@ -2,16 +2,25 @@ import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import useStoredUserInfo from '../src/useStoredUserInfo.js';
+import FloatingProfile from '../src/FloatingProfile.js';
 
 // GlobalStyle will be applied to the whole page to adjust the background
 const GlobalStyle = createGlobalStyle`
-  body {
-    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb); /* Same gradient as StaffPage */
-    min-height: 100vh; /* Ensure the background covers the full height */
+ {
     margin: 0;
-    font-family: 'Times New Roman', cursive, sans-serif;
-    color: rgb(29, 29, 29);
-    font-size: 20px; /* Increased global font size */
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding-bottom: 200px;
+    color: #black;
   }
 `;
 
@@ -20,7 +29,7 @@ const ReviewContainer = styled.div`
   font-family: 'Poppins', sans-serif;
   padding: 30px;
   border-radius: 16px;
-  width: 100%; /* Full width container */
+  width: 90%; /* Full width container */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   margin: 40px auto; /* Increased margin for more space around the container */
 
@@ -88,6 +97,7 @@ function PatientDataReview() {
   const { patientId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
 
   const handleCreateGraph = () => {
     const graphData = {
@@ -170,6 +180,14 @@ function PatientDataReview() {
           <Button onClick={() => navigate(`/patient/${patientId}`)}>{t('go_back')}</Button>
         </ButtonGroup>
       </ReviewContainer>
+       <FloatingProfile
+            userName={userName}
+            email={email}
+            role={role}
+            setUserName={setUserName}
+            setEmail={setEmail}
+          />
+      
     </>
   );
 }
