@@ -314,7 +314,6 @@ const CommentsPage = () => {
       </Link>
       <Navigation showGraphLink={true} patientId={patientId} />
 
-
       <PageContainer>
         <img
           src={patient1}
@@ -370,7 +369,6 @@ const CommentsPage = () => {
             )}
           </>
         )}
-
 
         <CommentList>
           {paginatedComments.map((comment) => (
