@@ -124,7 +124,7 @@ const StaffPage = () => {
     }
   };
 
-  
+
   return (
     <>
       <GlobalStyle />
@@ -135,16 +135,15 @@ const StaffPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
       </Link>
       <StaffPageContainer>
-      <FloatingProfile
-      userName={userName}
-      email={email}
-      role={role}
-      setUserName={setUserName}
-      setEmail={setEmail}
-    />
+        <FloatingProfile
+          userName={userName}
+          email={email}
+          role={role}
+          setUserName={setUserName}
+          setEmail={setEmail}
+        />
 
-        <Title>{t('staff_name')}</Title>
-        <WarningText>★{t('choose_patient')}</WarningText>
+        <Title>{t('choose_patient')}</Title>
 
         <DropdownWrapper>
           <Dropdown
@@ -152,7 +151,7 @@ const StaffPage = () => {
             value={selectedPatient}
             onChange={handlePatientSelect}
           >
-            <option value="">{t('choose_patient')}</option>
+            <option value="">{t('Patient')}</option>
             {patients.length > 0 ? (
               patients.map((patient) => (
                 <option key={patient.patientId} value={patient.patientId}>

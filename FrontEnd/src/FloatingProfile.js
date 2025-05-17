@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 const FloatingProfileContainer = styled.div`
   position: fixed;
-  bottom: 32px;
+  bottom: 50px;
   right: 20px;
   background-color: #ffffff;
   border-radius: 12px;

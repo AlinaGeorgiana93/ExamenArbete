@@ -465,36 +465,38 @@ function GraphPage() {
       );
     }
 
-    {!processedData.length && (
-  <div style={{ 
-    textAlign: 'center', 
-    padding: '40px',
-    color: '#666',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  }}>
-    <h3>No data available</h3>
-    <p>Please check your date range or submit patient data first.</p>
-    <button 
-      onClick={() => {
-        setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
-        setEndDate(new Date());
-      }}
-      style={{
-        marginTop: '20px',
-        padding: '10px 20px',
-        borderRadius: '8px',
-        backgroundColor: '#007B8F',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer'
-      }}
-    >
-      Reset Date Range
-    </button>
-  </div>
-);}
+    {
+      !processedData.length && (
+        <div style={{
+          textAlign: 'center',
+          padding: '40px',
+          color: '#666',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+          <h3>No data available</h3>
+          <p>Please check your date range or submit patient data first.</p>
+          <button
+            onClick={() => {
+              setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
+              setEndDate(new Date());
+            }}
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              backgroundColor: '#007B8F',
+              color: '#fff',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            Reset Date Range
+          </button>
+        </div>
+      );
+    }
 
     const commonProps = {
       data: processedData,
@@ -746,72 +748,72 @@ function GraphPage() {
           </div>
         )}
 
-        <div style={{ 
-  border: '1px solid #eee',
-  borderRadius: '10px',
-  padding: '20px',
-  marginBottom: '20px',
-  backgroundColor: '#f8f8f8',
-}}>
-  <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
-  <div style={{ 
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-    gap: '10px'
-  }}>
-    {metrics.map(metric => (
-      <MetricToggle 
-        key={metric.key}
-        active={activeMetrics[metric.key]}
-        onClick={() => toggleMetric(metric.key)}
-      >
-        <input
-          type="checkbox"
-          checked={activeMetrics[metric.key]}
-          readOnly
-          style={{ accentColor: metric.color }}
-        />
-        <span style={{ color: metric.color, fontWeight: '500' }}>
-          {metric.name}
-        </span>
-      </MetricToggle>
-    ))}
-  </div>
-</div>
+        <div style={{
+          border: '1px solid #eee',
+          borderRadius: '10px',
+          padding: '20px',
+          marginBottom: '20px',
+          backgroundColor: '#f8f8f8',
+        }}>
+          <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '10px'
+          }}>
+            {metrics.map(metric => (
+              <MetricToggle
+                key={metric.key}
+                active={activeMetrics[metric.key]}
+                onClick={() => toggleMetric(metric.key)}
+              >
+                <input
+                  type="checkbox"
+                  checked={activeMetrics[metric.key]}
+                  readOnly
+                  style={{ accentColor: metric.color }}
+                />
+                <span style={{ color: metric.color, fontWeight: '500' }}>
+                  {metric.name}
+                </span>
+              </MetricToggle>
+            ))}
+          </div>
+        </div>
 
 
-<div style={{ 
-  display: 'flex', 
-  gap: '10px', 
-  alignItems: 'center', 
-  marginBottom: '20px',
-  flexWrap: 'wrap',
-  justifyContent: 'center'
-}}>
-  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
-    <span style={{ fontWeight: '500' }}>From:</span>
-    <DatePicker
-      selected={startDate}
-      onChange={date => setStartDate(date)}
-      selectsStart
-      startDate={startDate}
-      endDate={endDate}
-      maxDate={endDate}
-    />
-  </div>
-  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
-    <span style={{ fontWeight: '500' }}>To:</span>
-    <DatePicker
-      selected={endDate}
-      onChange={date => setEndDate(date)}
-      selectsEnd
-      startDate={startDate}
-      endDate={endDate}
-      minDate={startDate}
-      maxDate={new Date()}
-    />
-  </div>
-</div>
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
+            <span style={{ fontWeight: '500' }}>From:</span>
+            <DatePicker
+              selected={startDate}
+              onChange={date => setStartDate(date)}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              maxDate={endDate}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
+            <span style={{ fontWeight: '500' }}>To:</span>
+            <DatePicker
+              selected={endDate}
+              onChange={date => setEndDate(date)}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+              maxDate={new Date()}
+            />
+          </div>
+        </div>
 
 
 
@@ -835,20 +837,39 @@ function GraphPage() {
           </ResponsiveContainer>
 
           <TimePeriodContainer>
-  {timeRanges.map(range => (
-    <TimeRangeButton
-      key={range.key}
-      active={timeRange === range.key}
-      onClick={() => setTimeRange(range.key)}
-      style={{ width: '100%' }}
-    >
-      {range.name}
-    </TimeRangeButton>
-  ))}
-</TimePeriodContainer>
+            {timeRanges.map(range => (
+              <TimeRangeButton
+                key={range.key}
+                active={timeRange === range.key}
+                onClick={() => setTimeRange(range.key)}
+                style={{ width: '100%' }}
+              >
+                {range.name}
+              </TimeRangeButton>
+            ))}
+          </TimePeriodContainer>
 
         </ChartWrapper>
-        
+        <Link
+          to={`/comments/${patientId}`}
+          state={{ from: 'graph' }}  // 👈 skickar med varifrån man kommer
+        >
+          <button style={{
+            padding: '10px 15px',
+            background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginTop: '20px',
+            marginBottom: '20px',
+          }}>
+            Comments
+          </button>
+        </Link>
+
+
+
       </GraphContainer>
       <FloatingProfile
         userName={userName}

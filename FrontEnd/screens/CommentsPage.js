@@ -9,6 +9,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
 import Navigation from '../src/Navigation';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 
 
 
@@ -188,6 +190,8 @@ const Signature = styled.div`
 `;
 
 
+// ...imports är oförändrade
+
 const CommentsPage = () => {
   const { patientId } = useParams();
   const [comments, setComments] = useState('');
@@ -201,6 +205,9 @@ const CommentsPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
   const [signature, setSignature] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const fromPage = location.state?.from || 'patient'; // Default till 'patient' om inget skickas
 
   const isToday = (date) => {
     const today = new Date();
@@ -212,9 +219,9 @@ const CommentsPage = () => {
   };
 
   useEffect(() => {
-    const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+    const savedComments = JSON.parse(localStorage.getItem(`comments_${patientId}`)) || [];
     setCommentList(savedComments);
-  }, []);
+  }, [patientId]);
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -250,7 +257,7 @@ const CommentsPage = () => {
 
     const updatedComments = [newComment, ...commentList];
     setCommentList(updatedComments);
-    localStorage.setItem('comments', JSON.stringify(updatedComments));
+    localStorage.setItem(`comments_${patientId}`, JSON.stringify(updatedComments));
     setComments('');
     setSignature('');
   };
@@ -258,7 +265,7 @@ const CommentsPage = () => {
   const handleDelete = (id) => {
     const updatedComments = commentList.filter(comment => comment.id !== id);
     setCommentList(updatedComments);
-    localStorage.setItem('comments', JSON.stringify(updatedComments));
+    localStorage.setItem(`comments_${patientId}`, JSON.stringify(updatedComments));
   };
 
   const handleEdit = (id) => {
@@ -271,10 +278,12 @@ const CommentsPage = () => {
   const handleSaveEdit = () => {
     if (comments.trim() !== '') {
       const updatedComments = commentList.map(comment =>
-        comment.id === editId ? { ...comment, text: comments.trim(), timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }) } : comment
+        comment.id === editId
+          ? { ...comment, text: comments.trim(), timestamp: new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' }) }
+          : comment
       );
       setCommentList(updatedComments);
-      localStorage.setItem('comments', JSON.stringify(updatedComments));
+      localStorage.setItem(`comments_${patientId}`, JSON.stringify(updatedComments));
       setComments('');
       setEditMode(false);
       setEditId(null);
@@ -310,9 +319,53 @@ const CommentsPage = () => {
         style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
       >
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
-        
       </Link>
-      <Navigation showGraphLink={true} patientId={patientId} />
+
+      {fromPage === 'patient' && (
+        <Link
+          to={`/patient/${patientId}`}
+          style={{
+            display: 'inline-block',
+            backgroundColor: '#125358',
+            color: 'white',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            textDecoration: 'none',
+            marginBottom: '20px',
+            marginTop: '10px',
+            fontWeight: '500',
+            position: 'absolute',
+            top: '25px',
+            left: '15px',
+            zIndex: 2
+          }}
+        >
+          Tillbaka till patient
+        </Link>
+      )}
+
+      {fromPage === 'graph' && (
+        <Link
+          to={`/graph/${patientId}`}
+          style={{
+            display: 'inline-block',
+            backgroundColor: '#125358',
+            color: 'white',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            textDecoration: 'none',
+            marginBottom: '20px',
+            marginTop: '10px',
+            fontWeight: '500',
+            position: 'absolute',
+            top: '25px',
+            left: '15px',
+            zIndex: 2
+          }}
+        >
+          Tillbaka till graf
+        </Link>
+      )}
 
       <PageContainer>
         <img

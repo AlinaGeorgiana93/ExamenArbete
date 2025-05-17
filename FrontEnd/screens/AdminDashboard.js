@@ -11,180 +11,158 @@ import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
 import InputValidationUtils from '../src/InputValidationUtils.js';
 import { FaInfoCircle } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
-
-
 const GlobalStyle = createGlobalStyle`
   * {
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
     box-sizing: border-box;
   }
+
   body {
-    font-family: 'Poppins', sans-serif; /* Change the font */
-    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #8CE3F3, #33E1CF, #B2DFDB);
     min-height: 100vh;
-    overflow-y: auto;
     color: #1a1a1a;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 30px 0;
+    padding: 30px 16px;
     transition: background 0.6s ease-in-out;
   }
 `;
 
 const Title = styled.h1`
-  color: #fff;
-  font-size: 36px;
+  color:rgb(57, 56, 56);
+  font-size: clamp(28px, 6vw, 40px);
   font-weight: 800;
-  letter-spacing: 1px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-
   text-align: center;
-
-  @media (max-width: 480px) {
-    font-size: 28px;
-  }
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
+  margin-bottom: 10px;
 `;
 
 const Subtitle = styled.span`
-  color:rgb(58, 53, 53);
-  font-size: 22px;
-  font-weight: 400;
-  opacity: 0.9;
-  margin-bottom: 0;  // remove unnecessary bottom space
-  display: block;
+  color: #3a3535;
+  font-size: clamp(18px, 4vw, 22px);
+  font-weight: 700;
+  opacity: 0.95;
   text-align: center;
-  font-weight: 600;
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-  }
+  display: block;
+  margin-bottom: 5px;
 `;
 
 const Container = styled.div`
-  padding: 10px;
-  justify-content: center;  
-  align-items: center;
+  max-width: 1200px;
+  width: 100%;
+  padding: 360px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  
-  h1 {
-    color: white;
-    margin-bottom: 30px;
-  }
-  
+  align-items: center;
 `;
 
 const SelectContainer = styled.div`
-  margin-bottom: 20px; /* Add margin below the Select component */
+  margin-bottom: 1px;
+  width: 100%;
+  max-width: 400px;
 `;
 
 const Tabs = styled.div`
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
   margin-bottom: 20px;
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center; 
-  gap: 20px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  
-  
+  gap: 16px;
+  margin: 20px 0 10px;
 `;
 
-
 const TabButton = styled.button`
-  padding: 10px 20px;
-  background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : '#eee')};
-  color: ${(props) => (props.active ? '#fff' : '#000')};
+  padding: 12px 24px;
+  background: ${(props) => (props.active ? '#28889b' : '#f2f2f2')};
+  color: ${(props) => (props.active ? '#fff' : '#333')};
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 
-  &:hover {
-    background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : ' #8ACCD5')};
+  &:hover,
+  &:focus {
+    background: ${(props) => (props.active ? '#247c8e' : '#d0f0f3')};
+    outline: none;
   }
 `;
 
 const MainWrapper = styled.div`
-  width: 350px; /* Or any fixed width you prefer */
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 15px;
-  align-items: stretch;
-  
-
+  gap: 20px;
 `;
 
-
 const Form = styled.form`
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 30px;
-  background-color: #F5ECD5;
-  padding: 30px;
-  border-radius: 12px;
-  width: ${(props) =>
-    props.activeTab === 'staff' ? '60%' : '100%'};
-  margin: 0 auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional for matching login form */
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
   display: flex;
   flex-direction: column;
 
   h2 {
-    color:rgb(58, 53, 53);
-    font-size: 22px;
-    font-weight: 400;
-    opacity: 0.9;
-    text-align: center;
-    padding: 10px;
-    font-family: 'Poppins', sans-serif;
+    font-size: clamp(20px, 4vw, 24px);
     font-weight: 600;
-    
+    color: #333;
+    text-align: center;
+    margin-bottom: 16px;
+  }
 `;
 
 const Input = styled.input`
-  margin-bottom: 16px;
-  padding: 12px;
-  width: 100%;
+  padding: 14px;
   border: 1px solid #ccc;
   border-radius: 8px;
+  margin-bottom: 20px;
   font-size: 1rem;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #2684FF;
+    outline: none;
+  }
 `;
 
 const Button = styled.button`
-  padding: 12px 24px;
-  border: none;
-  margin-right: 10px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  background: ${(props) =>
-    props.active === 'true' ? 'rgb(40, 136, 155)' : '#eee'};
+  padding: 14px;
+  background: ${(props) => (props.active === 'true' ? '#28889b' : '#eee')};
   color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
-   align-self: center; 
-   width: 35%;
-  
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.3s ease;
 
   &:hover {
-    background: #8ACCD5;
+    background: #8accd5;
   }
 `;
+
 const FloatingProfile = styled.div`
   position: fixed;
-  bottom: 32px;
-  right: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  bottom: 50px;
+  right: 16px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   z-index: 1000;
 `;
@@ -192,15 +170,14 @@ const FloatingProfile = styled.div`
 const ProfileHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 `;
 
 const ProfileDetails = styled.div`
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #333;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: #444;
 `;
-
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -211,9 +188,9 @@ const AdminDashboard = () => {
     firstName: '',
     lastName: '',
     personalNumber: '',
-    username: '',    
-    email: '',      
-    password: '',     
+    username: '',
+    email: '',
+    password: '',
     id: null,
     role: 'usr'
   });
@@ -239,63 +216,63 @@ const AdminDashboard = () => {
     id: null,
     role: 'usr'
   });
-  
-// Dummy data for now
-const userData = {
-  name: localStorage.getItem('userName'),
-  email: localStorage.getItem('email'),
-  role: localStorage.getItem('role'),
-};
+
+  // Dummy data for now
+  const userData = {
+    name: localStorage.getItem('userName'),
+    email: localStorage.getItem('email'),
+    role: localStorage.getItem('role'),
+  };
 
 
-const validateAllFields = ({ firstName, lastName, username, email, password, personalNumber, id, role }) => {
-  const errors = {};
+  const validateAllFields = ({ firstName, lastName, username, email, password, personalNumber, id, role }) => {
+    const errors = {};
 
-  if (!InputValidationUtils.isValidName(firstName)) {
-    errors.firstName = 'First name is invalid.';
-  }
+    if (!InputValidationUtils.isValidName(firstName)) {
+      errors.firstName = 'First name is invalid.';
+    }
 
-  if (!InputValidationUtils.isValidName(lastName)) {
-    errors.lastName = 'Last name is invalid.';
+    if (!InputValidationUtils.isValidName(lastName)) {
+      errors.lastName = 'Last name is invalid.';
 
-  }
+    }
 
-   if (!PersonalNumberUtils.isValid(personalNumber)) {
-    errors.personalNumber = 'Personal number is invalid.';
-  }
-  
- if (activeTab === 'staff' && !id && (role === 'usr' || role === 'sysadmin')) {
-   
-  if (!InputValidationUtils.isValidUsername(username)) {
-    errors.username = 'Username should be at least 4 characters long and contain only alphanumeric characters.';
-  }
+    if (!PersonalNumberUtils.isValid(personalNumber)) {
+      errors.personalNumber = 'Personal number is invalid.';
+    }
 
-  if (!InputValidationUtils.isValidEmail(email)) {
-    errors.email = 'Please provide a valid email address.';
-  }
+    if (activeTab === 'staff' && !id && (role === 'usr' || role === 'sysadmin')) {
 
-  if (!InputValidationUtils.isStrongPassword(password)) {
-    errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
-  }
-}
+      if (!InputValidationUtils.isValidUsername(username)) {
+        errors.username = 'Username should be at least 4 characters long and contain only alphanumeric characters.';
+      }
 
-  return errors;
-};
+      if (!InputValidationUtils.isValidEmail(email)) {
+        errors.email = 'Please provide a valid email address.';
+      }
+
+      if (!InputValidationUtils.isStrongPassword(password)) {
+        errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
+      }
+    }
+
+    return errors;
+  };
 
 
 
-const handlePersonalNumberChange = (e) => {
-  const newPersonalNumber = e.target.value;
-  setPersonalNumber(newPersonalNumber);
-  setFormData((prev) => ({ ...prev, personalNumber: newPersonalNumber }));
+  const handlePersonalNumberChange = (e) => {
+    const newPersonalNumber = e.target.value;
+    setPersonalNumber(newPersonalNumber);
+    setFormData((prev) => ({ ...prev, personalNumber: newPersonalNumber }));
 
-  if (PersonalNumberUtils.isValid(newPersonalNumber)) {
-    setIsValid(true);
-  } else {
-    setIsValid(false);
-  }
-};
-  
+    if (PersonalNumberUtils.isValid(newPersonalNumber)) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  };
+
 
   useEffect(() => {
     fetchPatients();
@@ -320,7 +297,7 @@ const handlePersonalNumberChange = (e) => {
       console.error('Error fetching staff:', error.response || error.message);
     }
   };
-  
+
   const fetchPatients = async () => {
     const token = localStorage.getItem('jwtToken');
     try {
@@ -335,10 +312,10 @@ const handlePersonalNumberChange = (e) => {
       console.error('Error fetching patient:', error.response || error.message);
     }
   };
-  
-const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     console.log('Form submitted with data:', formData); // Add this line for debugging
 
     // Validate fields
@@ -376,7 +353,7 @@ const handleSubmit = async (e) => {
         email: '',
         password: '',
         id: null,
-        role:''
+        role: ''
       });
 
       // Fetch updated data for the correct tab (Staff or Patient)
@@ -392,98 +369,98 @@ const handleSubmit = async (e) => {
     } finally {
       setIsLoading(false);  // stop loading after submission
     }
-};
+  };
 
 
   const handleDelete = async (personId) => {
     try {
       const isStaff = activeTab === 'staff';
       const endpoint = isStaff ? 'Staff' : 'Patient';
-      
+
       // Perform the delete operation
       await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
-      
+
       // Set success message
       setSuccessMessage(`${endpoint} deleted successfully!`);
       setShowSuccessMessage(true);
-      
+
       setTimeout(() => {
         setShowSuccessMessage(false);
         setSuccessMessage('');
       }, 2000);
-      
+
       // Fetch the updated data
       if (isStaff) {
         await fetchStaff();
       } else {
         await fetchPatients();
       }
-  
+
       // Reset the selected person and show the form again
       setSelectedPerson(null);
       setFormVisible(true); // Ensure the form appears after the delete
-      
+
     } catch (error) {
       console.error(`Error deleting ${activeTab}:`, error.response || error.message);
       setFormVisible(true); // Show form again if there's an error
     }
   };
-  
+
   const handleEdit = async (updatedPerson) => {
-  setIsLoading(true);
-  try {
-    const isStaff = activeTab === 'staff';
-    const endpoint = isStaff ? 'Staff' : 'Patient';
-    const idField = isStaff ? 'staffId' : 'patientId';
-    const personId = updatedPerson[idField];
+    setIsLoading(true);
+    try {
+      const isStaff = activeTab === 'staff';
+      const endpoint = isStaff ? 'Staff' : 'Patient';
+      const idField = isStaff ? 'staffId' : 'patientId';
+      const personId = updatedPerson[idField];
 
-    // Perform the update operation and get response
-    const response = await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
-      [idField]: personId,
-      firstName: updatedPerson.firstName,
-      lastName: updatedPerson.lastName,
-      personalNumber: updatedPerson.personalNumber,
-      // You may want to include other fields too, like username/email/password if staff
-      ...(isStaff && {
-        username: updatedPerson.username,
-        email: updatedPerson.email,
-        password: updatedPerson.password,
-        role: updatedPerson.role
-      }),
-    });
+      // Perform the update operation and get response
+      const response = await axiosInstance.put(`/${endpoint}/UpdateItem/${personId}`, {
+        [idField]: personId,
+        firstName: updatedPerson.firstName,
+        lastName: updatedPerson.lastName,
+        personalNumber: updatedPerson.personalNumber,
+        // You may want to include other fields too, like username/email/password if staff
+        ...(isStaff && {
+          username: updatedPerson.username,
+          email: updatedPerson.email,
+          password: updatedPerson.password,
+          role: updatedPerson.role
+        }),
+      });
 
-    // Check if the backend returned a new token
-    const newToken = response?.data?.Item?.Token;
-    if (newToken) {
-      localStorage.setItem('jwtToken', newToken);
+      // Check if the backend returned a new token
+      const newToken = response?.data?.Item?.Token;
+      if (newToken) {
+        localStorage.setItem('jwtToken', newToken);
+      }
+
+      setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
+      setShowSuccessMessage(true);
+
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setSuccessMessage('');
+      }, 2000);
+
+      // Reset selection and refresh list
+      setSelectedPerson(null);
+      if (isStaff) {
+        await fetchStaff();
+      } else {
+        await fetchPatients();
+      }
+
+      setFormVisible(true); // Ensure form appears after update
+
+    } catch (error) {
+      setSuccessMessage(`Error updating ${activeTab}.`);
+      setShowSuccessMessage(true);
+      setFormVisible(true);
+    } finally {
+      setIsLoading(false);
     }
-
-    setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
-    setShowSuccessMessage(true);
-
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-      setSuccessMessage('');
-    }, 2000);
-
-    // Reset selection and refresh list
-    setSelectedPerson(null);
-    if (isStaff) {
-      await fetchStaff();
-    } else {
-      await fetchPatients();
-    }
-
-    setFormVisible(true); // Ensure form appears after update
-
-  } catch (error) {
-    setSuccessMessage(`Error updating ${activeTab}.`);
-    setShowSuccessMessage(true);
-    setFormVisible(true);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
 
   const currentData = activeTab === 'patients' ? patients : staff;
@@ -496,23 +473,23 @@ const handleSubmit = async (e) => {
           ? p.staffId === selectedOption.value
           : p.patientId === selectedOption.value
       );
-  
+
       setSelectedPerson(person);
       setIsDropdownChanged(true);  // Mark that a change occurred
       setFormVisible(false);       // Hide the form after selection
     }
   };
-  
+
   const handleDropdownOpen = () => {
     setFormVisible(false);  // Hide the form when the dropdown is opened
   };
-  
+
   const handleDropdownClose = () => {
     if (!isDropdownChanged) {
       setFormVisible(true);  // Show the form again only if no change occurred
     }
   };
-  
+
 
   return (
     <>
@@ -521,233 +498,233 @@ const handleSubmit = async (e) => {
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
 
-      
+
       <Container>
-        
-      <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
-  <ProfileHeader>
-  <img
-  src={patient1}
-  alt="User Avatar"
-  style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-/>
-    <span>{userData.name}</span>
-  </ProfileHeader>
 
-  {showDetails && (
-    <ProfileDetails>
-      <div><strong>Email:</strong> {userData.email}</div>
-      <div><strong>Role:</strong> {userData.role}</div>
-    </ProfileDetails>
-  )}
-</FloatingProfile>
+        <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
+          <ProfileHeader>
+            <img
+              src={patient1}
+              alt="User Avatar"
+              style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+            />
+            <span>{userData.name}</span>
+          </ProfileHeader>
+
+          {showDetails && (
+            <ProfileDetails>
+              <div><strong>Email:</strong> {userData.email}</div>
+              <div><strong>Role:</strong> {userData.role}</div>
+            </ProfileDetails>
+          )}
+        </FloatingProfile>
 
 
-      <Title>{t('app_title')}</Title>
-      <Subtitle>{t('admin_dashboard')}</Subtitle>
+        <Title>{t('app_title')}</Title>
+        <Subtitle>{t('admin_dashboard')}</Subtitle>
 
         <Tabs>
-        <ButtonWrapper>
-          <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
-            {t('patients')}
-          </TabButton>
-          <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
-            {t('staff')}
-          </TabButton>
-        </ButtonWrapper>
+          <ButtonWrapper>
+            <TabButton active={activeTab === 'patients'} onClick={() => setActiveTab('patients')}>
+              {t('patients')}
+            </TabButton>
+            <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
+              {t('staff')}
+            </TabButton>
+          </ButtonWrapper>
         </Tabs>
         <MainWrapper>
-        <SelectContainer>
-      
-  <Select
-    onMenuOpen={() => setFormVisible(false)} // Hide form on dropdown open
-    onMenuClose={() => {
-      if (!isDropdownChanged) {
-        setFormVisible(true); // Show form again if no selection was made
-      }
-      setIsDropdownChanged(false); // Reset the flag when the dropdown is closed
-    }}
-    onChange={(selectedOption) => {
-      handleSelectChange(selectedOption);
-      setIsDropdownChanged(true); // Set flag when a selection is made
-    }} 
-    options={activeTab === 'staff'
-      ? staff.map(item => ({
-          value: item.staffId,
-          label: `${item.firstName} ${item.lastName}`,
-        }))
-      : patients.map(item => ({
-          value: item.patientId,
-          label: `${item.firstName} ${item.lastName}`,
-        }))
-    }
-    value={
-      selectedPerson
-        ? {
-            value: activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId,
-            label: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
-          }
-        : null
-    }
-    placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
-    isSearchable={true}
-    styles={{
-      control: (provided) => ({
-        ...provided,
-        padding: '5px',
-      }),
-    }}
-  /> 
-</SelectContainer>
+          <SelectContainer>
 
-<DetailsModal
-  staffMember={selectedPerson}
-  onClose={() => {
-    setSelectedPerson(null);
-    setFormVisible(true);  // show the form again
-  }}
-  onEdit={handleEdit}
-  onDelete={() =>
-    handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
-  }
-/>
+            <Select
+              onMenuOpen={() => setFormVisible(false)} // Hide form on dropdown open
+              onMenuClose={() => {
+                if (!isDropdownChanged) {
+                  setFormVisible(true); // Show form again if no selection was made
+                }
+                setIsDropdownChanged(false); // Reset the flag when the dropdown is closed
+              }}
+              onChange={(selectedOption) => {
+                handleSelectChange(selectedOption);
+                setIsDropdownChanged(true); // Set flag when a selection is made
+              }}
+              options={activeTab === 'staff'
+                ? staff.map(item => ({
+                  value: item.staffId,
+                  label: `${item.firstName} ${item.lastName}`,
+                }))
+                : patients.map(item => ({
+                  value: item.patientId,
+                  label: `${item.firstName} ${item.lastName}`,
+                }))
+              }
+              value={
+                selectedPerson
+                  ? {
+                    value: activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId,
+                    label: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
+                  }
+                  : null
+              }
+              placeholder={t(activeTab === 'staff' ? 'select_staff' : 'select_patient')}
+              isSearchable={true}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  padding: '5px',
+                }),
+              }}
+            />
+          </SelectContainer>
 
-        {showSuccessMessage && (
-          <div
-            style={{
-              backgroundColor: successMessage.toLowerCase().includes('successfully')
-                ? '#d4edda'
-                : '#f8d7da',
-              color: successMessage.toLowerCase().includes('successfully')
-                ? '#155724'
-                : '#721c24',
-              padding: '10px 15px',
-              borderRadius: '5px',
-              marginBottom: '20px',
-              border: '1px solid',
-              borderColor: successMessage.toLowerCase().includes('successfully')
-                ? '#c3e6cb'
-                : '#f5c6cb',
+          <DetailsModal
+            staffMember={selectedPerson}
+            onClose={() => {
+              setSelectedPerson(null);
+              setFormVisible(true);  // show the form again
             }}
-          >
-            {successMessage}
-          </div>
-        )}
-
-  {formVisible && (
-  <Form onSubmit={handleSubmit}>
-          <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
-          
-          <label htmlFor="first_name">{t('first_name')}</label>
-          <Input
-            type="text"
-            id="first_name"
-            placeholder={t('first_name')}
-            value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            required
+            onEdit={handleEdit}
+            onDelete={() =>
+              handleDelete(activeTab === 'staff' ? selectedPerson.staffId : selectedPerson.patientId)
+            }
           />
-                {fieldErrors.firstName && (
-        <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.firstName}</div>
-      )}
 
-          <label htmlFor="last_name">{t('last_name')}</label>
-          <Input
-            type="text"
-            id="last_name"
-            placeholder={t('last_name')}
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            required
-          />
-          {fieldErrors.lastName && (
-      <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.lastName}</div>
-    )}
-
-
-          <label htmlFor="personal_number">{t('personal_number')}</label>
-          <Input
-            type="text"
-            id="personal_number"
-            placeholder="YYYYMMDDXXX"
-            value={formData.personalNumber}
-            onChange={handlePersonalNumberChange}
-            required
-          />
-          {fieldErrors.personalNumber && (
-         <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.personalNumber}</div>
+          {showSuccessMessage && (
+            <div
+              style={{
+                backgroundColor: successMessage.toLowerCase().includes('successfully')
+                  ? '#d4edda'
+                  : '#f8d7da',
+                color: successMessage.toLowerCase().includes('successfully')
+                  ? '#155724'
+                  : '#721c24',
+                padding: '10px 15px',
+                borderRadius: '5px',
+                marginBottom: '20px',
+                border: '1px solid',
+                borderColor: successMessage.toLowerCase().includes('successfully')
+                  ? '#c3e6cb'
+                  : '#f5c6cb',
+              }}
+            >
+              {successMessage}
+            </div>
           )}
 
-          {activeTab === 'staff' && !formData.id && (
-  <>
-    {/* Role Dropdown */}
-    <Select
-      value={{ label: formData.role, value: formData.role }}
-      onChange={(selectedOption) => {
-        setFormData({ ...formData, role: selectedOption.value });
-      }}
-      options={[
-        { label: 'usr', value: 'usr' },
-        { label: 'sysadmin', value: 'sysadmin' },
-      ]}
-      placeholder={t('selectRole')}
-      styles={{
-        container: (provided) => ({ ...provided, marginBottom: '10px' }),
-      }}
-    />
+          {formVisible && (
+            <Form onSubmit={handleSubmit}>
+              <h2>{`${t('add')} ${activeTab === 'patients' ? t('patient') : t('staff')}`}</h2>
 
-    {/* Username Field */}
-    <Input
-      type="text"
-      placeholder={t('username')}
-      value={formData.username}
-      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-    />
-    {fieldErrors.username && <div style={{ color: 'red' }}>{fieldErrors.username}</div>}
+              <label htmlFor="first_name">{t('first_name')}</label>
+              <Input
+                type="text"
+                id="first_name"
+                placeholder={t('first_name')}
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                required
+              />
+              {fieldErrors.firstName && (
+                <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.firstName}</div>
+              )}
 
-    {/* Email Field */}
-    <Input
-      type="email"
-      placeholder={t('email')}
-      value={formData.email}
-      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-    />
-    {fieldErrors.email && <div style={{ color: 'red' }}>{fieldErrors.email}</div>}
+              <label htmlFor="last_name">{t('last_name')}</label>
+              <Input
+                type="text"
+                id="last_name"
+                placeholder={t('last_name')}
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                required
+              />
+              {fieldErrors.lastName && (
+                <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.lastName}</div>
+              )}
 
-    {/* Password Field */}
-  <>
-  {/* Password Field */}
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Input
-      type="password"
-      placeholder={t('password')}
-      value={formData.password}
-      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-    />
-    <FaInfoCircle
-      data-tooltip-id="passwordTooltip"
-      data-tooltip-html={t('password_strength_tooltip').replace(/\n/g, '<br />')}
-      style={{ cursor: 'pointer' }}
-      size={18}
-      color="#888"
-    />
-    <Tooltip id="passwordTooltip" place="right" />
-  </div>
 
-  {fieldErrors.password && (
-    <div style={{ color: 'red', marginTop: '4px' }}>
-      {fieldErrors.password}
-    </div>
-  )}
-</>
+              <label htmlFor="personal_number">{t('personal_number')}</label>
+              <Input
+                type="text"
+                id="personal_number"
+                placeholder="YYYYMMDDXXX"
+                value={formData.personalNumber}
+                onChange={handlePersonalNumberChange}
+                required
+              />
+              {fieldErrors.personalNumber && (
+                <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.personalNumber}</div>
+              )}
 
-  </>
+              {activeTab === 'staff' && !formData.id && (
+                <>
+                  {/* Role Dropdown */}
+                  <Select
+                    value={{ label: formData.role, value: formData.role }}
+                    onChange={(selectedOption) => {
+                      setFormData({ ...formData, role: selectedOption.value });
+                    }}
+                    options={[
+                      { label: 'usr', value: 'usr' },
+                      { label: 'sysadmin', value: 'sysadmin' },
+                    ]}
+                    placeholder={t('selectRole')}
+                    styles={{
+                      container: (provided) => ({ ...provided, marginBottom: '10px' }),
+                    }}
+                  />
+
+                  {/* Username Field */}
+                  <Input
+                    type="text"
+                    placeholder={t('username')}
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  />
+                  {fieldErrors.username && <div style={{ color: 'red' }}>{fieldErrors.username}</div>}
+
+                  {/* Email Field */}
+                  <Input
+                    type="email"
+                    placeholder={t('email')}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                  {fieldErrors.email && <div style={{ color: 'red' }}>{fieldErrors.email}</div>}
+
+                  {/* Password Field */}
+                  <>
+                    {/* Password Field */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Input
+                        type="password"
+                        placeholder={t('password')}
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      />
+                      <FaInfoCircle
+                        data-tooltip-id="passwordTooltip"
+                        data-tooltip-html={t('password_strength_tooltip').replace(/\n/g, '<br />')}
+                        style={{ cursor: 'pointer' }}
+                        size={18}
+                        color="#888"
+                      />
+                      <Tooltip id="passwordTooltip" place="right" />
+                    </div>
+
+                    {fieldErrors.password && (
+                      <div style={{ color: 'red', marginTop: '4px' }}>
+                        {fieldErrors.password}
+                      </div>
+                    )}
+                  </>
+
+                </>
+              )}
+              <Button type="submit" active="true">
+                {isLoading ? t('loading') : t('Add')}
+              </Button>
+            </Form>
           )}
-          <Button type="submit" active="true">
-            {isLoading ? t('loading') : t('Add')}
-          </Button>
-        </Form>    
-      )}
         </MainWrapper>
       </Container>
     </>

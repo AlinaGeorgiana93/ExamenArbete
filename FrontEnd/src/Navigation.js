@@ -1,61 +1,66 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   FaUserShield,
   FaChartLine,
   FaInfoCircle,
-  FaUserNurse,
   FaUserInjured,
   FaHome,
   FaComments,
   FaSignOutAlt,
+  FaUsers,
 } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next'; // Import the translation hook
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-// Navigation bar at the bottom
 const Nav = styled.nav`
   background-color: #125358;
-  padding: 5px 15px; /* Reduced padding for a slimmer nav */
+  padding: 8px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed; /* Fixed position at the bottom */
+  position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%; /* Span the full width of the screen */
-  z-index: 1000; /* Ensure it stays on top */
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 15px; /* Reduced gap between links */
+  gap: 20px;
+  align-items: center;
 `;
 
 const StyledLink = styled(Link)`
   color: white;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 14px; /* Reduced font size for a more compact look */
+  gap: 6px;
+  font-size: 15px;
 
   &:hover {
     color: #00d4ff;
   }
 `;
 
-const StyledHomeLink = styled(StyledLink)`
-  color: white; /* Specific white color for the "Home" link */
-
-  &:hover {
-    color: #00d4ff; /* Hover effect stays the same */
-  }
+const LogoutMessage = styled.div`
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #125358;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
 `;
-const Navigation = ({ showGraphLink = false, showCommentLink = false, patientId = null }) => {
+
+const Navigation = ({ showGraphLink = false, patientId = null }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [logoutMessage, setLogoutMessage] = useState('');
@@ -75,68 +80,38 @@ const Navigation = ({ showGraphLink = false, showCommentLink = false, patientId 
   return (
     <>
       <Nav>
-        <StyledLink onClick={handleLogout}>
-          <FaSignOutAlt size={18} /> {t('Log out')}
-        </StyledLink>
+
+
         <NavLinks>
+          <StyledLink onClick={handleLogout}>
+            <FaHome size={18} /> {t('Log out')}
+          </StyledLink>
+
           {showGraphLink && patientId && (
-            <StyledLink as={Link} to={`/graph/${patientId}`}>
+            <StyledLink to={`/graph/${patientId}`}>
               <FaChartLine size={18} /> {t('Graph')}
             </StyledLink>
           )}
-          
-          {showCommentLink && patientId && (
-           <StyledLink as={Link} to={`/comments/${patientId}`}>
-           <FaComments size={18} /> {t('Comment')}
-          </StyledLink>
-          )}
 
-          <StyledLink as={Link} to="/staff">
-            <FaUserNurse size={18} /> {t('staff')}
+          <StyledLink to="/staff">
+            <FaUsers size={18} /> {t('Patients')}
           </StyledLink>
 
           {role === 'sysadmin' && (
-            <>
-              <StyledLink as={Link} to="/admin">
-                <FaUserShield size={18} /> {t('admin')}
-              </StyledLink>
-            </>
+            <StyledLink to="/admin">
+              <FaUserShield size={18} /> {t('Admin')}
+            </StyledLink>
           )}
 
-          <StyledLink as={Link} to="/about">
-            <FaInfoCircle size={18} /> {t('about Us')}
+          <StyledLink to="/about">
+            <FaInfoCircle size={18} /> {t('About Us')}
           </StyledLink>
         </NavLinks>
       </Nav>
 
-      {logoutMessage && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: '60px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            backgroundColor: '#125358',
-            color: 'white',
-            padding: '10px 20px',
-            borderRadius: '5px',
-            fontSize: '14px',
-          }}
-        >
-          {logoutMessage}
-        </div>
-      )}
+      {logoutMessage && <LogoutMessage>{logoutMessage}</LogoutMessage>}
     </>
   );
 };
-
-
-Navigation.defaultProps = {
-  showGraphLink: false,
-  showCommentLink: false,
-  patientId: null
-
-};
-
 
 export default Navigation;
