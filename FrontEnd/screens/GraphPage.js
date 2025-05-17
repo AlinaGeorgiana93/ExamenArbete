@@ -14,6 +14,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Link as RouterLink } from 'react-router-dom';
 import useStoredUserInfo from '../src/useStoredUserInfo.js';
 import FloatingProfile from '../src/FloatingProfile.js';
+import Navigation from '../src/Navigation';
+
+
+
 
 
 const GlobalStyle = createGlobalStyle`
@@ -706,6 +710,9 @@ function GraphPage() {
       <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
         <img src={logo1} alt="Logo" style={{ width: '150px' }} />
       </Link>
+      
+      <Navigation showCommentLink={true} patientId={patientId} />
+
 
       <GraphContainer>
         {patientInfo && (

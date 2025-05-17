@@ -8,6 +8,7 @@ import {
   FaUserNurse,
   FaUserInjured,
   FaHome,
+  FaComments,
   FaSignOutAlt,
 } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next'; // Import the translation hook
@@ -54,7 +55,7 @@ const StyledHomeLink = styled(StyledLink)`
     color: #00d4ff; /* Hover effect stays the same */
   }
 `;
-const Navigation = ({ showGraphLink = false, patientId = null }) => {
+const Navigation = ({ showGraphLink = false, showCommentLink = false, patientId = null }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [logoutMessage, setLogoutMessage] = useState('');
@@ -83,6 +84,13 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
               <FaChartLine size={18} /> {t('Graph')}
             </StyledLink>
           )}
+          
+          {showCommentLink && patientId && (
+           <StyledLink as={Link} to={`/comments/${patientId}`}>
+           <FaComments size={18} /> {t('Comment')}
+          </StyledLink>
+          )}
+
           <StyledLink as={Link} to="/staff">
             <FaUserNurse size={18} /> {t('staff')}
           </StyledLink>
@@ -122,9 +130,12 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
   );
 };
 
+
 Navigation.defaultProps = {
   showGraphLink: false,
+  showCommentLink: false,
   patientId: null
+
 };
 
 
