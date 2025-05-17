@@ -13,156 +13,176 @@ import { FaInfoCircle } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
 const GlobalStyle = createGlobalStyle`
   * {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
   }
-
   body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #8CE3F3, #33E1CF, #B2DFDB);
+    font-family: 'Poppins', sans-serif; /* Change the font */
+    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
     min-height: 100vh;
+    overflow-y: auto;
     color: #1a1a1a;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 30px 16px;
+    padding: 30px 0;
     transition: background 0.6s ease-in-out;
   }
 `;
 
 const Title = styled.h1`
-  color:rgb(57, 56, 56);
-  font-size: clamp(28px, 6vw, 40px);
+  color: #fff;
+  font-size: 36px;
   font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
   text-align: center;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
-  margin-bottom: 10px;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+  }
 `;
 
 const Subtitle = styled.span`
-  color: #3a3535;
-  font-size: clamp(18px, 4vw, 22px);
-  font-weight: 700;
-  opacity: 0.95;
-  text-align: center;
+  color:rgb(58, 53, 53);
+  font-size: 22px;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-bottom: 0;  // remove unnecessary bottom space
   display: block;
-  margin-bottom: 5px;
+  text-align: center;
+  font-weight: 600;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 const Container = styled.div`
-  max-width: 1200px;
-  width: 100%;
-  padding: 360px;
-  margin: 0 auto;
+  padding: 10px;
+  justify-content: center;  
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  
+  h1 {
+    color: white;
+    margin-bottom: 30px;
+  }
+  
 `;
 
 const SelectContainer = styled.div`
-  margin-bottom: 1px;
-  width: 100%;
-  max-width: 400px;
+  margin-bottom: 20px; /* Add margin below the Select component */
 `;
 
 const Tabs = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
+  gap: 20px;
   margin-bottom: 20px;
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
-  margin: 20px 0 10px;
+  align-items: center; 
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  
+  
 `;
 
-const TabButton = styled.button`
-  padding: 12px 24px;
-  background: ${(props) => (props.active ? '#28889b' : '#f2f2f2')};
-  color: ${(props) => (props.active ? '#fff' : '#333')};
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s ease;
 
-  &:hover,
-  &:focus {
-    background: ${(props) => (props.active ? '#247c8e' : '#d0f0f3')};
-    outline: none;
+const TabButton = styled.button`
+  padding: 10px 20px;
+  background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : '#eee')};
+  color: ${(props) => (props.active ? '#fff' : '#000')};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background: ${(props) => (props.active ? 'rgb(40, 136, 155)' : ' #8ACCD5')};
   }
 `;
 
 const MainWrapper = styled.div`
-  width: 100%;
-  max-width: 500px;
+  width: 350px; /* Or any fixed width you prefer */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+  gap: 15px;
+  align-items: stretch;
+  
+
 `;
 
+
 const Form = styled.form`
-  background-color: #ffffff;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 30px;
+  background-color: #F5ECD5;
+  padding: 30px;
+  border-radius: 12px;
+  width: ${(props) =>
+    props.activeTab === 'staff' ? '60%' : '100%'};
+  margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional for matching login form */
   display: flex;
   flex-direction: column;
 
   h2 {
-    font-size: clamp(20px, 4vw, 24px);
-    font-weight: 600;
-    color: #333;
+    color:rgb(58, 53, 53);
+    font-size: 22px;
+    font-weight: 400;
+    opacity: 0.9;
     text-align: center;
-    margin-bottom: 16px;
-  }
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    
 `;
 
 const Input = styled.input`
-  padding: 14px;
+  margin-bottom: 16px;
+  padding: 12px;
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 8px;
-  margin-bottom: 20px;
   font-size: 1rem;
-  transition: border-color 0.2s;
-
-  &:focus {
-    border-color: #2684FF;
-    outline: none;
-  }
 `;
 
 const Button = styled.button`
-  padding: 14px;
-  background: ${(props) => (props.active === 'true' ? '#28889b' : '#eee')};
-  color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
+  padding: 12px 24px;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  width: 100%;
+  margin-right: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  background: ${(props) =>
+    props.active === 'true' ? 'rgb(40, 136, 155)' : '#eee'};
+  color: ${(props) => (props.active === 'true' ? '#fff' : '#000')};
+   align-self: center; 
+   width: 35%;
+  
 
   &:hover {
-    background: #8accd5;
+    background: #8ACCD5;
   }
 `;
-
 const FloatingProfile = styled.div`
   position: fixed;
   bottom: 50px;
-  right: 16px;
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  right: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   z-index: 1000;
 `;
@@ -170,14 +190,15 @@ const FloatingProfile = styled.div`
 const ProfileHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 `;
 
 const ProfileDetails = styled.div`
-  margin-top: 8px;
-  font-size: 0.95rem;
-  color: #444;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #333;
 `;
+
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
