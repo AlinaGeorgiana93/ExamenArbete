@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   FaUserShield,
   FaChartLine,
   FaInfoCircle,
-  FaUserInjured,
-  FaHome,
-  FaComments,
-  FaSignOutAlt,
+  FaUser,
   FaUsers,
+  FaSignOutAlt,
 } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import FloatingProfile from '../src/FloatingProfile';
+import useStoredUserInfo from '../src/useStoredUserInfo';
 
 const Nav = styled.nav`
   background-color: #125358;
-  padding: 8px 20px;
+  padding: 10px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,11 +25,12 @@ const Nav = styled.nav`
   width: 100%;
   z-index: 1000;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
 `;
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 22px;
   align-items: center;
 `;
 
@@ -47,6 +48,40 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const RightActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
+const LogoutButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    color: #ff5252;
+  }
+`;
+
+const UserNameText = styled.span`
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+`;
+
+const ProfileSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+`;
+
 const LogoutMessage = styled.div`
   position: fixed;
   bottom: 60px;
@@ -62,9 +97,9 @@ const LogoutMessage = styled.div`
 
 const Navigation = ({ showGraphLink = false, patientId = null }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [logoutMessage, setLogoutMessage] = useState('');
-  const role = localStorage.getItem('role');
+  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
+  const [showProfile, setShowProfile] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
@@ -80,19 +115,7 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
   return (
     <>
       <Nav>
-
-
         <NavLinks>
-          <StyledLink onClick={handleLogout}>
-            <FaHome size={18} /> {t('Log out')}
-          </StyledLink>
-
-          {showGraphLink && patientId && (
-            <StyledLink to={`/graph/${patientId}`}>
-              <FaChartLine size={18} /> {t('Graph')}
-            </StyledLink>
-          )}
-
           <StyledLink to="/staff">
             <FaUsers size={18} /> {t('Patients')}
           </StyledLink>
@@ -103,13 +126,42 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
             </StyledLink>
           )}
 
+          {showGraphLink && patientId && (
+            <StyledLink to={`/graph/${patientId}`}>
+              <FaChartLine size={18} /> {t('Graph')}
+            </StyledLink>
+          )}
+
           <StyledLink to="/about">
             <FaInfoCircle size={18} /> {t('About Us')}
           </StyledLink>
         </NavLinks>
+
+        <RightActions>
+          <ProfileSection onClick={() => setShowProfile(!showProfile)}>
+            <FaUser size={18} />
+            <UserNameText>{userName}</UserNameText>
+          </ProfileSection>
+
+          <LogoutButton onClick={handleLogout} title={t('Log out')}>
+            <FaSignOutAlt size={18} />
+            {t('Log out')}
+          </LogoutButton>
+        </RightActions>
       </Nav>
 
       {logoutMessage && <LogoutMessage>{logoutMessage}</LogoutMessage>}
+
+      {showProfile && (
+        <FloatingProfile
+          userName={userName}
+          setUserName={setUserName}
+          email={email}
+          setEmail={setEmail}
+          role={role}
+          onClose={() => setShowProfile(false)}
+        />
+      )}
     </>
   );
 };

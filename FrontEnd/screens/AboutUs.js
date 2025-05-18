@@ -6,7 +6,6 @@ import Parisa from '../src/media/Parisa.jpg';
 import Mona from '../src/media/Mona.jpg';
 import Nagi from '../src/media/Nagi.jpg';
 import checklist from '../src/media/checklist.jpg';
-
 import '../src/index.css';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

@@ -5,8 +5,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
-import useStoredUserInfo from '../src/useStoredUserInfo.js';
-import FloatingProfile from '../src/FloatingProfile.js';
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -158,7 +157,6 @@ function PatientPage() {
   const [selectedAppetiteLevel, setSelectedAppetiteLevel] = useState('');
   const [selectedSleepLevel, setSelectedSleepLevel] = useState('');
 
-  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -352,13 +350,6 @@ function PatientPage() {
           </ButtonsContainer>
         </PatientPageContainer>
 
-        <FloatingProfile
-          userName={userName}
-          email={email}
-          role={role}
-          setUserName={setUserName}
-          setEmail={setEmail}
-        />
       </div>
     </>
   );

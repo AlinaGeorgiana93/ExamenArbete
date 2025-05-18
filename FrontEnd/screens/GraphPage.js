@@ -12,8 +12,6 @@ import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link as RouterLink } from 'react-router-dom';
-import useStoredUserInfo from '../src/useStoredUserInfo.js';
-import FloatingProfile from '../src/FloatingProfile.js';
 import Navigation from '../src/Navigation';
 
 
@@ -371,7 +369,7 @@ function GraphPage() {
     appetiteRating: true,
     sleepRating: true,
   });
-  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
+ 
 
   const processedData = useMemo(() => {
     if (!rawData.length) return [];
@@ -871,14 +869,6 @@ function GraphPage() {
 
 
       </GraphContainer>
-      <FloatingProfile
-        userName={userName}
-        email={email}
-        role={role}
-        setUserName={setUserName}
-        setEmail={setEmail}
-      />
-
     </>
   );
 }

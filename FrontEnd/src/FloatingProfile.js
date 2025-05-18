@@ -1,4 +1,3 @@
-// src/components/FloatingProfile.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import patient1 from '../src/media/patient1.jpg';
@@ -15,7 +14,6 @@ const FloatingProfileContainer = styled.div`
   width: 240px;
   max-width: 90vw;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  cursor: default;
   z-index: 1000;
   font-family: 'Poppins', sans-serif;
 `;
@@ -72,35 +70,25 @@ const ChangeButton = styled.button`
 
 const FloatingProfile = ({ userName, email, role, setUserName, setEmail }) => {
   const { t } = useTranslation();
-  const [showDetails, setShowDetails] = useState(false);
   const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
-
-  const toggleDetails = (e) => {
-    // Prevent button clicks from toggling the container
-    if (e.target.tagName.toLowerCase() !== 'button') {
-      setShowDetails((prev) => !prev);
-    }
-  };
 
   return (
     <>
-      <FloatingProfileContainer onClick={toggleDetails}>
+      <FloatingProfileContainer>
         <ProfileHeader>
           <Avatar src={patient1} alt="User Avatar" />
           <UsernameText>{userName}</UsernameText>
         </ProfileHeader>
 
-        {showDetails && (
-          <ProfileDetails>
-            <ProfileItem><strong>Email:</strong> {email}</ProfileItem>
-            <ProfileItem><strong>Role:</strong> {role}</ProfileItem>
-            <ButtonWrapper>
-              <ChangeButton onClick={() => setShowUpdateProfileModal(true)}>
-                {t('change_info')}
-              </ChangeButton>
-            </ButtonWrapper>
-          </ProfileDetails>
-        )}
+        <ProfileDetails>
+          <ProfileItem><strong>Email:</strong> {email}</ProfileItem>
+          <ProfileItem><strong>Role:</strong> {role}</ProfileItem>
+          <ButtonWrapper>
+            <ChangeButton onClick={() => setShowUpdateProfileModal(true)}>
+              {t('change_info')}
+            </ChangeButton>
+          </ButtonWrapper>
+        </ProfileDetails>
       </FloatingProfileContainer>
 
       {showUpdateProfileModal && (

@@ -522,7 +522,7 @@ const AdminDashboard = () => {
 
       <Container>
 
-        <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
+        {/* <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
           <ProfileHeader>
             <img
               src={patient1}
@@ -538,7 +538,7 @@ const AdminDashboard = () => {
               <div><strong>Role:</strong> {userData.role}</div>
             </ProfileDetails>
           )}
-        </FloatingProfile>
+        </FloatingProfile> */}
 
 
         <Title>{t('app_title')}</Title>

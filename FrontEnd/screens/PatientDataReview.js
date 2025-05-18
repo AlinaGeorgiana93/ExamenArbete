@@ -2,8 +2,7 @@ import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import useStoredUserInfo from '../src/useStoredUserInfo.js';
-import FloatingProfile from '../src/FloatingProfile.js';
+
 
 // GlobalStyle will be applied to the whole page to adjust the background
 const GlobalStyle = createGlobalStyle`
@@ -97,7 +96,7 @@ function PatientDataReview() {
   const { patientId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
+
 
   const handleCreateGraph = () => {
     const graphData = {
@@ -180,14 +179,6 @@ function PatientDataReview() {
           <Button onClick={() => navigate(`/patient/${patientId}`)}>{t('go_back')}</Button>
         </ButtonGroup>
       </ReviewContainer>
-       <FloatingProfile
-            userName={userName}
-            email={email}
-            role={role}
-            setUserName={setUserName}
-            setEmail={setEmail}
-          />
-      
     </>
   );
 }

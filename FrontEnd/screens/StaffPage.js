@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
-import useStoredUserInfo from '../src/useStoredUserInfo.js';
-import FloatingProfile from '../src/FloatingProfile.js';
+
 
 
 const GlobalStyle = createGlobalStyle`
@@ -100,7 +99,6 @@ const StaffPage = () => {
   const [selectedPatient, setSelectedPatient] = useState('');
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { userName, setUserName, email, setEmail, role } = useStoredUserInfo();
 
   useEffect(() => {
     axios
@@ -135,13 +133,6 @@ const StaffPage = () => {
         <img src={logo1} alt="Logo" style={{ width: '140px' }} />
       </Link>
       <StaffPageContainer>
-        <FloatingProfile
-          userName={userName}
-          email={email}
-          role={role}
-          setUserName={setUserName}
-          setEmail={setEmail}
-        />
 
         <Title>{t('choose_patient')}</Title>
 
