@@ -8,6 +8,7 @@ import '../language/i18n.js';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../src/axiosInstance.js';
 import logo1 from '../src/media/logo1.png';
+import { FaInfoCircle } from 'react-icons/fa';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -16,6 +17,37 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 `;
+
+const AboutUsButtonContainer = styled.div`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+
+  button {
+    font-size: 40px;
+    padding: 50px 50px;
+    border-radius: 70px;
+  }
+`;
+
+
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #125358;
+  text-decoration: none;
+  padding: 5px 10px;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #8ACCD5;
+  }
+`;
+
 const LogoContainer = styled.div`
   position: absolute;
   top: 15px;
@@ -112,8 +144,7 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
   width: 100%;
 `;
-
-const Button = styled.button`
+const Button = styled.button.attrs({ type: 'button' })`
   padding: 10px 20px;
   background-color: rgb(40, 136, 155);
   color: white;
@@ -139,6 +170,7 @@ const Button = styled.button`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
+
 
 const Footer = styled.footer`
   text-align: center;
@@ -295,59 +327,66 @@ const StartPage = () => {
   return (
     <>
       <GlobalStyle />
-        <LogoContainer>
-             <Link to="/">
-               <img src={logo1} alt="Logo" style={{ width: '200px', objectFit: 'contain' }} />
-             </Link>
-           </LogoContainer>
+      <LogoContainer>
+        <Link to="/">
+          <img src={logo1} alt="Logo" style={{ width: '200px', objectFit: 'contain' }} />
+        </Link>
+      </LogoContainer>
+      <AboutUsButtonContainer>
+        <StyledLink to="/about">
+          <FaInfoCircle size={18} />
+          {t('about us')}
+        </StyledLink>
+      </AboutUsButtonContainer>
       <PageWrapper>
-      <StartPageContainer>
-        <LanguageButtonContainer>
-          <LanguageButton onClick={() => changeLanguage(i18n.language === 'en' ? 'sv' : 'en')}>
-            {i18n.language === 'en' ? 'SV' : 'EN'}
-          </LanguageButton>
-        </LanguageButtonContainer>
-        <Header>
-          <Title>{t('app_title')}</Title>
-          <SubTitle>{t('welcome')}</SubTitle>
-        </Header>
+        <StartPageContainer>
 
-        {loginMessage && (
-          <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>
-        )}
+          <LanguageButtonContainer>
+            <LanguageButton onClick={() => changeLanguage(i18n.language === 'en' ? 'sv' : 'en')}>
+              {i18n.language === 'en' ? 'SV' : 'EN'}
+            </LanguageButton>
+          </LanguageButtonContainer>
+          <Header>
+            <Title>{t('app_title')}</Title>
+            <SubTitle>{t('welcome')}</SubTitle>
+          </Header>
 
-        <LoginForm>
-          <Label>{t('username')}</Label>
-          <Input
-            type="text"
-            placeholder={t('enter_username')}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          {loginMessage && (
+            <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>
+          )}
 
-          <Label>{t('password')}</Label>
-          <Input
-            type="password"
-            placeholder={t('enter_password')}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
+          <LoginForm>
+            <Label>{t('username')}</Label>
+            <Input
+              type="text"
+              placeholder={t('enter_username')}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
-          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+            <Label>{t('password')}</Label>
+            <Input
+              type="password"
+              placeholder={t('enter_password')}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
 
-          <ButtonContainer>
-            <Button onClick={handleLogin} disabled={!username || !password}>
-              {t('login')}
-            </Button>
-          </ButtonContainer>
-        </LoginForm>
+            {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
-        <Footer>
-        
-        </Footer>
+            <ButtonContainer>
+              <Button onClick={handleLogin} disabled={!username || !password}>
+                {t('login')}
+              </Button>
+            </ButtonContainer>
+          </LoginForm>
 
-      </StartPageContainer>
+          <Footer>
+
+          </Footer>
+
+        </StartPageContainer>
       </PageWrapper>
     </>
   );

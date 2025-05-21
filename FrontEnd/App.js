@@ -22,9 +22,12 @@ function App() {
         <Routes>
           {/* Standalone StartPage */}
           <Route path="/" element={<LoginPage />} />
+          <Route path="/about" element={<AboutUs />} />
+
 
           {/* All other routes with shared layout */}
           <Route element={<Layout />}>
+
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/patient/:patientId" element={<PatientPage />} />
 
@@ -36,7 +39,6 @@ function App() {
 
             <Route path="/graph/:patientId" element={<GraphPage />} />
 
-            <Route path="/about" element={<AboutUs />} />
             <Route path="/comments/:patientId" element={<CommentsPage />} />
 
           </Route>
