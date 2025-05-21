@@ -15,12 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const GlobalStyle = createGlobalStyle`
-  body {
-    background: linear-gradient(135deg, #e0f7f9, #cceae7, #b2dfdb);
-    background-attachment: fixed;
-    margin: 0;
-    font-family: 'Times New Roman', cursive, sans-serif;
-  }
+ 
 `;
 
 const PageContainer = styled.div`
