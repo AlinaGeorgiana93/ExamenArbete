@@ -269,7 +269,7 @@ const StartPage = () => {
 
     }
 
-    //login admin : sysadmin1 ....password: Sysadmin1!(Uppercase, lowercase, number, special character, 6 characters minimum)
+    //login admin : sysadmin1 ....password: Sysadmin1! (Uppercase, lowercase, number, special character, 6 characters minimum)
     //login staff : Charlie1 ....password: Charlie1!(Uppercase, lowercase, number, special character, 6 characters minimum)
     //login admin : Mike1 ....password: Mike1! (Uppercase, lowercase, number, special character. 6 characters minimum)
     //login staff : Alice1 ....password: Alice1!(Uppercase, lowercase, number, special character, 6 characters minimum)
