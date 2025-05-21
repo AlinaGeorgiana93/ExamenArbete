@@ -126,12 +126,10 @@ const StaffPage = () => {
   return (
     <>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
-        <img src={logo1} alt="Logo" style={{ width: '140px' }} />
-      </Link>
+  <Link to="/" style={{ position: 'fixed', top: '-5px', left: '15px', zIndex: '2' }}>
+    <img src={logo1} alt="Logo" style={{ width: '230px', objectFit: 'contain' }} />
+  </Link>
+  
       <StaffPageContainer>
 
         <Title>{t('choose_patient')}</Title>
