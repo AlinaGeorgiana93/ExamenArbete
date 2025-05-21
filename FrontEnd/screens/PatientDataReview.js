@@ -63,7 +63,7 @@ const Button = styled.button`
   transition: all 0.3s ease;
 
   &:first-child {
-    background-color: #125358;
+    background-color:  rgb(40, 136, 155);
     color: white;
 
     &:hover {

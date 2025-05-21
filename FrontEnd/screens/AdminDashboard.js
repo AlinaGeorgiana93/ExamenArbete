@@ -113,7 +113,7 @@ const Form = styled.form`
   font-size: 1rem;
   font-weight: 500;
   margin-top: 30px;
-  background-color: #F5ECD5;
+  background-color:#F1F0E8;
   padding: 30px;
   border-radius: 12px;
   width: ${(props) =>
