@@ -1,6 +1,5 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import logo1 from '../src/media/logo1.png';
 import Alina from '../src/media/Alina.jpg';
 import Parisa from '../src/media/Parisa.jpg';
 import Mona from '../src/media/Mona.jpg';
@@ -9,24 +8,12 @@ import checklist from '../src/media/checklist.jpg';
 import '../src/index.css';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import videoFile from '../src/media/patient.mp4';
 
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
-    display: flex;
-    background-attachment: fixed;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #fff;
-    position: relative;
   }
 `;
 
@@ -124,30 +111,13 @@ const Role = styled.span`
   margin-top: 5px;
 `;
 
-const VideoContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1; /* För att hålla videon i bakgrunden */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const AboutUsPage = () => {
   const { t } = useTranslation();
 
   return (
     <div>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
-        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
-      </Link>
+
       <PageContainer>
         {/* Lägg till bilden här */}
         <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} />
@@ -224,25 +194,6 @@ const AboutUsPage = () => {
         </TeamGrid>
       </PageContainer>
 
-      {/* Video container with the updated video settings */}
-      <VideoContainer>
-        <video
-          src={videoFile}
-          autoPlay={true}
-          loop={true}
-          muted={true}
-          controls={false}
-          style={{
-            objectFit: 'cover',
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            zIndex: -1,
-          }}
-        />
-      </VideoContainer>
     </div>
   );
 };

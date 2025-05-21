@@ -14,20 +14,10 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding-bottom: 200px;
-    color: #fff;
-  }
 `;
 
 const StaffPageContainer = styled.div`
-  background-color: #F5ECD5;
+  background-color:#F1F0E8;
   padding: 50px 40px;
   border-radius: 16px;
   width: 100%;
@@ -126,10 +116,6 @@ const StaffPage = () => {
   return (
     <>
       <GlobalStyle />
-  <Link to="/" style={{ position: 'fixed', top: '-5px', left: '15px', zIndex: '2' }}>
-    <img src={logo1} alt="Logo" style={{ width: '230px', objectFit: 'contain' }} />
-  </Link>
-  
       <StaffPageContainer>
 
         <Title>{t('choose_patient')}</Title>

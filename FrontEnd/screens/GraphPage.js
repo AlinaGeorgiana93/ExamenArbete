@@ -25,19 +25,6 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     font-size: 1rem;
   }
-  body {
-    font-family: 'Times New Roman', cursive, sans-serif;
-    background: linear-gradient(135deg, #3B878C, #00d4ff, #006E75, #50D9E6, #1A5B61);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    color: #fff;
-    position: relative;
-    padding: 20px 0;
-    width: 100vw;
-    overflow-x: hidden;
-  }
 `;
 
 // Update the GraphContainer styled component
@@ -705,12 +692,7 @@ function GraphPage() {
 
   return (
     <>
-      <GlobalStyle />
-
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
-      </Link>
-      
+      <GlobalStyle />      
       <Navigation showCommentLink={true} patientId={patientId} />
 
 

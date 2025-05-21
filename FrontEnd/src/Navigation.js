@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import {
   FaUserShield,
   FaChartLine,
-  FaInfoCircle,
   FaRegUserCircle,
   FaUsers,
   FaSignOutAlt,
@@ -14,7 +13,7 @@ import FloatingProfile from '../src/FloatingProfile';
 import useStoredUserInfo from '../src/useStoredUserInfo';
 
 const Nav = styled.nav`
-  background-color: #125358;
+  background: rgb(40, 136, 155);
   padding: 10px 24px;
   display: flex;
   justify-content: space-between;
@@ -48,7 +47,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const RightActions = styled.div`
+const LeftActions = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
@@ -73,6 +72,10 @@ const UserNameText = styled.span`
   color: white;
   font-weight: 500;
   font-size: 15px;
+
+&:hover {
+  color: #00d4ff;
+}
 `;
 
 const ProfileSection = styled.div`
@@ -115,40 +118,39 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
   return (
     <>
       <Nav>
-        <NavLinks>
-          <StyledLink to="/staff">
-            <FaUsers size={18} /> {t('Patients')}
-          </StyledLink>
+  {/* Left: Logout + Profile */}
+  <LeftActions>
+    <LogoutButton onClick={handleLogout} title={t('Log out')}>
+      <FaSignOutAlt size={18} />
+      {t('Log out')}
+    </LogoutButton>
 
-          {role === 'sysadmin' && (
-            <StyledLink to="/admin">
-              <FaUserShield size={18} /> {t('Admin')}
-            </StyledLink>
-          )}
+    <ProfileSection onClick={() => setShowProfile(!showProfile)}>
+      <FaRegUserCircle size={18} color="#fff" />
+      <UserNameText>{userName}</UserNameText>
+    </ProfileSection>
+  </LeftActions>
 
-          {showGraphLink && patientId && (
-            <StyledLink to={`/graph/${patientId}`}>
-              <FaChartLine size={18} /> {t('Graph')}
-            </StyledLink>
-          )}
+  {/* Right: Navigation Links */}
+  <NavLinks>
+    <StyledLink to="/staff">
+      <FaUsers size={18} /> {t('Patients')}
+    </StyledLink>
 
-          <StyledLink to="/about">
-            <FaInfoCircle size={18} /> {t('About Us')}
-          </StyledLink>
-        </NavLinks>
+    {role === 'sysadmin' && (
+      <StyledLink to="/admin">
+        <FaUserShield size={18} /> {t('Admin')}
+      </StyledLink>
+    )}
 
-        <RightActions>
-          <ProfileSection onClick={() => setShowProfile(!showProfile)}>
-            <FaRegUserCircle  size={18} />
-            <UserNameText>{userName}</UserNameText>
-          </ProfileSection>
+    {showGraphLink && patientId && (
+      <StyledLink to={`/graph/${patientId}`}>
+        <FaChartLine size={18} /> {t('Graph')}
+      </StyledLink>
+    )}
+  </NavLinks>
+</Nav>
 
-          <LogoutButton onClick={handleLogout} title={t('Log out')}>
-            <FaSignOutAlt size={18} />
-            {t('Log out')}
-          </LogoutButton>
-        </RightActions>
-      </Nav>
 
       {logoutMessage && <LogoutMessage>{logoutMessage}</LogoutMessage>}
 

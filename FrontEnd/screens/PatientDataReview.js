@@ -11,16 +11,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding-bottom: 200px;
-    color: #black;
-  }
 `;
 
 const ReviewContainer = styled.div`

@@ -16,18 +16,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-  body {
-    font-family: 'Poppins', sans-serif; /* Change the font */
-    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
-    min-height: 100vh;
-    overflow-y: auto;
-    color: #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 30px 0;
-    transition: background 0.6s ease-in-out;
-  }
 `;
 
 const Title = styled.h1`
@@ -514,31 +502,8 @@ const AdminDashboard = () => {
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '-5px', left: '15px', zIndex: '2' }}>
-        <img src={logo1} alt="Logo" style={{ width: '230px', objectFit: 'contain' }} />
-      </Link>
-      
-
 
       <Container>
-
-        {/* <FloatingProfile onClick={() => setShowDetails(prev => !prev)}>
-          <ProfileHeader>
-            <img
-              src={patient1}
-              alt="User Avatar"
-              style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-            />
-            <span>{userData.name}</span>
-          </ProfileHeader>
-
-          {showDetails && (
-            <ProfileDetails>
-              <div><strong>Email:</strong> {userData.email}</div>
-              <div><strong>Role:</strong> {userData.role}</div>
-            </ProfileDetails>
-          )}
-        </FloatingProfile> */}
 
 
         <Title>{t('app_title')}</Title>

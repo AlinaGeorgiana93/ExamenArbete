@@ -13,16 +13,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,rgb(139, 229, 238),rgb(51, 225, 207), #b2dfdb);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding-bottom: 200px;
-    color: #fff;
-  }
 `;
 
 const PatientPageContainer = styled.div`
@@ -267,10 +257,6 @@ function PatientPage() {
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '-5px', left: '15px', zIndex: '2' }}>
-        <img src={logo1} alt="Logo" style={{ width: '230px', objectFit: 'contain' }} />
-      </Link>
-      
       <div>
         <PatientHeader>
           <PatientImage src={patient1} alt="Patient" />

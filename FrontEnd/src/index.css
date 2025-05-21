@@ -1,24 +1,24 @@
 /* Apply a background color and some padding */
 body {
-  background: linear-gradient(
-    135deg,
-    #BE5985 0%,
-    #1679AB 30%,
-    #8EACCD 60%,
-    #2A629A 90%,
-    #BE5985 110%
-);
-  /* Light blue background */
-  font-family: 'Poppins', sans-serif;
-  /* Set the font */
-  color: #424141;
-  /* Default text color */
-  display: flex;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start;
+    min-height: 100vh;
     color: black;
     position: relative;
+    padding: 20px 0;
+    width: 100vw;
+    overflow-x: hidden;
+ background: linear-gradient(135deg,rgb(85, 109, 245),rgb(128, 208, 206),rgb(156, 220, 252),rgb(188, 235, 255));
+  background-size: 300% 300%;
+  animation: softBlueWave 18s ease infinite;
+}
+
+
+@keyframes softBlueWave {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 /* Style the heading with some color */
@@ -35,18 +35,6 @@ p {
   /* Darker text color for the paragraph */
   font-size: 1.2em;
   line-height: 1.5;
-}
-
-body {
-  background: linear-gradient(135deg, #33787c, #00d4ff);
-  min-height: 100vh;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
 }
 
 .page-container .logo {

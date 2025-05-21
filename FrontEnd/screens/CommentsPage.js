@@ -314,12 +314,6 @@ const CommentsPage = () => {
   return (
     <>
       <GlobalStyle />
-      <Link
-        to="/"
-        style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}
-      >
-        <img src={logo1} alt="Logo" style={{ width: '140px' }} />
-      </Link>
 
       {fromPage === 'patient' && (
         <Link
