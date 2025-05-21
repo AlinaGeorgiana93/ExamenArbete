@@ -335,7 +335,7 @@ const StartPage = () => {
       <AboutUsButtonContainer>
         <StyledLink to="/about">
           <FaInfoCircle size={18} />
-          {t('about us')}
+          {t('About us')}
         </StyledLink>
       </AboutUsButtonContainer>
       <PageWrapper>
