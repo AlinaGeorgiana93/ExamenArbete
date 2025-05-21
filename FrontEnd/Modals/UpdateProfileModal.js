@@ -9,15 +9,20 @@ import { Tooltip } from 'react-tooltip';
 
 const ModalBackground = styled.div`
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex; justify-content: center; align-items: center;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+
+  display: flex;
+  justify-content: flex-start;  /* align left */
+  align-items: flex-start;      /* align top */
+  padding: 80px 0 0 20px;
   z-index: 2000;
 `;
 
+
+
 const ModalContainer = styled.div`
-  background-color:#F1F0E8;
+  background-color: #F1F0E8;
   padding: 20px;
   border-radius: 12px;
   max-width: 400px;
@@ -51,7 +56,7 @@ const Tabs = styled.div`
 const TabButton = styled.button`
   padding: 10px;
   border: none;
-  border-bottom: ${({ active }) => (active ? '3px solid #1a5b61' : 'none')};
+  border-bottom: ${({ active }) => (active ? '3px solid rgb(40, 136, 155)' : 'none')};
   background: transparent;
   font-weight: bold;
   cursor: pointer;
@@ -75,7 +80,7 @@ const InputField = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #3b878c;
+    border-color:rgb(40, 136, 155);
     background: #fff;
   }
 `;

@@ -201,7 +201,7 @@ const LanguageButton = styled.button`
   padding: 5px 10px;
   font-size: 1rem;
   background: none;
-  color: #125358;
+  color: rgb(40, 136, 155);
   border: none;
   cursor: pointer;
   transition: color 0.3s ease;

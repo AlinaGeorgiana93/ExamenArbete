@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const FloatingProfileContainer = styled.div`
   position: fixed;
   bottom: 50px;
-  right: 20px;
+  left: 20px;      /* changed from right: 20px */
   background-color: #ffffff;
   border-radius: 12px;
   padding: 16px;
@@ -17,6 +17,7 @@ const FloatingProfileContainer = styled.div`
   z-index: 1000;
   font-family: 'Poppins', sans-serif;
 `;
+
 
 const ProfileHeader = styled.div`
   display: flex;
