@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
+import LoadingSpinner from './LoadingSpinner';
+
 
 
 const GlobalStyle = createGlobalStyle`
@@ -246,7 +248,7 @@ function PatientPage() {
     }
   };
 
-  if (loading) return <div>{t('loading_patient')}</div>;
+  if (loading) return <LoadingSpinner />;
   if (!patient) return <div>{t('no_patient_found')}</div>;
 
   const sortedMoodKinds = [...moodKinds].sort((a, b) => a.rating - b.rating);
