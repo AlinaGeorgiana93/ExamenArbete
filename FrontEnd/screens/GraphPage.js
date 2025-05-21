@@ -13,7 +13,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link as RouterLink } from 'react-router-dom';
 import Navigation from '../src/Navigation';
-
+import CommentModal from '../Modals/CommentModal';
 
 
 
@@ -340,6 +340,7 @@ function getWeekNumber(date) {
 }
 
 function GraphPage() {
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const { patientId } = useParams();
   const location = useLocation();
   const [rawData, setRawData] = useState([]);
@@ -356,7 +357,7 @@ function GraphPage() {
     appetiteRating: true,
     sleepRating: true,
   });
- 
+
 
   const processedData = useMemo(() => {
     if (!rawData.length) return [];
@@ -695,7 +696,21 @@ function GraphPage() {
       <GlobalStyle />      
       <Navigation showCommentLink={true} patientId={patientId} />
 
-
+      <button 
+        onClick={() => setIsCommentModalOpen(true)}
+        style={{
+          padding: '10px 15px',
+          background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          marginTop: '20px',
+          marginBottom: '20px',
+        }}
+      >
+        Comments
+      </button>
       <GraphContainer>
         {patientInfo && (
           <div style={{
@@ -830,23 +845,31 @@ function GraphPage() {
           </TimePeriodContainer>
 
         </ChartWrapper>
-        <Link
-          to={`/comments/${patientId}`}
-          state={{ from: 'graph' }}  // 👈 skickar med varifrån man kommer
-        >
-          <button style={{
-            padding: '10px 15px',
-            background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginTop: '20px',
-            marginBottom: '20px',
-          }}>
-            Comments
-          </button>
-        </Link>
+        <button 
+  onClick={() => setIsCommentModalOpen(true)}
+  style={{
+    padding: '10px 15px',
+    background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginTop: '20px',
+    marginBottom: '20px',
+  }}
+>
+  Comments
+</button>
+<CommentModal 
+      isOpen={isCommentModalOpen} 
+      onClose={() => setIsCommentModalOpen(false)}
+    >
+      <div>
+        <h3>Comments for {patientInfo?.firstName} {patientInfo?.lastName}</h3>
+        <p>This is where you would display or add comments.</p>
+      </div>
+    </CommentModal>
+
 
 
 
