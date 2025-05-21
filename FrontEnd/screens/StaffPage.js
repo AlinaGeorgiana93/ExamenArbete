@@ -16,15 +16,16 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+
 const StaffPageContainer = styled.div`
-  background-color:#F1F0E8;
-  padding: 50px 40px;
+  background-color: #F1F0E8;
+  padding: 50px 50px;
   border-radius: 16px;
   width: 100%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   z-index: 1;
   text-align: center;
-  margin-top: 70px;
+  margin-top: 100px; /* slightly moved down */
 
   @media (max-width: 768px) {
     padding: 30px 20px;

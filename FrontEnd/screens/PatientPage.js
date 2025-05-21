@@ -18,8 +18,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const PatientPageContainer = styled.div`
-  background-color: #ffffffee;
-  padding: 30px;
+  background-color: #F1F0E8;
+  padding: 25px;
   border-radius: 16px;
   max-width: 450px;
   width: 100%;
@@ -30,7 +30,7 @@ const PatientPageContainer = styled.div`
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 17px;
 
   label {
     display: block;
@@ -65,7 +65,7 @@ const ButtonsContainer = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: rgb(7, 124, 147);
+  background: rgb(40, 136, 155);
   color: white;
   font-size: 0.9rem;
   padding: 8px 12px;
@@ -88,7 +88,7 @@ const Button = styled.button`
 `;
 
 const CommentsButton = styled(Link)`
-  background-color: rgb(7, 124, 147);
+  background: rgb(40, 136, 155);
   color: white;
   font-size: 0.9rem;
   padding: 8px 12px;
@@ -120,8 +120,8 @@ const PatientHeader = styled.div`
 `;
 
 const PatientImage = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 15px;
@@ -129,7 +129,7 @@ const PatientImage = styled.img`
 
 const PatientName = styled.h2`
   color: black;
-  font-size: 2rem;
+  font-size: 1,5rem;
   font-weight: bold;
   text-align: center;
 `;

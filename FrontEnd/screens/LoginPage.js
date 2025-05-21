@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { createGlobalStyle } from 'styled-components';
-import logo1 from '../src/media/logo1.png';
 import { useDispatch } from 'react-redux';
 import { setLanguage } from '../language/languageSlice.js';
 import { getI18n } from 'react-i18next';
 import '../language/i18n.js';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../src/axiosInstance.js';
+import logo1 from '../src/media/logo1.png';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -16,9 +16,26 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 `;
+const LogoContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 2;
+  margin-left: -50px;
+  margin-top: -110px;
+`;
+
+const PageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full height of the viewport */
+  position: relative;
+  z-index: 0;
+`;
 
 const StartPageContainer = styled.div`
-  background-color: #F5ECD5;
+  background-color:#F1F0E8;
   padding: 40px;
   border-radius: 12px; /* Rounded corners for soft look */
   width: 100%;
@@ -278,8 +295,12 @@ const StartPage = () => {
   return (
     <>
       <GlobalStyle />
-
-
+        <LogoContainer>
+             <Link to="/">
+               <img src={logo1} alt="Logo" style={{ width: '200px', objectFit: 'contain' }} />
+             </Link>
+           </LogoContainer>
+      <PageWrapper>
       <StartPageContainer>
         <LanguageButtonContainer>
           <LanguageButton onClick={() => changeLanguage(i18n.language === 'en' ? 'sv' : 'en')}>
@@ -327,6 +348,7 @@ const StartPage = () => {
         </Footer>
 
       </StartPageContainer>
+      </PageWrapper>
     </>
   );
 };

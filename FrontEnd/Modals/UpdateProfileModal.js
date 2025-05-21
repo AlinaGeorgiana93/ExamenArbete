@@ -17,7 +17,7 @@ const ModalBackground = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  background: #F5ECD5;
+  background-color:#F1F0E8;
   padding: 20px;
   border-radius: 12px;
   max-width: 400px;

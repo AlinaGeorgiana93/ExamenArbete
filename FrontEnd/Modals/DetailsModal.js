@@ -29,7 +29,7 @@ const ModalContainer = styled.div`
 `;
 
 const ModalContent = styled.div`
-   background-color: #FAF1E6;
+   background-color:#F1F0E8;
   padding: 30px;
   border-radius: 10px;
   width: 450px;

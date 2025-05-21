@@ -1,21 +1,29 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
+import styled from 'styled-components';
 import Navigation from '../Navigation';
 import logo1 from './logo1.png'; // Make sure the path is correct
+
+const LogoContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 2;
+  margin-left: -50px;
+  margin-top: -110px;
+`;
 
 const Layout = () => {
   return (
     <>
-      {/* Logo in top-left */}
-      <Link to="/" style={{ position: 'fixed', top: '-10px', left: '15px', zIndex: '1001' }}>
-        <img src={logo1} alt="Logo" style={{ width: '200px', objectFit: 'contain' }} />
-      </Link>
+      <LogoContainer>
+        <Link to="/">
+          <img src={logo1} alt="Logo" style={{ width: '200px', objectFit: 'contain' }} />
+        </Link>
+      </LogoContainer>
 
-      {/* Bottom Navigation */}
       <Navigation />
 
-      {/* Main content area */}
       <main style={{ padding: '20px' }}>
         <Outlet />
       </main>

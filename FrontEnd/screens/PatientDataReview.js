@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const ReviewContainer = styled.div`
-  background-color: #ffffffee;
+    background-color: #F1F0E8;
   font-family: 'Poppins', sans-serif;
   padding: 30px;
   border-radius: 16px;
