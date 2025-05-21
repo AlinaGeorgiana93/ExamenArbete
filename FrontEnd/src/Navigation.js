@@ -5,7 +5,7 @@ import {
   FaUserShield,
   FaChartLine,
   FaInfoCircle,
-  FaUser,
+  FaRegUserCircle,
   FaUsers,
   FaSignOutAlt,
 } from 'react-icons/fa';
@@ -139,7 +139,7 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
 
         <RightActions>
           <ProfileSection onClick={() => setShowProfile(!showProfile)}>
-            <FaUser size={18} />
+            <FaRegUserCircle  size={18} />
             <UserNameText>{userName}</UserNameText>
           </ProfileSection>
 
