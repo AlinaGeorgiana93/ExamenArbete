@@ -267,10 +267,10 @@ function PatientPage() {
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
+      <Link to="/" style={{ position: 'fixed', top: '-5px', left: '15px', zIndex: '2' }}>
+        <img src={logo1} alt="Logo" style={{ width: '230px', objectFit: 'contain' }} />
       </Link>
-
+      
       <div>
         <PatientHeader>
           <PatientImage src={patient1} alt="Patient" />

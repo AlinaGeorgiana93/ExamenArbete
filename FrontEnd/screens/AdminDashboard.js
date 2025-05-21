@@ -6,7 +6,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import logo1 from '../src/media/logo1.png';
 import DetailsModal from '../Modals/DetailsModal';
 import Select from 'react-select'; // Importing react-select
-import patient1 from '../src/media/patient1.jpg';
 import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
 import InputValidationUtils from '../src/InputValidationUtils.js';
 import { FaInfoCircle } from 'react-icons/fa';
@@ -515,9 +514,10 @@ const AdminDashboard = () => {
   return (
     <>
       <GlobalStyle />
-      <Link to="/" style={{ position: 'fixed', top: '15px', right: '15px', zIndex: '2' }}>
-        <img src={logo1} alt="Logo" style={{ width: '150px' }} />
+      <Link to="/" style={{ position: 'fixed', top: '-5px', left: '15px', zIndex: '2' }}>
+        <img src={logo1} alt="Logo" style={{ width: '230px', objectFit: 'contain' }} />
       </Link>
+      
 
 
       <Container>
