@@ -160,6 +160,24 @@ const MetricToggle = styled.label`
   }
 `;
 
+const TimePeriodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 15px;
+  gap: 10px;
+  width: 120px;
+  
+  @media (max-width: 480px) {
+    flex-direction: row;
+    width: 100%;
+    padding: 15px 0 0 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+`;
+
 const TimeRangeButton = styled.button`
   padding: 8px 16px;
   border: none;
@@ -171,6 +189,8 @@ const TimeRangeButton = styled.button`
   transition: all 0.3s ease;
   text-align: center;
   white-space: nowrap;
+  width: 100%;
+  margin-bottom: 5px;
 
   &:hover {
     background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
@@ -188,6 +208,8 @@ const TimeRangeButton = styled.button`
     font-size: 12px;
     border-radius: 15px;
     width: auto;
+    flex: 1;
+    min-width: 80px;
   }
 `;
 
@@ -221,24 +243,6 @@ const ChartWrapper = styled.div`
   
   &:hover .recharts-wrapper {
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-  }
-`;
-
-
-const TimePeriodContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0 15px;
-  gap: 10px;
-  width: 120px;
-  
-  @media (max-width: 480px) {
-    flex-direction: row;
-    width: 100%;
-    padding: 15px 0 0 0;
-    justify-content: center;
   }
 `;
 
@@ -574,53 +578,111 @@ function GraphPage() {
           </LineChart>
         );
 
-      case 'pie':
-        // Calculate average values for each metric
-        const pieData = metrics.map(metric => {
-          const validEntries = processedData.filter(item => item[metric.key] !== undefined);
-          const total = validEntries.reduce((sum, item) => sum + item[metric.key], 0);
-          const average = validEntries.length > 0 ? total / validEntries.length : 0;
+    case 'pie':
+  const pieData = metrics
+    .filter(metric => 
+      activeMetrics[metric.key] && 
+      ['activityRating', 'moodRating', 'appetiteRating', 'sleepRating'].includes(metric.key)
+    )
+    .map(metric => {
+      const validEntries = processedData.filter(item => item[metric.key] !== undefined);
+      const total = validEntries.reduce((sum, item) => sum + item[metric.key], 0);
+      const average = validEntries.length > 0 ? total / validEntries.length : 0;
 
-          return {
-            name: metric.name,
-            value: parseFloat(average.toFixed(2)),
-            color: metric.color
-          };
-        }).filter(item => !isNaN(item.value));
+      return {
+        name: metric.name,
+        value: parseFloat(average.toFixed(2)),
+        color: metric.color
+      };
+    })
+    .filter(item => !isNaN(item.value));
 
-        // Calculate total for percentage calculation
-        const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
+  if (pieData.length === 0) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        color: '#666'
+      }}>
+        No active metrics selected for pie chart
+      </div>
+    );
+  }
+  // Calculate total for percentage calculation
+  const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
 
+  return (
+    <PieChart {...commonProps}>
+      <Pie
+        data={pieData}
+        cx="50%"
+        cy="50%"
+        outerRadius={150}
+        innerRadius={80}
+        dataKey="value"
+        label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+        labelLine={false}
+      >
+        {pieData.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={entry.color} />
+        ))}
+      </Pie>
+      {/* Custom positioned labels with black text */}
+      {pieData.map((entry, index) => {
+        // Calculate positions for each label to be closer to their slices
+        let x, y;
+        
+        switch(entry.name) {
+          case 'Activity':
+            x = '50%';
+            y = '30%'; // Top center
+            break;
+          case 'Mood':
+            x = '70%';
+            y = '40%'; // Top right
+            break;
+          case 'Appetite':
+            x = '70%';
+            y = '60%'; // Bottom right
+            break;
+          case 'Sleep':
+            x = '50%';
+            y = '70%'; // Bottom center
+            break;
+          default:
+            x = '50%';
+            y = '50%';
+        }
+        
         return (
-          <PieChart {...commonProps}>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              outerRadius={150}
-              fill="#8884d8"
-              dataKey="value"
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              labelLine={false}
-            >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={tooltipStyle}
-              formatter={(value, name, props) => {
-                const percentage = totalValue > 0 ? (value / totalValue * 100).toFixed(2) : 0;
-                return [
-                  `${name}: ${value}`,
-                  `Percentage: ${percentage}%`
-                ];
-              }}
-            />
-            <Legend />
-          </PieChart>
+          <text
+            key={`label-${index}`}
+            x={x}
+            y={y}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="#000000" // Changed to black color
+            style={{ 
+              fontWeight: 'bold', 
+              fontSize: '14px',
+              pointerEvents: 'none' 
+            }}
+          >
+            {entry.name}
+          </text>
         );
-
+      })}
+      <Tooltip
+        contentStyle={tooltipStyle}
+        formatter={(value, name) => [
+          `${value.toFixed(2)} (average)`,
+          name
+        ]}
+      />
+    </PieChart>
+  );
       default:
         return (
           <ComposedChart {...commonProps}>
@@ -834,41 +896,28 @@ function GraphPage() {
             {renderChart()}
           </ResponsiveContainer>
 
-          <TimePeriodContainer>
-            {timeRanges.map(range => (
-              <TimeRangeButton
-                key={range.key}
-                active={timeRange === range.key}
-                onClick={() => setTimeRange(range.key)}
-                style={{ width: '100%' }}
-              >
-                {range.name}
-              </TimeRangeButton>
-            ))}
-          </TimePeriodContainer>
-
+   <TimePeriodContainer>
+  {timeRanges.map(range => (
+    <TimeRangeButton
+      key={range.key}
+      active={timeRange === range.key}
+      onClick={() => setTimeRange(range.key)}
+    >
+      {range.name}
+    </TimeRangeButton>
+  ))}
+  <Link 
+    to={`/comments/${patientId}`}
+    state={{ from: 'graph' }}
+    style={{ textDecoration: 'none', width: '100%' }}
+  >
+    <TimeRangeButton>
+      Comment
+    </TimeRangeButton>
+  </Link>
+</TimePeriodContainer>
         </ChartWrapper>
-        <Link
-          to={`/comments/${patientId}`}
-          state={{ from: 'graph' }}  // 👈 skickar med varifrån man kommer
-        >
-          <button style={{
-            padding: '10px 15px',
-            background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginTop: '20px',
-            marginBottom: '20px',
-          }}>
-            Comments
-          </button>
-        </Link>
-
-
-
-      </GraphContainer>
+        </GraphContainer>
     </>
   );
 }
