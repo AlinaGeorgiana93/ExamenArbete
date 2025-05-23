@@ -149,7 +149,12 @@ namespace AppWebApi.Controllers
                 var model = await _service.UpdateSleepLevelAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
 
-                return Ok(model);
+                
+                    
+                 return Ok(new {
+            item = model.Item,
+            Message = "SleepLevel updated successfully"
+                             });
             }
             catch (Exception ex)
             {
@@ -174,7 +179,12 @@ namespace AppWebApi.Controllers
                 var model = await _service.CreateSleepLevelAsync(item);
                 _logger.LogInformation($"item {model.Item.SleepLevelId} created");
 
-                return Ok(model);
+                
+        
+                 return Ok(new {
+            item = model.Item,
+            Message = "SleepLevel created successfully"
+             });
             }
             catch (Exception ex)
             {

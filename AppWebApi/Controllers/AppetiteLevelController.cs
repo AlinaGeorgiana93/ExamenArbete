@@ -147,7 +147,10 @@ namespace AppWebApi.Controllers
                 var model = await _service.UpdateAppetiteLevelAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
 
-                return Ok(model);
+                 return Ok(new {
+                    item = model.Item,
+                    Message = "AppetiteLevel updated successfully"
+                });
             }
             catch (Exception ex)
             {
@@ -170,7 +173,11 @@ namespace AppWebApi.Controllers
                 var model = await _service.CreateAppetiteLevelAsync(item);
                 _logger.LogInformation($"item {model.Item.AppetiteLevelId} created");
 
-                return Ok(model);
+               
+                 return Ok(new {
+                    item = model.Item,
+                    Message = "AppetiteLevel created successfully"
+                });
             }
             catch (Exception ex)
             {

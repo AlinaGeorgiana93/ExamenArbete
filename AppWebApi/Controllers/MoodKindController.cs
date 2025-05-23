@@ -128,18 +128,17 @@ namespace AppWebApi.Controllers
                 return BadRequest($"{ex.Message}.{ex.InnerException?.Message}");
             }
         }
-
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        
+  [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles ="usr, sysadmin")]
-        [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> UpdateItem(string id, [FromBody] MoodKindCuDto item)
+ [HttpPut("{id}")]
+ [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
+ [ProducesResponseType(400, Type = typeof(string))]
+public async Task<IActionResult> UpdateItem(string id, [FromBody] MoodKindCuDto item)
         {
             try
             {
                 var idArg = Guid.Parse(id);
-                
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
 
@@ -148,36 +147,44 @@ namespace AppWebApi.Controllers
                 var model = await _service.UpdateMoodKindAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
 
-                return Ok(model);
+                 return Ok(new {
+                    item = model.Item,
+                    Message = "MoodKind updated successfully"
+                });
             }
             catch (Exception ex)
             {
-                    _logger.LogError(ex, $"{nameof(UpdateItem)} failed: {ex.Message}");
-                    return BadRequest($"Could not update. Error: {ex.Message}");
+                _logger.LogError(ex, $"{nameof(UpdateItem)} failed: {ex.Message}");
+                return BadRequest($"Could not update. Error: {ex.Message}");
             }
         }
-        [HttpPost()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = "usr,sysadmin")]
 
-        public async Task<IActionResult> CreateItem([FromBody] MoodKindCuDto item)
-        {
-            try
-            {
-                _logger.LogInformation($"{nameof(CreateItem)}:");
+[HttpPost()]
+[ProducesResponseType(200, Type = typeof(ResponseItemDto<IMoodKind>))]
+[ProducesResponseType(400, Type = typeof(string))]
+[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+    Policy = null, Roles = "usr,sysadmin")]
+public async Task<IActionResult> CreateItem([FromBody] MoodKindCuDto item)
+{
+    try
+    {
+        _logger.LogInformation($"{nameof(CreateItem)}:");
 
-                var model = await _service.CreateMoodKindAsync(item);
-                _logger.LogInformation($"item {model.Item.MoodKindId} created");
+        var model = await _service.CreateMoodKindAsync(item);
+        _logger.LogInformation($"item {model.Item.MoodKindId} created");
 
-                return Ok(model);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
-                return BadRequest($"Could not create. Error {ex.Message}");
-            }
-        }
+            return Ok(new {
+            item = model.Item,
+            Message = "MoodKind created successfully"
+        });
+
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
+        return BadRequest($"Could not create. Error {ex.Message}");
+    }
+}
+
     }
 }

@@ -159,5 +159,20 @@
   "name": "Namn",
    "label": "Etikett",
   "categories": "Kategorier",
-  "add": "Lägg till"
+  "add": "Lägg till",
+  "enter rating (1-10)": "Ange betyg (1–10)",
+  "enter label": "Ange etikett",
+  "enter name": "Ange namn",
+  "createdSuccessfully": "Skapades framgångsrikt",
+  "updatedSuccessfully": "Uppdaterades framgångsrikt",
+  "deletedSuccessfully": "Togs bort framgångsrikt",
+   "firstNameInvalid": "Förnamnet är ogiltigt.",
+  "lastNameInvalid": "Efternamnet är ogiltigt.",
+  "personalNumberInvalid": "Personnumret är ogiltigt.",
+  "usernameInvalid": "Användarnamnet måste vara minst 4 tecken långt och endast innehålla bokstäver och siffror.",
+  "emailInvalid": "Vänligen ange en giltig e-postadress.",
+  "passwordWeak": "Lösenordet måste innehålla minst en versal, en gemen, en siffra och ett specialtecken.",
+  "loading": "Laddar...",
+  "staffUpdatedSuccessfully": "Personal uppdaterades framgångsrikt.",
+  "patientUpdatedSuccessfully": "Patient uppdaterades framgångsrikt."
 }

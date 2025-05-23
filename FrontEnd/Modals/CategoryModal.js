@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import EmojiPickerWrapper from '../src/emojiPickerWrapper.js';  // import emoji picker
 
 // Styled components (similar style to your Staff modal)
 const ModalContainer = styled.div`
@@ -110,6 +111,25 @@ const Button = styled.button`
     transform: translateY(1px);
   }
 `;
+const ToastMessage = styled.div`
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  animation: fadeInOut 3s ease;
+  z-index: 9999;
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  }
+`;
+
 
 const ButtonDelete = styled(Button)`
   background: red;
@@ -136,6 +156,13 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
   const [fieldErrors, setFieldErrors] = useState({});
   const token = localStorage.getItem('jwtToken');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+const handleEmojiSelect = (emoji) => {
+  setFormValues((prev) => ({ ...prev, label: prev.label + emoji }));
+};
 
 
 const openEditModal = (item) => {
@@ -194,7 +221,7 @@ const fetchItems = async () => {
 
 
   // Simple validation for name, rating, label
-  const validate = () => {
+   const validate = () => {
     const errors = {};
     if (!formValues.name.trim()) errors.name = t('Name is required');
     if (!formValues.rating || isNaN(formValues.rating) || formValues.rating < 1 || formValues.rating > 10)
@@ -231,6 +258,11 @@ const handleCreate = async () => {
     );
     console.log('✅ Create response:', response.data);
     await fetchItems(); // wait to refresh list
+
+     setSuccessMessage(response.data.message || `${t(activeType)} ${t('createdSuccessfully')}`);
+    setShowSuccessMessage(true);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
+
     resetForm(); // reset after fetch success
   } catch (err) {
     console.error('❌ Error creating item:', err.response?.data || err.message);
@@ -279,13 +311,9 @@ const handleUpdate = async () => {
     }
     await fetchItems();
 
-        setSuccessMessage(`${t(type.toLowerCase())} updated successfully.`);
+  setSuccessMessage(response.data.message || `${t(activeType)} ${t('updatedSuccessfully')}`);
     setShowSuccessMessage(true);
-
-    setTimeout(() => {
-  setShowSuccessMessage(false);
-  setSuccessMessage('');
-}, 2000);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
 
 
     resetForm();
@@ -307,6 +335,10 @@ const handleUpdate = async () => {
       
       if (editingId === id) resetForm();
       fetchItems();
+
+      setSuccessMessage(`${t(activeType)} ${t('deletedSuccessfully')}`);
+    setShowSuccessMessage(true);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
     } catch (err) {
       console.error('Error deleting item:', err);
     }
@@ -317,6 +349,7 @@ const handleUpdate = async () => {
       <ModalContent>
         <CloseButton onClick={onClose}>×</CloseButton>
         <ModalHeader>{t('manageCategories')}</ModalHeader>
+          
 
         {/* Tabs */}
         <div style={{ display: 'flex', marginBottom: '20px', gap: '10px' }}>
@@ -341,6 +374,7 @@ const handleUpdate = async () => {
             </button>
           ))}
         </div>
+      
 
         {/* Item list */}
         <ul style={{ listStyle: 'none', padding: 0, maxHeight: '200px', overflowY: 'auto', marginBottom: '20px' }}>
@@ -361,82 +395,115 @@ const handleUpdate = async () => {
                 <strong>{item.name}</strong> <br />
                 <small>{t('Rating')}: {item.rating} | {t('Label')}: {item.label}</small>
               </div>
-              <div>
-                <button onClick={() => startEditing(item)} style={{ marginRight: 8 }}>
+               <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => startEditing(item)}
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: '#28889b',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: 6,
+                    fontSize: 14,
+                    cursor: 'pointer'
+                  }}
+                >
                   {t('edit')}
                 </button>
 
-                <button onClick={() => handleDelete(getItemId(item))} style={{ color: 'red' }}>
-                  {t('delete')}
-                </button>
-              </div>
+                 <button
+              onClick={() => handleDelete(getItemId(item))}
+              style={{
+                padding: '6px 12px',
+                backgroundColor: 'red',
+                color: 'white',
+                border: 'none',
+                borderRadius: 6,
+                fontSize: 14,
+                cursor: 'pointer'
+              }}
+            >
+              {t('delete')}
+            </button>
+          </div>
+              
             </li>
           ))}
           {items.length === 0 && <li>{t('noItemsFound')}</li>}
         </ul>
-
-        {/* Form */}
+          <ModalHeader>
+      {editingId ? `${t('edit')} ${t(activeType)}` : `${t('create')} ${t(activeType)}`}
+    </ModalHeader>
+         {/* Form */}
         <form onSubmit={handleSubmit} noValidate>
           <InputGroup>
-            <label htmlFor="name">{t('name')}</label>
+            <label htmlFor="name">{t('Name')}</label>
             <input
               id="name"
               name="name"
-              type="text"
               value={formValues.name}
               onChange={handleInputChange}
-              autoComplete="off"
+              placeholder={t('enter name')}
             />
-            {fieldErrors.name && <small style={{ color: 'red' }}>{fieldErrors.name}</small>}
+            {fieldErrors.name && <span style={{ color: 'red', fontSize: '13px' }}>{fieldErrors.name}</span>}
           </InputGroup>
 
           <InputGroup>
-            <label htmlFor="rating">{t('rating')}</label>
+            <label htmlFor="rating">{t('Rating')}</label>
             <input
               id="rating"
               name="rating"
               type="number"
-              min="1"
-              max="10"
               value={formValues.rating}
               onChange={handleInputChange}
-              autoComplete="off"
+              placeholder={t('enter rating (1-10)')}
             />
-            {fieldErrors.rating && <small style={{ color: 'red' }}>{fieldErrors.rating}</small>}
+            {fieldErrors.rating && <span style={{ color: 'red', fontSize: '13px' }}>{fieldErrors.rating}</span>}
           </InputGroup>
+              <InputGroup>
+                <label htmlFor="label">{t('Label')}</label>
 
-          <InputGroup>
-            <label htmlFor="label">{t('label')}</label>
-            <input
-              id="label"
-              name="label"
-              type="text"
-              value={formValues.label}
-              onChange={handleInputChange}
-              autoComplete="off"
-            />
-            {fieldErrors.label && <small style={{ color: 'red' }}>{fieldErrors.label}</small>}
-          </InputGroup>
+                  <div style={{ position: 'relative', width: '100%' }}>
+                    <input
+                      id="label"
+                      name="label"
+                      type="text"
+                      value={formValues.label}
+                      onChange={handleInputChange}
+                      placeholder={t('Enter label')}
+                      style={{ width: '100%', paddingRight: '32px' }}
+                    />
 
-          <ButtonGroup>
-  <Button onClick={handleUpdate}>{t('update')}</Button>
-  <Button onClick={handleCreate}>{t('create')}</Button>
+                    <EmojiPickerWrapper
+                      onSelect={handleEmojiSelect}
+                    />
+                  </div>
+
+                  {fieldErrors.label && <small style={{ color: 'red' }}>{fieldErrors.label}</small>}
+                </InputGroup>
+
+                <ButtonGroup>
+  {!editingId && (
+    <Button onClick={handleCreate}>{t('create')}</Button>
+  )}
   {editingId && (
-    <ButtonDelete
-      type="button"
-      onClick={() => {
-        resetForm();
-      }}
-    >
-      {t('cancel')}
-    </ButtonDelete>
-     
-
-
+    <>
+      <Button onClick={handleUpdate}>{t('update')}</Button>
+      <ButtonDelete
+        type="button"
+        onClick={resetForm}
+      >
+        {t('cancel')}
+      </ButtonDelete>
+    </>
   )}
 </ButtonGroup>
 
+
+
         </form>
+
+        {showSuccessMessage && <ToastMessage>{successMessage}</ToastMessage>}
       </ModalContent>
     </ModalContainer>
   );

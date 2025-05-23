@@ -150,7 +150,22 @@
   "categoryName": "Category Name",
   "name": "Name",
   "label": "Label",
-  "categories": "Categories"
+  "categories": "Categories",
+  "enter rating (1-10)": "Enter rating (1-10)",
+  "enter label": "Enter label",
+  "enter name": "Enter name",
+  "createdSuccessfully": "Succesfully created",
+  "updatedSuccessfully": "Succesfully updated",
+  "deletedSuccessfully": "Succesfully deleted",
+  "firstNameInvalid": "First name is invalid.",
+  "lastNameInvalid": "Last name is invalid.",
+  "personalNumberInvalid": "Personal number is invalid.",
+  "usernameInvalid": "Username should be at least 4 characters long and contain only alphanumeric characters.",
+  "emailInvalid": "Please provide a valid email address.",
+  "passwordWeak": "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+  "loading": "Loading...",
+  "staffUpdatedSuccessfully": "Staff updated successfully.",
+  "patientUpdatedSuccessfully": "Patient updated successfully."
  
 
 }

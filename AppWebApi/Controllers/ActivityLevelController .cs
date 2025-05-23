@@ -147,7 +147,11 @@ namespace AppWebApi.Controllers
                 var model = await _service.UpdateActivityLevelAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
 
-                return Ok(model);
+                
+                 return Ok(new {
+            item = model.Item,
+            Message = "ActivityLevel updated successfully"
+        });
             }
             catch (Exception ex)
             {
@@ -170,7 +174,12 @@ namespace AppWebApi.Controllers
                 var model = await _service.CreateActivityLevelAsync(item);
                 _logger.LogInformation($"item {model.Item.ActivityLevelId} created");
 
-                return Ok(model);
+               
+                
+                 return Ok(new {
+                    item = model.Item,
+                    Message = "ActivityLevel created successfully"
+                });
             }
             catch (Exception ex)
             {

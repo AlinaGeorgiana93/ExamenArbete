@@ -217,38 +217,37 @@ const AdminDashboard = () => {
 
 
   const validateAllFields = ({ firstName, lastName, username, email, password, personalNumber, id, role }) => {
-    const errors = {};
+  const errors = {};
 
-    if (!InputValidationUtils.isValidName(firstName)) {
-      errors.firstName = 'First name is invalid.';
+  if (!InputValidationUtils.isValidName(firstName)) {
+    errors.firstName = t('firstNameInvalid');
+  }
+
+  if (!InputValidationUtils.isValidName(lastName)) {
+    errors.lastName = t('lastNameInvalid');
+  }
+
+  if (!PersonalNumberUtils.isValid(personalNumber)) {
+    errors.personalNumber = t('personalNumberInvalid');
+  }
+
+  if (activeTab === 'staff' && !id && (role === 'usr' || role === 'sysadmin')) {
+    if (!InputValidationUtils.isValidUsername(username)) {
+      errors.username = t('usernameInvalid');
     }
 
-    if (!InputValidationUtils.isValidName(lastName)) {
-      errors.lastName = 'Last name is invalid.';
-
+    if (!InputValidationUtils.isValidEmail(email)) {
+      errors.email = t('emailInvalid');
     }
 
-    if (!PersonalNumberUtils.isValid(personalNumber)) {
-      errors.personalNumber = 'Personal number is invalid.';
+    if (!InputValidationUtils.isStrongPassword(password)) {
+      errors.password = t('passwordWeak');
     }
+  }
 
-    if (activeTab === 'staff' && !id && (role === 'usr' || role === 'sysadmin')) {
+  return errors;
+};
 
-      if (!InputValidationUtils.isValidUsername(username)) {
-        errors.username = 'Username should be at least 4 characters long and contain only alphanumeric characters.';
-      }
-
-      if (!InputValidationUtils.isValidEmail(email)) {
-        errors.email = 'Please provide a valid email address.';
-      }
-
-      if (!InputValidationUtils.isStrongPassword(password)) {
-        errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
-      }
-    }
-
-    return errors;
-  };
 
 
 
@@ -450,7 +449,10 @@ const AdminDashboard = () => {
         localStorage.setItem('jwtToken', newToken);
       }
 
-      setSuccessMessage(`${isStaff ? 'Staff' : 'Patient'} updated successfully.`);
+      setSuccessMessage(
+        isStaff ? t('staffUpdatedSuccessfully') : t('patientUpdatedSuccessfully')
+      );
+
       setShowSuccessMessage(true);
 
       setTimeout(() => {
