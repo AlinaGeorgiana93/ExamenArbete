@@ -139,8 +139,18 @@
   "invalid_email": "Invalid email format",
   "profile_info": "Profile info",
   "password_change_failed": "Password change failed.",
-  "profile_updated":"Profile successfully updated",
-  "password_changed":"Password changed successfully."
-  
-
+  "profile_updated": "Profile successfully updated",
+  "password_changed": "Password changed successfully.",
+  "Back_to_graph": "Back to graph",
+  "Back_to_patient": "Back to patient",
+  "Comments_for": "Comments for",
+  "Write_your_comment_here...": "Write your comment here...",
+  "Initials": "Initials",
+  "Comment_cannot_be_empty.": "Comment cannot be empty.",
+  "Please_enter_your_initials.": "Please enter your initials.",
+  "No_patient_found": "No patient found",
+  "Save_changes": "Save changes",
+  "Submit_comment": "Submit comment",
+  "Previous": "Previous",
+  "Next": "Next"
 }

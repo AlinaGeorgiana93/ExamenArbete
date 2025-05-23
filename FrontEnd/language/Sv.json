@@ -133,7 +133,7 @@
   "team4": "Nagihan",
   "logged in as": "Inloggad som",
   "update_success": "Uppdatering lyckades!",
-  "update_error": "Uppdatering misslyckades",
+  "update_error": "Uppdatering misslyckades!",
   "update_profile": "Uppdatera profil",
   "cancel_password_change": "Avbryt lösenordsändring",
   "change_password": "Ändra lösenord",
@@ -148,6 +148,17 @@
   "profile_info": "Profilinformation",
   "password_change_failed": "Lösenordsändring misslyckades.",
   "profile_updated": "Profilen uppdaterades.",
-  "password_changed": "Lösenordet har ändrats."
-
+  "password_changed": "Lösenordet har ändrats.",
+  "Back to graph": "Tillbaka till grafen",
+  "Back to patient": "Tillbaka till patienten",
+  "Comments for": "Kommentarer för",
+  "Write your comment here...": "Skriv din kommentar här...",
+  "Initials": "Initialer",
+  "Comment cannot be empty.": "Kommentaren får inte vara tom.",
+  "Please enter your initials.": "Vänligen ange dina initialer.",
+  "No patient found": "Ingen patient hittades",
+  "Save changes": "Spara ändringar",
+  "Submit comment": " Skicka kommentar",
+  "Previous": " Föregående",
+  "Next": " Nästa"
 }

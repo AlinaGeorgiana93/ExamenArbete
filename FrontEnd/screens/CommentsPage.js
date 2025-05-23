@@ -11,12 +11,7 @@ import { Link } from 'react-router-dom';
 import Navigation from '../src/Navigation';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-
-
-
-const GlobalStyle = createGlobalStyle`
- 
-`;
+const GlobalStyle = createGlobalStyle``;
 
 const PageContainer = styled.div`
   background-color: rgba(255, 255, 255, 0.95);
@@ -27,6 +22,7 @@ const PageContainer = styled.div`
   height: 80vh;
   overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
 `;
 
 const Title = styled.h1`
@@ -37,18 +33,15 @@ const Title = styled.h1`
 
 const CommentBox = styled.textarea`
   width: 100%;
-  height: 140px; /* ⬅️ Lägg till eller ändra höjden här */
+  height: 140px;
   padding: 14px;
   font-size: 16px;
   margin-top: 12px;
   margin-bottom: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  resize: vertical; /* ⬅️ Tillåt att dra rutan manuellt om du vill */
+  resize: vertical;
 `;
-
-
-
 
 const CommentButton = styled.button`
   background-color: #125358;
@@ -184,9 +177,6 @@ const Signature = styled.div`
   color: #125358;
 `;
 
-
-// ...imports är oförändrade
-
 const CommentsPage = () => {
   const { patientId } = useParams();
   const [comments, setComments] = useState('');
@@ -202,7 +192,7 @@ const CommentsPage = () => {
   const [signature, setSignature] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
-  const fromPage = location.state?.from || 'patient'; // Default till 'patient' om inget skickas
+  const fromPage = location.state?.from || 'patient';
 
   const isToday = (date) => {
     const today = new Date();
@@ -225,7 +215,7 @@ const CommentsPage = () => {
         setPatientData(response.data.item);
         setLoading(false);
       } catch (err) {
-        setError("Kunde inte hämta patientdata.");
+        setError("Could not fetch patient data.");
         setLoading(false);
       }
     };
@@ -234,12 +224,12 @@ const CommentsPage = () => {
 
   const handleCommentSubmit = () => {
     if (comments.trim() === '') {
-      alert("Kommentar kan inte vara tom.");
+      alert("Comment cannot be empty.");
       return;
     }
 
     if (signature.trim() === '') {
-      alert("Vänligen fyll i dina initialer.");
+      alert("Please enter your initials.");
       return;
     }
 
@@ -310,29 +300,6 @@ const CommentsPage = () => {
     <>
       <GlobalStyle />
 
-      {fromPage === 'patient' && (
-        <Link
-          to={`/patient/${patientId}`}
-          style={{
-            display: 'inline-block',
-            backgroundColor: '#125358',
-            color: 'white',
-            padding: '10px 16px',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            marginBottom: '20px',
-            marginTop: '10px',
-            fontWeight: '500',
-            position: 'absolute',
-            top: '25px',
-            left: '15px',
-            zIndex: 2
-          }}
-        >
-          Tillbaka till patient
-        </Link>
-      )}
-
       {fromPage === 'graph' && (
         <Link
           to={`/graph/${patientId}`}
@@ -352,20 +319,39 @@ const CommentsPage = () => {
             zIndex: 2
           }}
         >
-          Tillbaka till graf
+          Back to graph
         </Link>
       )}
 
       <PageContainer>
+        {fromPage === 'patient' && (
+          <Link
+            to={`/patient/${patientId}`}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              backgroundColor: '#125358',
+              color: 'white',
+              padding: '10px 16px',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: '500',
+              zIndex: 2
+            }}
+          >
+            Back to patient
+          </Link>
+        )}
         <img
           src={patient1}
-          alt="Patient Bild"
+          alt="Patient Image"
           style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }}
         />
         <Title>
-          Kommentarer för {patientData ?
+          Comments for {patientData ?
             <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> :
-            (error || 'Ingen patient hittades')}
+            (error || 'No patient found')}
         </Title>
 
         <DatePicker
@@ -380,12 +366,12 @@ const CommentsPage = () => {
             <CommentBox
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              placeholder="Skriv din kommentar här..."
+              placeholder="Write your comment here..."
             />
 
             <input
               type="text"
-              placeholder="Signatur"
+              placeholder="Initials"
               value={signature}
               onChange={(e) => setSignature(e.target.value)}
               style={{
@@ -401,12 +387,12 @@ const CommentsPage = () => {
 
             {editMode ? (
               <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
-                <CommentButton onClick={handleSaveEdit}>Spara ändring</CommentButton>
-                <CommentButton onClick={handleCancelEdit}>Avbryt</CommentButton>
+                <CommentButton onClick={handleSaveEdit}>Save changes</CommentButton>
+                <CommentButton onClick={handleCancelEdit}>Cancel</CommentButton>
               </div>
             ) : (
               <div style={{ marginTop: '6px' }}>
-                <CommentButton onClick={handleCommentSubmit}>Skicka kommentar</CommentButton>
+                <CommentButton onClick={handleCommentSubmit}>Submit comment</CommentButton>
               </div>
             )}
           </>
@@ -418,7 +404,7 @@ const CommentsPage = () => {
               <p>{comment.text}</p>
               <p>{comment.timestamp}</p>
               <DeleteButton onClick={() => handleDelete(comment.id)}>X</DeleteButton>
-              <button onClick={() => handleEdit(comment.id)}>Redigera</button>
+              <button onClick={() => handleEdit(comment.id)}>Edit</button>
               <Signature>{comment.signature}</Signature>
             </CommentItem>
           ))}
@@ -430,19 +416,19 @@ const CommentsPage = () => {
             disabled={currentPage === 1}
           >
             <FaArrowLeft />
-            Föregående
+            Previous
           </PageButton>
           <PageButton
             onClick={() => setCurrentPage((prev) => prev + 1)}
             disabled={currentPage === totalPages}
           >
-            Nästa
+            Next
             <FaArrowRight />
           </PageButton>
         </PageButtonContainer>
 
         <PageInfo>
-          Sida {currentPage} av {totalPages}
+          Page {currentPage} of {totalPages}
         </PageInfo>
       </PageContainer>
     </>
