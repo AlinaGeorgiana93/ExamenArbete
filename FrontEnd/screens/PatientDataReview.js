@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 // GlobalStyle will be applied to the whole page to adjust the background
 const GlobalStyle = createGlobalStyle`
- {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -14,56 +14,87 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const ReviewContainer = styled.div`
-    background-color: #F1F0E8;
+  background-color: #F1F0E8;
   font-family: 'Poppins', sans-serif;
-  padding: 30px;
+  padding: 20px; /* Reduced padding */
   border-radius: 16px;
-  width: 90%; /* Full width container */
+  width: 90%;
+  max-width: 600px; /* Limit max width on large screens */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  margin: 40px auto; /* Increased margin for more space around the container */
+  margin: 40px auto;
 
   h2 {
-    font-size: 2.9rem; /* Larger font size for the header */
+    font-size: 1.8rem; /* Smaller header font size */
+    margin-bottom: 20px;
+    color: #125358;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    margin: 20px auto;
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
   }
 `;
 
 const DataItem = styled.div`
-  margin-bottom: 15px;
-  padding: 15px;
+  margin-bottom: 12px;
+  padding: 12px;
   background-color: #f5f5f5;
   border-radius: 8px;
-  font-size: 1.8rem; /* Larger text for DataItem */
+  font-size: 1.1rem; /* More balanced text size */
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    padding: 10px;
+  }
 `;
 
 const Label = styled.span`
   font-weight: bold;
   color: #125358;
-  font-size: 1.9rem; /* Larger font size for label */
+  font-size: 1.2rem;
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const Value = styled.span`
-  margin-left: 10px;
-  font-size: 1.8rem; /* Larger font size for value */
+  margin-left: 8px;
+  font-size: 1.1rem;
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 15px;
-  margin-top: 30px;
+  gap: 12px;
+  margin-top: 25px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 10px;
+  }
 `;
 
 const Button = styled.button`
-  padding: 12px 24px;
+  padding: 10px 18px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: bold;
   flex: 1;
-  font-size: 1.2rem; /* Larger font size for buttons */
+  font-size: 1rem;
   transition: all 0.3s ease;
 
   &:first-child {
-    background-color:  rgb(40, 136, 155);
+    background-color: rgb(40, 136, 155);
     color: white;
 
     &:hover {
@@ -80,6 +111,7 @@ const Button = styled.button`
     }
   }
 `;
+
 
 function PatientDataReview() {
   const { t } = useTranslation();

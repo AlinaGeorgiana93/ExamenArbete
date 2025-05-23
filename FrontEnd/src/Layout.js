@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import Navigation from '../Navigation';
-import logo1 from './logo1.png'; // Make sure the path is correct
+import Navigation from './Navigation';
+import logo1 from './media/logo1.png'; // Make sure the path is correct
 
 const LogoContainer = styled.div`
   position: absolute;

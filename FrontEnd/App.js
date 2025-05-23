@@ -12,7 +12,7 @@ import CommentsPage from './screens/CommentsPage.js';
 import PatientDataReview from './screens/PatientDataReview';
 import { store } from './language/store/store';
 import './language/i18n.js';
-import Layout from './src/media/Layout.js';
+import Layout from './src/Layout.js';
 import AboutUs from './screens/AboutUs';
 
 function App() {

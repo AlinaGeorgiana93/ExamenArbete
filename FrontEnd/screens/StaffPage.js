@@ -3,9 +3,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import logo1 from '../src/media/logo1.png';
-import patient1 from '../src/media/patient1.jpg';
-
+import patientsImage from '../src/media/patients.png';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -59,6 +57,16 @@ const DropdownWrapper = styled.div`
     font-size: 0.9rem;
   }
 `;
+const Patients = styled.img`
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 25px auto;
+  display: block;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+`;
+
 
 const Dropdown = styled.select`
   padding: 14px 16px;
@@ -117,8 +125,9 @@ const StaffPage = () => {
   return (
     <>
       <GlobalStyle />
+          <Patients src={patientsImage} alt="Patients" />
       <StaffPageContainer>
-
+       
         <Title>{t('choose_patient')}</Title>
 
         <DropdownWrapper>

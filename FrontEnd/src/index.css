@@ -1,53 +1,85 @@
 /* Apply a background color and some padding */
 body {
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    color: black;
-    position: relative;
-    padding: 20px 0;
-    width: 100vw;
-    overflow-x: hidden;
- background: linear-gradient(135deg,rgb(85, 109, 245),rgb(128, 208, 206),rgb(156, 220, 252),rgb(188, 235, 255));
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px 0;
+  width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  color: black;
+  background: linear-gradient(135deg, rgb(85, 109, 245), rgb(128, 208, 206), rgb(156, 220, 252), rgb(188, 235, 255));
   background-size: 300% 300%;
   animation: softBlueWave 18s ease infinite;
+  box-sizing: border-box;
 }
 
+/* Ensure direct child adapts */
+.page-container {
+  flex: 1 1 auto;
+}
 
 @keyframes softBlueWave {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
-
-/* Style the heading with some color */
-h1 {
-  color: #156ba0;
-  /* Green color for the header */
-  font-size: 2.5em;
-  margin-bottom: 20px;
+/* Tablets and smaller laptops */
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 2rem;
+  }
+  p {
+    font-size: 1rem;
+  }
+  .page-container {
+    width: 95%;
+  }
 }
 
-/* Style the paragraph text */
+/* Mobile phones */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  p {
+    font-size: 0.9rem;
+  }
+  body {
+    padding: 10px 0;
+  }
+  .page-container {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .page-container .logo {
+    width: 70px;
+    top: 5px;
+    right: 5px;
+  }
+}
+
+
+h1 {
+  color: #156ba0;
+  font-size: 2.5rem; /* instead of px */
+  margin-bottom: 1.25rem;
+}
+
 p {
   color: #555;
-  /* Darker text color for the paragraph */
-  font-size: 1.2em;
+  font-size: 1.2rem;
   line-height: 1.5;
 }
 
+
 .page-container .logo {
   position: absolute;
-  /* Position the logo absolutely */
   top: 10px;
-  /* Distance from the top of the page */
   right: 10px;
-  /* Distance from the right of the page */
-  width: 100px;
-  /* Adjust the size as needed */
-  height: auto;
-  /* Maintain the aspect ratio */
+  max-width: 100px;  /* max-width for scaling */
+  height: auto;      /* maintain aspect ratio */
 }
 
 
