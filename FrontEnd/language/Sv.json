@@ -148,6 +148,16 @@
   "profile_info": "Profilinformation",
   "password_change_failed": "Lösenordsändring misslyckades.",
   "profile_updated": "Profilen uppdaterades.",
-  "password_changed": "Lösenordet har ändrats."
-
+  "password_changed": "Lösenordet har ändrats.",
+ "manageCategories": "Hantera kategorier",
+  "moodKind": "Humör",
+  "activityLevel": "Aktivitetsnivå",
+  "appetiteLevel": "Aptit",
+  "sleepLevel": "Sömn",
+  "create": "Skapa",
+  "categoryName": "Kategorinamn",
+  "name": "Namn",
+   "label": "Etikett",
+  "categories": "Kategorier",
+  "add": "Lägg till"
 }

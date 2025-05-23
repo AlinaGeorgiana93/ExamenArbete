@@ -139,6 +139,7 @@ namespace AppWebApi.Controllers
             try
             {
                 var idArg = Guid.Parse(id);
+                
 
                 _logger.LogInformation($"{nameof(UpdateItem)}: {nameof(idArg)}: {idArg}");
 
@@ -151,8 +152,8 @@ namespace AppWebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
+                    _logger.LogError(ex, $"{nameof(UpdateItem)} failed: {ex.Message}");
+                    return BadRequest($"Could not update. Error: {ex.Message}");
             }
         }
         [HttpPost()]

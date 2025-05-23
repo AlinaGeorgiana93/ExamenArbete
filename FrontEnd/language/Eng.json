@@ -147,7 +147,10 @@
   "appetiteLevel": "Appetite",
   "sleepLevel": "Sleep",
   "create": "Create",
-  "categoryName": "Category Name"
-  
+  "categoryName": "Category Name",
+  "name": "Name",
+  "label": "Label",
+  "categories": "Categories"
+ 
 
 }

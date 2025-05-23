@@ -365,7 +365,7 @@ const AdminDashboard = () => {
           const newBackendErrors = {};
 
           if (msg.includes('username')) newBackendErrors.username = data.message;
-          
+
 
           if (Object.keys(newBackendErrors).length > 0) {
             setBackendFieldErrors(newBackendErrors);
@@ -525,16 +525,16 @@ const AdminDashboard = () => {
             <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
               {t('staff')}
             </TabButton>
-             <Button onClick={() =>{
-          console.log("Opening Category Modal");
-          setShowCategoryModal(true);
-        }}>
-            {t('ManageCategory')}
-            
+            <Button onClick={() => {
+              console.log("Opening Category Modal");
+              setShowCategoryModal(true);
+            }}>
+              {t('categories')}
+
             </Button>
           </ButtonWrapper>
-         
-          
+
+
         </Tabs>
         <MainWrapper>
           <SelectContainer>
@@ -578,7 +578,7 @@ const AdminDashboard = () => {
                 }),
               }}
             />
-            
+
           </SelectContainer>
 
           <DetailsModal
@@ -725,17 +725,17 @@ const AdminDashboard = () => {
                 </>
               )}
 
-          <div>      
-        {showCategoryModal && (
-          <CategoryModal
-            onClose={() => setShowCategoryModal(false)}
-            initialType="moodKind"
-          />
-        )}
-        </div>      
+              <div>
+                {showCategoryModal && (
+                  <CategoryModal
+                    onClose={() => setShowCategoryModal(false)}
+                    initialType="moodKind"
+                  />
+                )}
+              </div>
 
               <Button type="submit" active="true">
-                {isLoading ? t('loading') : t('Add')}
+                {isLoading ? t('loading') : t('add')}
               </Button>
             </Form>
           )}

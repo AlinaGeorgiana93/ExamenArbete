@@ -135,6 +135,21 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
   const [editingId, setEditingId] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const token = localStorage.getItem('jwtToken');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+const openEditModal = (item) => {
+  setEditingId(item.id);
+  setFormValues(item);
+  setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  setIsModalOpen(false);
+  setEditingId(null);
+  resetForm();
+};
+
 
   
 const getItemId = (item) => {
@@ -159,17 +174,24 @@ const getItemId = (item) => {
     setFieldErrors({});
   };
 
-  const fetchItems = async () => {
-    try {
-      const response = await axios.get(
-        `https://localhost:7066/api/${types[activeType]}/ReadItems`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setItems(response.data.pageItems || []);
-    } catch (err) {
-      console.error(`Failed to fetch ${activeType}:`, err);
-    }
-  };
+const fetchItems = async () => {
+  console.log(`🔄 Fetching items for type: ${activeType} with token:`, token);
+
+  try {
+    const response = await axios.get(
+      `https://localhost:7066/api/${types[activeType]}/ReadItems`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    console.log(`✅ Fetched items response for ${activeType}:`, response.data);
+
+    setItems(response.data.pageItems || []);
+    console.log(`📦 Set items state with ${ (response.data.pageItems || []).length } items`);
+  } catch (err) {
+    console.error(`❌ Failed to fetch ${activeType}:`, err.response?.data || err.message || err);
+  }
+};
+
 
   // Simple validation for name, rating, label
   const validate = () => {
@@ -187,39 +209,93 @@ const getItemId = (item) => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    const endpoint = editingId ? `UpdateItem/${editingId}` : 'CreateItem';
-
-    try {
-      await axios[editingId ? 'put' : 'post'](
-  `https://localhost:7066/api/${types[activeType]}/${editingId ? `UpdateItem/${editingId}` : 'CreateItem'}`,
-  {
-    ...(editingId ? { [`${types[activeType][0].toLowerCase()}${types[activeType].slice(1)}Id`]: editingId } : {}),
-    name: formValues.name,
-    rating: parseInt(formValues.rating),
-    label: formValues.label,
-  },
-  { headers: { Authorization: `Bearer ${token}` } }
-);
-      resetForm();
-      fetchItems();
-    } catch (err) {
-      console.error('Error submitting form:', err);
-    }
-  };
-
- const handleEdit = (item) => {
-  setFormValues({
-    name: item.name,
-    rating: item.rating.toString(),
-    label: item.label,
-  });
-  setEditingId(getItemId(item)); // 👈 use normalized ID
-  setFieldErrors({});
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (editingId) {
+    await handleUpdate(e);
+  } else {
+    await handleCreate();
+  }
 };
+
+const handleCreate = async () => {
+  if (!validate()) {
+    console.log('❌ Validation failed');
+    return;
+  }
+  try {
+    const response = await axios.post(
+      `https://localhost:7066/api/${types[activeType]}/CreateItem`,
+      formValues,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    console.log('✅ Create response:', response.data);
+    await fetchItems(); // wait to refresh list
+    resetForm(); // reset after fetch success
+  } catch (err) {
+    console.error('❌ Error creating item:', err.response?.data || err.message);
+  }
+};
+
+const startEditing = (item) => {
+   console.log('✏️ Edit clicked for item:', item);
+  const id = getItemId(item);
+  console.log('Extracted ID for editing:', id);
+  console.log('Starting to edit item:', item); // Debug log
+  setFormValues({
+    name: item.name || '',
+    rating: item.rating || '',
+    label: item.label || '',
+  });
+  setEditingId(getItemId(item));
+};
+
+const handleUpdate = async () => {
+  console.log('Updating:', editingId, formValues);
+
+  if (!validate()) {
+    console.warn('Validation failed');
+    return;
+  }
+  console.log("Validation result:", validate());
+
+
+  try {
+    const response = await axios.put(
+      `https://localhost:7066/api/${types[activeType]}/UpdateItem/${editingId}`,
+      {
+        ...formValues,
+        [`${types[activeType].toLowerCase()}Id`]: editingId, // e.g., staffId or patientId
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    console.log('Update success:', response.data);
+
+    // ✅ Save new token if provided
+    const newToken = response?.data?.Item?.Token;
+    if (newToken) {
+      localStorage.setItem('jwtToken', newToken);
+    }
+    await fetchItems();
+
+        setSuccessMessage(`${t(type.toLowerCase())} updated successfully.`);
+    setShowSuccessMessage(true);
+
+    setTimeout(() => {
+  setShowSuccessMessage(false);
+  setSuccessMessage('');
+}, 2000);
+
+
+    resetForm();
+    closeModal();
+  } catch (err) {
+    console.error('Update failed:', err);
+  }
+};
+
+
 
 
   const handleDelete = async (id) => {
@@ -228,6 +304,7 @@ const getItemId = (item) => {
         `https://localhost:7066/api/${types[activeType]}/DeleteItem/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      
       if (editingId === id) resetForm();
       fetchItems();
     } catch (err) {
@@ -285,9 +362,10 @@ const getItemId = (item) => {
                 <small>{t('Rating')}: {item.rating} | {t('Label')}: {item.label}</small>
               </div>
               <div>
-                <button onClick={() => handleEdit(item)} style={{ marginRight: 8 }}>
+                <button onClick={() => startEditing(item)} style={{ marginRight: 8 }}>
                   {t('edit')}
                 </button>
+
                 <button onClick={() => handleDelete(getItemId(item))} style={{ color: 'red' }}>
                   {t('delete')}
                 </button>
@@ -341,18 +419,23 @@ const getItemId = (item) => {
           </InputGroup>
 
           <ButtonGroup>
-            <Button type="submit">{editingId ? t('update') : t('add')}</Button>
-            {editingId && (
-              <ButtonDelete
-                type="button"
-                onClick={() => {
-                  resetForm();
-                }}
-              >
-                {t('cancel')}
-              </ButtonDelete>
-            )}
-          </ButtonGroup>
+  <Button onClick={handleUpdate}>{t('update')}</Button>
+  <Button onClick={handleCreate}>{t('create')}</Button>
+  {editingId && (
+    <ButtonDelete
+      type="button"
+      onClick={() => {
+        resetForm();
+      }}
+    >
+      {t('cancel')}
+    </ButtonDelete>
+     
+
+
+  )}
+</ButtonGroup>
+
         </form>
       </ModalContent>
     </ModalContainer>
