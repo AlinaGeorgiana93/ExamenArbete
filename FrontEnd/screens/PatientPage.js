@@ -270,6 +270,7 @@ function PatientPage() {
         </PatientHeader>
 
         <PatientPageContainer>
+          {/* MoodKind */}
           <FormGroup>
             <label htmlFor="moodkind-select">{t('select_moodkind')}</label>
             <Dropdown
@@ -280,12 +281,13 @@ function PatientPage() {
               <option value="">{t('choose_moodkind')}</option>
               {sortedMoodKinds.map((mood) => (
                 <option key={mood.moodKindId} value={mood.moodKindId}>
-                  {mood.label} {mood.rating}
+                  {t(`moodkinds.${mood.name}`)} ({mood.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
 
+          {/* ActivityLevel */}
           <FormGroup>
             <label htmlFor="activitylevel-select">{t('select_activitylevel')}</label>
             <Dropdown
@@ -296,12 +298,13 @@ function PatientPage() {
               <option value="">{t('choose_activitylevel')}</option>
               {sortedActivityLevels.map((activity) => (
                 <option key={activity.activityLevelId} value={activity.activityLevelId}>
-                  {activity.label} {activity.rating}
+                  {t(`activities.${activity.name}`)} ({activity.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
 
+          {/* AppetiteLevel */}
           <FormGroup>
             <label htmlFor="appetitelevel-select">{t('select_appetitelevel')}</label>
             <Dropdown
@@ -312,12 +315,13 @@ function PatientPage() {
               <option value="">{t('choose_appetitelevel')}</option>
               {sortedAppetiteLevels.map((appetite) => (
                 <option key={appetite.appetiteLevelId} value={appetite.appetiteLevelId}>
-                  {appetite.label} {appetite.rating}
+                  {t(`appetitelevels.${appetite.name}`)} ({appetite.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
 
+          {/* SleepLevel */}
           <FormGroup>
             <label htmlFor="sleeplevel-select">{t('select_sleeplevel')}</label>
             <Dropdown
@@ -328,11 +332,12 @@ function PatientPage() {
               <option value="">{t('choose_sleeplevel')}</option>
               {sortedSleepLevels.map((sleep) => (
                 <option key={sleep.sleepLevelId} value={sleep.sleepLevelId}>
-                  {sleep.label} {sleep.rating}
+                  {t(`sleeplevels.${sleep.name}`)} ({sleep.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
+
 
           <ButtonsContainer>
             <Button onClick={handleSave}>{t('save_button')}</Button>
