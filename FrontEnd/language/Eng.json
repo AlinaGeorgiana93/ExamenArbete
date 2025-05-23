@@ -156,6 +156,38 @@
   "page_Of": "Page of",
   "next": "Next",
   "comments": "Comments",
+  "ratings": "Ratings",
   "Add_a_comment_for": "Add a comment for ",
-  "Add_Or_View_Comments": "Add or view comments"
+  "Add_Or_View_Comments": "Add or view comments",
+  "Date_Recorded": "Date Recorded",
+  "activities": {
+    "Resting": "Resting 🛌",
+    "Reading": "Reading 📖",
+    "Take a Walk": "Taking a walk 🚶‍♂️",
+    "Jogging": "Jogging 🏃‍♂️",
+    "Swimming": "Swimming 🏊‍♂️",
+    "Training": "Training 🏋️‍♂️"
+  },
+  "moodkinds": {
+    "Happy": "Happy 😃",
+    "Sad": "Sad 🙁",
+    "Angry": "Angry 😡",
+    "Lovely": "Lovely 😍",
+    "Depressed": "Depressed 😢",
+    "Excited": "Excited 🤩",
+    "Bored": "Bored 😒"
+  },
+  "sleeplevels": {
+    "Low": "Low Sleep Level 🙁",
+    "Medium": "Medium Sleep Level 😐",
+    "OK": "OK Sleep Level 🙂",
+    "Too much": "Too much Sleep Level 😃"
+  },
+  "appetitelevels": {
+    "Didn't Eat At All": "Didn't Eat At All 🤢",
+    "Little": "Little 🍽️",
+    "Normal": "Normal Appetite 🙂",
+    "Medium": "Medium 😋",
+    "Very Much": "Very Much 🍴"
+  }
 }
