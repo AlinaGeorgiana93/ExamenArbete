@@ -30,12 +30,12 @@ const GlobalStyle = createGlobalStyle`
 // Update the GraphContainer styled component
 const GraphContainer = styled.div`
   background-color: #ffffffee;
-  padding: 30px;
+  padding: 20px;  // Reduced from 30px
   border-radius: 16px;
-  max-width: 1200px;  // Increased from 1000px
-  width: 95%;  // Changed from 100%
+  max-width: 1200px;
+  width: 95%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  margin: 20px auto;
+  margin: 10px auto;  // Reduced vertical margin from 20px
   transition: all 0.3s ease;
   
   &:hover {
@@ -46,21 +46,21 @@ const GraphContainer = styled.div`
   /* Tablet (481px – 1024px) */
   @media (min-width: 481px) and (max-width: 1024px) {
     width: 98%;
-    padding: 25px;
+    padding: 15px;  // Reduced from 25px
   }
 
   /* Desktop (1025px and up) */
   @media (min-width: 1025px) {
     width: 90%;
-     padding: 25px 40px;  // reduce vertical
-    max-width: 1300px;  // Increased from 1100px
+    padding: 15px 20px;  // Reduced vertical padding (first value)
+    max-width: 1100px;  // Consider reducing if needed
   }
 
   /* Mobile (320px – 480px) */
   @media (max-width: 480px) {
     width: 98%;
-    padding: 15px;
-    margin: 10px auto;
+    padding: 10px;  // Reduced from 15px
+    margin: 5px auto;  // Reduced from 10px
     border-radius: 12px;
   }
 `;
@@ -208,12 +208,12 @@ const TimeRangeButton = styled.button`
 const ChartWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 500px;
+  height: 400px;
   transition: all 0.3s ease;
   
   /* Desktop */
   @media (min-width: 1025px) {
-    height: 600px;  // Increased from 550px
+    height: 450px;  // Increased from 550px
   }
   
   /* Tablet */
@@ -808,8 +808,8 @@ case 'pie':
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            marginBottom: '20px',
-            padding: '15px',
+            marginBottom: '10px',
+            padding: '10px',
             backgroundColor: '#f5f5f5',
             borderRadius: '8px',
           }}>
@@ -842,7 +842,7 @@ case 'pie':
           marginBottom: '20px',
           backgroundColor: '#f8f8f8',
         }}>
-          <h3 style={{ marginBottom: '15px', color: '#125358' }}>Select Metrics to Display</h3>
+          <h3 style={{ marginBottom: '10px',padding: '15px', color: '#125358' }}>Select Metrics to Display</h3>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
