@@ -199,32 +199,33 @@ namespace AppWebApi.Controllers
 
 
 
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Policy = null, Roles = " sysadmin")]
-        [HttpPost()]
-        [ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
-        [ProducesResponseType(400, Type = typeof(string))]
-        public async Task<IActionResult> CreateItem([FromBody] StaffCuDto item)
-        {
-           
-            try
-            {                
-                _logger.LogInformation($"{nameof(CreateItem)}:");
+  [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Policy = null, Roles = "sysadmin")]
+[HttpPost()]
+[ProducesResponseType(200, Type = typeof(ResponseItemDto<IStaff>))]
+[ProducesResponseType(400, Type = typeof(string))]
+public async Task<IActionResult> CreateItem([FromBody] StaffCuDto item)
+{
+    try
+    {                
+        _logger.LogInformation($"{nameof(CreateItem)}:");
 
-                var _item = await _service.CreateStaffAsync(item);
-                _logger.LogInformation($"item {_item.Item.StaffId} created");
+        var _item = await _service.CreateStaffAsync(item);
+        _logger.LogInformation($"item {_item.Item.StaffId} created");
 
-                if (string.IsNullOrWhiteSpace(item.Password))
-              throw new ArgumentException("Password is required.");
+        if (string.IsNullOrWhiteSpace(item.Password))
+            throw new ArgumentException("Password is required.");
 
-                return Ok(_item);
-            }
-                catch (Exception ex)
+        return Ok(_item);
+    }
+    catch (Exception ex)
     {
         _logger.LogError(ex, $"{nameof(CreateItem)} failed: {ex.Message}");
-        return BadRequest($"Could not create. Error: {ex.Message}");
+        // Return JSON object instead of string:
+        return BadRequest(new { message = ex.Message });
     }
-            }
+}
+
     }
 
 }

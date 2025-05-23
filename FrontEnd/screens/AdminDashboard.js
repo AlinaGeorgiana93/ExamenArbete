@@ -10,6 +10,8 @@ import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
 import InputValidationUtils from '../src/InputValidationUtils.js';
 import { FaInfoCircle } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
+
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -162,29 +164,7 @@ const Button = styled.button`
     background: #8ACCD5;
   }
 `;
-const FloatingProfile = styled.div`
-  position: fixed;
-  bottom: 50px;
-  right: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 1000;
-`;
 
-const ProfileHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const ProfileDetails = styled.div`
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #333;
-`;
 
 
 const AdminDashboard = () => {
@@ -214,6 +194,7 @@ const AdminDashboard = () => {
   const [userEmail, setUserEmail] = useState('');
   const [personalNumber, setPersonalNumber] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const [backendFieldErrors, setBackendFieldErrors] = useState({});
   const [fieldErrors, setFieldErrors] = useState({
     firstName: '',
     lastName: '',
@@ -370,15 +351,39 @@ const AdminDashboard = () => {
       } else {
         fetchPatients();
       }
+
     } catch (error) {
-      console.error('Error during submission:', error.response || error.message); // Log the error for debugging
-      setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
-      setShowSuccessMessage(true);
+      console.error('Error during submission:', error.response || error.message);
+
+      if (error.response) {
+        const { status, data } = error.response;
+
+        if (status === 400 && data.message) {
+          const msg = data.message.toLowerCase();
+          const newBackendErrors = {};
+
+          if (msg.includes('username')) newBackendErrors.username = data.message;
+          
+
+          if (Object.keys(newBackendErrors).length > 0) {
+            setBackendFieldErrors(newBackendErrors);
+          } else {
+            setSuccessMessage(data.message);
+            setShowSuccessMessage(true);
+          }
+        } else {
+          setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
+          setShowSuccessMessage(true);
+        }
+      } else {
+        setSuccessMessage('Failed to connect to the server.');
+        setShowSuccessMessage(true);
+      }
+
     } finally {
-      setIsLoading(false);  // stop loading after submission
+      setIsLoading(false);
     }
   };
-
 
   const handleDelete = async (personId) => {
     try {
@@ -667,6 +672,7 @@ const AdminDashboard = () => {
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   />
                   {fieldErrors.username && <div style={{ color: 'red' }}>{fieldErrors.username}</div>}
+                  {backendFieldErrors.username && <div style={{ color: 'red' }}>{backendFieldErrors.username}</div>}
 
                   {/* Email Field */}
                   <Input
@@ -676,7 +682,6 @@ const AdminDashboard = () => {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   />
                   {fieldErrors.email && <div style={{ color: 'red' }}>{fieldErrors.email}</div>}
-
                   {/* Password Field */}
                   <>
                     {/* Password Field */}

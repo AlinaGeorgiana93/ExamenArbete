@@ -27,7 +27,7 @@ namespace Utils
             if (name.Length < 2)
                 return false;
 
-            return Regex.IsMatch(name, @"^[A-Za-zÀ-ÖØ-öø-ÿ]+$"); // Supports international characters
+            return Regex.IsMatch(name, @"^[A-Za-zÀ-ÖØ-öø-ÿ]+$" ); // Supports international characters
         }
 
         // Validate username (at least 4 characters, letters, digits, underscores)
