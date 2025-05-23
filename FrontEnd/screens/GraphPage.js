@@ -52,7 +52,7 @@ const GraphContainer = styled.div`
   /* Desktop (1025px and up) */
   @media (min-width: 1025px) {
     width: 90%;
-    padding: 40px;
+     padding: 25px 40px;  // reduce vertical
     max-width: 1300px;  // Increased from 1100px
   }
 
@@ -147,6 +147,27 @@ const MetricToggle = styled.label`
   }
 `;
 
+const TimePeriodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  // Changed from flex-start to center
+  padding: 0 15px;
+  gap: 20px;
+  min-width: 120px;  // Changed from width to min-width
+  max-width: 150px;  // Added max-width
+  
+  @media (max-width: 480px) {
+    flex-direction: row;
+    width: 100%;
+    min-width: auto;
+    max-width: 100%;
+    padding: 15px 0 0 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+`;
+
 const TimeRangeButton = styled.button`
   padding: 8px 16px;
   border: none;
@@ -158,23 +179,28 @@ const TimeRangeButton = styled.button`
   transition: all 0.3s ease;
   text-align: center;
   white-space: nowrap;
+  width: 100%;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: ${props => props.active ? '#0e4246' : '#d0d0d0'};
   }
 
-  /* Desktop (1025px and up) */
   @media (min-width: 1025px) {
     padding: 10px 20px;
     font-size: 15px;
   }
 
-  /* Mobile (320px – 480px) */
   @media (max-width: 480px) {
     padding: 6px 12px;
     font-size: 12px;
     border-radius: 15px;
     width: auto;
+    flex: 1;
+    min-width: 80px;
   }
 `;
 
@@ -208,24 +234,6 @@ const ChartWrapper = styled.div`
   
   &:hover .recharts-wrapper {
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-  }
-`;
-
-
-const TimePeriodContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0 15px;
-  gap: 10px;
-  width: 120px;
-  
-  @media (max-width: 480px) {
-    flex-direction: row;
-    width: 100%;
-    padding: 15px 0 0 0;
-    justify-content: center;
   }
 `;
 
@@ -483,10 +491,10 @@ function GraphPage() {
       );
     }
 
-    const commonProps = {
-      data: processedData,
-      margin: { top: 20, right: 30, left: 20, bottom: 60 }
-    };
+ const commonProps = {
+  data: processedData,
+  margin: { top: 20, right: 30, left: 20, bottom: 80 } // Increased bottom margin
+};
 
     const tooltipStyle = {
       background: 'rgba(255, 255, 255, 0.96)',
@@ -500,114 +508,213 @@ function GraphPage() {
     switch (chartType) {
       case 'bar':
         return (
-          <BarChart {...commonProps}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-            <XAxis
-              dataKey="date"
-              tick={{ fill: '#555' }}
-              tickFormatter={(value) => formatDateLabel(value, timeRange)}
-            />
-            <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
-            <Tooltip
-              contentStyle={tooltipStyle}
-              labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            {metrics.map(metric =>
-              activeMetrics[metric.key] && (
-                <Bar
-                  key={metric.key}
-                  dataKey={metric.key}
-                  name={metric.name}
-                  fill={metric.color}
-                  radius={[4, 4, 0, 0]}
-                  animationDuration={1500}
-                />
-              )
-            )}
-          </BarChart>
+<BarChart {...commonProps}>
+  <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
+  <XAxis
+    dataKey="date"
+    tick={{ fill: '#555' }}
+    tickFormatter={(value) => formatDateLabel(value, timeRange)}
+  />
+  <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
+  <Tooltip
+    contentStyle={tooltipStyle}
+    labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
+  />
+  <Legend 
+    wrapperStyle={{ 
+      paddingTop: '20px',
+      whiteSpace: 'nowrap',
+      width: '100%',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }}
+    layout="horizontal"
+    verticalAlign="bottom"
+    align="center"
+    formatter={(value) => (
+      <span style={{ 
+        display: 'inline-block',
+        margin: '0 5px',
+        fontSize: '13px'
+      }}>
+        {value}
+      </span>
+    )}
+  />
+  {metrics.map(metric =>
+    activeMetrics[metric.key] && (
+      <Bar
+        key={metric.key}
+        dataKey={metric.key}
+        name={metric.name}
+        fill={metric.color}
+        radius={[4, 4, 0, 0]}
+        animationDuration={1500}
+      />
+    )
+  )}
+</BarChart>
         );
 
       case 'line':
         return (
           <LineChart {...commonProps}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-            <XAxis
-              dataKey="date"
-              tick={{ fill: '#555' }}
-              tickFormatter={(value) => formatDateLabel(value, timeRange)}
-            />
-            <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
-            <Tooltip
-              contentStyle={tooltipStyle}
-              labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            {metrics.map(metric => (
-              activeMetrics[metric.key] && (
-                <Line
-                  key={metric.key}
-                  type="monotone"
-                  dataKey={metric.key}
-                  name={metric.name}
-                  stroke={metric.color}
-                  strokeWidth={3}
-                  activeDot={{ r: 8 }}
-                  dot={{ r: 4 }}
-                  animationDuration={1500}
-                />
-              )
-            ))}
-          </LineChart>
+  <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+  <XAxis
+    dataKey="date"
+    tick={{ fill: '#555' }}
+    tickFormatter={(value) => formatDateLabel(value, timeRange)}
+  />
+  <YAxis domain={[0, 10]} tick={{ fill: '#555' }} />
+  <Tooltip
+    contentStyle={tooltipStyle}
+    labelFormatter={(value) => formatDateLabel(value, timeRange, true)}
+  />
+  <Legend 
+    wrapperStyle={{ 
+      paddingTop: '20px',
+      whiteSpace: 'nowrap',
+      width: '100%',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }}
+    layout="horizontal"
+    verticalAlign="bottom"
+    align="center"
+    formatter={(value) => (
+      <span style={{ 
+        display: 'inline-block',
+        margin: '0 5px',
+        fontSize: '13px'
+      }}>
+        {value}
+      </span>
+    )}
+  />
+  {metrics.map(metric => (
+    activeMetrics[metric.key] && (
+      <Line
+        key={metric.key}
+        type="monotone"
+        dataKey={metric.key}
+        name={metric.name}
+        stroke={metric.color}
+        strokeWidth={3}
+        activeDot={{ r: 8 }}
+        dot={{ r: 4 }}
+        animationDuration={1500}
+      />
+    )
+  ))}
+</LineChart>
         );
 
-      case 'pie':
-        // Calculate average values for each metric
-        const pieData = metrics.map(metric => {
-          const validEntries = processedData.filter(item => item[metric.key] !== undefined);
-          const total = validEntries.reduce((sum, item) => sum + item[metric.key], 0);
-          const average = validEntries.length > 0 ? total / validEntries.length : 0;
+case 'pie':
+  const pieData = metrics
+    .filter(metric => 
+      activeMetrics[metric.key] && 
+      ['activityRating', 'moodRating', 'appetiteRating', 'sleepRating'].includes(metric.key)
+    )
+    .map(metric => {
+      const validEntries = processedData.filter(item => item[metric.key] !== undefined);
+      const total = validEntries.reduce((sum, item) => sum + item[metric.key], 0);
+      const average = validEntries.length > 0 ? total / validEntries.length : 0;
 
-          return {
-            name: metric.name,
-            value: parseFloat(average.toFixed(2)),
-            color: metric.color
-          };
-        }).filter(item => !isNaN(item.value));
+      return {
+        name: metric.name,
+        value: parseFloat(average.toFixed(2)),
+        color: metric.color
+      };
+    })
+    .filter(item => !isNaN(item.value));
 
-        // Calculate total for percentage calculation
-        const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
+  if (pieData.length === 0) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        color: '#666'
+      }}>
+        No active metrics selected for pie chart
+      </div>
+    );
+  }
+  // Calculate total for percentage calculation
+  const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
 
-        return (
-          <PieChart {...commonProps}>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              outerRadius={150}
-              fill="#8884d8"
-              dataKey="value"
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              labelLine={false}
-            >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={tooltipStyle}
-              formatter={(value, name, props) => {
-                const percentage = totalValue > 0 ? (value / totalValue * 100).toFixed(2) : 0;
-                return [
-                  `${name}: ${value}`,
-                  `Percentage: ${percentage}%`
-                ];
-              }}
-            />
-            <Legend />
-          </PieChart>
-        );
-
+  return (
+    
+   <PieChart 
+      {...commonProps} 
+      margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+    >
+      <Pie
+        data={pieData}
+        cx="50%"
+        cy="50%"
+        outerRadius={window.innerWidth < 480 ? 130 : 160}
+        innerRadius={window.innerWidth < 480 ? 50 : 80}
+        dataKey="value"
+        label={({
+          cx, cy, midAngle, innerRadius, outerRadius, percent, index
+        }) => {
+          const RADIAN = Math.PI / 180;
+          // Position for percentage (middle of the slice)
+          const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+          const x = cx + radius * Math.cos(-midAngle * RADIAN);
+          const y = cy + radius * Math.sin(-midAngle * RADIAN);
+          
+          // Position for metric name (inner space)
+          const labelRadius = innerRadius * 0.7;
+          const labelX = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+          const labelY = cy + labelRadius * Math.sin(-midAngle * RADIAN);
+          
+          return (
+            <g>
+              {/* Metric name (inner circle) - now using slice color */}
+              <text
+                x={labelX}
+                y={labelY}
+                fill={pieData[index].color} // Changed to use slice color
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={window.innerWidth < 480 ? 10 : 12}
+                fontWeight="bold"
+              >
+                {pieData[index].name}
+              </text>
+              {/* Percentage value (middle of slice) */}
+              <text
+                x={x}
+                y={y}
+                fill="white"
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={window.innerWidth < 480 ? 10 : 12}
+                fontWeight="bold"
+              >
+                {`${(percent * 100).toFixed(0)}%`}
+              </text>
+            </g>
+          );
+        }}
+        labelLine={false}
+      >
+        {pieData.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={entry.color} />
+        ))}
+      </Pie>
+      <Tooltip
+        contentStyle={tooltipStyle}
+        formatter={(value, name) => [
+          `${value.toFixed(2)} (average)`,
+          name
+        ]}
+      />
+    </PieChart>
+  );
       default:
         return (
           <ComposedChart {...commonProps}>
@@ -718,12 +825,12 @@ function GraphPage() {
               }}
             />
             <div>
-              <h2 style={{ margin: 0, color: '#125358' }}>
+              <h2 style={{ margin: 0, color: '#125358', fontWeight: "bold", fontSize: "24px",}}>
                 {patientInfo.firstName} {patientInfo.lastName}
               </h2>
-              <p style={{ margin: '5px 0 0 0', color: '#666' }}>
+              {/* <p style={{ margin: '5px 0 0 0', color: '#666' }}>
                 Patient ID: {patientId}
-              </p>
+              </p> */}
             </div>
           </div>
         )}
@@ -816,41 +923,32 @@ function GraphPage() {
             {renderChart()}
           </ResponsiveContainer>
 
-          <TimePeriodContainer>
-            {timeRanges.map(range => (
-              <TimeRangeButton
-                key={range.key}
-                active={timeRange === range.key}
-                onClick={() => setTimeRange(range.key)}
-                style={{ width: '100%' }}
-              >
-                {range.name}
-              </TimeRangeButton>
-            ))}
-          </TimePeriodContainer>
-
+   <TimePeriodContainer>
+  {timeRanges.map(range => (
+    <TimeRangeButton
+      key={range.key}
+      active={timeRange === range.key}
+      onClick={() => setTimeRange(range.key)}
+    >
+      {range.name}
+    </TimeRangeButton>
+  ))}
+  
+  {/* Add a separator div with some margin */}
+  <div style={{ margin: '15px 0', width: '100%', borderTop: '1px solid #ddd' }} />
+  
+  <Link 
+    to={`/comments/${patientId}`}
+    state={{ from: 'graph' }}
+    style={{ textDecoration: 'none', width: '100%' }}
+  >
+    <TimeRangeButton>
+      Comment
+    </TimeRangeButton>
+  </Link>
+</TimePeriodContainer>
         </ChartWrapper>
-        <Link
-          to={`/comments/${patientId}`}
-          state={{ from: 'graph' }}  // 👈 skickar med varifrån man kommer
-        >
-          <button style={{
-            padding: '10px 15px',
-            background: 'linear-gradient(135deg, #3B878C, #00d4ff, #1A5B61)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginTop: '20px',
-            marginBottom: '20px',
-          }}>
-            Comments
-          </button>
-        </Link>
-
-
-
-      </GraphContainer>
+        </GraphContainer>
     </>
   );
 }
