@@ -106,7 +106,7 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
-    localStorage.removeItem('role');
+    localStorage.removeItem(t('role'));
     setLogoutMessage(t('logout_success'));
 
     setTimeout(() => {
@@ -118,38 +118,38 @@ const Navigation = ({ showGraphLink = false, patientId = null }) => {
   return (
     <>
       <Nav>
-  {/* Left: Logout + Profile */}
-  <LeftActions>
-    <LogoutButton onClick={handleLogout} title={t('Log out')}>
-      <FaSignOutAlt size={18} />
-      {t('Log out')}
-    </LogoutButton>
+        {/* Left: Logout + Profile */}
+        <LeftActions>
+          <LogoutButton onClick={handleLogout} title={t('Log out')}>
+            <FaSignOutAlt size={18} />
+            {t('Log out')}
+          </LogoutButton>
 
-    <ProfileSection onClick={() => setShowProfile(!showProfile)}>
-      <FaRegUserCircle size={18} color="#fff" />
-      <UserNameText>{userName}</UserNameText>
-    </ProfileSection>
-  </LeftActions>
+          <ProfileSection onClick={() => setShowProfile(!showProfile)}>
+            <FaRegUserCircle size={18} color="#fff" />
+            <UserNameText>{userName}</UserNameText>
+          </ProfileSection>
+        </LeftActions>
 
-  {/* Right: Navigation Links */}
-  <NavLinks>
-    <StyledLink to="/staff">
-      <FaUsers size={18} /> {t('Patients')}
-    </StyledLink>
+        {/* Right: Navigation Links */}
+        <NavLinks>
+          <StyledLink to="/staff">
+            <FaUsers size={18} /> {t('Patients')}
+          </StyledLink>
 
-    {role === 'sysadmin' && (
-      <StyledLink to="/admin">
-        <FaUserShield size={18} /> {t('Admin')}
-      </StyledLink>
-    )}
+          {role === 'sysadmin' && (
+            <StyledLink to="/admin">
+              <FaUserShield size={18} /> {t('Admin')}
+            </StyledLink>
+          )}
 
-    {showGraphLink && patientId && (
-      <StyledLink to={`/graph/${patientId}`}>
-        <FaChartLine size={18} /> {t('Graph')}
-      </StyledLink>
-    )}
-  </NavLinks>
-</Nav>
+          {showGraphLink && patientId && (
+            <StyledLink to={`/graph/${patientId}`}>
+              <FaChartLine size={18} /> {t('Graph')}
+            </StyledLink>
+          )}
+        </NavLinks>
+      </Nav>
 
 
       {logoutMessage && <LogoutMessage>{logoutMessage}</LogoutMessage>}
