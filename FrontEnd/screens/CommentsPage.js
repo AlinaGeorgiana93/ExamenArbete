@@ -222,7 +222,7 @@ const CommentsPage = () => {
         setPatientData(response.data.item);
         setLoading(false);
       } catch (err) {
-        setError("Could not fetch patient data.");
+        setError(t("Could not fetch patient data."));
         setLoading(false);
       }
     };
@@ -231,12 +231,12 @@ const CommentsPage = () => {
 
   const handleCommentSubmit = () => {
     if (comments.trim() === '') {
-      alert("Comment cannot be empty.");
+      alert(t("Comment cannot be empty."));
       return;
     }
 
     if (signature.trim() === '') {
-      alert("Please enter your initials.");
+      alert(t("Please enter your initials."));
       return;
     }
 
