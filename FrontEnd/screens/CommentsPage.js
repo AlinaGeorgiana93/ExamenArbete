@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styled, { createGlobalStyle } from 'styled-components';
-import logo1 from '../src/media/logo1.png';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
-import Navigation from '../src/Navigation';
 import { useLocation, useNavigate } from 'react-router-dom';
+import '../language/i18n.js';
+import { useTranslation } from 'react-i18next';
+
 
 const GlobalStyle = createGlobalStyle``;
 
@@ -177,8 +178,11 @@ const Signature = styled.div`
   color: #125358;
 `;
 
+
+
 const CommentsPage = () => {
   const { patientId } = useParams();
+  const { t } = useTranslation();
   const [comments, setComments] = useState('');
   const [commentList, setCommentList] = useState([]);
   const [patientData, setPatientData] = useState(null);
@@ -193,6 +197,9 @@ const CommentsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fromPage = location.state?.from || 'patient';
+
+
+
 
   const isToday = (date) => {
     const today = new Date();
@@ -319,7 +326,7 @@ const CommentsPage = () => {
             zIndex: 2
           }}
         >
-          Back to graph
+          {t('back To Graph')}
         </Link>
       )}
 
@@ -340,7 +347,7 @@ const CommentsPage = () => {
               zIndex: 2
             }}
           >
-            Back to patient
+            {t('back To Patient')}
           </Link>
         )}
         <img
@@ -349,9 +356,9 @@ const CommentsPage = () => {
           style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }}
         />
         <Title>
-          Comments for {patientData ?
+          {t('comments For')}  {patientData ?
             <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> :
-            (error || 'No patient found')}
+            (error || t('no Patient Found'))}
         </Title>
 
         <DatePicker
@@ -366,12 +373,12 @@ const CommentsPage = () => {
             <CommentBox
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              placeholder="Write your comment here..."
+              placeholder={t('write Your Comment')}
             />
 
             <input
               type="text"
-              placeholder="Initials"
+              placeholder={t('initials')}
               value={signature}
               onChange={(e) => setSignature(e.target.value)}
               style={{
@@ -387,12 +394,12 @@ const CommentsPage = () => {
 
             {editMode ? (
               <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
-                <CommentButton onClick={handleSaveEdit}>Save changes</CommentButton>
-                <CommentButton onClick={handleCancelEdit}>Cancel</CommentButton>
+                <CommentButton onClick={handleSaveEdit}>{t('save Changes')}</CommentButton>
+                <CommentButton onClick={handleCancelEdit}>{t('cancel')}</CommentButton>
               </div>
             ) : (
               <div style={{ marginTop: '6px' }}>
-                <CommentButton onClick={handleCommentSubmit}>Submit comment</CommentButton>
+                <CommentButton onClick={handleCommentSubmit}>{t('submit Comment')}</CommentButton>
               </div>
             )}
           </>
@@ -404,7 +411,7 @@ const CommentsPage = () => {
               <p>{comment.text}</p>
               <p>{comment.timestamp}</p>
               <DeleteButton onClick={() => handleDelete(comment.id)}>X</DeleteButton>
-              <button onClick={() => handleEdit(comment.id)}>Edit</button>
+              <button onClick={() => handleEdit(comment.id)}>{t('edit')}</button>
               <Signature>{comment.signature}</Signature>
             </CommentItem>
           ))}
@@ -416,19 +423,19 @@ const CommentsPage = () => {
             disabled={currentPage === 1}
           >
             <FaArrowLeft />
-            Previous
+            {t('previous')}
           </PageButton>
           <PageButton
             onClick={() => setCurrentPage((prev) => prev + 1)}
             disabled={currentPage === totalPages}
           >
-            Next
+            {t('next')}
             <FaArrowRight />
           </PageButton>
         </PageButtonContainer>
 
         <PageInfo>
-          Page {currentPage} of {totalPages}
+          {t('page Of', { current: currentPage, total: totalPages })}
         </PageInfo>
       </PageContainer>
     </>

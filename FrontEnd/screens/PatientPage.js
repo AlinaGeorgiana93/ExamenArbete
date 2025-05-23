@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import LoadingSpinner from './LoadingSpinner';
+import '../language/i18n.js';
 
 
 
@@ -134,10 +135,13 @@ const PatientName = styled.h2`
   text-align: center;
 `;
 
+
+
 function PatientPage() {
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
+
 
   const [moodKinds, setMoodKinds] = useState([]);
   const [activityLevels, setActivityLevels] = useState([]);
@@ -333,7 +337,9 @@ function PatientPage() {
           <ButtonsContainer>
             <Button onClick={handleSave}>{t('save_button')}</Button>
             <CommentsButton to={`/comments/${patientId}`} state={{ from: 'patient' }}>
-              {patient ? `Add a comment for ${patient.firstName}` : 'Add/View Comments'}
+              {patient
+                ? t('Add a comment for', { name: patient.firstName })
+                : t('Add Or View Comments')}
             </CommentsButton>
           </ButtonsContainer>
         </PatientPageContainer>
