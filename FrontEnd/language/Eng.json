@@ -140,7 +140,14 @@
   "profile_info": "Profile info",
   "password_change_failed": "Password change failed.",
   "profile_updated":"Profile successfully updated",
-  "password_changed":"Password changed successfully."
+  "password_changed":"Password changed successfully.",
+   "manageCategories": "Manage Categories",
+  "moodKind": "Mood",
+  "activityLevel": "Activity",
+  "appetiteLevel": "Appetite",
+  "sleepLevel": "Sleep",
+  "create": "Create",
+  "categoryName": "Category Name"
   
 
 }

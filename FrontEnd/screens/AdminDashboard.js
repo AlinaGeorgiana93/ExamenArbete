@@ -10,6 +10,7 @@ import PersonalNumberUtils from '../src/PersonalNumberUtils.js';
 import InputValidationUtils from '../src/InputValidationUtils.js';
 import { FaInfoCircle } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
+import CategoryModal from '../Modals/CategoryModal';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -195,6 +196,7 @@ const AdminDashboard = () => {
   const [personalNumber, setPersonalNumber] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [backendFieldErrors, setBackendFieldErrors] = useState({});
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({
     firstName: '',
     lastName: '',
@@ -504,6 +506,7 @@ const AdminDashboard = () => {
   };
 
 
+
   return (
     <>
       <GlobalStyle />
@@ -522,7 +525,16 @@ const AdminDashboard = () => {
             <TabButton active={activeTab === 'staff'} onClick={() => setActiveTab('staff')}>
               {t('staff')}
             </TabButton>
+             <Button onClick={() =>{
+          console.log("Opening Category Modal");
+          setShowCategoryModal(true);
+        }}>
+            {t('ManageCategory')}
+            
+            </Button>
           </ButtonWrapper>
+         
+          
         </Tabs>
         <MainWrapper>
           <SelectContainer>
@@ -566,6 +578,7 @@ const AdminDashboard = () => {
                 }),
               }}
             />
+            
           </SelectContainer>
 
           <DetailsModal
@@ -711,6 +724,16 @@ const AdminDashboard = () => {
 
                 </>
               )}
+
+          <div>      
+        {showCategoryModal && (
+          <CategoryModal
+            onClose={() => setShowCategoryModal(false)}
+            initialType="moodKind"
+          />
+        )}
+        </div>      
+
               <Button type="submit" active="true">
                 {isLoading ? t('loading') : t('Add')}
               </Button>
