@@ -166,8 +166,8 @@ const TimePeriodContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding: 0 15px;
-  gap: 10px;
-  width: 120px;
+  gap: 20px;
+  width: 120px; // size of buttons
   
   @media (max-width: 480px) {
     flex-direction: row;
@@ -578,7 +578,7 @@ function GraphPage() {
           </LineChart>
         );
 
-    case 'pie':
+case 'pie':
   const pieData = metrics
     .filter(metric => 
       activeMetrics[metric.key] && 
@@ -614,7 +614,7 @@ function GraphPage() {
   const totalValue = pieData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <PieChart {...commonProps}>
+   <PieChart {...commonProps}>
       <Pie
         data={pieData}
         cx="50%"
@@ -622,58 +622,53 @@ function GraphPage() {
         outerRadius={150}
         innerRadius={80}
         dataKey="value"
-        label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+        label={({
+          cx, cy, midAngle, innerRadius, outerRadius, percent, index
+        }) => {
+          const RADIAN = Math.PI / 180;
+          // Position for percentage (inside slice)
+          const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+          const x = cx + radius * Math.cos(-midAngle * RADIAN);
+          const y = cy + radius * Math.sin(-midAngle * RADIAN);
+          
+          // Position for metric name (outside slice)
+          const labelRadius = outerRadius + 20;
+          const labelX = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+          const labelY = cy + labelRadius * Math.sin(-midAngle * RADIAN);
+          
+          return (
+            <g>
+              <text
+                x={x}
+                y={y}
+                fill="white"
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={12}
+                fontWeight="bold"
+              >
+                {`${(percent * 100).toFixed(0)}%`}
+              </text>
+              <text
+                x={labelX}
+                y={labelY}
+                fill="#000000" // Changed to black color
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={14}
+                fontWeight="bold"
+              >
+                {pieData[index].name} {/* Access name through pieData array */}
+              </text>
+            </g>
+          );
+        }}
         labelLine={false}
       >
         {pieData.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={entry.color} />
         ))}
       </Pie>
-      {/* Custom positioned labels with black text */}
-      {pieData.map((entry, index) => {
-        // Calculate positions for each label to be closer to their slices
-        let x, y;
-        
-        switch(entry.name) {
-          case 'Activity':
-            x = '50%';
-            y = '30%'; // Top center
-            break;
-          case 'Mood':
-            x = '70%';
-            y = '40%'; // Top right
-            break;
-          case 'Appetite':
-            x = '70%';
-            y = '60%'; // Bottom right
-            break;
-          case 'Sleep':
-            x = '50%';
-            y = '70%'; // Bottom center
-            break;
-          default:
-            x = '50%';
-            y = '50%';
-        }
-        
-        return (
-          <text
-            key={`label-${index}`}
-            x={x}
-            y={y}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fill="#000000" // Changed to black color
-            style={{ 
-              fontWeight: 'bold', 
-              fontSize: '14px',
-              pointerEvents: 'none' 
-            }}
-          >
-            {entry.name}
-          </text>
-        );
-      })}
       <Tooltip
         contentStyle={tooltipStyle}
         formatter={(value, name) => [
@@ -802,7 +797,7 @@ function GraphPage() {
                 {patientInfo.firstName} {patientInfo.lastName}
               </h2>
               <p style={{ margin: '5px 0 0 0', color: '#666' }}>
-                Patient ID: {patientId}
+                {/* Patient ID: {patientId} */}
               </p>
             </div>
           </div>
@@ -906,6 +901,10 @@ function GraphPage() {
       {range.name}
     </TimeRangeButton>
   ))}
+  
+  {/* Add a separator div with some margin */}
+  <div style={{ margin: '15px 0', width: '100%', borderTop: '1px solid #ddd' }} />
+  
   <Link 
     to={`/comments/${patientId}`}
     state={{ from: 'graph' }}
