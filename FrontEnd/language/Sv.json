@@ -212,35 +212,36 @@
   "Add a comment for": "Lägg till en kommentar för ",
   "Add Or View Comments": "Lägg till eller visa kommentarer",
   "Date Recorded": "Datum registrerat",
-  "activities": {
-    "Resting": "Vilar 🛌",
-    "Reading": "Läser 📖",
-    "Take a Walk": "Tar en promenad 🚶‍♂️",
-    "Jogging": "Joggar 🏃‍♂️",
-    "Swimming": "Simning 🏊‍♂️",
-    "Training": "Tränar 🏋️‍♂️"
+  "activitylevels": {
+
+    "Resting": "Vilar ",
+    "Reading": "Läser ",
+    "Take a Walk": "Tar en promenad ",
+    "Jogging": "Joggar ",
+    "Swimming": "Simning ",
+    "Training": "Tränar "
   },
   "moodkinds": {
-    "Happy": "Glad 😃",
-    "Sad": "Ledsen 🙁",
-    "Angry": "Arg 😡",
-    "Lovely": "Kärleksfull 😍",
-    "Depressed": "Deprimerad 😢",
-    "Excited": "Uppspelt 🤩",
-    "Bored": "Uttråkad 😒"
+    "Happy": "Glad ",
+    "Sad": "Ledsen ",
+    "Angry": "Arg ",
+    "Lovely": "Kärleksfull ",
+    "Depressed": "Deprimerad ",
+    "Excited": "Uppspelt ",
+    "Bored": "Uttråkad "
   },
   "sleeplevels": {
-    "Low": "Lite sömn 🙁",
-    "Medium": "Medelnivå sömn 😐",
-    "OK": "OK sömn 🙂",
-    "Too much": "För mycket sömn 😃",
-     "Not enough": "Väldigt lite  🛌"
+    "Low": "Lite sömn ",
+    "Medium": "Medelnivå sömn ",
+    "OK": "OK sömn ",
+    "Too much": "För mycket sömn ",
+     "Not enough": "Väldigt lite  "
   },
   "appetitelevels": {
-    "Didn't Eat At All": "Åt inte alls 🤢",
-    "Little": "Lite 🍽️",
-    "Normal": "Normal aptit 🙂",
-    "Medium": "Medium 😋",
-    "Very Much": "Mycket 🍴"
+    "Didn't Eat At All": "Åt inte alls ",
+    "Little": "Lite ",
+    "Normal": "Normal aptit ",
+    "Medium": "Medium ",
+    "Very Much": "Mycket "
   }
 }

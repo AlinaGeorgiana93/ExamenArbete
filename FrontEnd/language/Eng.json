@@ -204,7 +204,8 @@
   "Add_a_comment_for": "Add a comment for ",
   "Add_Or_View_Comments": "Add or view comments",
   "Date_Recorded": "Date Recorded",
-  "activities": {
+
+  "activitylevels": {
     "Resting": "Resting ",
     "Reading": "Reading ",
     "Take a Walk": "Taking a walk ",

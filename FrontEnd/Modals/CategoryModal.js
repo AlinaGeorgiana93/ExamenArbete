@@ -407,8 +407,10 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
               }}
             >
               <div>
-                <strong>{item.name}</strong> <br />
-                <small>{t('Rating')}: {item.rating} | {t('Label')}: {item.label}</small>
+                    <strong>{t(item.name)}</strong> <br />
+            <small>
+              {t('rating')}: {item.rating} | {t('label')}: {t(item.label)}
+            </small>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button
@@ -452,10 +454,10 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
         {/* Form */}
         <form onSubmit={handleSubmit} noValidate>
           <InputGroup>
-            <label htmlFor="name">{t('Name')}</label>
+            <label htmlFor="name">{t('name')}</label>
             <input
               id="name"
-              name="name"
+              name={t('name')}
               value={formValues.name}
               onChange={handleInputChange}
               placeholder={t('enter name')}
@@ -464,10 +466,10 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
           </InputGroup>
 
           <InputGroup>
-            <label htmlFor="rating">{t('Rating')}</label>
+            <label htmlFor="rating">{t('rating')}</label>
             <input
               id="rating"
-              name="rating"
+              name={t('rating')}
               type="number"
               min="1"
               max="10"
@@ -478,16 +480,16 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
             {fieldErrors.rating && <span style={{ color: 'red', fontSize: '13px' }}>{fieldErrors.rating}</span>}
           </InputGroup>
           <InputGroup>
-            <label htmlFor="label">{t('Label')}</label>
+            <label htmlFor="label">{t('label')}</label>
 
             <div style={{ position: 'relative', width: '100%' }}>
               <input
                 id="label"
-                name="label"
+                name={t('label')}
                 type="text"
                 value={formValues.label}
                 onChange={handleInputChange}
-                placeholder={t('Enter label')}
+                placeholder={t('enter label')}
                 style={{ width: '100%', paddingRight: '32px' }}
               />
 
