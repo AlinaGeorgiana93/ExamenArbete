@@ -172,8 +172,9 @@ function PatientDataReview() {
     navigate(`/graph/${patientId}`, { state: graphData });
   };
 
-  const getRatingDisplay = (name, label, rating) =>
-    `${t(name) || t('not_specified')} ${t(label) || t('not_specified')} (Rating: ${t(rating) ?? t('not_available')})`;
+ const getRatingDisplay = (name, label, rating) =>
+  `${t(name) || t('not_specified')} ${t(label) || t('not_specified')} (${t('rating')}: ${rating ?? t('not_available')})`;
+
 
 
   if (!state || !patientId) {
