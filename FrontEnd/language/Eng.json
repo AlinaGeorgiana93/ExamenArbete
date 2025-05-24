@@ -139,9 +139,9 @@
   "invalid_email": "Invalid email format",
   "profile_info": "Profile info",
   "password_change_failed": "Password change failed.",
-  "profile_updated":"Profile successfully updated",
-  "password_changed":"Password changed successfully.",
-   "manageCategories": "Manage Categories",
+  "profile_updated": "Profile successfully updated",
+  "password_changed": "Password changed successfully.",
+  "manageCategories": "Manage Categories",
   "moodKind": "Mood",
   "activityLevel": "Activity",
   "appetiteLevel": "Appetite",
@@ -164,7 +164,7 @@
   "emailInvalid": "Please provide a valid email address.",
   "passwordWeak": "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
   "loading": "Loading...",
-   "staffCreatedSuccessfully": "Staff successfully created!",
+  "staffCreatedSuccessfully": "Staff successfully created!",
   "staffUpdatedSuccessfully": "Staff successfully updated!",
   "patientCreatedSuccessfully": "Patient successfully created!",
   "patientUpdatedSuccessfully": "Patient successfully updated!",
@@ -180,7 +180,58 @@
   "Name is required": "Name is required",
   "Label is required": "Label is required",
   "Rating must be an integer between 1 and 10": "Rating must be an integer between 1 and 10",
-  "patientDeletedSuccessfully": "Patient successfully deleted!"
- 
-
+  "patientDeletedSuccessfully": "Patient successfully deleted!",
+  "back_To_Graph": "Back to graph",
+  "back_To_Patient": "Back to patient",
+  "comments_For": "Comments for",
+  "write_Your_Comment": "Write your comment here...",
+  "initials": "Initials",
+  "Comment_cannot_be_empty.": "Comment cannot be empty.",
+  "Could_not_fetch_patient_data.": "Could not fetch patient data.",
+  "Please_enter_your_initials.": "Please enter your initials.",
+  "no_Patient_Found": "No patient found",
+  "save_Changes": "Save changes",
+  "submit_Comment": "Submit comment",
+  "previous": "Previous",
+  "Log out": "Log out",
+  "page_Of": "Page of",
+  "role": "Role",
+  "Patients": "Patients",
+  "About us": "About us",
+  "next": "Next",
+  "comments": "Comments",
+  "ratings": "Ratings",
+  "Add_a_comment_for": "Add a comment for ",
+  "Add_Or_View_Comments": "Add or view comments",
+  "Date_Recorded": "Date Recorded",
+  "activities": {
+    "Resting": "Resting 🛌",
+    "Reading": "Reading 📖",
+    "Take a Walk": "Taking a walk 🚶‍♂️",
+    "Jogging": "Jogging 🏃‍♂️",
+    "Swimming": "Swimming 🏊‍♂️",
+    "Training": "Training 🏋️‍♂️"
+  },
+  "moodkinds": {
+    "Happy": "Happy 😃",
+    "Sad": "Sad 🙁",
+    "Angry": "Angry 😡",
+    "Lovely": "Lovely 😍",
+    "Depressed": "Depressed 😢",
+    "Excited": "Excited 🤩",
+    "Bored": "Bored 😒"
+  },
+  "sleeplevels": {
+    "Low": "Low Sleep Level 🙁",
+    "Medium": "Medium Sleep Level 😐",
+    "OK": "OK Sleep Level 🙂",
+    "Too much": "Too much Sleep Level 😃"
+  },
+  "appetitelevels": {
+    "Didn't Eat At All": "Didn't Eat At All 🤢",
+    "Little": "Little 🍽️",
+    "Normal": "Normal Appetite 🙂",
+    "Medium": "Medium 😋",
+    "Very Much": "Very Much 🍴"
+  }
 }
