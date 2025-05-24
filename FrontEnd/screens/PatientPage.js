@@ -353,12 +353,13 @@ function PatientPage() {
 
 
           <ButtonsContainer>
-            <Button onClick={handleSave}>{t('save_button')}</Button>
             <CommentsButton to={`/comments/${patientId}`} state={{ from: 'patient' }}>
               {patient
                 ? t('Add a comment for', { name: patient.firstName })
-                : t('Add Or View Comments')}
+                : t('Add a comment')}
             </CommentsButton>
+            <Button onClick={handleSave}>{t('save_button')}</Button>
+
           </ButtonsContainer>
         </PatientPageContainer>
 

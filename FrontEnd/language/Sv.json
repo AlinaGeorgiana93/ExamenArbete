@@ -209,7 +209,7 @@
   "About us": "Om oss",
   "Log out": "Logga ut",
   "comments": "Kommentarer",
-  "Add a comment for": "Lägg till en kommentar för ",
+  "Add a comment for": "Lägg till en kommentar för {{name}} ",
   "Add Or View Comments": "Lägg till eller visa kommentarer",
   "Date Recorded": "Datum registrerat",
   "activitylevels": {
