@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import EmojiPickerWrapper from '../src/emojiPickerWrapper.js';  // import emoji picker
+import { useNavigate } from 'react-router-dom';
+
 
 // Styled components (similar style to your Staff modal)
 const ModalContainer = styled.div`
@@ -159,35 +161,31 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
   const [successMessage, setSuccessMessage] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
-const handleEmojiSelect = (emoji) => {
-  setFormValues((prev) => ({ ...prev, label: prev.label + emoji }));
-};
+  const navigate = useNavigate();
 
 
-const openEditModal = (item) => {
-  setEditingId(item.id);
-  setFormValues(item);
-  setIsModalOpen(true);
-};
-
-const closeModal = () => {
-  setIsModalOpen(false);
-  setEditingId(null);
-  resetForm();
-};
-
-
-  
-const getItemId = (item) => {
-  const idFields = {
-    moodKind: 'moodKindId',
-    activityLevel: 'activityLevelId',
-    appetiteLevel: 'appetiteLevelId',
-    sleepLevel: 'sleepLevelId',
+  const handleEmojiSelect = (emoji) => {
+    setFormValues((prev) => ({ ...prev, label: prev.label + emoji }));
   };
-  return item[idFields[activeType]];
-};
+
+
+  const openEditModal = (item) => {
+    setEditingId(item.id);
+    setFormValues(item);
+    setIsModalOpen(true);
+  };
+
+
+
+  const getItemId = (item) => {
+    const idFields = {
+      moodKind: 'moodKindId',
+      activityLevel: 'activityLevelId',
+      appetiteLevel: 'appetiteLevelId',
+      sleepLevel: 'sleepLevelId',
+    };
+    return item[idFields[activeType]];
+  };
 
 
   useEffect(() => {
@@ -201,31 +199,33 @@ const getItemId = (item) => {
     setFieldErrors({});
   };
 
-const fetchItems = async () => {
-  console.log(`🔄 Fetching items for type: ${activeType} with token:`, token);
+  const fetchItems = async () => {
+    console.log(`🔄 Fetching items for type: ${activeType} with token:`, token);
 
-  try {
-    const response = await axios.get(
-      `https://localhost:7066/api/${types[activeType]}/ReadItems`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    try {
+      const response = await axios.get(
+        `https://localhost:7066/api/${types[activeType]}/ReadItems`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    console.log(`✅ Fetched items response for ${activeType}:`, response.data);
+      console.log(`✅ Fetched items response for ${activeType}:`, response.data);
 
-    setItems(response.data.pageItems || []);
-    console.log(`📦 Set items state with ${ (response.data.pageItems || []).length } items`);
-  } catch (err) {
-    console.error(`❌ Failed to fetch ${activeType}:`, err.response?.data || err.message || err);
-  }
-};
+      setItems(response.data.pageItems || []);
+      console.log(`📦 Set items state with ${(response.data.pageItems || []).length} items`);
+    } catch (err) {
+      console.error(`❌ Failed to fetch ${activeType}:`, err.response?.data || err.message || err);
+    }
+  };
 
 
   // Simple validation for name, rating, label
-   const validate = () => {
+  const validate = () => {
     const errors = {};
     if (!formValues.name.trim()) errors.name = t('Name is required');
-    if (!formValues.rating || isNaN(formValues.rating) || formValues.rating < 1 || formValues.rating > 10)
-      errors.rating = t('Rating must be a number between 1 and 10');
+    const ratingNum = Number(formValues.rating);
+    if (!formValues.rating || isNaN(ratingNum) || ratingNum < 1 || ratingNum > 10) {
+      errors.rating = 'Rating must be a number between 1 and 10';  // no translation here per your request
+    }
     if (!formValues.label.trim()) errors.label = t('Label is required');
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -236,104 +236,103 @@ const fetchItems = async () => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (editingId) {
-    await handleUpdate(e);
-  } else {
-    await handleCreate();
-  }
-};
-
-const handleCreate = async () => {
-  if (!validate()) {
-    console.log('❌ Validation failed');
-    return;
-  }
-  try {
-    const response = await axios.post(
-      `https://localhost:7066/api/${types[activeType]}/CreateItem`,
-      formValues,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    console.log('✅ Create response:', response.data);
-    await fetchItems(); // wait to refresh list
-
-    setSuccessMessage(t(`${types[activeType]} created successfully!`));
-    setShowSuccessMessage(true);
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-      setSuccessMessage('');
-    }, 2000);
-
-
-    resetForm(); // reset after fetch success
-  } catch (err) {
-    console.error('❌ Error creating item:', err.response?.data || err.message);
-  }
-};
-
-const startEditing = (item) => {
-   console.log('✏️ Edit clicked for item:', item);
-  const id = getItemId(item);
-  console.log('Extracted ID for editing:', id);
-  console.log('Starting to edit item:', item); // Debug log
-  setFormValues({
-    name: item.name || '',
-    rating: item.rating || '',
-    label: item.label || '',
-  });
-  setEditingId(getItemId(item));
-};
-
-const handleUpdate = async () => {
-  console.log('Updating:', editingId, formValues);
-
-  if (!validate()) {
-    console.warn('Validation failed');
-    return;
-  }
-  console.log("Validation result:", validate());
-
-
-  try {
-    const response = await axios.put(
-      `https://localhost:7066/api/${types[activeType]}/UpdateItem/${editingId}`,
-      {
-        ...formValues,
-        [`${types[activeType].toLowerCase()}Id`]: editingId, // e.g., staffId or patientId
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    console.log('Update success:', response.data);
-
-    // ✅ Save new token if provided
-    const newToken = response?.data?.Item?.Token;
-    if (newToken) {
-      localStorage.setItem('jwtToken', newToken);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (editingId) {
+      await handleUpdate(event);
+    } else {
+      await handleCreate();
     }
-    await fetchItems();
-
-  setSuccessMessage(t(`${types[activeType]} updated successfully!`));
-
-  setShowSuccessMessage(true);
-  setTimeout(() => {
-  setShowSuccessMessage(false);
-  setSuccessMessage('');
-}, 2000);
+  };
 
 
+  const handleCreate = async () => {
+    if (!validate()) {
+      console.log('❌ Validation failed');
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `https://localhost:7066/api/${types[activeType]}/CreateItem`,
+        formValues,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log('✅ Create response:', response.data);
+      await fetchItems(); // wait to refresh list
 
-    resetForm();
-    closeModal();
-  } catch (err) {
-    console.error('Update failed:', err);
-  }
-};
+      setSuccessMessage(t(`${types[activeType]}CreatedSuccessfully`));
+      setShowSuccessMessage(true);
+
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setSuccessMessage('');
+        closeModal();  // <-- Close the modal here
+      }, 2000);
+
+      resetForm();
+    } catch (err) {
+      console.error('❌ Error creating item:', err.response?.data || err.message);
+    }
+  };
 
 
+  const startEditing = (item) => {
+    console.log('✏️ Edit clicked for item:', item);
+    const id = getItemId(item);
+    console.log('Extracted ID for editing:', id);
+    console.log('Starting to edit item:', item); // Debug log
+    setFormValues({
+      name: item.name || '',
+      rating: item.rating || '',
+      label: item.label || '',
+    });
+    setEditingId(getItemId(item));
+  };
 
+  const handleUpdate = async () => {
+    console.log('Updating:', editingId, formValues);
+
+    if (!validate()) {
+      console.warn('Validation failed');
+      return;
+    }
+    console.log("Validation result:", validate());
+
+
+    try {
+      const response = await axios.put(
+        `https://localhost:7066/api/${types[activeType]}/UpdateItem/${editingId}`,
+        {
+          ...formValues,
+          [`${types[activeType].toLowerCase()}Id`]: editingId, // e.g., staffId or patientId
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log('Update success:', response.data);
+
+      // ✅ Save new token if provided
+      const newToken = response?.data?.Item?.Token;
+      if (newToken) {
+        localStorage.setItem('jwtToken', newToken);
+      }
+      await fetchItems();
+
+      setSuccessMessage(t(`${types[activeType]}UpdatedSuccessfully`));
+
+      setShowSuccessMessage(true);
+
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setSuccessMessage('');
+        closeModal();  // <-- Close the modal here
+      }, 2000);
+
+      resetForm();
+    } catch (err) {
+      console.error('❌ Error creating item:', err.response?.data || err.message);
+    }
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -341,16 +340,23 @@ const handleUpdate = async () => {
         `https://localhost:7066/api/${types[activeType]}/DeleteItem/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (editingId === id) resetForm();
       fetchItems();
 
       setSuccessMessage(`${t(activeType)} ${t('deletedSuccessfully')}`);
-    setShowSuccessMessage(true);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
+      setShowSuccessMessage(true);
+      setTimeout(() => setShowSuccessMessage(false), 3000);
     } catch (err) {
       console.error('Error deleting item:', err);
     }
+  };
+
+  const closeModal = () => {
+    resetForm();
+    setEditingId(null);
+    onClose();  // Tell parent to close modal
+
   };
 
   return (
@@ -358,7 +364,7 @@ const handleUpdate = async () => {
       <ModalContent>
         <CloseButton onClick={onClose}>×</CloseButton>
         <ModalHeader>{t('manageCategories')}</ModalHeader>
-          
+
 
         {/* Tabs */}
         <div style={{ display: 'flex', marginBottom: '20px', gap: '10px' }}>
@@ -383,7 +389,7 @@ const handleUpdate = async () => {
             </button>
           ))}
         </div>
-      
+
 
         {/* Item list */}
         <ul style={{ listStyle: 'none', padding: 0, maxHeight: '200px', overflowY: 'auto', marginBottom: '20px' }}>
@@ -404,7 +410,7 @@ const handleUpdate = async () => {
                 <strong>{item.name}</strong> <br />
                 <small>{t('Rating')}: {item.rating} | {t('Label')}: {item.label}</small>
               </div>
-               <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
                 <button
                   onClick={() => startEditing(item)}
                   style={{
@@ -420,30 +426,30 @@ const handleUpdate = async () => {
                   {t('edit')}
                 </button>
 
-                 <button
-              onClick={() => handleDelete(getItemId(item))}
-              style={{
-                padding: '6px 12px',
-                backgroundColor: 'red',
-                color: 'white',
-                border: 'none',
-                borderRadius: 6,
-                fontSize: 14,
-                cursor: 'pointer'
-              }}
-            >
-              {t('delete')}
-            </button>
-          </div>
-              
+                <button
+                  onClick={() => handleDelete(getItemId(item))}
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: 'red',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 6,
+                    fontSize: 14,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {t('delete')}
+                </button>
+              </div>
+
             </li>
           ))}
           {items.length === 0 && <li>{t('noItemsFound')}</li>}
         </ul>
-          <ModalHeader>
-      {editingId ? `${t('edit')} ${t(activeType)}` : `${t('create')} ${t(activeType)}`}
-    </ModalHeader>
-         {/* Form */}
+        <ModalHeader>
+          {editingId ? `${t('edit')} ${t(activeType)}` : `${t('create')} ${t(activeType)}`}
+        </ModalHeader>
+        {/* Form */}
         <form onSubmit={handleSubmit} noValidate>
           <InputGroup>
             <label htmlFor="name">{t('Name')}</label>
@@ -463,50 +469,53 @@ const handleUpdate = async () => {
               id="rating"
               name="rating"
               type="number"
+              min="1"
+              max="10"
               value={formValues.rating}
               onChange={handleInputChange}
               placeholder={t('enter rating (1-10)')}
             />
             {fieldErrors.rating && <span style={{ color: 'red', fontSize: '13px' }}>{fieldErrors.rating}</span>}
           </InputGroup>
-              <InputGroup>
-                <label htmlFor="label">{t('Label')}</label>
+          <InputGroup>
+            <label htmlFor="label">{t('Label')}</label>
 
-                  <div style={{ position: 'relative', width: '100%' }}>
-                    <input
-                      id="label"
-                      name="label"
-                      type="text"
-                      value={formValues.label}
-                      onChange={handleInputChange}
-                      placeholder={t('Enter label')}
-                      style={{ width: '100%', paddingRight: '32px' }}
-                    />
+            <div style={{ position: 'relative', width: '100%' }}>
+              <input
+                id="label"
+                name="label"
+                type="text"
+                value={formValues.label}
+                onChange={handleInputChange}
+                placeholder={t('Enter label')}
+                style={{ width: '100%', paddingRight: '32px' }}
+              />
 
-                    <EmojiPickerWrapper
-                      onSelect={handleEmojiSelect}
-                    />
-                  </div>
+              <EmojiPickerWrapper
+                onSelect={handleEmojiSelect}
+              />
+            </div>
 
-                  {fieldErrors.label && <small style={{ color: 'red' }}>{fieldErrors.label}</small>}
-                </InputGroup>
+            {fieldErrors.label && <small style={{ color: 'red' }}>{fieldErrors.label}</small>}
+          </InputGroup>
 
-                <ButtonGroup>
-  {!editingId && (
-    <Button onClick={handleCreate}>{t('create')}</Button>
-  )}
-  {editingId && (
-    <>
-      <Button onClick={handleUpdate}>{t('update')}</Button>
-      <ButtonDelete
-        type="button"
-        onClick={resetForm}
-      >
-        {t('cancel')}
-      </ButtonDelete>
-    </>
-  )}
-</ButtonGroup>
+          <ButtonGroup>
+            {!editingId && (
+              <Button type="button" onClick={handleCreate}>{t('create')}</Button>
+
+            )}
+            {editingId && (
+              <>
+                <Button type="button" onClick={handleUpdate}>{t('update')}</Button>
+                <ButtonDelete
+                  type="button"
+                  onClick={resetForm}
+                >
+                  {t('cancel')}
+                </ButtonDelete>
+              </>
+            )}
+          </ButtonGroup>
         </form>
       </ModalContent>
       {showSuccessMessage && <ToastMessage>{successMessage}</ToastMessage>}

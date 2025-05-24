@@ -154,9 +154,9 @@
   "enter rating (1-10)": "Enter rating (1-10)",
   "enter label": "Enter label",
   "enter name": "Enter name",
-  "createdSuccessfully": "Succesfully created",
-  "updatedSuccessfully": "Succesfully updated",
-  "deletedSuccessfully": "Succesfully deleted",
+  "createdSuccessfully!": "succesfully created!",
+  "updatedSuccessfully!": "succesfully updated!",
+  "deletedSuccessfully!": "succesfully deleted!",
   "firstNameInvalid": "First name is invalid.",
   "lastNameInvalid": "Last name is invalid.",
   "personalNumberInvalid": "Personal number is invalid.",
@@ -164,8 +164,23 @@
   "emailInvalid": "Please provide a valid email address.",
   "passwordWeak": "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
   "loading": "Loading...",
-  "staffUpdatedSuccessfully": "Staff updated successfully.",
-  "patientUpdatedSuccessfully": "Patient updated successfully."
+   "staffCreatedSuccessfully": "Staff successfully created!",
+  "staffUpdatedSuccessfully": "Staff successfully updated!",
+  "patientCreatedSuccessfully": "Patient successfully created!",
+  "patientUpdatedSuccessfully": "Patient successfully updated!",
+  "MoodKindCreatedSuccessfully": "Mood kind successfully created!",
+  "ActivityLevelCreatedSuccessfully": "Activity level successfully created!",
+  "AppetiteLevelCreatedSuccessfully": "Appetite level successfully created!",
+  "SleepLevelCreatedSuccessfully": "Sleep level successfully created!",
+  "MoodKindUpdatedSuccessfully": "Mood kind successfully updated!",
+  "ActivityLevelUpdatedSuccessfully": "Activity level successfully updated!",
+  "AppetiteLevelUpdatedSuccessfully": "Appetite level successfully updated!",
+  "SleepLevelUpdatedSuccessfully": "Sleep level successfully updated!",
+  "deletedSuccessfully": "Successfully deleted",
+  "Name is required": "Name is required",
+  "Label is required": "Label is required",
+  "Rating must be an integer between 1 and 10": "Rating must be an integer between 1 and 10",
+  "patientDeletedSuccessfully": "Patient successfully deleted!"
  
 
 }

@@ -327,7 +327,7 @@ const AdminDashboard = () => {
       const response = await axiosInstance.post(`/${endpoint}/CreateItem`, formData);
       console.log('API Response:', response);  // Check if the API call is successful
 
-      setSuccessMessage(`${endpoint} created successfully!`);
+      setSuccessMessage(`${t(endpoint)} ${t('createdSuccessfully')}`);
       setShowSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
@@ -395,7 +395,7 @@ const AdminDashboard = () => {
       await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
 
       // Set success message
-      setSuccessMessage(`${endpoint} deleted successfully!`);
+        setSuccessMessage(`${t(endpoint)} ${t('deletedSuccessfully')}`);
       setShowSuccessMessage(true);
 
       setTimeout(() => {

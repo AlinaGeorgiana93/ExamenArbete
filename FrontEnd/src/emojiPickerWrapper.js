@@ -10,30 +10,32 @@ function EmojiPickerWrapper({ onSelect }) {
   };
 
   useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .epr-body {
-        max-height: 200px !important;
-        overflow-y: auto !important;
-      }
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .epr-body {
+      max-height: 250px !important;
+      overflow-y: auto !important;
+    }
 
-      .epr-body::-webkit-scrollbar {
-        display: none;
-      }
+    /* Remove this block to show scrollbar */
+    /* .epr-body::-webkit-scrollbar {
+      display: none;
+    } */
 
-      .epr-category-nav {
-        padding: 4px !important;
-        justify-content: center !important;
-        gap: 6px !important;
-      }
+    .epr-category-nav {
+      padding: 4px !important;
+      justify-content: center !important;
+      gap: 6px !important;
+    }
 
-      .epr-search, .epr-preview {
-        display: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
+    .epr-search, .epr-preview {
+      display: none !important;
+    }
+  `;
+  document.head.appendChild(style);
+  return () => document.head.removeChild(style);
+}, []);
+
 
   return (
     <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)' }}>
@@ -66,29 +68,31 @@ function EmojiPickerWrapper({ onSelect }) {
             padding: '8px',
           }}
         >
-          <button
-            type="button"
-            onClick={() => setShowPicker(false)}
-            aria-label="Close emoji picker"
-            style={{
-              position: 'absolute',
-              top: '6px',
-              right: '6px',
-              background: '#f0f0f0',
-              border: 'none',
-              fontSize: '16px',
-              cursor: 'pointer',
-              borderRadius: '50%',
-              width: '24px',
-              height: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-            }}
-          >
-            ×
-          </button>
+         <button
+      type="button"
+      onClick={() => setShowPicker(false)}
+      aria-label="Close emoji picker"
+      style={{
+        position: 'absolute',
+        top: '6px',
+        right: '6px',
+        background: '#f0f0f0',
+        border: 'none',
+        fontSize: '18px',
+        cursor: 'pointer',
+        borderRadius: '50%',
+        width: '28px',
+        height: '28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+        zIndex: 1100, // <- make sure it's on top
+      }}
+    >
+      ×
+    </button>
+
 
           <EmojiPicker
             onEmojiClick={onEmojiClick}
