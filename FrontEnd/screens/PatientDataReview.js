@@ -2,113 +2,133 @@ import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 
-
-// GlobalStyle will be applied to the whole page to adjust the background
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+  }
 `;
 
-const ReviewContainer = styled.div`
-  background-color: #F1F0E8;
-  font-family: 'Poppins', sans-serif;
-  padding: 20px; /* Reduced padding */
-  border-radius: 16px;
-  width: 90%;
-  max-width: 600px; /* Limit max width on large screens */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  margin: 40px auto;
+const PageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+`;
 
-  h2 {
-    font-size: 1.8rem; /* Smaller header font size */
-    margin-bottom: 20px;
-    color: #125358;
-  }
+const ReviewCard = styled.div`
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
 
-  @media (max-width: 480px) {
-    padding: 15px;
-    margin: 20px auto;
-
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
+
+  @media (max-width: 600px) {
+    padding: 20px;
+    border-radius: 10px;
+  }
+`;
+
+const Title = styled.h2`
+  font-size: 2.5rem;
+  color: #125358;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 15px;
 `;
 
 const DataItem = styled.div`
-  margin-bottom: 12px;
-  padding: 12px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  font-size: 1.1rem; /* More balanced text size */
-
-  @media (max-width: 480px) {
-    font-size: 1rem;
-    padding: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin-bottom: 16px;
+  background-color: #f9fafa;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
 `;
 
 const Label = styled.span`
-  font-weight: bold;
-  color: #125358;
-  font-size: 1.2rem;
-
-  @media (max-width: 480px) {
-    font-size: 1.1rem;
-  }
+  font-weight: 600;
+  color: #0f3d3e;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
 `;
 
 const Value = styled.span`
-  margin-left: 8px;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  color: #333;
+`;
 
-  @media (max-width: 480px) {
-    font-size: 1rem;
-  }
+const Skeleton = styled.div`
+  height: 1.2em;
+  width: 150px;
+  background-color: #ddd;
+  border-radius: 6px;
+  display: inline-block;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 12px;
-  margin-top: 25px;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 30px;
+`;
 
-  @media (max-width: 480px) {
-    flex-direction: column;
-    gap: 10px;
+const PrimaryButton = styled.button`
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background-color: #28889b;
+  color: #fff;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    &:hover {
+    background-color: #e0e0e0;
   }
 `;
 
-const Button = styled.button`
-  padding: 10px 18px;
-  border-radius: 8px;
+const SecondaryButton = styled.button`
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  font-weight: bold;
-  flex: 1;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  background-color: #28889b;
+  color:  #f0f0f0;
+  transition: background-color 0.3s ease;
 
-  &:first-child {
-    background-color: rgb(40, 136, 155);
-    color: white;
-
-    &:hover {
-      background-color: #0e4246;
-    }
-  }
-
-  &:last-child {
-    background-color: #f5f5f5;
-    color: #333;
-
-    &:hover {
-      background-color: #e0e0e0;
-    }
+  &:hover {
+    background-color: #e0e0e0;
   }
 `;
 
@@ -118,7 +138,23 @@ function PatientDataReview() {
   const { patientId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
+  const [patientInfo, setPatientInfo] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
 
+  React.useEffect(() => {
+    const fetchPatientInfo = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7066/api/Patient/ReadItem?id=${patientId}`);
+        setPatientInfo(response.data.item);
+      } catch (error) {
+        console.error('Error fetching patient info:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatientInfo();
+  }, [patientId]);
 
   const handleCreateGraph = () => {
     const graphData = {
@@ -137,70 +173,71 @@ function PatientDataReview() {
     navigate(`/graph/${patientId}`, { state: graphData });
   };
 
-  if (!state) {
+  const getRatingDisplay = (label, rating) =>
+    `${label || t('not_specified')} (Rating: ${rating ?? t('not_available')})`;
+
+  if (!state || !patientId) {
     return (
       <>
-        <GlobalStyle /> {/* GlobalStyle applied to the page */}
-        <ReviewContainer>
-          <h2>{t('no_data_to_review')}</h2>
-          <p>{t('no_patient_data')}</p>
-          <Button onClick={() => navigate(`/patient/${patientId}`)}>
-            {t('go_back_to_patient_page')}
-          </Button>
-        </ReviewContainer>
+        <GlobalStyle />
+        <PageContainer>
+          <ReviewCard>
+            <Title>{t('no_data_to_review')}</Title>
+            <p>{t('no_patient_data')}</p>
+            <SecondaryButton onClick={() => navigate('/')}>
+              {t('go_back_home')}
+            </SecondaryButton>
+          </ReviewCard>
+        </PageContainer>
       </>
     );
   }
 
   return (
     <>
-      <GlobalStyle /> {/* GlobalStyle applied to the page */}
-      <ReviewContainer>
-        <h2>{t('review_patient_data')}</h2>
+      <GlobalStyle />
+      <PageContainer>
+        <ReviewCard>
+          <Title>{t('review_patient_data')}</Title>
 
-        <DataItem>
-          <Label>{t('patient_id')}</Label>
-          <Value>{patientId}</Value>
-        </DataItem>
+          <DataItem>
+            <Label>{t('patient_name')}</Label>
+            <Value>
+              {loading ? <Skeleton /> : patientInfo ? `${patientInfo.firstName} ${patientInfo.lastName}` : t('not_found')}
+            </Value>
+          </DataItem>
 
-        <DataItem>
-          <Label>{t('mood')}</Label>
-          <Value>
-            {state.moodKind?.label} (Rating: {state.moodKind?.rating || 'N/A'}, ID: {state.moodKind?.moodKindId || 'N/A'})
-          </Value>
-        </DataItem>
+          <DataItem>
+            <Label>{t('mood')}</Label>
+            <Value>{getRatingDisplay(state.moodKind?.label, state.moodKind?.rating)}</Value>
+          </DataItem>
 
-        <DataItem>
-          <Label>{t('activity')}</Label>
-          <Value>
-            {state.activityLevel?.label} (Rating: {state.activityLevel?.rating || 'N/A'}, ID: {state.activityLevel?.activityLevelId || 'N/A'})
-          </Value>
-        </DataItem>
+          <DataItem>
+            <Label>{t('activity')}</Label>
+            <Value>{getRatingDisplay(state.activityLevel?.label, state.activityLevel?.rating)}</Value>
+          </DataItem>
 
-        <DataItem>
-          <Label>{t('appetite')}</Label>
-          <Value>
-            {state.appetiteLevel?.label} (Rating: {state.appetiteLevel?.rating || 'N/A'}, ID: {state.appetiteLevel?.appetiteLevelId || 'N/A'})
-          </Value>
-        </DataItem>
+          <DataItem>
+            <Label>{t('appetite')}</Label>
+            <Value>{getRatingDisplay(state.appetiteLevel?.label, state.appetiteLevel?.rating)}</Value>
+          </DataItem>
 
-        <DataItem>
-          <Label>{t('sleep')}</Label>
-          <Value>
-            {state.sleepLevel?.label} (Rating: {state.sleepLevel?.rating || 'N/A'}, ID: {state.sleepLevel?.sleepLevelId || 'N/A'})
-          </Value>
-        </DataItem>
+          <DataItem>
+            <Label>{t('sleep')}</Label>
+            <Value>{getRatingDisplay(state.sleepLevel?.label, state.sleepLevel?.rating)}</Value>
+          </DataItem>
 
-        <DataItem>
-          <Label>Date Recorded:</Label>
-          <Value>{state.date ? new Date(state.date).toLocaleString() : 'Not recorded'}</Value>
-        </DataItem>
+          <DataItem>
+            <Label>{t('date_recorded')}</Label>
+            <Value>{state.date ? new Date(state.date).toLocaleString() : t('not_recorded')}</Value>
+          </DataItem>
 
-        <ButtonGroup>
-          <Button onClick={handleCreateGraph}>{t('save_and_create_graph')}</Button>
-          <Button onClick={() => navigate(`/patient/${patientId}`)}>{t('go_back')}</Button>
-        </ButtonGroup>
-      </ReviewContainer>
+          <ButtonGroup>
+            <PrimaryButton onClick={handleCreateGraph}>{t('save_and_create_graph')}</PrimaryButton>
+            <SecondaryButton onClick={() => navigate(`/patient/${patientId}`)}>{t('go_back')}</SecondaryButton>
+          </ButtonGroup>
+        </ReviewCard>
+      </PageContainer>
     </>
   );
 }

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import LoadingSpinner from './LoadingSpinner';
+import '../language/i18n.js';
 
 
 
@@ -134,10 +135,13 @@ const PatientName = styled.h2`
   text-align: center;
 `;
 
+
+
 function PatientPage() {
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
+
 
   const [moodKinds, setMoodKinds] = useState([]);
   const [activityLevels, setActivityLevels] = useState([]);
@@ -266,6 +270,7 @@ function PatientPage() {
         </PatientHeader>
 
         <PatientPageContainer>
+          {/* MoodKind */}
           <FormGroup>
             <label htmlFor="moodkind-select">{t('select_moodkind')}</label>
             <Dropdown
@@ -276,12 +281,13 @@ function PatientPage() {
               <option value="">{t('choose_moodkind')}</option>
               {sortedMoodKinds.map((mood) => (
                 <option key={mood.moodKindId} value={mood.moodKindId}>
-                  {mood.label} {mood.rating}
+                  {t(`moodkinds.${mood.name}`)} ({mood.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
 
+          {/* ActivityLevel */}
           <FormGroup>
             <label htmlFor="activitylevel-select">{t('select_activitylevel')}</label>
             <Dropdown
@@ -292,12 +298,13 @@ function PatientPage() {
               <option value="">{t('choose_activitylevel')}</option>
               {sortedActivityLevels.map((activity) => (
                 <option key={activity.activityLevelId} value={activity.activityLevelId}>
-                  {activity.label} {activity.rating}
+                  {t(`activities.${activity.name}`)} ({activity.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
 
+          {/* AppetiteLevel */}
           <FormGroup>
             <label htmlFor="appetitelevel-select">{t('select_appetitelevel')}</label>
             <Dropdown
@@ -308,12 +315,13 @@ function PatientPage() {
               <option value="">{t('choose_appetitelevel')}</option>
               {sortedAppetiteLevels.map((appetite) => (
                 <option key={appetite.appetiteLevelId} value={appetite.appetiteLevelId}>
-                  {appetite.label} {appetite.rating}
+                  {t(`appetitelevels.${appetite.name}`)} ({appetite.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
 
+          {/* SleepLevel */}
           <FormGroup>
             <label htmlFor="sleeplevel-select">{t('select_sleeplevel')}</label>
             <Dropdown
@@ -324,16 +332,19 @@ function PatientPage() {
               <option value="">{t('choose_sleeplevel')}</option>
               {sortedSleepLevels.map((sleep) => (
                 <option key={sleep.sleepLevelId} value={sleep.sleepLevelId}>
-                  {sleep.label} {sleep.rating}
+                  {t(`sleeplevels.${sleep.name}`)} ({sleep.rating})
                 </option>
               ))}
             </Dropdown>
           </FormGroup>
 
+
           <ButtonsContainer>
             <Button onClick={handleSave}>{t('save_button')}</Button>
             <CommentsButton to={`/comments/${patientId}`} state={{ from: 'patient' }}>
-              {patient ? `Add a comment for ${patient.firstName}` : 'Add/View Comments'}
+              {patient
+                ? t('Add a comment for', { name: patient.firstName })
+                : t('Add Or View Comments')}
             </CommentsButton>
           </ButtonsContainer>
         </PatientPageContainer>

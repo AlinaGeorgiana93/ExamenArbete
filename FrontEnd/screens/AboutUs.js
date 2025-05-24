@@ -8,6 +8,7 @@ import checklist from '../src/media/checklist.jpg';
 import '../src/index.css';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import logo1 from '../src/media/logo1.png';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -15,6 +16,16 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
+`;
+
+
+const LogoContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 2;
+  margin-left: -50px;
+  margin-top: -110px;
 `;
 
 const Section = styled.section`
@@ -117,6 +128,11 @@ const AboutUsPage = () => {
   return (
     <div>
       <GlobalStyle />
+      <LogoContainer>
+        <Link to="/">
+          <img src={logo1} alt="Logo" style={{ width: '200px', objectFit: 'contain' }} />
+        </Link>
+      </LogoContainer>
 
       <PageContainer>
         {/* Lägg till bilden här */}
