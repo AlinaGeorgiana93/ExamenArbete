@@ -407,10 +407,10 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
               }}
             >
               <div>
-                    <strong>{t(item.name)}</strong> <br />
-            <small>
-              {t('rating')}: {item.rating} | {t('label')}: {t(item.label)}
-            </small>
+                <strong>{t(item.name)}</strong> <br />
+                <small>
+                  {t('rating')}: {item.rating} | {t('label')}: {t(item.label)}
+                </small>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button
@@ -457,7 +457,7 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
             <label htmlFor="name">{t('name')}</label>
             <input
               id="name"
-              name={t('name')}
+              name="name"
               value={formValues.name}
               onChange={handleInputChange}
               placeholder={t('enter name')}
@@ -469,7 +469,7 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
             <label htmlFor="rating">{t('rating')}</label>
             <input
               id="rating"
-              name={t('rating')}
+              name="rating"
               type="number"
               min="1"
               max="10"
