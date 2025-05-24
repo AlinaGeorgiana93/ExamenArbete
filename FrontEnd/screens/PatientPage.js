@@ -260,6 +260,18 @@ function PatientPage() {
   const sortedAppetiteLevels = [...appetiteLevels].sort((a, b) => a.rating - b.rating);
   const sortedSleepLevels = [...sleepLevels].sort((a, b) => a.rating - b.rating);
 
+ function translateOrRaw(namespace, name, label) {
+  const key = `${namespace}.${name}`;
+  const translation = t(key);
+
+  // If no translation, fallback to raw name
+  const translated = translation === key ? name : translation;
+
+  // Prepend emoji label (if any) before the translated text
+  return label ? `${label} ${translated}` : translated;
+}
+
+
   return (
     <>
       <GlobalStyle />
@@ -271,72 +283,73 @@ function PatientPage() {
 
         <PatientPageContainer>
           {/* MoodKind */}
-          <FormGroup>
-            <label htmlFor="moodkind-select">{t('select_moodkind')}</label>
-            <Dropdown
-              id="moodkind-select"
-              value={selectedMoodKind}
-              onChange={handleSelectChange('selectedMoodKind', setSelectedMoodKind)}
-            >
-              <option value="">{t('choose_moodkind')}</option>
-              {sortedMoodKinds.map((mood) => (
-                <option key={mood.moodKindId} value={mood.moodKindId}>
-                  {t(`moodkinds.${mood.name}`)} ({mood.rating})
-                </option>
-              ))}
-            </Dropdown>
-          </FormGroup>
+         {/* MoodKind */}
+        <FormGroup>
+          <label htmlFor="moodkind-select">{t('select_moodkind')}</label>
+          <Dropdown
+            id="moodkind-select"
+            value={selectedMoodKind}
+            onChange={handleSelectChange('selectedMoodKind', setSelectedMoodKind)}
+          >
+            <option value="">{t('choose_moodkind')}</option>
+            {sortedMoodKinds.map((mood) => (
+              <option key={mood.moodKindId} value={mood.moodKindId}>
+                {translateOrRaw('moodkinds', mood.name, mood.level)} ({mood.rating})
+              </option>
+            ))}
+          </Dropdown>
+        </FormGroup>
 
-          {/* ActivityLevel */}
-          <FormGroup>
-            <label htmlFor="activitylevel-select">{t('select_activitylevel')}</label>
-            <Dropdown
-              id="activitylevel-select"
-              value={selectedActivityLevel}
-              onChange={handleSelectChange('selectedActivityLevel', setSelectedActivityLevel)}
-            >
-              <option value="">{t('choose_activitylevel')}</option>
-              {sortedActivityLevels.map((activity) => (
-                <option key={activity.activityLevelId} value={activity.activityLevelId}>
-                  {t(`activities.${activity.name}`)} ({activity.rating})
-                </option>
-              ))}
-            </Dropdown>
-          </FormGroup>
+        {/* ActivityLevel */}
+        <FormGroup>
+          <label htmlFor="activitylevel-select">{t('select_activitylevel')}</label>
+          <Dropdown
+            id="activitylevel-select"
+            value={selectedActivityLevel}
+            onChange={handleSelectChange('selectedActivityLevel', setSelectedActivityLevel)}
+          >
+            <option value="">{t('choose_activitylevel')}</option>
+            {sortedActivityLevels.map((activity) => (
+              <option key={activity.activityLevelId} value={activity.activityLevelId}>
+                {translateOrRaw('activitylevels', activity.name, activity.label)} ({activity.rating})
+              </option>
+            ))}
+          </Dropdown>
+        </FormGroup>
 
-          {/* AppetiteLevel */}
-          <FormGroup>
-            <label htmlFor="appetitelevel-select">{t('select_appetitelevel')}</label>
-            <Dropdown
-              id="appetitelevel-select"
-              value={selectedAppetiteLevel}
-              onChange={handleSelectChange('selectedAppetiteLevel', setSelectedAppetiteLevel)}
-            >
-              <option value="">{t('choose_appetitelevel')}</option>
-              {sortedAppetiteLevels.map((appetite) => (
-                <option key={appetite.appetiteLevelId} value={appetite.appetiteLevelId}>
-                  {t(`appetitelevels.${appetite.name}`)} ({appetite.rating})
-                </option>
-              ))}
-            </Dropdown>
-          </FormGroup>
+        {/* AppetiteLevel */}
+        <FormGroup>
+          <label htmlFor="appetitelevel-select">{t('select_appetitelevel')}</label>
+          <Dropdown
+            id="appetitelevel-select"
+            value={selectedAppetiteLevel}
+            onChange={handleSelectChange('selectedAppetiteLevel', setSelectedAppetiteLevel)}
+          >
+            <option value="">{t('choose_appetitelevel')}</option>
+            {sortedAppetiteLevels.map((appetite) => (
+              <option key={appetite.appetiteLevelId} value={appetite.appetiteLevelId}>
+               {translateOrRaw('appetitelevels', appetite.name, appetite.label)} ({appetite.rating})
+              </option>
+            ))}
+          </Dropdown>
+        </FormGroup>
 
-          {/* SleepLevel */}
-          <FormGroup>
-            <label htmlFor="sleeplevel-select">{t('select_sleeplevel')}</label>
-            <Dropdown
-              id="sleeplevel-select"
-              value={selectedSleepLevel}
-              onChange={handleSelectChange('selectedSleepLevel', setSelectedSleepLevel)}
-            >
-              <option value="">{t('choose_sleeplevel')}</option>
-              {sortedSleepLevels.map((sleep) => (
-                <option key={sleep.sleepLevelId} value={sleep.sleepLevelId}>
-                  {t(`sleeplevels.${sleep.name}`)} ({sleep.rating})
-                </option>
-              ))}
-            </Dropdown>
-          </FormGroup>
+        {/* SleepLevel */}
+        <FormGroup>
+          <label htmlFor="sleeplevel-select">{t('select_sleeplevel')}</label>
+          <Dropdown
+            id="sleeplevel-select"
+            value={selectedSleepLevel}
+            onChange={handleSelectChange('selectedSleepLevel', setSelectedSleepLevel)}
+          >
+            <option value="">{t('choose_sleeplevel')}</option>
+            {sortedSleepLevels.map((sleep) => (
+              <option key={sleep.sleepLevelId} value={sleep.sleepLevelId}>
+                {translateOrRaw('sleeplevels', sleep.name, sleep.label)} ({sleep.rating})
+              </option>
+            ))}
+          </Dropdown>
+        </FormGroup>
 
 
           <ButtonsContainer>

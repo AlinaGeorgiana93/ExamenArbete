@@ -20,31 +20,31 @@ public class AppetiteLevel : IAppetiteLevel
                 AppetiteLevelId = Guid.NewGuid(), 
                 Name = "Didn't Eat At All", 
                 Rating = 1, 
-                Label = "Didn't Eat At All 🤢"
+                Label = "🤢"
             },
             new AppetiteLevel { 
                 AppetiteLevelId = Guid.NewGuid(), 
                 Name = "Little", 
                 Rating = 3, 
-                Label = "Little 🍽️"
+                Label = "🍽️"
             },
             new AppetiteLevel { 
                 AppetiteLevelId = Guid.NewGuid(), 
                 Name = "Normal", 
                 Rating = 5, 
-                Label = "Normal Appetite 🙂"
+                Label = " 🙂"
             },
             new AppetiteLevel { 
                 AppetiteLevelId = Guid.NewGuid(), 
                 Name = "Medium", 
                 Rating = 7, 
-                Label = "Medium 😋"
+                Label = " 😋"
             },
             new AppetiteLevel { 
                 AppetiteLevelId = Guid.NewGuid(), 
                 Name = "Very Much", 
                 Rating = 10, 
-                Label = "Very Much 🍴"
+                Label = " 🍴"
             }
         ];
 }

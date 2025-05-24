@@ -18,25 +18,25 @@ public class SleepLevel : ISleepLevel
             SleepLevelId = Guid.NewGuid(),
             Name = "Low",
             Rating = 5,
-            Label = "Low Sleep Level 🙁"
+            Label = " 🙁"
         },
         new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "Medium",
             Rating = 6,
-            Label = "Medium Sleep Level 😐"
+            Label = " 😐"
         },
         new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "OK",
             Rating = 8,
-            Label = "OK Sleep Level 🙂"
+            Label = " 🙂"
         },
         new SleepLevel {
             SleepLevelId = Guid.NewGuid(),
             Name = "Too much",
             Rating = 10,
-            Label = "Too much Sleep Level 😃"
+            Label = " 😃"
         },
         ];
     }

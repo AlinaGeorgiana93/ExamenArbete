@@ -233,7 +233,8 @@
     "Low": "Lite sömn 🙁",
     "Medium": "Medelnivå sömn 😐",
     "OK": "OK sömn 🙂",
-    "Too much": "För mycket sömn 😃"
+    "Too much": "För mycket sömn 😃",
+     "Not enough": "Väldigt lite  🛌"
   },
   "appetitelevels": {
     "Didn't Eat At All": "Åt inte alls 🤢",

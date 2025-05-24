@@ -20,43 +20,43 @@ public class MoodKind : IMoodKind
             MoodKindId = Guid.NewGuid(),
             Name = "Happy",
             Rating = 10,
-            Label = "Happy 😃"
+            Label = " 😃"
         },
         new MoodKind {
             MoodKindId = Guid.NewGuid(),
             Name = "Sad",
             Rating = 2,
-            Label = "Sad 🙁"
+            Label = " 🙁"
         },
         new MoodKind {
             MoodKindId = Guid.NewGuid(),
             Name = "Angry",
             Rating = 3,
-            Label = "Angry 😡"
+            Label = " 😡"
         },
         new MoodKind {
             MoodKindId = Guid.NewGuid(),
             Name = "Lovely",
             Rating = 7,
-            Label = "Lovely 😍"
+            Label = " 😍"
         },
         new MoodKind {
             MoodKindId = Guid.NewGuid(),
             Name = "Depressed",
             Rating = 1,
-            Label = "Depressed 😢"
+            Label = " 😢"
         },
         new MoodKind {
             MoodKindId = Guid.NewGuid(),
             Name = "Excited",
             Rating = 9,
-            Label = "Excited 🤩"
+            Label = " 🤩"
         },
         new MoodKind {
             MoodKindId = Guid.NewGuid(),
             Name = "Bored",
             Rating = 4,
-            Label = "Bored 😒"
+            Label = "😒"
         },
         
         ];
