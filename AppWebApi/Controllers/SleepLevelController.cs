@@ -150,19 +150,14 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"item {idArg} updated");
 
                 
-                    
-                 return Ok(new {
-            item = model.Item,
-            Message = "SleepLevel updated successfully"
-                             });
+                  return Ok(item);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message ?? ex.Message}");
+                    return BadRequest($"Could not update. Error {ex.InnerException?.Message ?? ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
-            }
-        }
-
 
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<ISleepLevel>))]
@@ -181,16 +176,14 @@ namespace AppWebApi.Controllers
 
                 
         
-                 return Ok(new {
-            item = model.Item,
-            Message = "SleepLevel created successfully"
-             });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
-                return BadRequest($"Could not create. Error {ex.Message}");
-            }
-        }
+                  return Ok(item);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, $"{nameof(CreateItem)} failed: {ex.Message}");
+        // Return JSON object instead of string:
+        return BadRequest(new { message = ex.Message });
+    }
+}
     }
 }

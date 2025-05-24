@@ -259,9 +259,13 @@ const handleCreate = async () => {
     console.log('✅ Create response:', response.data);
     await fetchItems(); // wait to refresh list
 
-     setSuccessMessage(response.data.message || `${t(activeType)} ${t('createdSuccessfully')}`);
+    setSuccessMessage(t(`${types[activeType]} created successfully!`));
     setShowSuccessMessage(true);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      setSuccessMessage('');
+    }, 2000);
+
 
     resetForm(); // reset after fetch success
   } catch (err) {
@@ -311,9 +315,14 @@ const handleUpdate = async () => {
     }
     await fetchItems();
 
-  setSuccessMessage(response.data.message || `${t(activeType)} ${t('updatedSuccessfully')}`);
-    setShowSuccessMessage(true);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
+  setSuccessMessage(t(`${types[activeType]} updated successfully!`));
+
+  setShowSuccessMessage(true);
+  setTimeout(() => {
+  setShowSuccessMessage(false);
+  setSuccessMessage('');
+}, 2000);
+
 
 
     resetForm();
@@ -498,13 +507,9 @@ const handleUpdate = async () => {
     </>
   )}
 </ButtonGroup>
-
-
-
         </form>
-
-        {showSuccessMessage && <ToastMessage>{successMessage}</ToastMessage>}
       </ModalContent>
+      {showSuccessMessage && <ToastMessage>{successMessage}</ToastMessage>}
     </ModalContainer>
   );
 };

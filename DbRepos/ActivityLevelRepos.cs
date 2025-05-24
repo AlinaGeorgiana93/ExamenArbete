@@ -130,6 +130,7 @@ public class ActivityLevelDbRepos
         _dbContext.ActivityLevels.Update(item);
 
         await _dbContext.SaveChangesAsync();
+          _logger.LogInformation($"UpdateItemAsync completed for ActivityLevel: {itemDto.ActivityLevelId}");
 
         // Return the updated item
         return await ReadItemAsync(item.ActivityLevelId, false);
@@ -152,13 +153,9 @@ public class ActivityLevelDbRepos
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
-
+          _logger.LogInformation($"ActivityLevel item created with ID: {item.ActivityLevelId}");
         //return the updated item in non-flat mode
         return await ReadItemAsync(item.ActivityLevelId, false);
     }
 
-    // public static implicit operator ActivityLevelDbRepos(ActivityDbRepos v)
-    // {
-    //     throw new NotImplementedException();
-    // }
 }

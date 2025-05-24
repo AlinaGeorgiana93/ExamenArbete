@@ -148,17 +148,14 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"item {idArg} updated");
 
                 
-                 return Ok(new {
-            item = model.Item,
-            Message = "ActivityLevel updated successfully"
-        });
+                return Ok(item);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message ?? ex.Message}");
+                    return BadRequest($"Could not update. Error {ex.InnerException?.Message ?? ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
-            }
-        }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
             Policy = null, Roles = "usr, sysadmin")]
@@ -176,15 +173,12 @@ namespace AppWebApi.Controllers
 
                
                 
-                 return Ok(new {
-                    item = model.Item,
-                    Message = "ActivityLevel created successfully"
-                });
+             return Ok(item);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"{nameof(CreateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not create. Error {ex.InnerException?.Message}");
+               return BadRequest(new { message = ex.Message });
             }
         }
     }

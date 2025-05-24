@@ -1,35 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 
-function EmojiPickerWrapper(props) {
+function EmojiPickerWrapper({ onSelect }) {
   const [showPicker, setShowPicker] = useState(false);
 
-  // onEmojiClick is inside the component, so has access to props
-  const onEmojiClick = (emojiObject, event) => {
-    if (props.onSelect) {
-      props.onSelect(emojiObject.emoji);
-    }
+  const onEmojiClick = (emojiData) => {
+    onSelect?.(emojiData.emoji);
     setShowPicker(false);
   };
 
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .epr-body {
+        max-height: 200px !important;
+        overflow-y: auto !important;
+      }
+
+      .epr-body::-webkit-scrollbar {
+        display: none;
+      }
+
+      .epr-category-nav {
+        padding: 4px !important;
+        justify-content: center !important;
+        gap: 6px !important;
+      }
+
+      .epr-search, .epr-preview {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
   return (
-    <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
-      <input
-        type="text"
-        name={props.name}
-        value={props.value}
-        onChange={props.onChange}
-        autoComplete="off"
-        style={{ width: '100%', paddingRight: '32px' }}
-      />
+    <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)' }}>
       <button
         type="button"
-        onClick={() => setShowPicker(!showPicker)}
+        onClick={() => setShowPicker(prev => !prev)}
+        title="Choose your emoji"
         style={{
-          position: 'absolute',
-          right: '8px',
-          top: '50%',
-          transform: 'translateY(-50%)',
           background: 'transparent',
           border: 'none',
           cursor: 'pointer',
@@ -40,50 +52,53 @@ function EmojiPickerWrapper(props) {
       >
         😊
       </button>
+
       {showPicker && (
         <div
           style={{
             position: 'absolute',
-            top: '100%',
-            right: 0,
-            width: '280px',
+            top: '0',
+            right: '40px',
             zIndex: 1000,
-            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-            borderRadius: '8px',
-            backgroundColor: '#fff',
+            borderRadius: '10px',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
+            backgroundColor: 'white',
+            padding: '8px',
           }}
         >
           <button
             type="button"
-            aria-label="Close emoji picker"
             onClick={() => setShowPicker(false)}
+            aria-label="Close emoji picker"
             style={{
               position: 'absolute',
-              top: '8px',
-              right: '8px',
-              background: 'rgba(255,255,255,0.8)',
+              top: '6px',
+              right: '6px',
+              background: '#f0f0f0',
               border: 'none',
-              fontSize: '18px',
+              fontSize: '16px',
               cursor: 'pointer',
-              lineHeight: 1,
               borderRadius: '50%',
               width: '24px',
               height: '24px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              zIndex: 1100,
-              boxShadow: '0 0 5px rgba(0,0,0,0.1)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
             }}
           >
             ×
           </button>
+
           <EmojiPicker
             onEmojiClick={onEmojiClick}
-            searchDisabled={true}
-            skinTonePickerEnabled={false}
-            groupNames={{ smileys_people: 'Smileys & People' }}
-            categories={['smileys_people']}
+            emojiStyle="native"
+            searchDisabled
+            skinTonesDisabled
+            previewConfig={{ showPreview: false }}
+            height={240}
+            width={280}
+            categories={['smileys_people', 'activities']}
           />
         </div>
       )}

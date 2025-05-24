@@ -111,9 +111,10 @@ public class MoodKindDbRepos
             _dbContext.MoodKinds.Update(item);
 
             await _dbContext.SaveChangesAsync();
+             _logger.LogInformation($"UpdateItemAsync completed for MoodKind: {itemDto.MoodKindId}");
 
             // Return the updated item
-            return await ReadItemAsync(item.MoodKindId, false);
+        return await ReadItemAsync(item.MoodKindId, false);
         }
 
        public async Task<ResponseItemDto<IMoodKind>> CreateItemAsync(MoodKindCuDto itemDto)
@@ -133,6 +134,7 @@ public class MoodKindDbRepos
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
+         _logger.LogInformation($"MoodKind item created with ID: {item.MoodKindId}");
 
         //return the updated item in non-flat mode
         return await ReadItemAsync(item.MoodKindId, false);    

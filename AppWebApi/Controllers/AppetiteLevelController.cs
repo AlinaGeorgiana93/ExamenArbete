@@ -147,17 +147,15 @@ namespace AppWebApi.Controllers
                 var model = await _service.UpdateAppetiteLevelAsync(item);
                 _logger.LogInformation($"item {idArg} updated");
 
-                 return Ok(new {
-                    item = model.Item,
-                    Message = "AppetiteLevel updated successfully"
-                });
+                   return Ok(item);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message ?? ex.Message}");
+                    return BadRequest($"Could not update. Error {ex.InnerException?.Message ?? ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(UpdateItem)}: {ex.InnerException?.Message}");
-                return BadRequest($"Could not update. Error {ex.InnerException?.Message}");
-            }
-        }
+
         [HttpPost()]
         [ProducesResponseType(200, Type = typeof(ResponseItemDto<IAppetiteLevel>))]
         [ProducesResponseType(400, Type = typeof(string))]
@@ -174,15 +172,13 @@ namespace AppWebApi.Controllers
                 _logger.LogInformation($"item {model.Item.AppetiteLevelId} created");
 
                
-                 return Ok(new {
-                    item = model.Item,
-                    Message = "AppetiteLevel created successfully"
-                });
+                 return Ok(item);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"{nameof(CreateItem)}: {ex.Message}");
-                return BadRequest($"Could not create. Error {ex.Message}");
+                 // Return JSON object instead of string:
+                     return BadRequest(new { message = ex.Message });
             }
         }
     }

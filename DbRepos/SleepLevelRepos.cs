@@ -114,6 +114,7 @@ public class SleepLevelDbRepos
         _dbContext.SleepLevels.Update(item);
 
         await _dbContext.SaveChangesAsync();
+         _logger.LogInformation($"UpdateItemAsync completed for SleepLevel: {itemDto.SleepLevelId}");
 
         // Return the updated item
         return await ReadItemAsync(item.SleepLevelId, false);
@@ -136,6 +137,7 @@ public class SleepLevelDbRepos
 
         //write to database in a UoW
         await _dbContext.SaveChangesAsync();
+          _logger.LogInformation($"SleepLevel item created with ID: {item.SleepLevelId}");
 
         //return the updated item in non-flat mode
         return await ReadItemAsync(item.SleepLevelId, false);

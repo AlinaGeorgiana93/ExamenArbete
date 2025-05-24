@@ -125,7 +125,9 @@ namespace DbRepos
             _dbContext.AppetiteLevels.Update(item);
 
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation($"UpdateItemAsync completed for AppetiteLevel: {itemDto.AppetiteLevelId}");
 
+        
             // Return the updated item
             return await ReadItemAsync(item.AppetiteLevelId, false);
         }
@@ -147,7 +149,7 @@ namespace DbRepos
 
             //write to database in a UoW
             await _dbContext.SaveChangesAsync();
-
+             _logger.LogInformation($"AppetiteLevel item created with ID: {item.AppetiteLevelId}");
             //return the updated item in non-flat mode
             return await ReadItemAsync(item.AppetiteLevelId, false);
         }
