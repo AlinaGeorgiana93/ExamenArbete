@@ -212,11 +212,12 @@
   "Add a comment for": "Lägg till en kommentar för {{name}} ",
   "Add Or View Comments": "Lägg till eller visa kommentarer",
   "Date Recorded": "Datum registrerat",
-  "not_specified": "Inte specificerat",
   "no_data_to_review": "Ingen data att granska",
   "no_patient_data": "Ingen patientdata",
   "go_back_home": "Tillbaka hem",
   "not_recorded": "Inte registrerat",
+  "not_available": "Ej tillgänglig",
+  "not_specified": "Ej specificerad",
   
   "activitylevels": {
     "Resting": "Vilar ",

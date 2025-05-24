@@ -204,15 +204,13 @@
   "Add a comment for": "Add a comment for {{name}}",
   "Add_Or_View_Comments": "Add or view comments",
   "Date_Recorded": "Date Recorded",
-  "not_specified":"Not specified",
-  "no_data_to_review":"No data to review", 
+  "not_specified": "Not specified",
+  "no_data_to_review": "No data to review",
   "no_patient_data": "No patient data",
-  "go_back_home":"Back home",
+  "go_back_home": "Back home",
   "not_recorded": "Not recorded",
- 
- 
-
-
+  "not_available": "Not available",
+  
   "activitylevels": {
     "Resting": "Resting ",
     "Reading": "Reading ",

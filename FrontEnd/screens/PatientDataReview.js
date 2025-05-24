@@ -172,8 +172,9 @@ function PatientDataReview() {
     navigate(`/graph/${patientId}`, { state: graphData });
   };
 
-  const getRatingDisplay = (label, rating) =>
-    `${label || t('not_specified')} (Rating: ${rating ?? t('not_available')})`;
+  const getRatingDisplay = (name, label, rating) =>
+    `${t(name) || t('not_specified')} ${t(label) || t('not_specified')} (Rating: ${t(rating) ?? t('not_available')})`;
+
 
   if (!state || !patientId) {
     return (
@@ -208,22 +209,22 @@ function PatientDataReview() {
 
           <DataItem>
             <Label>{t('mood')}</Label>
-            <Value>{getRatingDisplay(state.moodKind?.label, state.moodKind?.rating)}</Value>
+            <Value>{getRatingDisplay(state.moodKind?.name, state.moodKind?.label, state.moodKind?.rating)}</Value>
           </DataItem>
 
           <DataItem>
             <Label>{t('activity')}</Label>
-            <Value>{getRatingDisplay(state.activityLevel?.label, state.activityLevel?.rating)}</Value>
+            <Value>{getRatingDisplay(state.activityLevel?.name, state.activityLevel?.label, state.activityLevel?.rating)}</Value>
           </DataItem>
 
           <DataItem>
             <Label>{t('appetite')}</Label>
-            <Value>{getRatingDisplay(state.appetiteLevel?.label, state.appetiteLevel?.rating)}</Value>
+            <Value>{getRatingDisplay(state.appetiteLevel?.name, state.appetiteLevel?.label, state.appetiteLevel?.rating)}</Value>
           </DataItem>
 
           <DataItem>
             <Label>{t('sleep')}</Label>
-            <Value>{getRatingDisplay(state.sleepLevel?.label, state.sleepLevel?.rating)}</Value>
+            <Value>{getRatingDisplay(state.sleepLevel?.name, state.sleepLevel?.label, state.sleepLevel?.rating)}</Value>
           </DataItem>
 
           <DataItem>
