@@ -151,7 +151,7 @@
   "profile_updated": "Profilen uppdaterades.",
   "manageCategories": "Hantera kategorier",
   "moodKind": "Humör",
-  "activityLevel": "Aktivitetsnivå",
+  "activityLevel": "Aktivitet",
   "appetiteLevel": "Aptit",
   "sleepLevel": "Sömn",
   "create": "Skapa",
@@ -212,8 +212,7 @@
   "Add a comment for": "Lägg till en kommentar för ",
   "Add Or View Comments": "Lägg till eller visa kommentarer",
   "Date Recorded": "Datum registrerat",
-  "activitylevels": {
-
+  "activities": {
     "Resting": "Vilar ",
     "Reading": "Läser ",
     "Take a Walk": "Tar en promenad ",
@@ -235,7 +234,7 @@
     "Medium": "Medelnivå sömn ",
     "OK": "OK sömn ",
     "Too much": "För mycket sömn ",
-     "Not enough": "Väldigt lite  "
+    "Not enough": "Väldigt lite  "
   },
   "appetitelevels": {
     "Didn't Eat At All": "Åt inte alls ",
