@@ -201,6 +201,7 @@ const CommentsPage = () => {
 
 
 
+
   const isToday = (date) => {
     const today = new Date();
     return (
@@ -347,7 +348,7 @@ const CommentsPage = () => {
               zIndex: 2
             }}
           >
-            {t('Back To Patient')}
+            {t('back To Patient')}
           </Link>
         )}
         <img
@@ -356,9 +357,9 @@ const CommentsPage = () => {
           style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }}
         />
         <Title>
-          {t('Comments for')}  {patientData ?
+          {t('comments For')}  {patientData ?
             <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> :
-            (error || t('No Patient Found'))}
+            (error || t('no Patient Found'))}
         </Title>
 
         <DatePicker
@@ -373,7 +374,7 @@ const CommentsPage = () => {
             <CommentBox
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              placeholder={t('Write Your Comment')}
+              placeholder={t('write Your Comment')}
             />
 
             <input
@@ -399,7 +400,7 @@ const CommentsPage = () => {
               </div>
             ) : (
               <div style={{ marginTop: '6px' }}>
-                <CommentButton onClick={handleCommentSubmit}>{t('Submit Comment')}</CommentButton>
+                <CommentButton onClick={handleCommentSubmit}>{t('submit Comment')}</CommentButton>
               </div>
             )}
           </>
@@ -411,7 +412,7 @@ const CommentsPage = () => {
               <p>{comment.text}</p>
               <p>{comment.timestamp}</p>
               <DeleteButton onClick={() => handleDelete(comment.id)}>X</DeleteButton>
-              <button onClick={() => handleEdit(comment.id)}>{t('Edit')}</button>
+              <button onClick={() => handleEdit(comment.id)}>{t('edit')}</button>
               <Signature>{comment.signature}</Signature>
             </CommentItem>
           ))}
@@ -423,19 +424,19 @@ const CommentsPage = () => {
             disabled={currentPage === 1}
           >
             <FaArrowLeft />
-            {t('Previous')}
+            {t('previous')}
           </PageButton>
           <PageButton
             onClick={() => setCurrentPage((prev) => prev + 1)}
             disabled={currentPage === totalPages}
           >
-            {t('Next')}
+            {t('next')}
             <FaArrowRight />
           </PageButton>
         </PageButtonContainer>
 
         <PageInfo>
-          {t('Page Of', { current: currentPage, total: totalPages })}
+          {t('page Of', { current: currentPage, total: totalPages })}
         </PageInfo>
       </PageContainer>
     </>
