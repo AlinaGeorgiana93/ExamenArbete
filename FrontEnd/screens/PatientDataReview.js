@@ -58,6 +58,7 @@ const Title = styled.h2`
 `;
 
 const DataItem = styled.div`
+
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -65,6 +66,14 @@ const DataItem = styled.div`
   background-color: #f9fafa;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  
+  /* Hover effect - grows slightly larger */
+  &:hover {
+    transform: scale(1.02); /* Grows 2% larger */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    background-color: #ffffff; /* Slightly brighter background */
+  
 `;
 
 const Label = styled.span`
