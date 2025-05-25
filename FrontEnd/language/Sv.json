@@ -218,6 +218,19 @@
   "not_recorded": "Inte registrerat",
   "not_available": "Ej tillgänglig",
   "not_specified": "Ej specificerad",
+  "Bar Chart": "Stapeldiagram",
+  "Line Chart": "Linjediagram",
+  "Pie Chart": "Cirkeldiagram",
+  "Daily": "Daglig",
+  "Weekly": "Veckovis",
+  "Monthly": "Månadsvis",
+  "Annual": "Årlig",
+  "select_metrics_to_display": "Välj mått att visa",
+  "From": "Från",
+  "To": "Till",
+  "reset_date_range": "Återställ datumintervall",
+
+ 
   
   "activitylevels": {
     "Resting": "Vilar ",
@@ -249,5 +262,7 @@
     "Normal": "Normal aptit ",
     "Medium": "Medium ",
     "Very Much": "Mycket "
+    
   }
+
 }

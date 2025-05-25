@@ -210,6 +210,17 @@
   "go_back_home": "Back home",
   "not_recorded": "Not recorded",
   "not_available": "Not available",
+    "Bar Chart": "Bar Chart",
+  "Line Chart": "Line Chart",
+  "Pie Chart": "Pie Chart",
+  "Daily": "Daily",
+  "Weekly": "Weekly",
+  "Monthly": "Monthly",
+  "Annual": "Annual",
+  "select_metrics_to_display": "Select Metrics to Display",
+  "From": "From",
+  "To": "To",
+  "reset_date_range": "Reset Date Range",
   
   "activitylevels": {
     "Resting": "Resting ",

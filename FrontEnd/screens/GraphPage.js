@@ -13,6 +13,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link as RouterLink } from 'react-router-dom';
 import Navigation from '../src/Navigation';
+import { useTranslation } from 'react-i18next';
+import '../language/i18n.js';
 
 
 
@@ -26,42 +28,71 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1rem;
   }
 `;
+const GraphPageWrapper = styled.div`
+  position: relative;
+  padding-top: 10px; /* Reduced from 20px */
+  
+  @media (max-width: 480px) {
+    padding-top: 60px; /* Reduced from 80px */
+    padding-bottom: 10px; /* Reduced from 20px */
+    padding-left: 0px;
+  }
+`;
 
 // Update the GraphContainer styled component
 const GraphContainer = styled.div`
   background-color: #ffffffee;
-  padding: 20px;  // Reduced from 30px
+  padding: 16px;
   border-radius: 16px;
-  max-width: 1200px;
-  width: 95%;
+  max-width: 1000px;
+  width: 92%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  margin: 10px auto;  // Reduced vertical margin from 20px
+  margin: 80px auto 40px; /* Increased top to 80px and bottom to 40px */
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
   
   &:hover {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
   }
 
-  /* Tablet (481px – 1024px) */
-  @media (min-width: 481px) and (max-width: 1024px) {
-    width: 98%;
-    padding: 15px;  // Reduced from 25px
+  /* Tablet (768px – 1024px) */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    width: 90%;
+    padding: 14px;
+    margin: 60px auto 30px; /* Adjusted top and bottom */
+  }
+
+  /* Small tablets (481px – 767px) */
+  @media (min-width: 481px) and (max-width: 767px) {
+    width: 88%;
+    padding: 12px;
+    margin: 50px auto 25px; /* Adjusted top and bottom */
   }
 
   /* Desktop (1025px and up) */
   @media (min-width: 1025px) {
-    width: 90%;
-    padding: 15px 20px;  // Reduced vertical padding (first value)
-    max-width: 1100px;  // Consider reducing if needed
+    width: 88%;
+    padding: 16px;
+    margin: 90px auto 50px; /* Increased top and bottom */
+    max-width: 900px;
   }
 
   /* Mobile (320px – 480px) */
   @media (max-width: 480px) {
-    width: 98%;
-    padding: 10px;  // Reduced from 15px
-    margin: 5px auto;  // Reduced from 10px
+    width: 86%;
+    padding: 10px;
+    margin: 60px auto 20px; /* Increased top and bottom */
     border-radius: 12px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Large desktop screens (1440px and up) */
+  @media (min-width: 1440px) {
+    max-width: 1000px;
+    margin: 100px auto 60px;  /* Increased top and bottom */
   }
 `;
 
@@ -208,7 +239,7 @@ const TimeRangeButton = styled.button`
 const ChartWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 400px;
+  height: 200px;
   transition: all 0.3s ease;
   
   /* Desktop */
@@ -241,26 +272,7 @@ const ChartWrapper = styled.div`
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
-const chartTypes = [
-  { key: 'bar', name: 'Bar Chart' },
-  { key: 'line', name: 'Line Chart' },
-  { key: 'pie', name: 'Pie Chart' },
 
-];
-
-const timeRanges = [
-  { key: 'day', name: 'Daily' },
-  { key: 'week', name: 'Weekly' },
-  { key: 'month', name: 'Monthly' },
-  { key: 'year', name: 'Annual' }
-];
-
-const metrics = [
-  { key: 'moodRating', name: 'Mood', color: COLORS[0] },
-  { key: 'activityRating', name: 'Activity', color: COLORS[1] },
-  { key: 'appetiteRating', name: 'Appetite', color: COLORS[2] },
-  { key: 'sleepRating', name: 'Sleep', color: COLORS[3] },
-];
 
 const calculateDailyAverages = (data) => {
   const dateMap = {};
@@ -348,8 +360,31 @@ function getWeekNumber(date) {
 }
 
 function GraphPage() {
+  const { t } = useTranslation();
   const { patientId } = useParams();
   const location = useLocation();
+
+  const chartTypes = [
+    { key: 'bar', name: t('Bar Chart') },
+    { key: 'line', name: t('Line Chart') },
+    { key: 'pie', name: t('Pie Chart') },
+
+];
+
+const timeRanges = [
+    { key: 'day', name: t('Daily') },
+    { key: 'week', name: t('Weekly') },
+    { key: 'month', name: t('Monthly') },
+    { key: 'year', name: t('Annual') }
+];
+
+  const metrics = [
+    { key: 'moodRating', name: t('mood'), color: COLORS[0] },
+    { key: 'activityRating', name: t('activity'), color: COLORS[1] },
+    { key: 'appetiteRating', name: t('appetite'), color: COLORS[2] },
+    { key: 'sleepRating', name: t('sleep'), color: COLORS[3] },
+  ];
+
   const [rawData, setRawData] = useState([]);
   const [patientInfo, setPatientInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -453,7 +488,7 @@ function GraphPage() {
           height: '100%'
         }}>
           <div className="spinner"></div>
-          <p>Loading chart data...</p>
+          <p>{t('loading')}</p>
         </div>
       );
     }
@@ -468,8 +503,8 @@ function GraphPage() {
           flexDirection: 'column',
           alignItems: 'center'
         }}>
-          <h3>No data available</h3>
-          <p>Please check your date range or submit patient data first.</p>
+          <h3>{t('no_data_to_review')}</h3>
+          <p>{t('no_patient_data')}</p>
           <button
             onClick={() => {
               setStartDate(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000));
@@ -485,7 +520,7 @@ function GraphPage() {
               cursor: 'pointer'
             }}
           >
-            Reset Date Range
+            {t('reset_date_range')}
           </button>
         </div>
       );
@@ -802,20 +837,20 @@ case 'pie':
       <GlobalStyle />      
       <Navigation showCommentLink={true} patientId={patientId} />
 
-
+ <GraphPageWrapper>
       <GraphContainer>
         {patientInfo && (
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            marginBottom: '10px',
+            marginBottom: '5px', // Reduced from 10px
             padding: '10px',
             backgroundColor: '#f5f5f5',
             borderRadius: '8px',
           }}>
             <img
               src={patient1}
-              alt="Patient"
+              alt={t('Patient')}
               style={{
                 width: '80px',
                 height: '80px',
@@ -838,11 +873,11 @@ case 'pie':
         <div style={{
           border: '1px solid #eee',
           borderRadius: '10px',
-          padding: '20px',
-          marginBottom: '20px',
+          padding: '15px',
+          marginBottom: '15px',
           backgroundColor: '#f8f8f8',
         }}>
-          <h3 style={{ marginBottom: '10px',padding: '15px', color: '#125358' }}>Select Metrics to Display</h3>
+          <h3 style={{ marginBottom: '10px',padding: '15px', color: '#125358' }}> {t('select_metrics_to_display')}</h3>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
@@ -873,12 +908,12 @@ case 'pie':
           display: 'flex',
           gap: '10px',
           alignItems: 'center',
-          marginBottom: '20px',
+          marginBottom: '15px',
           flexWrap: 'wrap',
           justifyContent: 'center'
         }}>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
-            <span style={{ fontWeight: '500' }}>From:</span>
+            <span style={{ fontWeight: '500' }}>{t('From')}:</span>
             <DatePicker
               selected={startDate}
               onChange={date => setStartDate(date)}
@@ -889,7 +924,7 @@ case 'pie':
             />
           </div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
-            <span style={{ fontWeight: '500' }}>To:</span>
+            <span style={{ fontWeight: '500' }}>{t('To')}:</span>
             <DatePicker
               selected={endDate}
               onChange={date => setEndDate(date)}
@@ -943,14 +978,15 @@ case 'pie':
     style={{ textDecoration: 'none', width: '100%' }}
   >
     <TimeRangeButton>
-      Comment
+          {t('comments')}
     </TimeRangeButton>
   </Link>
 </TimePeriodContainer>
         </ChartWrapper>
-        </GraphContainer>
-    </>
-  );
+   </GraphContainer>
+    </GraphPageWrapper>
+  </>
+);
 }
 
 export default GraphPage;
