@@ -221,6 +221,13 @@
   "From": "From",
   "To": "To",
   "reset_date_range": "Reset Date Range",
+  "week_short": "W",
+  "week_long": "Week",
+  "months": {
+    "short": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "long": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  },
+  "locale_code": "en-US",
   
   "activitylevels": {
     "Resting": "Resting ",
@@ -230,6 +237,8 @@
     "Swimming": "Swimming ",
     "Training": "Training "
   },
+  
+
   "moodkinds": {
     "Happy": "Happy ",
     "Sad": "Sad ",

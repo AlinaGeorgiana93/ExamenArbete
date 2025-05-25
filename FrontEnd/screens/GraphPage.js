@@ -10,6 +10,9 @@ import axios from 'axios';
 import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import DatePicker from 'react-datepicker';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import sv from 'date-fns/locale/sv'; // Swedish locale
+import en from 'date-fns/locale/en-US'; // English locale
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link as RouterLink } from 'react-router-dom';
 import Navigation from '../src/Navigation';
@@ -18,7 +21,9 @@ import '../language/i18n.js';
 
 
 
-
+// Register the locales
+registerLocale('sv', sv);
+registerLocale('en', en);
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -360,7 +365,7 @@ function getWeekNumber(date) {
 }
 
 function GraphPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { patientId } = useParams();
   const location = useLocation();
 
@@ -777,31 +782,34 @@ case 'pie':
     }
   };
 
-  const formatDateLabel = (value, range, detailed = false) => {
-    if (!value) return '';
+const formatDateLabel = (value, range, detailed = false) => {
+  if (!value) return '';
 
-    try {
-      if (range === 'week') {
-        const match = String(value).match(/(\d{4})-W(\d{2})/);
-        if (match) return detailed ? `Week ${match[2]}, ${match[1]}` : `W${match[2]}`;
-      }
-      if (range === 'month') {
-        const date = new Date(value);
-        return detailed ?
-          date.toLocaleDateString('default', { month: 'long', year: 'numeric' }) :
-          date.toLocaleDateString('default', { month: 'short' });
-      }
-      if (range === 'year') {
-        return value;
-      }
+  try {
+    if (range === 'week') {
+      const match = String(value).match(/(\d{4})-W(\d{2})/);
+      if (match) return detailed ? 
+        `${t('week_long')} ${match[2]}, ${match[1]}` : 
+        `${t('week_short')}${match[2]}`;
+    }
+    if (range === 'month') {
       const date = new Date(value);
+      const monthIndex = date.getMonth();
       return detailed ?
-        date.toLocaleDateString() :
-        date.toLocaleDateString('default', { day: 'numeric', month: 'short' });
-    } catch {
+        `${t(`months.long.${monthIndex}`)} ${date.getFullYear()}` :
+        t(`months.short.${monthIndex}`);
+    }
+    if (range === 'year') {
       return value;
     }
-  };
+    const date = new Date(value);
+    return detailed ?
+      date.toLocaleDateString(i18n.language) :
+      `${date.getDate()} ${t(`months.short.${date.getMonth()}`)}`;
+  } catch {
+    return value;
+  }
+};
 
   if (errorMsg) {
     return (
@@ -921,6 +929,7 @@ case 'pie':
               startDate={startDate}
               endDate={endDate}
               maxDate={endDate}
+              locale={i18n.language} // This automatically uses 'sv' or 'en' based on current language
             />
           </div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'black' }}>
