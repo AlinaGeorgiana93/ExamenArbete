@@ -7,6 +7,8 @@ import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import LoadingSpinner from './LoadingSpinner';
 import '../language/i18n.js';
+import CommentModal from '../Modals/CommentModal.js'; // Adjust path as needed
+
 
 
 
@@ -138,7 +140,7 @@ const PatientName = styled.h2`
 
 
 function PatientPage() {
-  const { patientId } = useParams();
+  const {patientId } = useParams();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -153,6 +155,9 @@ function PatientPage() {
   const [selectedAppetiteLevel, setSelectedAppetiteLevel] = useState('');
   const [selectedSleepLevel, setSelectedSleepLevel] = useState('');
 
+
+ const [isCommentModalOpen, setCommentModalOpen] = useState(false);
+  const closeModal = () => setCommentModalOpen(false);
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -271,6 +276,8 @@ function PatientPage() {
     return label ? `${label} ${translated}` : translated;
   }
 
+  
+
 
   return (
     <>
@@ -349,18 +356,25 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
-          </FormGroup>
+              </FormGroup>
+    <ButtonsContainer>
+        <Button onClick={() => setCommentModalOpen(true)}>
+          {patient
+            ? t('Add a comment for', { name: patient.firstName })
+            : t('Add a comment')}
+        </Button>
 
+        <Button onClick={handleSave}>{t('save_button')}</Button>
+      </ButtonsContainer>
 
-          <ButtonsContainer>
-            <CommentsButton to={`/comments/${patientId}`} state={{ from: 'patient' }}>
-              {patient
-                ? t('Add a comment for', { name: patient.firstName })
-                : t('Add a comment')}
-            </CommentsButton>
-            <Button onClick={handleSave}>{t('save_button')}</Button>
+        {patient && isCommentModalOpen && (
+        <CommentModal
+          onClose={closeModal}
+          patientId={patient.id}
+          patientName={`${patient.firstName} ${patient.lastName}`}
+        />
+      )}
 
-          </ButtonsContainer>
         </PatientPageContainer>
 
       </div>
