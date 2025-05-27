@@ -11,6 +11,7 @@ npm update react-datepicker
 npm install react-collapsible
 npm install react-tooltip
 npm install emoji-picker-react
+npm install aos
 
 
 --------------------------
