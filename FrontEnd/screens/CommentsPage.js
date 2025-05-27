@@ -357,7 +357,7 @@ const CommentsPage = () => {
           style={{ maxWidth: '200px', margin: 'auto', display: 'block', marginBottom: '20px' }}
         />
         <Title>
-          {t('comments For')}  {patientData ?
+          {t('Comments for')}  {patientData ?
             <NameTitle>{patientData.firstName} {patientData.lastName}</NameTitle> :
             (error || t('no Patient Found'))}
         </Title>
@@ -374,7 +374,7 @@ const CommentsPage = () => {
             <CommentBox
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              placeholder={t('write Your Comment')}
+              placeholder={t('Write your Comment')}
             />
 
             <input
