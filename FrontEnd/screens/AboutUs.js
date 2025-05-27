@@ -51,17 +51,22 @@ const SectionText = styled.p`
 `;
 
 const PageContainer = styled.div`
+  position: relative;
   background-color: #fff;
   padding: 40px;
   border-radius: 8px;
   width: 100%;
   max-width: 700px;
-  /* Ta bort height & overflow-y så hela sidan scrollar */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   color: #000;
   scrollbar-width: thin;
   scrollbar-color: #50D9E6 #ffffff;
+
+  display: flex;
+  flex-direction: column;
 `;
+
+
 
 
 const Title = styled.h1`
@@ -182,7 +187,10 @@ const StyledList = styled.ul`
   }
 `;
 const Footer = styled.footer`
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;  
   padding: 20px;
   background-color: #f7f7f7;
   color: #555;
@@ -190,6 +198,57 @@ const Footer = styled.footer`
   margin-top: 50px;
   border-top: 1px solid #ddd;
 `;
+
+const BackToTopButton = styled.button`
+align-self: flex-end;
+margin-top: 30px;
+margin-bottom: 30px;
+
+width: 50px;
+height: 50px;
+background-color:rgb(83, 189, 197);
+color: white;
+border: none;
+border-radius: 50%;
+font-size: 24px;
+cursor: pointer;
+opacity: 0.7;
+transition: opacity 0.3s ease, transform 0.3s ease;
+
+display: flex;
+align-items: center;
+justify-content: center;
+position: relative;
+
+&:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+&::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  color: #125358;
+  border: 1px solid #125358;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+&:hover::after {
+  opacity: 1;
+}
+`;
+
+
 
 
 const AboutUsPage = () => {
@@ -273,7 +332,7 @@ const AboutUsPage = () => {
             <li data-aos="fade-up">Goal: To create a platform that makes it easier for individuals to continuously document their well-being in a simple and safe way.</li>
             <li data-aos="fade-up">Development focus: We focused on user-friendliness, accessibility and enabling both patients and healthcare professionals to track progress over time.</li>
           </StyledList>
-          <Text>
+          <Text data-aos="fade-up">
             Thank you for using our service! 💙
           </Text>
         </Section>
@@ -302,9 +361,19 @@ const AboutUsPage = () => {
           </TeamMember>
         </TeamGrid>
 
+       
+
         <Footer>
   &copy; {new Date().getFullYear()} VitalsGraph. All rights reserved.
+  <BackToTopButton 
+    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+    data-tooltip="Scroll to top"
+    style={{ marginLeft: '20px' }} 
+  >
+    ↑
+  </BackToTopButton>
 </Footer>
+
 
       </PageContainer>
 
