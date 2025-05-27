@@ -28,7 +28,7 @@ const ReviewCard = styled.div`
   padding: 40px;
   border-radius: 20px;
   width: 100%;
-  max-width: 800px;
+  max-width: 700px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.5s ease-in-out;
 
@@ -63,7 +63,7 @@ const DataItem = styled.div`
   flex-direction: column;
   padding: 20px;
   margin-bottom: 16px;
-  background-color: #f9fafa;
+    background-color: #F1F0E8;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   transition: all 0.3s ease; /* Smooth transition for hover effects */

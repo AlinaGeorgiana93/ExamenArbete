@@ -23,7 +23,7 @@ const ModalContainer = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background: #F1F0E8;
+    background-color: #F1F0E8;
   border-radius: 10px;
   width: 450px;
   max-height: 80vh;

@@ -21,17 +21,27 @@ body {
 }
 
 @keyframes softBlueWave {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
+
 /* Tablets and smaller laptops */
 @media (max-width: 1024px) {
   h1 {
     font-size: 2rem;
   }
+
   p {
     font-size: 1rem;
   }
+
   .page-container {
     width: 95%;
   }
@@ -42,17 +52,20 @@ body {
   h1 {
     font-size: 1.5rem;
   }
+
   p {
     font-size: 0.9rem;
   }
+
   body {
     padding: 10px 0;
   }
+
   .page-container {
     width: 100%;
     padding: 10px;
   }
-  
+
   .page-container .logo {
     width: 70px;
     top: 5px;
@@ -63,7 +76,8 @@ body {
 
 h1 {
   color: #156ba0;
-  font-size: 2.5rem; /* instead of px */
+  font-size: 2.5rem;
+  /* instead of px */
   margin-bottom: 1.25rem;
 }
 
@@ -78,11 +92,11 @@ p {
   position: absolute;
   top: 10px;
   right: 10px;
-  max-width: 100px;  /* max-width for scaling */
-  height: auto;      /* maintain aspect ratio */
+  max-width: 100px;
+  /* max-width for scaling */
+  height: auto;
+  /* maintain aspect ratio */
 }
-
-
 
 
 .App {

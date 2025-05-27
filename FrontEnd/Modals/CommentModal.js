@@ -11,103 +11,171 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import '../language/i18n.js';
 import { useTranslation } from 'react-i18next';
 
-const Overlay = styled.div`
-  position: fixed;
+export const Overlay = styled.div`
+  position: absolute;
   top: 0;
   left: 0;
+  width: 200%;      
   height: 100%;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  left: -105px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;  /* if container has rounding */
 `;
 
-const ModalContainer = styled.div`
-  background-color: #f9fafa;
-  width: 700px;
-  max-height: 90vh;
-  margin: 50px auto;
-  padding: 32px;
+// Make modal a bit bigger
+export const ModalContainer = styled.div`
+  background-color: #F1F0E8;
   border-radius: 10px;
-  position: relative;
+  width: 90%;            // <= container width (500px * 0.9 = 450px max)
+  max-width: 450px;      // max width so it won't overflow
+  max-height: 80vh;
   overflow-y: auto;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+
+  @keyframes slideUp {
+    from {transform: translateY(20px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+  }
 `;
 
-const CloseButton = styled.button`
-   position: absolute;
-  right: 15px;
-  top: 15px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
-`;
 
-const Title = styled.h1`
+// Title and Close
+export const Title = styled.h1`
   text-align: center;
   color: #125358;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  font-size: 24px;
 `;
 
-const CommentBox = styled.textarea`
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  color: #444;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+`;
+
+
+
+
+
+// Form Fields
+export const CommentBox = styled.textarea`
   width: 100%;
   height: 140px;
-  padding: 14px;
+  padding: 16px;
   font-size: 16px;
-  margin: 12px 0;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #ccc;
+  margin-bottom: 16px;
+  resize: none;
+
+  &:focus {
+    outline: none;
+    border-color: #125358;
+  }
 `;
 
-const SignatureInput = styled.input`
+export const SignatureInput = styled.input`
   width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
   border: 1px solid #ccc;
+
+  &:focus {
+    outline: none;
+    border-color: #125358;
+  }
 `;
 
-const Button = styled.button`
+// Buttons
+export const Button = styled.button`
   background-color: #125358;
   color: white;
-  padding: 10px 18px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
-  margin-right: 10px;
+  transition: background-color 0.2s ease;
 
   &:hover {
     background-color: #0d3e40;
   }
 `;
 
-const CommentList = styled.div`
+export const ActionButton = styled(Button).attrs({ as: 'button' })`
+  background-color: ${({ $variant }) =>
+    $variant === 'delete' ? '#ff4d4f' : '#125358'};
+
+  &:hover {
+    background-color: ${({ $variant }) =>
+    $variant === 'delete' ? '#cc0000' : '#0d3e40'};
+  }
+
+  margin-left: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+`;
+
+// Comment Display
+export const CommentList = styled.div`
   margin-top: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 `;
 
-const CommentItem = styled.div`
+export const CommentItem = styled.div`
   background: #f0f0f0;
-  padding: 14px;
+  padding: 16px;
   border-left: 4px solid #125358;
-  border-radius: 6px;
+  border-radius: 10px;
   position: relative;
 `;
 
-const DeleteButton = styled.button`
+// Meta Info
+export const NameTitle = styled.span`
+  font-weight: 600;
+  color: #125358;
+`;
+
+export const Signature = styled.div`
+  font-style: italic;
+  color: #777;
+  margin-top: 6px;
+  font-size: 14px;
+`;
+
+// Delete Button on Comment
+export const DeleteButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   background: #ff4d4d;
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   color: white;
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
 
   &:hover {
@@ -115,62 +183,64 @@ const DeleteButton = styled.button`
   }
 `;
 
-const Pagination = styled.div`
+export const Pagination = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
-`;
-const NameTitle = styled.span`
-  color: #125358;
-  font-weight: bold;
+  justify-content: space-between; /* previous left, next right */
+  align-items: center;
+  margin-top: 24px;
 `;
 
-const Signature = styled.div`
-  font-style: italic;
-  color: #888;
+
+export const PageButtonContainer = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+export const PageButton = styled(Button)`
+  padding: 8px;
+  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Remove extra text spacing */
+  svg {
+    pointer-events: none;
+  }
+`;
+
+export const PageInfo = styled.div`
+  font-size: 14px;
+  color: #668;
+  text-align: center;
+  margin-top: 8px;
+`;
+
+export const PageContainer = styled.div`
+  margin-top: 20px;
+`;
+
+export const CommentButton = styled(Button)`
+  background-color: #125358;
+   align-items: center;
+  
+  &:hover {
+    background-color: #0d3e40;
+  }
+`;
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   margin-top: 6px;
 `;
 
-const CommentButton = styled(Button)`
-  background-color: #125358;
-`;
 
-const PageButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
 
-const PageButton = styled(Button)`
-  font-size: 14px;
-`;
-
-const PageInfo = styled.div`
-  margin-top: 10px;
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-`;
-
-const PageContainer = styled.div`
-  margin-top: 20px;
-`;
-
-const ActionButton = styled.button`
-  background-color: ${({ $variant }) =>
-    $variant === 'delete' ? '#ff4d4f' : '#1890ff'};
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 4px 8px;
-  margin-left: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-
-  &:hover {
-    opacity: 0.9;
-  }
-`;
 
 
 const CommentModal = ({ isOpen, onClose, patientName, readOnly = false }) => {
@@ -184,7 +254,7 @@ const CommentModal = ({ isOpen, onClose, patientName, readOnly = false }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const COMMENTS_PER_PAGE = 16;
+  const COMMENTS_PER_PAGE = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -223,21 +293,21 @@ const CommentModal = ({ isOpen, onClose, patientName, readOnly = false }) => {
     fetchPatientData();
   }, [patientId]);
 
-   useEffect(() => {
-  if (isModalOpen) {
-    document.body.style.overflow = 'hidden';
-    // Also add right padding to compensate for scrollbar width (~15-17px)
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
-  } else {
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-  }
-  return () => {
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-  };
-}, [isModalOpen]);
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+      // Also add right padding to compensate for scrollbar width (~15-17px)
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    };
+  }, [isModalOpen]);
 
   const handleCommentSubmit = () => {
     if (comments.trim() === '') {
@@ -299,15 +369,22 @@ const CommentModal = ({ isOpen, onClose, patientName, readOnly = false }) => {
   };
 
 
-  const totalPages = Math.ceil(commentList.length / COMMENTS_PER_PAGE);
-  const startIdx = (currentPage - 1) * COMMENTS_PER_PAGE;
-  const filteredComments = commentList.filter(comment => {
-    const commentDate = new Date(comment.timestamp).toLocaleDateString('sv-SE');
-    const selectedDateString = selectedDate.toLocaleDateString('sv-SE');
-    return commentDate === selectedDateString;
-  });
+ // 1. Filter comments by selected date first
+const filteredComments = commentList.filter(comment => {
+  const commentDate = new Date(comment.timestamp).toLocaleDateString('sv-SE');
+  const selectedDateString = selectedDate.toLocaleDateString('sv-SE');
+  return commentDate === selectedDateString;
+});
 
-  const paginatedComments = filteredComments.slice(startIdx, startIdx + COMMENTS_PER_PAGE);
+// 2. Calculate total pages based on filtered comments count
+const totalPages = Math.ceil(filteredComments.length / COMMENTS_PER_PAGE);
+
+// 3. Calculate start index for current page
+const startIdx = (currentPage - 1) * COMMENTS_PER_PAGE;
+
+// 4. Slice filtered comments for pagination
+const paginatedComments = filteredComments.slice(startIdx, startIdx + COMMENTS_PER_PAGE);
+
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -336,30 +413,32 @@ const CommentModal = ({ isOpen, onClose, patientName, readOnly = false }) => {
         {isToday(selectedDate) && !readOnly && (
           <>
             <CommentBox
-          value={comments}
-          onChange={(e) => setComments(e.target.value)}
-          placeholder={t('Write Your Comment')}
-          readOnly={readOnly}
-        />
-          <SignatureInput
-            type="text"
-            placeholder={t('initials')}
-            value={signature}
-            onChange={(e) => setSignature(e.target.value)}
-            readOnly={readOnly}
-          />
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              placeholder={t('Write Your Comment')}
+              readOnly={readOnly}
+            />
+            <SignatureInput
+              type="text"
+              placeholder={t('initials')}
+              value={signature}
+              onChange={(e) => setSignature(e.target.value)}
+              readOnly={readOnly}
+            />
 
+            {!readOnly && (
+              editMode ? (
+                <ButtonsWrapper>
+                  <CommentButton onClick={handleSaveEdit}>{t('Save')}</CommentButton>
+                  <Button onClick={handleCancelEdit}>{t('Cancel')}</Button>
+                </ButtonsWrapper>
+              ) : (
+                <ButtonsWrapper>
+                  <CommentButton onClick={handleCommentSubmit}>{t('Submit Comment')}</CommentButton>
+                </ButtonsWrapper>
+              )
+            )}
 
-           {!readOnly && (
-            editMode ? (
-              <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
-                <CommentButton onClick={handleSaveEdit}>{t('Save')}</CommentButton>
-                <Button onClick={handleCancelEdit}>{t('Cancel')}</Button>
-              </div>
-            ) : (
-              <CommentButton onClick={handleCommentSubmit}>{t('Submit Comment')}</CommentButton>
-            )
-          )}
           </>
         )}
 
@@ -381,31 +460,27 @@ const CommentModal = ({ isOpen, onClose, patientName, readOnly = false }) => {
           ))}
         </CommentList>
 
-        <PageButtonContainer>
+        <Pagination>
           <PageButton
-            onClick={() => setCurrentPage((prev) => prev - 1)}
+            onClick={() => setCurrentPage(prev => prev - 1)}
             disabled={currentPage === 1}
+            aria-label={t('Previous')}
           >
             <FaArrowLeft />
-            {t('Previous')}
           </PageButton>
+
+          <PageInfo>
+            {t('Page')} {currentPage} {t('of')} {totalPages}
+          </PageInfo>
+
           <PageButton
-            onClick={() => setCurrentPage((prev) => prev + 1)}
+            onClick={() => setCurrentPage(prev => prev + 1)}
             disabled={currentPage === totalPages}
+            aria-label={t('Next')}
           >
-            {t('Next')}
             <FaArrowRight />
           </PageButton>
-        </PageButtonContainer>
-
-        <CloseButton onClick={onClose} aria-label="Close modal">
-          <FaTimes />
-        </CloseButton>
-
-
-        <PageInfo>
-          {t('Page Of', { current: currentPage, total: totalPages })}
-        </PageInfo>
+        </Pagination>
       </ModalContainer>
     </Overlay>
   );

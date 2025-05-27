@@ -48,7 +48,7 @@ const GraphPageWrapper = styled.div`
 
 // Update the GraphContainer styled component
 const GraphContainer = styled.div`
-  background-color: #ffffffee;
+  background-color: #F1F0E8;
   padding: 16px;
   border-radius: 16px;
   max-width: 1000px;

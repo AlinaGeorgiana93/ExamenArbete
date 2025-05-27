@@ -24,10 +24,10 @@ const PatientPageContainer = styled.div`
   background-color: #F1F0E8;
   padding: 25px;
   border-radius: 16px;
-  max-width: 450px;
+  max-width: 500px;
   width: 100%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  position: relative;
+  position: relative;  /* for modal absolute positioning */
   z-index: 1;
   backdrop-filter: blur(6px);
 `;
