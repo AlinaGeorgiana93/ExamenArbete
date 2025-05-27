@@ -128,6 +128,11 @@ const Role = styled.span`
   font-size: 0.9rem;
   color: #555;
   margin-top: 5px;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #50D9E6;
+  }
 `;
 const ChecklistImage = styled.img`
   width: 200px;
