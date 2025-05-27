@@ -29,13 +29,13 @@ const LogoContainer = styled.div`
 `;
 
 const Section = styled.section`
-  margin-bottom: 50px; /* Större mellanrum mellan sektionerna */
+  margin-bottom: 50px;
 `;
 
 const SectionTitle = styled.h2`
   color: #125358;
-  font-size: 1.8rem; /* Större fontstorlek */
-  margin-bottom: 15px; /* Större avstånd mellan rubrik och text */
+  font-size: 1.8rem; 
+  margin-bottom: 15px; 
   text-align: center;
 `;
 
@@ -44,7 +44,7 @@ const SectionText = styled.p`
   color: #333;
   line-height: 1.6;
   text-align: center;
-  margin-bottom: 30px; /* Mer mellanrum efter texten */
+  margin-bottom: 30px;
 `;
 
 const PageContainer = styled.div`
@@ -64,30 +64,38 @@ const PageContainer = styled.div`
 const Title = styled.h1`
   text-align: center;
   color: #125358;
-  margin-bottom: 30px; /* Större avstånd till rubrikens text */
+  margin-bottom: 30px;
 `;
 
 const Text = styled.p`
   font-size: 18px;
   color: #333;
   line-height: 1.6;
-  margin-bottom: 20px; /* Större mellanrum */
+  margin-bottom: 20px; 
   text-align: center;
 `;
 
 const TeamGrid = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center; 
   flex-wrap: wrap;
+  gap: 30px;        
   margin-top: 30px;
 `;
+
 
 const TeamMember = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 15px;
+  flex-basis: calc(50% - 15px); 
+  
+  @media (max-width: 600px) {
+    flex-basis: 100%;
+  }
 `;
+
+
 
 const Name = styled.span`
   font-weight: bold;
@@ -98,7 +106,7 @@ const TeamHeading = styled.h2`
   text-align: center;
   color: #125358;
   margin-top: 40px;
-  margin-bottom: 25px; /* Mer mellanrum före och efter */
+  margin-bottom: 25px; 
   font-size: 1.8rem;
 `;
 
@@ -121,6 +129,55 @@ const Role = styled.span`
   color: #555;
   margin-top: 5px;
 `;
+const ChecklistImage = styled.img`
+  width: 200px;
+  height: 200px;
+  object-fit: cover;   
+  display: block;
+  margin: 0 auto 30px auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  @media (max-width: 500px) {
+    width: 150px;
+    height: 150px;
+  }
+`;
+const StyledList = styled.ul`
+  max-width: 600px;
+  margin: 0 auto 30px auto;  
+  padding-left: 0;
+  list-style: none;   
+  text-align: center;
+
+  li {
+    position: relative;
+    margin-bottom: 12px;
+    font-size: 17px;
+    color: #333;
+    padding-left: 30px; 
+    text-align: left;  
+    max-width: 100%;
+
+    
+    &::before {
+      content: "✨";  
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 18px;
+      line-height: 1;
+      color: #125358; 
+    }
+  }
+`;
+
+
 
 const AboutUsPage = () => {
   const { t } = useTranslation();
@@ -135,57 +192,65 @@ const AboutUsPage = () => {
       </LogoContainer>
 
       <PageContainer>
-        {/* Lägg till bilden här */}
-        <img src={checklist} alt="Checklist" style={{ width: '75%', height: 'auto', display: 'block', margin: '0 auto' }} />
+      <ChecklistImage src={checklist} alt="Checklist" />
+      <Title>About VitalsGraph</Title>
+<SectionText>
+  We are four dedicated women studying system development, and together we have created this website as part of our educational project. Our goal is to build a smooth and user-friendly platform that helps healthcare professionals track and report patients well-being on a daily basis.
+</SectionText>
+<SectionText>
+  By combining technology with compassion, we aim to improve communication between healthcare staff and patients. We believe that small actions every day can make a big difference in peoples health over time.
+</SectionText>
+<SectionText>
+  The platform is designed with a focus on accessibility, safety and simplicity – and we are proud to have built something that can make healthcare more efficient and provide patients with a better experience.
+</SectionText>
 
-        <Title>Om AutiGraph</Title>
-        <Text>
-          Vi är fyra engagerade tjejer som studerar systemutveckling och har tillsammans utvecklat den här webbplatsen som en del av vårt utbildningsprojekt. Vårt mål är att skapa en smidig och användarvänlig plattform som underlättar för vårdpersonal att spåra och rapportera patienters mående dagligen.
-        </Text>
-        <Text>
-          Genom att kombinera teknik med omtanke vill vi bidra till en bättre kommunikation mellan vårdpersonal och patienter. Vi tror att små insatser varje dag kan göra stor skillnad för människors hälsa över tid.
-        </Text>
-        <Text>
-          Plattformen är utformad med fokus på tillgänglighet, trygghet och enkelhet — och vi är stolta över att ha byggt något som kan göra vården mer effektiv och ge patienter en bättre upplevelse.
-        </Text>
+
+<Section>
+  <SectionTitle>What is VitalsGraph?</SectionTitle>
+
+  <SectionText>
+    VitalsGraph is a digital platform that makes it easy for healthcare professionals to report and track patients' well-being on a daily basis.
+  </SectionText>
+
+  <SectionText>
+    By visualizing health data, we help healthcare staff monitor progress over time and make better decisions together with the patients.
+  </SectionText>
+
+  <SectionText>
+    The platform provides a clear overview of each individual's well-being, which improves communication and enables more efficient care.
+  </SectionText>
+</Section>
+
 
         <Section>
-          <SectionTitle>Vad är AutiGraph?</SectionTitle>
+          <SectionTitle>Our Vision</SectionTitle>
           <SectionText>
-            AutiGraph är en digital plattform som gör det enkelt för vårdpersonal att dagligen rapportera och spåra patienternas mående. Genom att visualisera hälsodata hjälper vi vårdpersonal att följa utvecklingen över tid och fatta bättre beslut tillsammans med patienterna. Plattformen gör det möjligt att få en tydlig översikt av varje individs välmående, vilket underlättar kommunikationen och ger en mer effektiv vård.
+          We believe that everyone should be able to communicate their well-being easily, safely and visually. Our vision is to enable people to express their inner state in a way that both they and others can understand.
           </SectionText>
         </Section>
 
         <Section>
-          <SectionTitle>Vår vision</SectionTitle>
+          <SectionTitle>Who Are We?</SectionTitle>
           <SectionText>
-            Vi tror att alla ska kunna kommunicera sitt välmående enkelt, tryggt och visuellt. Vår vision är att göra det möjligt för människor att uttrycka sitt inre tillstånd på ett sätt som både de själva och andra kan förstå.
+          We are a dedicated team of future software developers with a passion for creating digital solutions that make a difference. With our diverse strengths in development, design, and empathy, we build products that put people at the center.
           </SectionText>
         </Section>
 
         <Section>
-          <SectionTitle>Vilka är vi?</SectionTitle>
-          <SectionText>
-            Vi är ett dedikerat team av blivande systemutvecklare med passion för att skapa digitala lösningar som gör skillnad. Med våra olika styrkor inom utveckling, design och empati, bygger vi produkter som sätter människan i centrum.
-          </SectionText>
-        </Section>
+  <SectionTitle>Our Story</SectionTitle>
+  <StyledList>
+    <li>Founded in 2025</li>
+    <li>Self-funded: The project was started without external investments.</li>
+    <li>Goal: To create a platform that makes it easier for individuals to continuously document their well-being in a simple and safe way.</li>
+    <li>Development focus: We focused on user-friendliness, accessibility and enabling both patients and healthcare professionals to track progress over time.</li>
+  </StyledList>
+  <Text>
+    Thank you for using our service! 💙
+  </Text>
+</Section>
 
-        <Section>
-          <SectionTitle>Vår historia</SectionTitle>
-          <SectionText>
-            <ul>
-              <li>Grundades 2025</li>
-              <li>Självfinansierat: Projektet startades utan externa investeringar.</li>
-              <li>Mål: Att skapa en plattform som underlättar för personer att kontinuerligt dokumentera sitt mående på ett enkelt och tryggt sätt.</li>
-              <li>Utvecklingsfokus: Vi fokuserade på användarvänlighet, tillgänglighet och att göra det möjligt för både patienter och vårdpersonal att följa utvecklingen över tid.</li>
-            </ul>
-          </SectionText>
-          <Text>
-            Tack för att du använder vår tjänst! 💙
-          </Text>
-        </Section>
 
-        <TeamHeading>Träffa AutiGraph-teamet</TeamHeading>
+        <TeamHeading>Meet the VitalsGraph Team</TeamHeading>
         <TeamGrid>
           <TeamMember>
             <ProfileImage src={Parisa} alt="Teammedlem 1" />
