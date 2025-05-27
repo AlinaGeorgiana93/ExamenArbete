@@ -7,6 +7,8 @@ import logo1 from '../src/media/logo1.png';
 import patient1 from '../src/media/patient1.jpg';
 import LoadingSpinner from './LoadingSpinner';
 import '../language/i18n.js';
+import CommentModal from '../Modals/CommentModal.js'; // Adjust path as needed
+
 
 
 
@@ -22,10 +24,10 @@ const PatientPageContainer = styled.div`
   background-color: #F1F0E8;
   padding: 25px;
   border-radius: 16px;
-  max-width: 450px;
+  max-width: 500px;
   width: 100%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  position: relative;
+  position: relative;  /* for modal absolute positioning */
   z-index: 1;
   backdrop-filter: blur(6px);
 `;
@@ -138,7 +140,7 @@ const PatientName = styled.h2`
 
 
 function PatientPage() {
-  const { patientId } = useParams();
+  const {patientId } = useParams();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -153,6 +155,9 @@ function PatientPage() {
   const [selectedAppetiteLevel, setSelectedAppetiteLevel] = useState('');
   const [selectedSleepLevel, setSelectedSleepLevel] = useState('');
 
+
+ const [isCommentModalOpen, setCommentModalOpen] = useState(false);
+  const closeModal = () => setCommentModalOpen(false);
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -271,6 +276,8 @@ function PatientPage() {
     return label ? `${label} ${translated}` : translated;
   }
 
+  
+
 
   return (
     <>
@@ -349,18 +356,25 @@ function PatientPage() {
                 </option>
               ))}
             </Dropdown>
-          </FormGroup>
+              </FormGroup>
+    <ButtonsContainer>
+        <Button onClick={() => setCommentModalOpen(true)}>
+          {patient
+            ? t('Add a comment for', { name: patient.firstName })
+            : t('Add a comment')}
+        </Button>
 
+        <Button onClick={handleSave}>{t('save_button')}</Button>
+      </ButtonsContainer>
 
-          <ButtonsContainer>
-            <CommentsButton to={`/comments/${patientId}`} state={{ from: 'patient' }}>
-              {patient
-                ? t('Add a comment for', { name: patient.firstName })
-                : t('Add a comment')}
-            </CommentsButton>
-            <Button onClick={handleSave}>{t('save_button')}</Button>
+        {patient && isCommentModalOpen && (
+        <CommentModal
+          onClose={closeModal}
+          patientId={patient.id}
+          patientName={`${patient.firstName} ${patient.lastName}`}
+        />
+      )}
 
-          </ButtonsContainer>
         </PatientPageContainer>
 
       </div>

@@ -18,6 +18,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import Navigation from '../src/Navigation';
 import { useTranslation } from 'react-i18next';
 import '../language/i18n.js';
+import CommentModal from '../Modals/CommentModal.js'; // Adjust path as needed
+
 
 
 
@@ -46,7 +48,7 @@ const GraphPageWrapper = styled.div`
 
 // Update the GraphContainer styled component
 const GraphContainer = styled.div`
-  background-color: #ffffffee;
+  background-color: #F1F0E8;
   padding: 16px;
   border-radius: 16px;
   max-width: 1000px;
@@ -59,7 +61,7 @@ const GraphContainer = styled.div`
   
   &:hover {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
+    
   }
 
   /* Tablet (768px – 1024px) */
@@ -273,8 +275,6 @@ const ChartWrapper = styled.div`
   }
 `;
 
-
-
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
 
@@ -364,10 +364,17 @@ function getWeekNumber(date) {
   return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
 }
 
+
+
 function GraphPage() {
   const { t, i18n } = useTranslation();
   const { patientId } = useParams();
   const location = useLocation();
+  const [isCommentModalOpen, setCommentModalOpen] = useState(false);
+  const closeModal = () => setCommentModalOpen(false);
+  const openModal = () => setCommentModalOpen(true);
+
+
 
   const chartTypes = [
     { key: 'bar', name: t('Bar Chart') },
@@ -981,15 +988,19 @@ const formatDateLabel = (value, range, detailed = false) => {
   {/* Add a separator div with some margin */}
   <div style={{ margin: '15px 0', width: '100%', borderTop: '1px solid #ddd' }} />
   
-  <Link 
-    to={`/comments/${patientId}`}
-    state={{ from: 'graph' }}
-    style={{ textDecoration: 'none', width: '100%' }}
-  >
-    <TimeRangeButton>
-          {t('comments')}
-    </TimeRangeButton>
-  </Link>
+     <TimeRangeButton onClick={openModal}>
+        {t('comments')}
+      </TimeRangeButton>
+
+      {isCommentModalOpen && (
+        <CommentModal
+          isOpen={isCommentModalOpen}
+          onClose={closeModal}
+          patientId={patientId}
+          readOnly={true} // allow edit & view
+        />
+      )}
+
 </TimePeriodContainer>
         </ChartWrapper>
    </GraphContainer>
