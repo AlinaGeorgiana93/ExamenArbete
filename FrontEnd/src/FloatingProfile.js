@@ -8,7 +8,7 @@ const FloatingProfileContainer = styled.div`
   position: fixed;
   bottom: 50px;
   left: 20px;      /* changed from right: 20px */
-  background-color: #ffffff;
+ background-color: #F1F0E8;
   border-radius: 12px;
   padding: 16px;
   width: 240px;

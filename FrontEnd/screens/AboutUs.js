@@ -52,7 +52,7 @@ const SectionText = styled.p`
 
 const PageContainer = styled.div`
   position: relative;
-  background-color: #fff;
+   background-color: #F1F0E8;
   padding: 40px;
   border-radius: 8px;
   width: 100%;
@@ -192,7 +192,7 @@ const Footer = styled.footer`
   align-items: center;
   gap: 30px;  
   padding: 20px;
-  background-color: #f7f7f7;
+   background-color: #F1F0E8;
   color: #555;
   font-size: 14px;
   margin-top: 50px;
