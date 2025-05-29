@@ -250,6 +250,7 @@ position: relative;
 
 
 
+// ... dina imports oförändrade
 
 const AboutUsPage = () => {
   const { t } = useTranslation();
@@ -281,102 +282,77 @@ const AboutUsPage = () => {
         </Link>
       </LogoContainer>
 
-      <PageContainer>
+      <PageContainer id="page-container">
         <ChecklistImage data-aos="fade-up" src={checklist} alt="Checklist" />
-        <Title data-aos="fade-up">About VitalsGraph</Title>
-        <SectionText data-aos="fade-up">
-          We are four dedicated women studying system development and together we have created this website as part of our educational project. Our goal is to build a smooth and user-friendly platform that helps healthcare professionals track and report patients well-being on a daily basis.
-        </SectionText>
-        <SectionText data-aos="fade-up">
-          By combining technology with compassion, we aim to improve communication between healthcare staff and patients. We believe that small actions every day can make a big difference in peoples health over time.
-        </SectionText>
-        <SectionText data-aos="fade-up">
-          The platform is designed with a focus on accessibility, safety and simplicity – and we are proud to have built something that can make healthcare more efficient and provide patients with a better experience.
-        </SectionText>
+        <Title data-aos="fade-up">{t('about.title')}</Title>
+
+        <SectionText data-aos="fade-up">{t('about.intro1')}</SectionText>
+        <SectionText data-aos="fade-up">{t('about.intro2')}</SectionText>
+        <SectionText data-aos="fade-up">{t('about.intro3')}</SectionText>
 
         <Section>
-          <SectionTitle data-aos="fade-up">What is VitalsGraph?</SectionTitle>
-
-          <SectionText data-aos="fade-up">
-            VitalsGraph is a digital platform that makes it easy for healthcare professionals to report and track patients' well-being on a daily basis.
-          </SectionText>
-
-          <SectionText data-aos="fade-up">
-            By visualizing health data, we help healthcare staff monitor progress over time and make better decisions together with the patients.
-          </SectionText>
-
-          <SectionText data-aos="fade-up">
-            The platform provides a clear overview of each individual's well-being, which improves communication and enables more efficient care.
-          </SectionText>
+          <SectionTitle data-aos="fade-up">{t('about.whatIs.title')}</SectionTitle>
+          <SectionText data-aos="fade-up">{t('about.whatIs.text1')}</SectionText>
+          <SectionText data-aos="fade-up">{t('about.whatIs.text2')}</SectionText>
+          <SectionText data-aos="fade-up">{t('about.whatIs.text3')}</SectionText>
         </Section>
 
         <Section>
-          <SectionTitle data-aos="fade-up">Our Vision</SectionTitle>
-          <SectionText data-aos="fade-up">
-            We believe that everyone should be able to communicate their well-being easily, safely and visually. Our vision is to enable people to express their inner state in a way that both they and others can understand.
-          </SectionText>
+          <SectionTitle data-aos="fade-up">{t('about.vision.title')}</SectionTitle>
+          <SectionText data-aos="fade-up">{t('about.vision.text')}</SectionText>
         </Section>
 
         <Section>
-          <SectionTitle data-aos="fade-up">Who Are We?</SectionTitle>
-          <SectionText data-aos="fade-up">
-            We are a dedicated team of future software developers with a passion for creating digital solutions that make a difference. With our diverse strengths in development, design and empathy, we build products that put people at the center.
-          </SectionText>
+          <SectionTitle data-aos="fade-up">{t('about.whoAreWe.title')}</SectionTitle>
+          <SectionText data-aos="fade-up">{t('about.whoAreWe.text')}</SectionText>
         </Section>
 
         <Section>
-          <SectionTitle data-aos="fade-up">Our Story</SectionTitle>
+          <SectionTitle data-aos="fade-up">{t('about.story.title')}</SectionTitle>
           <StyledList>
-            <li data-aos="fade-up">Founded in 2025</li>
-            <li data-aos="fade-up">Self-funded: The project was started without external investments.</li>
-            <li data-aos="fade-up">Goal: To create a platform that makes it easier for individuals to continuously document their well-being in a simple and safe way.</li>
-            <li data-aos="fade-up">Development focus: We focused on user-friendliness, accessibility and enabling both patients and healthcare professionals to track progress over time.</li>
+            <li data-aos="fade-up">{t('about.story.founded')}</li>
+            <li data-aos="fade-up">{t('about.story.selfFunded')}</li>
+            <li data-aos="fade-up">{t('about.story.goal')}</li>
+            <li data-aos="fade-up">{t('about.story.focus')}</li>
           </StyledList>
-          <Text data-aos="fade-up">
-            Thank you for using our service! 💙
-          </Text>
+          <Text data-aos="fade-up">{t('about.story.thankYou')}</Text>
         </Section>
 
-        <TeamHeading data-aos="fade-up">Meet the VitalsGraph Team</TeamHeading>
+        <TeamHeading data-aos="fade-up">{t('about.team.title')}</TeamHeading>
         <TeamGrid>
           <TeamMember data-aos="fade-up">
-            <ProfileImage src={Parisa} alt="Teammedlem 1" />
-            <Name>Parisa A.</Name>
-            <Role>Fullstack Developer</Role>
+            <ProfileImage src={Parisa} alt="Parisa" />
+            <Name>{t('team.parisa.name')}</Name>
+            <Role>{t('team.parisa.role')}</Role>
           </TeamMember>
           <TeamMember data-aos="fade-up">
-            <ProfileImage src={Alina} alt="Teammedlem 2" />
-            <Name>Alina M.</Name>
-            <Role>Fullstack Developer</Role>
+            <ProfileImage src={Alina} alt="Alina" />
+            <Name>{t('team.alina.name')}</Name>
+            <Role>{t('team.alina.role')}</Role>
           </TeamMember>
           <TeamMember data-aos="fade-up">
-            <ProfileImage src={Mona} alt="Teammedlem 3" />
-            <Name>Mona E.</Name>
-            <Role>Fullstack Developer</Role>
+            <ProfileImage src={Mona} alt="Mona" />
+            <Name>{t('team.mona.name')}</Name>
+            <Role>{t('team.mona.role')}</Role>
           </TeamMember>
           <TeamMember data-aos="fade-up">
-            <ProfileImage src={Nagi} alt="Teammedlem 4" />
-            <Name>Nagihan C.</Name>
-            <Role>Fullstack Developer</Role>
+            <ProfileImage src={Nagi} alt="Nagihan" />
+            <Name>{t('team.nagihan.name')}</Name>
+            <Role>{t('team.nagihan.role')}</Role>
           </TeamMember>
         </TeamGrid>
 
-       
-
         <Footer>
-  &copy; {new Date().getFullYear()} VitalsGraph. All rights reserved.
-  <BackToTopButton 
-    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
-    data-tooltip="Scroll to top"
-    style={{ marginLeft: '20px' }} 
-  >
-    ↑
-  </BackToTopButton>
-</Footer>
-
-
+          &copy; {new Date().getFullYear()} {t('VitalsGraph. All rights reserved.')}
+          <BackToTopButton 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+            data-tooltip={t('scrollTop')}
+            style={{ marginLeft: '20px' }} 
+          >
+            ↑
+          </BackToTopButton>
+        </Footer>
       </PageContainer>
-
     </div>
   );
 };
