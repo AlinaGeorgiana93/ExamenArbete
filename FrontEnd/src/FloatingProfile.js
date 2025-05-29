@@ -11,7 +11,7 @@ const FloatingProfileContainer = styled.div`
  background-color: #F1F0E8;
   border-radius: 12px;
   padding: 16px;
-  width: 240px;
+  width: 330px;
   max-width: 90vw;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
