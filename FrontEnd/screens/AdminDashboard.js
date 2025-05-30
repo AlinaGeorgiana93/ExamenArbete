@@ -217,36 +217,36 @@ const AdminDashboard = () => {
 
 
   const validateAllFields = ({ firstName, lastName, username, email, password, personalNumber, id, role }) => {
-  const errors = {};
+    const errors = {};
 
-  if (!InputValidationUtils.isValidName(firstName)) {
-    errors.firstName = t('firstNameInvalid');
-  }
-
-  if (!InputValidationUtils.isValidName(lastName)) {
-    errors.lastName = t('lastNameInvalid');
-  }
-
-  if (!PersonalNumberUtils.isValid(personalNumber)) {
-    errors.personalNumber = t('personalNumberInvalid');
-  }
-
-  if (activeTab === 'staff' && !id && (role === 'usr' || role === 'sysadmin')) {
-    if (!InputValidationUtils.isValidUsername(username)) {
-      errors.username = t('usernameInvalid');
+    if (!InputValidationUtils.isValidName(firstName)) {
+      errors.firstName = t('firstNameInvalid');
     }
 
-    if (!InputValidationUtils.isValidEmail(email)) {
-      errors.email = t('emailInvalid');
+    if (!InputValidationUtils.isValidName(lastName)) {
+      errors.lastName = t('lastNameInvalid');
     }
 
-    if (!InputValidationUtils.isStrongPassword(password)) {
-      errors.password = t('passwordWeak');
+    if (!PersonalNumberUtils.isValid(personalNumber)) {
+      errors.personalNumber = t('personalNumberInvalid');
     }
-  }
 
-  return errors;
-};
+    if (activeTab === 'staff' && !id && (role === 'usr' || role === 'sysadmin')) {
+      if (!InputValidationUtils.isValidUsername(username)) {
+        errors.username = t('usernameInvalid');
+      }
+
+      if (!InputValidationUtils.isValidEmail(email)) {
+        errors.email = t('emailInvalid');
+      }
+
+      if (!InputValidationUtils.isStrongPassword(password)) {
+        errors.password = t('passwordWeak');
+      }
+    }
+
+    return errors;
+  };
 
 
 
@@ -361,17 +361,17 @@ const AdminDashboard = () => {
 
         if (status === 400 && data.message) {
           const msg = data.message.toLowerCase();
-          const newBackendErrors = {};
 
-          if (msg.includes('username')) newBackendErrors.username = data.message;
-
-
-          if (Object.keys(newBackendErrors).length > 0) {
-            setBackendFieldErrors(newBackendErrors);
+          if (msg.includes('email or username already exists')) {
+            setBackendFieldErrors({
+              emailError: t('emailError'),
+              usernameError: t('usernameError'),
+            });
           } else {
             setSuccessMessage(data.message);
             setShowSuccessMessage(true);
           }
+
         } else {
           setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
           setShowSuccessMessage(true);
@@ -395,7 +395,7 @@ const AdminDashboard = () => {
       await axiosInstance.delete(`/${endpoint}/DeleteItem/${personId}`);
 
       // Set success message
-        setSuccessMessage(`${t(endpoint)} ${t('deletedSuccessfully')}`);
+      setSuccessMessage(`${t(endpoint)} ${t('deletedSuccessfully')}`);
       setShowSuccessMessage(true);
 
       setTimeout(() => {
@@ -687,7 +687,7 @@ const AdminDashboard = () => {
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   />
                   {fieldErrors.username && <div style={{ color: 'red' }}>{fieldErrors.username}</div>}
-                  {backendFieldErrors.username && <div style={{ color: 'red' }}>{backendFieldErrors.username}</div>}
+                  {backendFieldErrors.usernameError && <div style={{ color: 'red' }}>{backendFieldErrors.usernameError}</div>}
 
                   {/* Email Field */}
                   <Input

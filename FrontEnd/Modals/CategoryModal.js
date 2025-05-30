@@ -224,7 +224,7 @@ const CategoryModal = ({ onClose, initialType = 'moodKind' }) => {
     if (!formValues.name.trim()) errors.name = t('Name is required');
     const ratingNum = Number(formValues.rating);
     if (!formValues.rating || isNaN(ratingNum) || ratingNum < 1 || ratingNum > 10) {
-      errors.rating = 'Rating must be a number between 1 and 10';  // no translation here per your request
+     errors.rating = t('ratingMustBeNumberBetween1And10');
     }
     if (!formValues.label.trim()) errors.label = t('Label is required');
     setFieldErrors(errors);

@@ -189,7 +189,7 @@
   "deletedSuccessfully": "raderades framgångsrikt",
   "Name is required": "Namn krävs",
   "Label is required": "Etikett krävs",
-  "Rating must be an integer between 1 and 10": "Betyg måste vara ett heltal mellan 1 och 10",
+  "ratingMustBeNumberBetween1And10": "Betyg måste vara ett heltal mellan 1 och 10",
   "staffCreatedSuccessfully": "Personal skapades framgångsrikt!",
   "patientCreatedSuccessfully": "Patient skapades framgångsrikt!",
   "password_changed": "Lösenordet har ändrats.",
@@ -326,5 +326,7 @@
   "team.nagihan.name": "Nagihan C.",
   "team.nagihan.role": "Fullstackutvecklare",
   "VitalsGraph. All rights reserved.": "VitalsGraph. Alla rättigheter reserverade.",
-  "scrollTop": "Scrolla upp"
+  "scrollTop": "Scrolla upp",
+  "emailError": "E-postadress eller användarnamn finns redan.",
+  "usernameError": "E-postadress eller användarnamn finns redan."
 }
