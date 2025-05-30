@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 export const Overlay = styled.div`
   position: absolute;
-  top: 0;
+  top: 20px;
   left: 0;
   width: 200%;      
   height: 100%;
@@ -32,7 +32,7 @@ export const ModalContainer = styled.div`
   border-radius: 10px;
   width: 90%;            // <= container width (500px * 0.9 = 450px max)
   max-width: 450px;      // max width so it won't overflow
-  max-height: 80vh;
+  max-height: 89vh;
   overflow-y: auto;
   padding: 30px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -50,8 +50,8 @@ export const ModalContainer = styled.div`
 export const Title = styled.h1`
   text-align: center;
   color: #125358;
-  margin-bottom: 24px;
-  font-size: 24px;
+  margin-bottom: 15px;
+  font-size: 28px;
 `;
 
 export const CloseButton = styled.button`
@@ -81,7 +81,8 @@ export const CommentBox = styled.textarea`
   font-size: 16px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  margin-bottom: 16px;
+  margin-bottom: 9px;
+  margin-top: 8px;
   resize: none;
 
   &:focus {
@@ -94,7 +95,7 @@ export const SignatureInput = styled.input`
   width: 100%;
   padding: 12px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 17px;
   font-size: 16px;
   border: 1px solid #ccc;
 
@@ -369,21 +370,21 @@ const CommentModal = ({ isOpen, onClose, patientName, readOnly = false }) => {
   };
 
 
- // 1. Filter comments by selected date first
-const filteredComments = commentList.filter(comment => {
-  const commentDate = new Date(comment.timestamp).toLocaleDateString('sv-SE');
-  const selectedDateString = selectedDate.toLocaleDateString('sv-SE');
-  return commentDate === selectedDateString;
-});
+  // 1. Filter comments by selected date first
+  const filteredComments = commentList.filter(comment => {
+    const commentDate = new Date(comment.timestamp).toLocaleDateString('sv-SE');
+    const selectedDateString = selectedDate.toLocaleDateString('sv-SE');
+    return commentDate === selectedDateString;
+  });
 
-// 2. Calculate total pages based on filtered comments count
-const totalPages = Math.ceil(filteredComments.length / COMMENTS_PER_PAGE);
+  // 2. Calculate total pages based on filtered comments count
+  const totalPages = Math.ceil(filteredComments.length / COMMENTS_PER_PAGE);
 
-// 3. Calculate start index for current page
-const startIdx = (currentPage - 1) * COMMENTS_PER_PAGE;
+  // 3. Calculate start index for current page
+  const startIdx = (currentPage - 1) * COMMENTS_PER_PAGE;
 
-// 4. Slice filtered comments for pagination
-const paginatedComments = filteredComments.slice(startIdx, startIdx + COMMENTS_PER_PAGE);
+  // 4. Slice filtered comments for pagination
+  const paginatedComments = filteredComments.slice(startIdx, startIdx + COMMENTS_PER_PAGE);
 
 
   const handleDateChange = date => {
@@ -450,7 +451,7 @@ const paginatedComments = filteredComments.slice(startIdx, startIdx + COMMENTS_P
               <p>{comment.timestamp}</p>
               {!readOnly && (
                 <>
-                  <ActionButton $variant="delete" onClick={() => handleDelete(comment.id)}>X</ActionButton>
+                  <ActionButton $variant="Delete" onClick={() => handleDelete(comment.id)}>X</ActionButton>
                   <ActionButton onClick={() => handleEdit(comment.id)}>{t('Edit')}</ActionButton>
                 </>
               )}
@@ -470,13 +471,13 @@ const paginatedComments = filteredComments.slice(startIdx, startIdx + COMMENTS_P
           </PageButton>
 
           <PageInfo>
-            {t('Page')} {currentPage} {t('of')} {totalPages}
+            {t('Page_Of', { current: currentPage, total: totalPages })}
           </PageInfo>
 
           <PageButton
             onClick={() => setCurrentPage(prev => prev + 1)}
             disabled={currentPage === totalPages}
-            aria-label={t('Next')}
+            aria-label={t('next')}
           >
             <FaArrowRight />
           </PageButton>
