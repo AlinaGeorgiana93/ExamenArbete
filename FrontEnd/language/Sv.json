@@ -187,6 +187,7 @@
   "AppetiteLevelUpdatedSuccessfully": "Aptitnivå uppdaterades framgångsrikt!",
   "SleepLevelUpdatedSuccessfully": "Sömnivå uppdaterades framgångsrikt!",
   "deletedSuccessfully": "raderades framgångsrikt",
+  "createdSuccessfully": "skapades framgångsrikt",
   "Name is required": "Namn krävs",
   "Label is required": "Etikett krävs",
   "ratingMustBeNumberBetween1And10": "Betyg måste vara ett heltal mellan 1 och 10",
@@ -327,6 +328,10 @@
   "team.nagihan.role": "Fullstackutvecklare",
   "VitalsGraph. All rights reserved.": "VitalsGraph. Alla rättigheter reserverade.",
   "scrollTop": "Scrolla upp",
-  "emailError": "E-postadress eller användarnamn finns redan.",
-  "usernameError": "E-postadress eller användarnamn finns redan."
+  "emailError": "E-post eller användarnamn finns redan.",
+  "usernameError":"E-post eller användarnamn finns redan.",
+  "personalNumberExists": "En person med detta personnummer finns redan.",
+  "roleInvalid": "Roll måste vara 'usr' eller 'sysadmin'.",
+  "unknownError": "Ett oväntat fel uppstod",
+  "creationFailed": "Fel vid skapandet av {{item}}. Försök igen."
 }

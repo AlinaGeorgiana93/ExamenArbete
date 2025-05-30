@@ -159,6 +159,7 @@
   "AppetiteLevelUpdatedSuccessfully": "Appetite level successfully updated!",
   "SleepLevelUpdatedSuccessfully": "Sleep level successfully updated!",
   "deletedSuccessfully": "Successfully deleted",
+  "createdSuccessfully": "succesfully created",
   "Name is required": "Name is required",
   "Label is required": "Label is required",
   "ratingMustBeNumberBetween1And10": "Rating must be a number between 1 and 10",
@@ -303,7 +304,12 @@
   "VitalsGraph. All rights reserved.": "VitalsGraph. All rights reserved.",
   "scrollTop": "Scroll to Top",
   "page Of": "Page {{current}} of {{total}}",
-  "emailError": "Email or Username already exists.",
-  "usernameError": "Email or Username already exists."
+    "emailOrUsernameExists": "Email or Username already exists.",
+    "emailError":"Email or Username already exists.",
+ "usernameError":"Email or Username already exists.",
+  "personalNumberExists": "A staff member with this personal number already exists.",
+  "roleInvalid": "Role must be either 'usr' or 'sysadmin'.",
+  "unknownError": "Unexpected error occurred",
+  "creationFailed": "Error creating {{item}}. Please try again."
  
 }

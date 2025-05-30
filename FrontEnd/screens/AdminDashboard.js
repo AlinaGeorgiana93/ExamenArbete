@@ -367,24 +367,29 @@ const AdminDashboard = () => {
               emailError: t('emailError'),
               usernameError: t('usernameError'),
             });
+            } else if (msg.includes('personal number')) {
+                setBackendFieldErrors({
+                  personalNumberError: t('personalNumberExists'),
+                });
+              } else {
+                setSuccessMessage(`${t('error')}: ${data.message}`);
+                setShowSuccessMessage(true);
+              }
+
+            } else {
+              setSuccessMessage(t('creationFailed', { item: t(activeTab) }));
+              setShowSuccessMessage(true);
+            }
+
           } else {
-            setSuccessMessage(data.message);
+            setSuccessMessage(t('serverUnavailable'));
             setShowSuccessMessage(true);
           }
 
-        } else {
-          setSuccessMessage(`Error creating ${activeTab}. Please try again.`);
-          setShowSuccessMessage(true);
-        }
-      } else {
-        setSuccessMessage('Failed to connect to the server.');
-        setShowSuccessMessage(true);
-      }
-
-    } finally {
-      setIsLoading(false);
-    }
-  };
+              } finally {
+                setIsLoading(false);
+              }
+            };
 
   const handleDelete = async (personId) => {
     try {
@@ -660,6 +665,10 @@ const AdminDashboard = () => {
               {fieldErrors.personalNumber && (
                 <div style={{ color: 'red', fontSize: '0.8rem' }}>{fieldErrors.personalNumber}</div>
               )}
+              {backendFieldErrors.personalNumberError && (
+              <div style={{ color: 'red', fontSize: '0.8rem' }}>{backendFieldErrors.personalNumberError}</div>
+            )}
+
 
               {activeTab === 'staff' && !formData.id && (
                 <>
