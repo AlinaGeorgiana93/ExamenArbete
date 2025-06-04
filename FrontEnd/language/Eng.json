@@ -308,12 +308,11 @@
   "VitalsGraph. All rights reserved.": "VitalsGraph. All rights reserved.",
   "scrollTop": "Scroll to Top",
   "page Of": "Page {{current}} of {{total}}",
-    "emailOrUsernameExists": "Email or Username already exists.",
-    "emailError":"Email or Username already exists.",
- "usernameError":"Email or Username already exists.",
+  "emailOrUsernameExists": "Email or Username already exists.",
+  "emailError": "Email or Username already exists.",
+  "usernameError": "Email or Username already exists.",
   "personalNumberExists": "A staff member with this personal number already exists.",
   "roleInvalid": "Role must be either 'usr' or 'sysadmin'.",
   "unknownError": "Unexpected error occurred",
   "creationFailed": "Error creating {{item}}. Please try again."
- 
 }
