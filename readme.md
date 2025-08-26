@@ -23,3 +23,9 @@ dotnet nuget locals all --clear
 dotnet restore
 dotnet build
 browser: delete browsing data
+
+--------------------------
+Next steps 
+Admin should be able to see all the patients graphs 
+Fixing the database in an azure database
+Working on design or fixing for Android /IOS
